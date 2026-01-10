@@ -224,7 +224,7 @@ public class RobotContainer {
 
   }
 
-  public void updateAutonCommand() {
+  public void updateAutonCommand() throws ParseException {
     if (autoString != null) {
       if (chooser.getSelected() != autoString) {
         autoString = chooser.getSelected();
