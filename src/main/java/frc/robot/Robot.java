@@ -51,7 +51,6 @@ public class Robot extends TimedRobot {
 
     /* Create a default auto to initialize Path Planner  */
     initAuto = new PathPlannerAuto("initAuto").ignoringDisable(true);
-
   }
 
   @Override

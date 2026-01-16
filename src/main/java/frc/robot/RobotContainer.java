@@ -33,6 +33,9 @@ public class RobotContainer {
 
     drivetrain = new Drive(new DriveKraken());
 
+    chooser.setDefaultOption("Auto", "Auto");
+    chooser.addOption("Test", "Test");
+
     SmartDashboard.putData(chooser);
 
     configureBindings();
@@ -63,11 +66,11 @@ public class RobotContainer {
         try {
           drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
         } catch (IOException e) {
-          System.err.println("No Auto File");
+          System.err.println("No Auto File: " + e.toString());
         } catch (ParseException e) {
-          System.err.println("idk good luck");
+          System.err.println("idk good luck: " + e.toString());
         } catch (IndexOutOfBoundsException e) {
-          System.err.println("no auto Paths");
+          System.err.println("no auto Paths: " + e.toString());
         }
       }
     } else {
