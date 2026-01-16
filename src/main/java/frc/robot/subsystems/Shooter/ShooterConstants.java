@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Shooter;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
@@ -21,9 +22,9 @@ public class ShooterConstants {
     public static int kMotorID = 27;
     public static int kShooterEncoderID = 28 ;
     public static double kReduction =(1.0/1.0);
-    public static double kShooterSpeed = 2000.0; 
-    public static double kEjectSpeed = 3000.0;
-    public static String kBusName = "sim";
+    public static int kIdleSpeed = 1000;
+    public static int kShooterSpeed = 2000; 
+    public static CANBus canbus = new CANBus("sim");
     public static double kEncoderOffset = -0.072266;
 
     // Define configuration for Shooter Wheel Motor 
@@ -84,7 +85,7 @@ public class ShooterConstants {
         );
 
     /********************************************************
-    * Based on the robot selected, load Intake configs with
+    * Based on the robot selected, load Shooter configs with
     *   the selected robot configuration  
     ********************************************************/
     public static final ShooterConfigs ShooterConfigs =
@@ -117,16 +118,7 @@ public class ShooterConstants {
      * Define the Intake Config Class 
      *****************/
     public record ShooterConfigs(
-        TalonFXConfiguration shooterWheelConfigs, CANcoderConfiguration shooteCaNcoderConfiguration 
+        TalonFXConfiguration shooterWheelConfigs, CANcoderConfiguration shooterCaNcoderConfiguration 
     ) {}
 
 }
-
-
-
-
-
-
-//Getter for speed
-//Idle state, where flywheel is at a constant speed.
-//Shoot state, where flywheel speeds up its velocity.

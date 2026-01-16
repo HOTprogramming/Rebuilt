@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.sim.PhysicsSim;
+import frc.robot.subsystems.Shooter.Shooter.shooterStats;
 
 public class ShooterKraken {
   private static ShooterKraken instance = null;
@@ -38,8 +39,8 @@ public class ShooterKraken {
   private int controlMode = 3; 
   
   // Hardware
-  private TalonFX m_talonFX = new TalonFX(ShooterConstants.kMotorID, ShooterConstants.kBusName);
-  private CANcoder m_canCoder = new CANcoder(ShooterConstants.kShooterEncoderID, ShooterConstants.kBusName);
+  private TalonFX m_talonFX = new TalonFX(ShooterConstants.kMotorID, ShooterConstants.canbus);
+  private CANcoder m_canCoder = new CANcoder(ShooterConstants.kShooterEncoderID, ShooterConstants.canbus);
 
 
   //Control 
@@ -61,17 +62,17 @@ public class ShooterKraken {
   public ShooterKraken() {
 
     /**********************************
-    * Confiure the shooter Motor 
+    * Confiure the Shooter Motor 
     ***********************************/
-    // Apply Configuration from Intake Constants to motor 
+    // Apply Configuration from Shooter Constants to motor 
     StatusCode statuscode = m_talonFX.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterWheelConfigs(), 1.0); 
     if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Intake shooter Motor ");
+      System.out.println("Configuration Failed on Shooter Motor");
     }
 
-    StatusCode statuscodeEnc = m_canCoder.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterWheelConfigs(), 1.0); 
-    if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Intake shooter Motor ");
+    StatusCode statuscodeEnc = m_canCoder.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterCaNcoderConfiguration(), 1.0); 
+    if(!statuscodeEnc.isOK()) { 
+      System.out.println("Configuration Failed on Shooter CANCoder");
     }
 
     // Set signals
@@ -98,8 +99,47 @@ public class ShooterKraken {
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
       isSimulation = true; 
-      PhysicsSim.getInstance().addTalonFX(m_talonFX, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_talonFX, m_canCoder, 1.0, 0.001);
+    }
+  }
+
+  /*****************************************************************************
+   * Return an instance of this class - Ensures that there is a single instance   
+   ****************************************************************************/
+  public static ShooterKraken getInstance() {
+    return instance = instance == null ? new ShooterKraken() : instance;
+  }
+
+    public void updateStats(shooterStats stats) {
+      
+      stats.shooterPositionRads = shooterPosition.getValueAsDouble();
+      stats.shooterVelocityRpm = shooterVelocity.getValueAsDouble();
+      stats.shooterAppliedVolts = shooterAppliedVolts.getValueAsDouble();
+      stats.shooterSupplyCurrentAmps = shooterSupplyCurrent.getValueAsDouble();
+      stats.shooterTorqueCurrentAmps = shooterTorqueCurrent.getValueAsDouble();
+      stats.shooterTempCelsius = shooterTempCelsius.getValueAsDouble();
     }
 
-    }
+    /*********************
+  * The runVelocity function can run (based on the controlMode Variable either:
+  *     0-means run Velocity Voltage Control Mode  
+  *     1-means run Velocity Torque Control Mode  
+  *     2-means run Motion Magic Voltage Control Mode  
+  *     3-means run Motion Magic Torque Control mode  
+  **********************/
+  public void runVelocity(double RPM) {      
+    //Convert rotations per minute into rotations per second 
+    double desiredRotationsPerSecond = (RPM/60.0); 
+
+    switch (controlMode) {
+      case 0:      /* Use velocity voltage */
+        m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+      case 1:      /* Use velocity torque */
+        m_talonFX.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
+      // case 2:      /*Use Motion Magic Voltage */
+      //   m_talonFX.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
+      // case 3:      /*Use Motion Magic Torque Current FOC */
+      //   m_talonFX.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond));
+      }
+  }
 }
