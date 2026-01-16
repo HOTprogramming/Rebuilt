@@ -12,6 +12,7 @@ import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +22,9 @@ import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveSim;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
+
 public class RobotContainer {
+
   private SendableChooser<String> chooser = new SendableChooser<>();
   private Command autoCommand;
   private String autoString;
@@ -30,6 +33,7 @@ public class RobotContainer {
   
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+  
 
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
@@ -39,12 +43,6 @@ public class RobotContainer {
     } else {
         drivetrain = new Drive(new DriveSim());
     }
-
-    chooser.setDefaultOption("Auto", "Auto");
-
-    // chooser.addOption("<PUT_AUTO_HERE>", "<PUT_AUTO_HERE>");
-    
-    // NamedCommands.registerCommand("Put Command Name Here", Put Command Here);
 
     SmartDashboard.putData(chooser);
 
@@ -60,9 +58,15 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
+
+      NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
+      NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
+
+      new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
+
   }
 
-  public void updateAutonCommand() throws ParseException {
+  public void updateAutonCommand() {
     if (autoString != null) {
       if (chooser.getSelected() != autoString) {
         autoString = chooser.getSelected();
@@ -71,6 +75,8 @@ public class RobotContainer {
           drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
         } catch (IOException e) {
           System.err.println("No Auto File");
+        } catch (ParseException e) {
+          System.err.println("idk good luck");
         } catch (IndexOutOfBoundsException e) {
           System.err.println("no auto Paths");
         }
