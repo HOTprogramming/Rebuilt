@@ -4,24 +4,17 @@
 package frc.robot;
 
 import java.io.IOException;
-
-
 import org.json.simple.parser.ParseException;
-
-import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Drivetrain.DriveSim;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
-
 
 public class RobotContainer {
 
@@ -38,11 +31,10 @@ public class RobotContainer {
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
-    if(!Utils.isSimulation()){
-        drivetrain = new Drive(new DriveKraken());
-    } else {
-        drivetrain = new Drive(new DriveSim());
-    }
+    drivetrain = new Drive(new DriveKraken());
+
+    chooser.setDefaultOption("Auto", "Auto");
+    chooser.addOption("Test", "Test");
 
     SmartDashboard.putData(chooser);
 
@@ -74,11 +66,11 @@ public class RobotContainer {
         try {
           drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
         } catch (IOException e) {
-          System.err.println("No Auto File");
+          System.err.println("No Auto File: " + e.toString());
         } catch (ParseException e) {
-          System.err.println("idk good luck");
+          System.err.println("idk good luck: " + e.toString());
         } catch (IndexOutOfBoundsException e) {
-          System.err.println("no auto Paths");
+          System.err.println("no auto Paths: " + e.toString());
         }
       }
     } else {
