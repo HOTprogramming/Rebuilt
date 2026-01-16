@@ -36,23 +36,17 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
-    /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
-    /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
     private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
 
     private Pigeon2 m_Pigeon2;
-
 
     private SwerveDriveState currentState;
 
     private DriveIOdata iOdata = new DriveIOdata();
 
 
-
     public DriveKraken() {
-        // drivetrain constants
-        
         super(TalonFX::new, TalonFX::new, CANcoder::new,
         DriveConfig.DRIVETRAIN(), 
         DriveConfig.FRONT_LEFT(), 
@@ -69,14 +63,13 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
         }
     }
 
-    public void setCurrentLimits() { // used for setting different current limits for auton/teleop
+    public void setCurrentLimits() {
         SwerveModule<TalonFX, TalonFX, CANcoder>[] m_modules = getModules();
         
         for (int i = 0; i < m_modules.length; i++) {
             m_modules[i].getDriveMotor().setNeutralMode(NeutralModeValue.Coast, 1.0);
             m_modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.driveInitialConfigs.CurrentLimits, 1.0);
             m_modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.steerInitialConfigs.CurrentLimits, 1.0);
-            // apply these seperatly (not in a TalonFXConfiguration obj) to ensure PID doesn't get overwritten
             m_modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.driveInitialConfigs.TorqueCurrent, 1.0);
             m_modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.steerInitialConfigs.TorqueCurrent, 1.0);
         }
