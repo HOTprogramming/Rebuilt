@@ -13,14 +13,22 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class IntakeConstants {
-    public static int kLeftdeployedPosition;
-    public static int kRightdeployedPosition;
-    public static int kLeftdeployedExpel;
-    public static int kRightdeployedExpel;
+    public static double kLeftDeployedPosition = 200.0;
+    public static double kRightDeployedPosition = 200.0;
+    public static double kLeftRetractPosition = 0.0;
+    public static double kRightRetractPosition = 0.0;
+
+    public static double kLeftExpel = -1000.0;
+    public static double kRightExpel = -1000.0;
+
+    public static double kLeftIntake = 2000.0;
+    public static double kRightIntake = 2000.0;
+
     public static int kIntakeMotorIDLExtend = 15;
     public static int kIntakeMotorIDRExtend = 16;
     public static int kIntakeMotorIDLRoller = 17;
     public static int kIntakeMotorIDRRoller = 18;
+
     public static String kBusName = "sim";
 
     public static final TalonFXConfiguration LeftRollerConfigs = new TalonFXConfiguration()

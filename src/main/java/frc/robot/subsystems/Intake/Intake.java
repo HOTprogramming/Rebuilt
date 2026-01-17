@@ -39,6 +39,7 @@ public class Intake extends SubsystemBase{
     private DoublePublisher RRollerSupplyCurrent;
     private DoublePublisher RRollerTorqueCurrent;
     private DoublePublisher RRollerTemp;
+ 
     public Intake() {
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
         NetworkTable table = inst.getTable("HOT/Intake");
@@ -81,125 +82,141 @@ public class Intake extends SubsystemBase{
     }
 
     private void UpdateTelemetry() {
-    LExtendVelocity.set(roundTo1Decimal(ioStats.LExtendVelocityRpm));
-    LExtendPosition.set(roundTo1Decimal(ioStats.LExtendPositionRads));
-    LExtendSupplyCurrent.set(roundTo1Decimal(ioStats.LExtendSupplyCurrentAmps));
-    LExtendTorqueCurrent.set(roundTo1Decimal(ioStats.LExtendTorqueCurrentAmps));
-    LExtendAppliedVolts.set(roundTo1Decimal(ioStats.LExtendAppliedVolts));
-    LExtendTemp.set(roundTo1Decimal(ioStats.LExtendTempCelsius));
+        LExtendVelocity.set(roundTo1Decimal(ioStats.LExtendVelocityRpm));
+        LExtendPosition.set(roundTo1Decimal(ioStats.LExtendPositionRads));
+        LExtendSupplyCurrent.set(roundTo1Decimal(ioStats.LExtendSupplyCurrentAmps));
+        LExtendTorqueCurrent.set(roundTo1Decimal(ioStats.LExtendTorqueCurrentAmps));
+        LExtendAppliedVolts.set(roundTo1Decimal(ioStats.LExtendAppliedVolts));
+        LExtendTemp.set(roundTo1Decimal(ioStats.LExtendTempCelsius));
 
-    RExtendVelocity.set(roundTo1Decimal(ioStats.LExtendVelocityRpm));
-    RExtendPosition.set(roundTo1Decimal(ioStats.LExtendPositionRads));
-    RExtendSupplyCurrent.set(roundTo1Decimal(ioStats.LExtendSupplyCurrentAmps));
-    RExtendTorqueCurrent.set(roundTo1Decimal(ioStats.LExtendTorqueCurrentAmps));
-    RExtendAppliedVolts.set(roundTo1Decimal(ioStats.LExtendAppliedVolts));
-    RExtendTemp.set(roundTo1Decimal(ioStats.LExtendTempCelsius));
+        RExtendVelocity.set(roundTo1Decimal(ioStats.RExtendVelocityRpm));
+        RExtendPosition.set(roundTo1Decimal(ioStats.RExtendPositionRads));
+        RExtendSupplyCurrent.set(roundTo1Decimal(ioStats.RExtendSupplyCurrentAmps));
+        RExtendTorqueCurrent.set(roundTo1Decimal(ioStats.RExtendTorqueCurrentAmps));
+        RExtendAppliedVolts.set(roundTo1Decimal(ioStats.RExtendAppliedVolts));
+        RExtendTemp.set(roundTo1Decimal(ioStats.RExtendTempCelsius));
 
-    LRollerVelocity.set(roundTo1Decimal(ioStats.LExtendVelocityRpm));
-    LRollerPosition.set(roundTo1Decimal(ioStats.LExtendPositionRads));
-    LRollerSupplyCurrent.set(roundTo1Decimal(ioStats.LExtendSupplyCurrentAmps));
-    LRollerTorqueCurrent.set(roundTo1Decimal(ioStats.LExtendTorqueCurrentAmps));
-    LRollerAppliedVolts.set(roundTo1Decimal(ioStats.LExtendAppliedVolts));
-    LRollerTemp.set(roundTo1Decimal(ioStats.LExtendTempCelsius));
+        LRollerVelocity.set(roundTo1Decimal(ioStats.LRollerVelocityRpm));
+        LRollerPosition.set(roundTo1Decimal(ioStats.LRollerPositionRads));
+        LRollerSupplyCurrent.set(roundTo1Decimal(ioStats.LRollerSupplyCurrentAmps));
+        LRollerTorqueCurrent.set(roundTo1Decimal(ioStats.LRollerTorqueCurrentAmps));
+        LRollerAppliedVolts.set(roundTo1Decimal(ioStats.LRollerAppliedVolts));
+        LRollerTemp.set(roundTo1Decimal(ioStats.LRollerTempCelsius));
 
-    RRollerVelocity.set(roundTo1Decimal(ioStats.LExtendVelocityRpm));
-    RRollerPosition.set(roundTo1Decimal(ioStats.LExtendPositionRads));
-    RRollerSupplyCurrent.set(roundTo1Decimal(ioStats.LExtendSupplyCurrentAmps));
-    RRollerTorqueCurrent.set(roundTo1Decimal(ioStats.LExtendTorqueCurrentAmps));
-    RRollerAppliedVolts.set(roundTo1Decimal(ioStats.LExtendAppliedVolts));
-    RRollerTemp.set(roundTo1Decimal(ioStats.LExtendTempCelsius));
-}
+        RRollerVelocity.set(roundTo1Decimal(ioStats.RRollerVelocityRpm));
+        RRollerPosition.set(roundTo1Decimal(ioStats.RRollerPositionRads));
+        RRollerSupplyCurrent.set(roundTo1Decimal(ioStats.RRollerSupplyCurrentAmps));
+        RRollerTorqueCurrent.set(roundTo1Decimal(ioStats.RRollerTorqueCurrentAmps));
+        RRollerAppliedVolts.set(roundTo1Decimal(ioStats.RRollerAppliedVolts));
+        RRollerTemp.set(roundTo1Decimal(ioStats.RRollerTempCelsius));
+    }
 
-    private void setLeftRollerSpeed() {
+    private void setLeftRollerSpeed(double speed) { 
+        mIntakeKraken.runVelocity(speed,1);
+    }
 
+    private void setRightRollerSpeed(double speed) { 
+        mIntakeKraken.runVelocity(speed,0);
     }
 
     private void setLeftIntakePosition(double intakePosition) {
         mIntakeKraken.runPosition(intakePosition,1);
-        mIntakeKraken.runVelocity(intakePosition,1);
     }
+
+    private void setRightIntakePosition(double intakePosition) {
+        mIntakeKraken.runPosition(intakePosition,0);
+    }
+
+    /******************************************************************************************
+     * COMMANDS 
+     * @return a command 
+     ******************************************************************************************/
+
     public Command extendLeftIntake() {
         return runOnce(() ->
         {
-            setLeftIntakePosition(IntakeConstants.kLeftdeployedPosition);
+            setLeftIntakePosition(IntakeConstants.kLeftDeployedPosition);
         });
     }
      public Command retractLeftIntake() {
         return runOnce(() ->
         {
-            setLeftIntakePosition(IntakeConstants.kLeftdeployedPosition);
+            setLeftIntakePosition(IntakeConstants.kLeftRetractPosition);
         });
     }
     public Command expelLeftIntake() {
         return runOnce(() ->
           {
-            setLeftIntakePosition(IntakeConstants.kLeftdeployedExpel);
+            setLeftRollerSpeed(IntakeConstants.kLeftExpel);
+        });
+    } 
+    
+    public Command expelRightIntake() {
+        return runOnce(() ->
+          {
+            setRightRollerSpeed(IntakeConstants.kRightExpel);
         });
     }
+    
     public Command turnOffLeftExpel() {
         return runOnce(() ->
           {
-            setLeftIntakePosition(IntakeConstants.kLeftdeployedExpel);
+            setLeftRollerSpeed(0.0);
         });
     }
     public Command turnOffRightExpel() {
         return runOnce(() ->
           {
-            setRightIntakePosition(IntakeConstants.kRightdeployedExpel);
+            setRightRollerSpeed(0.0);
         });
     }
-      public Command turnOnLeftIntake() {
+    public Command turnOnLeftIntake() {
         return runOnce(() ->
         {
-            setLeftRollerSpeed();
-        });
-    }
-
-  public Command turnOffLeftIntake() {
-        return runOnce(() ->
-        {
-            setLeftRollerSpeed();
-        });
-    }
-
-    private void setRightIntakePosition(double intakePosition) {
-           mIntakeKraken.runPosition(intakePosition,0);
-           mIntakeKraken.runVelocity(intakePosition,0);
-    }
-
-    public Command extendRightIntake() {
-        return runOnce(() ->
-        {
-            setRightIntakePosition(IntakeConstants.kRightdeployedPosition);
-        });
-    }
-
-    public Command retractRightIntake() {
-        return runOnce(() ->
-        {
-            setRightIntakePosition(IntakeConstants.kRightdeployedPosition);
-        }); 
-    }
-    public Command expelRightIntake() {
-        return runOnce(() ->
-          {
-            setRightIntakePosition(IntakeConstants.kRightdeployedExpel);
+            setLeftRollerSpeed(IntakeConstants.kLeftIntake);
         });
     }
 
     public Command turnOnRightIntake() {
         return runOnce(() ->
         {
-            setLeftRollerSpeed();
+            setLeftRollerSpeed(IntakeConstants.kRightIntake);
+        });
+    }
+
+    public Command turnOffLeftIntake() {
+        return runOnce(() ->
+        {
+            setLeftRollerSpeed(0.0);
         });
     }
 
     public Command turnOffRightIntake() {
         return runOnce(() ->
         {
-            setLeftRollerSpeed();
+            setRightRollerSpeed(0.0);
         });
     }
+
+    public Command extendRightIntake() {
+        return runOnce(() ->
+        {
+            setRightIntakePosition(IntakeConstants.kRightDeployedPosition);
+        });
+    }
+
+    public Command retractRightIntake() {
+        return runOnce(() ->
+        {
+            setRightIntakePosition(IntakeConstants.kRightRetractPosition);
+        }); 
+    }
+    
+   
+
+
+
+  
     class IntakeStats {
     //Stats for the Intake/Expel Motor  
     public boolean MotorConnected = true;    
