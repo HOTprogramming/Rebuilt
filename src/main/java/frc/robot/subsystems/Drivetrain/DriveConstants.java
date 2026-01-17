@@ -211,7 +211,7 @@ public class DriveConstants {
     private static final double kSteerGearRatioMinibot = 10.285714285714286;
   
     // CAN bus that the devices are located on; All swerve devices must share the same CAN bus
-    public static final CANBus kCANBusMinibot = new CANBus("drivetrain", "./logs/example.hoot");
+    public static final CANBus kCANBusMinibot = new CANBus("sim", "./logs/example.hoot");
 
     public static final SwerveDrivetrainConstants DrivetrainConstantsMinibot = new SwerveDrivetrainConstants()
        .withCANBusName(kCANBusMinibot.getName())
@@ -460,7 +460,7 @@ public class DriveConstants {
     private static final double kSteerGearRatioComp25 = 11.314285714285715;
   
     // CAN bus that the devices are located on; All swerve devices must share the same CAN bus
-    public static final CANBus kCANBusComp25 = new CANBus("robot", "./logs/example.hoot");
+    public static final CANBus kCANBusComp25 = new CANBus("sim", "./logs/example.hoot");
 
     public static final SwerveDrivetrainConstants DrivetrainConstantsComp25 = new SwerveDrivetrainConstants()
        .withCANBusName(kCANBusComp25.getName())

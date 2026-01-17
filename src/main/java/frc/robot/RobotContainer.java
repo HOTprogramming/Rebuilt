@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveSim;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
@@ -27,7 +28,8 @@ public class RobotContainer {
   private String autoString;
 
   private Drive drivetrain;
-  
+  private Climber m_climber;
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -39,6 +41,8 @@ public class RobotContainer {
     } else {
         drivetrain = new Drive(new DriveSim());
     }
+    
+    m_climber = new Climber();
 
     chooser.setDefaultOption("Auto", "Auto");
 
@@ -60,6 +64,8 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
+
+      driver.a().toggleOnTrue(m_climber.deployCommand()).toggleOnFalse(m_climber.retractCommand());
   }
 
   public void updateAutonCommand() throws ParseException {
