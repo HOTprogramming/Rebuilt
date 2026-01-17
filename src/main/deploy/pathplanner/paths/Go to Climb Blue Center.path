@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.264,
-        "y": 4.025
+        "x": 1.896486486486487,
+        "y": 2.5539752252252255
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9238063640230598,
-        "y": 3.9087374487968147
+        "x": 1.151621245217327,
+        "y": 2.5664950878203596
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot (Blue Outpost Side)"
     },
     {
       "anchor": {
-        "x": 1.630923423423424,
-        "y": 3.861362612612613
+        "x": 1.0385135135135142,
+        "y": 2.5539752252252255
       },
       "prevControl": {
-        "x": 2.010841327403427,
-        "y": 3.9688670544515796
+        "x": 1.3959242422756941,
+        "y": 2.557134740206611
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "Outpost Shoot Climb Blue Center",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 28.810793742973022
   },
   "useDefaultConstraints": true
 }

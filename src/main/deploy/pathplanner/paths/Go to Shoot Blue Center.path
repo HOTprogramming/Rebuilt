@@ -8,29 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.6401689189189195,
-        "y": 1.9411373873873878
+        "x": 1.2007651431955404,
+        "y": 1.4539965718409693
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.2641891891891897,
-        "y": 4.024786036036036
+        "x": 1.896486486486487,
+        "y": 2.5539752252252255
       },
       "prevControl": {
-        "x": 2.141621621621622,
-        "y": 2.7888963963963964
+        "x": 1.3943157351085258,
+        "y": 2.2891144422446668
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot (Blue Outpost Side)"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 4.55,
+        "y": 4.0
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.9030520646319562,
+      "maxWaypointRelativePos": 1.0,
+      "name": "Point Towards Zone"
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.0,
@@ -42,7 +53,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 28.810793742973022
   },
   "reversed": false,
   "folder": "Outpost Shoot Climb Blue Center",
