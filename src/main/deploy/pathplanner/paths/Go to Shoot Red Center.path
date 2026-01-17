@@ -1,0 +1,65 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 15.91,
+        "y": 7.365
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 15.209228790931718,
+        "y": 6.546008618393269
+      },
+      "isLocked": false,
+      "linkedName": "Red Side Outpost Pickup"
+    },
+    {
+      "anchor": {
+        "x": 14.514,
+        "y": 5.446
+      },
+      "prevControl": {
+        "x": 15.016168838627166,
+        "y": 5.710864409486101
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Shoot (Red Outpost Side)"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 11.86,
+        "y": 4.0
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.9030520646319562,
+      "maxWaypointRelativePos": 1.0,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -151.189
+  },
+  "reversed": false,
+  "folder": "Outpost Shoot Climb From Center",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
