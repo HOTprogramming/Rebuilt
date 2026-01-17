@@ -3,7 +3,6 @@ package frc.robot.sim;
 import java.util.ArrayList;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 /**
@@ -24,16 +23,12 @@ public class PhysicsSim {
      * 
      * @param talonFX
      *        The TalonFX device
-     * @param can
-     *        The CANcoder device
-     * @param gearRatio
-     *        The gear reduction of the TalonFX
      * @param rotorInertia
      *        Rotational Inertia of the mechanism at the rotor
      */
-    public void addTalonFX(TalonFX talonFX, CANcoder can, double gearRatio, final double rotorInertia) {
+    public void addTalonFX(TalonFX talonFX, final double rotorInertia) {
         if (talonFX != null) {
-            TalonFXSimProfile simTalonFX = new TalonFXSimProfile(talonFX, can, gearRatio, rotorInertia);
+            TalonFXSimProfile simTalonFX = new TalonFXSimProfile(talonFX, rotorInertia);
             _simProfiles.add(simTalonFX);
         }
     }

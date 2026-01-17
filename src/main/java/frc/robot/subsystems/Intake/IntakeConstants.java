@@ -10,12 +10,18 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import frc.robot.Constants;
 
 public class IntakeConstants {
-    public static double kLeftdeployedPosition = 15;
-    public static double kRightdeployedPosition = 15;
-    public static double kLeftdeployedExpel = 15;
-    public static double kRightdeployedExpel = 15;
+    public static int kLeftdeployedPosition;
+    public static int kRightdeployedPosition;
+    public static int kLeftdeployedExpel;
+    public static int kRightdeployedExpel;
+    public static int kIntakeMotorIDLExtend = 15;
+    public static int kIntakeMotorIDRExtend = 16;
+    public static int kIntakeMotorIDLRoller = 17;
+    public static int kIntakeMotorIDRRoller = 18;
+    public static String kBusName = "sim";
 
     public static final TalonFXConfiguration LeftRollerConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
@@ -200,4 +206,57 @@ public class IntakeConstants {
                 .withMotionMagicExpo_kV(0.12)          // kV is around 0.12 V/rps
                 .withMotionMagicExpo_kA(0.1)          // Use a slower kA of 0.1 V/(rps/s)
             );
+    
+             public static final IntakeConfigs IntakeConfigs =
+        switch (Constants.getRobot()) {
+            case COMPBOT -> new IntakeConfigs(
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs 
+            );
+            case SIMBOT -> new IntakeConfigs(
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs
+            );
+            case DEVBOT -> new IntakeConfigs(
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs 
+            );
+            case CAMERABOT -> new IntakeConfigs( 
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs
+            );
+            case COMP24 -> new IntakeConfigs(
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs 
+            );
+            case COMP25 -> new IntakeConfigs(
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs 
+            );
+            case MINIBOT -> new IntakeConfigs(
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs 
+            );
+        };
+
+        public record IntakeConfigs(
+            TalonFXConfiguration LeftRollerConfigs,
+            TalonFXConfiguration RightRollerConfigs,
+            TalonFXConfiguration LeftIntakeExtendConfigs,
+            TalonFXConfiguration RightIntakeExtendConfigs
+        ) {}
 }

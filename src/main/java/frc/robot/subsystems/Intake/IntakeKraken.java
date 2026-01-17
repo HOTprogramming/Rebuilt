@@ -1,8 +1,9 @@
 package frc.robot.subsystems.Intake;
-
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
@@ -20,14 +21,15 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.sim.PhysicsSim;
-
+import frc.robot.subsystems.Intake.Intake.IntakeStats;
 
 public class IntakeKraken {
   // Hardware
-  private TalonFX m_LExtend = new TalonFX(IntakeConstants.kIntakeMotorID, IntakeConstants.kBusName);
-  private TalonFX m_RExtend = new TalonFX(IntakeConstants.kIntakeMotorID, IntakeConstants.kBusName);
-  private TalonFX m_LRoller = new TalonFX(IntakeConstants.kIntakeMotorID, IntakeConstants.kBusName);
-  private TalonFX m_RRoller = new TalonFX(IntakeConstants.kIntakeMotorID, IntakeConstants.kBusName);
+  private CANBus canBus = new CANBus(IntakeConstants.kBusName);
+  private TalonFX m_LExtend = new TalonFX(IntakeConstants.kIntakeMotorIDLExtend, IntakeConstants.kBusName);
+  private TalonFX m_RExtend = new TalonFX(IntakeConstants.kIntakeMotorIDRExtend, IntakeConstants.kBusName);
+  private TalonFX m_LRoller = new TalonFX(IntakeConstants.kIntakeMotorIDLRoller, IntakeConstants.kBusName);
+  private TalonFX m_RRoller = new TalonFX(IntakeConstants.kIntakeMotorIDRRoller, IntakeConstants.kBusName);
     //Control
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
   private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
@@ -81,6 +83,7 @@ public class IntakeKraken {
   private int controlPos = 3; 
   private int controlVel = 3;
   private StatusCode statuscode = null;
+
   public IntakeKraken(){
          /**********************************
     * Confiure the shooter Motor 
@@ -134,27 +137,139 @@ public class IntakeKraken {
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
-        shooterPosition,
-        shooterVelocity,
-        shooterAppliedVolts,
-        shooterSupplyCurrent,
-        shooterTorqueCurrent,
-        shooterTempCelsius
+          LeftIntakePosition,
+        LeftIntakeVelocity,
+        LeftIntakeAppliedVolts,
+        LeftIntakeSupplyCurrent,
+        LeftIntakeTorqueCurrent,
+        LeftIntakeTempCelsius,
+          RightIntakePosition,
+        RightIntakeVelocity,
+        RightIntakeAppliedVolts,
+        RightIntakeSupplyCurrent,
+        RightIntakeTorqueCurrent,
+        RightIntakeTempCelsius,
+          LeftRollerPosition,
+        LeftRollerVelocity,
+        LeftRollerAppliedVolts,
+        LeftRollerSupplyCurrent,
+        LeftRollerTorqueCurrent,
+        LeftRollerTempCelsius,
+          RightRollerPosition,
+        RightRollerVelocity,
+        RightRollerAppliedVolts,
+        RightRollerSupplyCurrent,
+        RightRollerTorqueCurrent,
+        RightRollerTempCelsius
     );
 
     /* Optimize out the other signals, since they're not useful */
-    m_talonFX.optimizeBusUtilization();
+    m_LExtend.optimizeBusUtilization();
+     m_RExtend.optimizeBusUtilization();
+      m_LRoller.optimizeBusUtilization();
+       m_RRoller.optimizeBusUtilization();
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
       isSimulation = true; 
-      PhysicsSim.getInstance().addTalonFX(m_talonFX, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_LExtend, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_RExtend, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_LRoller, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_RRoller, 0.001);
+      }
     }
-  }
 
   public static IntakeKraken getInstance() {
     return instance = instance == null ? new IntakeKraken() : instance;
   }
+  public void updateStats(IntakeStats stats) {
+  if(isSimulation){
+      PhysicsSim.getInstance().run();
+    }
+
+    stats.MotorConnected =
+        BaseStatusSignal.refreshAll(
+                LeftIntakePosition,
+                LeftIntakeVelocity,
+                LeftIntakeAppliedVolts,
+                LeftIntakeSupplyCurrent,
+                LeftIntakeTorqueCurrent,
+                LeftIntakeTempCelsius)
+            .isOK();
+
+    stats.LExtendPositionRads = LeftIntakePosition.getValueAsDouble();
+    stats.LExtendVelocityRpm = LeftIntakeVelocity.getValueAsDouble();
+    stats.LExtendAppliedVolts = LeftIntakeAppliedVolts.getValueAsDouble();
+    stats.LExtendSupplyCurrentAmps = LeftIntakeSupplyCurrent.getValueAsDouble();
+    stats.LExtendTorqueCurrentAmps = LeftIntakeTorqueCurrent.getValueAsDouble();
+    stats.LExtendTempCelsius = LeftIntakeTempCelsius.getValueAsDouble();
+
+    if(isSimulation){
+      PhysicsSim.getInstance().run();
+    }
+
+    stats.MotorConnected =
+        BaseStatusSignal.refreshAll(
+                RightIntakePosition,
+                RightIntakeVelocity,
+                RightIntakeAppliedVolts,
+                RightIntakeSupplyCurrent,
+                RightIntakeTorqueCurrent,
+                RightIntakeTempCelsius)
+            .isOK();
+
+    stats.RExtendPositionRads = RightIntakePosition.getValueAsDouble();
+    stats.RExtendVelocityRpm = RightIntakeVelocity.getValueAsDouble();
+    stats.RExtendAppliedVolts = RightIntakeAppliedVolts.getValueAsDouble();
+    stats.RExtendSupplyCurrentAmps = RightIntakeSupplyCurrent.getValueAsDouble();
+    stats.RExtendTorqueCurrentAmps = RightIntakeTorqueCurrent.getValueAsDouble();
+    stats.RExtendTempCelsius = RightIntakeTempCelsius.getValueAsDouble();
+
+    if(isSimulation){
+      PhysicsSim.getInstance().run();
+    }
+
+    stats.MotorConnected =
+        BaseStatusSignal.refreshAll(
+                LeftRollerPosition,
+                LeftRollerVelocity,
+                LeftRollerAppliedVolts,
+                LeftRollerSupplyCurrent,
+                LeftRollerTorqueCurrent,
+                LeftRollerTempCelsius)
+            .isOK();
+
+    stats.LRollerPositionRads = LeftRollerPosition.getValueAsDouble();
+    stats.LRollerVelocityRpm = LeftRollerVelocity.getValueAsDouble();
+    stats.LRollerAppliedVolts = LeftRollerAppliedVolts.getValueAsDouble();
+    stats.LRollerSupplyCurrentAmps = LeftRollerSupplyCurrent.getValueAsDouble();
+    stats.LRollerTorqueCurrentAmps = LeftRollerTorqueCurrent.getValueAsDouble();
+    stats.LRollerTempCelsius = LeftRollerTempCelsius.getValueAsDouble();
+
+    if(isSimulation){
+      PhysicsSim.getInstance().run();
+    }
+
+    stats.MotorConnected =
+        BaseStatusSignal.refreshAll(
+                RightRollerPosition,
+                RightRollerVelocity,
+                RightRollerAppliedVolts,
+                RightRollerSupplyCurrent,
+                RightRollerTorqueCurrent,
+                RightRollerTempCelsius)
+            .isOK();
+
+    stats.RRollerPositionRads = RightRollerPosition.getValueAsDouble();
+    stats.RRollerVelocityRpm = RightRollerVelocity.getValueAsDouble();
+    stats.RRollerAppliedVolts = RightRollerAppliedVolts.getValueAsDouble();
+    stats.RRollerSupplyCurrentAmps = RightRollerSupplyCurrent.getValueAsDouble();
+    stats.RRollerTorqueCurrentAmps = RightRollerTorqueCurrent.getValueAsDouble();
+    stats.RRollerTempCelsius = RightRollerTempCelsius.getValueAsDouble();
+  }
+
+
+
   /***************************************************************************
   * The runVelocity function can run (based on the controlMode Variable either:
   *     0-means run Position Voltage Control Mode  
@@ -225,4 +340,4 @@ public class IntakeKraken {
         }
       }
    }
-}
+  }

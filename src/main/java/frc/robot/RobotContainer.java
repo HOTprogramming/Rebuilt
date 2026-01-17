@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveSim;
+import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
@@ -27,7 +28,7 @@ public class RobotContainer {
   private String autoString;
 
   private Drive drivetrain;
-  
+  private static Intake m_intake = new Intake();
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -60,6 +61,15 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
+
+      driver.a().toggleOnTrue(m_intake.extendLeftIntake()).toggleOnFalse(m_intake.retractLeftIntake());
+      driver.b().toggleOnTrue(m_intake.extendRightIntake()).toggleOnFalse(m_intake.retractRightIntake());
+      driver.x().toggleOnTrue(m_intake.turnOnLeftIntake()).toggleOnFalse(m_intake.turnOffLeftIntake());
+      driver.y().toggleOnTrue(m_intake.turnOnRightIntake()).toggleOnFalse(m_intake.turnOffRightIntake());
+      driver.leftBumper().toggleOnTrue(m_intake.expelLeftIntake()).toggleOnFalse(m_intake.turnOffLeftExpel());
+      driver.rightBumper().toggleOnTrue(m_intake.expelRightIntake()).toggleOnFalse(m_intake.turnOffRightExpel());
+      
+
   }
 
   public void updateAutonCommand() throws ParseException {
