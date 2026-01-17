@@ -35,6 +35,7 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     chooser.addOption("Test", "Test");
+    chooser.addOption("Outpost Shoot Climb Blue Center", "Outpost Shoot Climb Blue Center");
 
     SmartDashboard.putData(chooser);
 
