@@ -35,6 +35,10 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     chooser.addOption("Test", "Test");
+    chooser.addOption("Collect And Shoot Ramp Right Blue", "Collect And Shoot Ramp Right Blue");
+    chooser.addOption("Collect And Shoot Ramp Left Blue", "Collect And Shoot Ramp Left Blue");
+    chooser.addOption("Collect And Shoot Ramp Right Red", "Collect And Shoot Ramp Right Red");
+    chooser.addOption("Collect And Shoot Ramp Left Red", "Collect And Shoot Ramp Left Red");
 
     SmartDashboard.putData(chooser);
 
