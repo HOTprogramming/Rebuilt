@@ -20,6 +20,12 @@ public class Climber extends SubsystemBase {
     private DoublePublisher climberSupplyCurrent;
     private DoublePublisher climberTorqueCurrent;
     private DoublePublisher climberTemp;
+    private DoublePublisher spinnerPosition;
+    private DoublePublisher spinnerVelocity;
+    private DoublePublisher spinnerAppliedVolts;
+    private DoublePublisher spinnerSupplyCurrent;
+    private DoublePublisher spinnerTorqueCurrent;
+    private DoublePublisher spinnerTemp;
 
 
     class ClimberStats {
@@ -30,6 +36,12 @@ public class Climber extends SubsystemBase {
         public double climberSupplyCurrentAmps = 0.0;
         public double climberTorqueCurrentApls = 0.0;
         public double climberTempCelsius = 0.0;
+        public double spinnerPositionRads = 0.0;
+        public double spinnerVelocityRpm = 0.0; 
+        public double spinnerAppliedVolt = 0.0;
+        public double spinnerSupplyCurrentAmps = 0.0;
+        public double spinnerTorqueCurrentApls = 0.0;
+        public double spinnerTempCelsius = 0.0;
     }
 
     public Climber() {
@@ -44,6 +56,12 @@ public class Climber extends SubsystemBase {
         climberTorqueCurrent = table.getDoubleTopic("Torque Current").publish();
         climberTemp = table.getDoubleTopic("Motor Temp").publish();
         climberAppliedVolts = table.getDoubleTopic("Applied Volts").publish();
+        spinnerVelocity = table.getDoubleTopic("spin velocity").publish();
+        spinnerPosition = table.getDoubleTopic("spin Position-Motor").publish();
+        spinnerSupplyCurrent = table.getDoubleTopic("spin Supply Current").publish();
+        spinnerTorqueCurrent = table.getDoubleTopic("spin Torque Current").publish();
+        spinnerTemp = table.getDoubleTopic("spin Motor Temp").publish();
+        spinnerAppliedVolts = table.getDoubleTopic("spin Applied Volts").publish();
     }
 
 @Override
@@ -59,6 +77,12 @@ public void periodic() {
         climberTorqueCurrent.set(ioStats.climberTorqueCurrentApls);
         climberTemp.set(ioStats.climberTempCelsius);
         climberAppliedVolts.set(ioStats.climberAppliedVolt);
+        spinnerVelocity.set(ioStats.spinnerVelocityRpm);
+        spinnerPosition.set(ioStats.spinnerPositionRads);
+        spinnerSupplyCurrent.set(ioStats.spinnerSupplyCurrentAmps);
+        spinnerTorqueCurrent.set(ioStats.spinnerTorqueCurrentApls);
+        spinnerTemp.set(ioStats.spinnerTempCelsius);
+        spinnerAppliedVolts.set(ioStats.spinnerAppliedVolt);
     }
 
     private void runPosition(double targetPos){
@@ -74,5 +98,7 @@ public void periodic() {
         return runOnce ( () -> runPosition(ClimberConstants.retractPosition));
     }
 
-    
+    public Command rotateCommand() {
+        return runOnce ( () -> runPosition(ClimberConstants.spinPosition));
+    }
 }

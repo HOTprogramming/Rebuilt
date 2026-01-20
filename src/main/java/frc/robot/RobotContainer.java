@@ -65,7 +65,9 @@ public class RobotContainer {
         }
       ));
 
-      driver.a().toggleOnTrue(m_climber.deployCommand()).toggleOnFalse(m_climber.retractCommand());
+      driver.a().toggleOnTrue(m_climber.deployCommand());
+      driver.b().toggleOnTrue(m_climber.retractCommand());
+      driver.x().toggleOnTrue(m_climber.rotateCommand());
   }
 
   public void updateAutonCommand() throws ParseException {

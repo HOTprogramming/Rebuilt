@@ -28,6 +28,7 @@ public class ClimberKraken {
 
     private CANBus canbus = new CANBus(ClimberConstants.kBusName);
     private TalonFX m_talonFX = new TalonFX(ClimberConstants.kClimbermotorID, canbus);
+    private TalonFX m_talonFX2 = new TalonFX(ClimberConstants.kClimberspinnerID, canbus);
     private static ClimberKraken instance = null;
     private double getAppliedVolts = 0.0;
     private boolean isSimulation = false;
@@ -38,7 +39,12 @@ public class ClimberKraken {
     private final StatusSignal<Current> climberSupplyCurrent;
     private final StatusSignal<Current> climberTorqueCurrent;
     private final StatusSignal<Temperature> climberTempCelsius;
-  
+    private final StatusSignal<Angle> spinnerPosition;
+    private final StatusSignal<AngularVelocity> spinnerVelocity;
+    private final StatusSignal<Voltage> spinnerAppliedVolts;
+    private final StatusSignal<Current> spinnerSupplyCurrent;
+    private final StatusSignal<Current> spinnerTorqueCurrent;
+    private final StatusSignal<Temperature> spinnerTempCelsius;
     /**************************************************************** 
      * Change this variable to select which motor control feature runs 
     *     0-means run Position Voltage Control Mode  
@@ -50,6 +56,7 @@ public class ClimberKraken {
       
     //Control 
     private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+    private final PositionVoltage m_spinpositionVoltage = new PositionVoltage(0).withSlot(0);
     private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
     private final MotionMagicExpoVoltage m_mmExpoVoltage = new MotionMagicExpoVoltage(0).withSlot(2);
     private final MotionMagicExpoTorqueCurrentFOC m_mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0).withSlot(1);
@@ -74,7 +81,13 @@ public class ClimberKraken {
             climberAppliedVolts,
             climberSupplyCurrent,
             climberTorqueCurrent,
-            climberTempCelsius)
+            climberTempCelsius,
+            spinnerPosition,
+            spinnerVelocity,
+            spinnerAppliedVolts,
+            spinnerSupplyCurrent,
+            spinnerTorqueCurrent,
+            spinnerTempCelsius)
             .isOK();
 
             stats.climberPositionRads = climberPosition.getValueAsDouble();
@@ -83,6 +96,12 @@ public class ClimberKraken {
             stats.climberSupplyCurrentAmps = climberSupplyCurrent.getValueAsDouble();
             stats.climberTorqueCurrentApls = climberTorqueCurrent.getValueAsDouble();
             stats.climberTempCelsius = climberTempCelsius.getValueAsDouble();
+            stats.spinnerPositionRads = spinnerPosition.getValueAsDouble();
+            stats.spinnerVelocityRpm = spinnerVelocity.getValueAsDouble();
+            stats.spinnerAppliedVolt = spinnerAppliedVolts.getValueAsDouble();
+            stats.spinnerSupplyCurrentAmps = spinnerSupplyCurrent.getValueAsDouble();
+            stats.spinnerTorqueCurrentApls = spinnerTorqueCurrent.getValueAsDouble();
+            stats.spinnerTempCelsius = spinnerTempCelsius.getValueAsDouble();
     }
 
 
@@ -97,6 +116,7 @@ public class ClimberKraken {
         switch (controlMode) {
         case 0:      /* Use Position Voltage */
             m_talonFX.setControl(m_positionVoltage.withPosition(desiredRotations));
+            m_talonFX2.setControl(m_spinpositionVoltage.withPosition(desiredRotations));
         case 1:      /* Use Position Torque */
             m_talonFX.setControl(m_positionTorque.withPosition(desiredRotations));
         case 2:      /* Use Motion Magic Position Voltage */
@@ -109,17 +129,26 @@ public class ClimberKraken {
     
     public ClimberKraken() {
         StatusCode statuscode = m_talonFX.getConfigurator().apply(ClimberConstants.ClimberConfigs.climberWheelConfigs(), 1.0); 
-    
+        StatusCode statuscode2 = m_talonFX2.getConfigurator().apply(ClimberConstants.ClimberConfigs.climberWheelConfigs(), 1.0);
+       
         if (!statuscode.isOK()) {
             System.out.println("Configuration Failed on Climber Motor");
         }
-
+        if (!statuscode2.isOK()) {
+            System.out.println("Configuration Failed on Climber Motor");
+        }
         climberPosition = m_talonFX.getPosition();
         climberVelocity = m_talonFX.getVelocity();
         climberAppliedVolts = m_talonFX.getMotorVoltage();
         climberSupplyCurrent = m_talonFX.getSupplyCurrent();
         climberTorqueCurrent = m_talonFX.getTorqueCurrent();
         climberTempCelsius = m_talonFX.getDeviceTemp();
+        spinnerPosition = m_talonFX.getPosition();
+        spinnerVelocity = m_talonFX.getVelocity();
+        spinnerAppliedVolts = m_talonFX.getMotorVoltage();
+        spinnerSupplyCurrent = m_talonFX.getSupplyCurrent();
+        spinnerTorqueCurrent = m_talonFX.getTorqueCurrent();
+        spinnerTempCelsius = m_talonFX.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -128,7 +157,13 @@ public class ClimberKraken {
         climberAppliedVolts,
         climberSupplyCurrent,
         climberTorqueCurrent,
-        climberTempCelsius
+        climberTempCelsius,
+        spinnerPosition,
+        spinnerVelocity,
+        spinnerAppliedVolts,
+        spinnerSupplyCurrent,
+        spinnerTorqueCurrent,
+        spinnerTempCelsius
     );
     
     m_talonFX.optimizeBusUtilization();

@@ -15,10 +15,11 @@ import frc.robot.Constants;
 
 public class ClimberConstants {
     public static int kClimbermotorID = 21; //IMPORTANT
-    public static int kClimberencoderID =22; //IMPORTANT
+    public static int kClimberspinnerID =22; //IMPORTANT
     public static String kBusName = "sim";
     public static double deployPosition = 200.0;
     public static double retractPosition = 0.0;
+    public static double spinPosition = 400;
 
         public static final TalonFXConfiguration climberWheelConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
@@ -110,4 +111,3 @@ public class ClimberConstants {
     ) {}
 
 }
-
