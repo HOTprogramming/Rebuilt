@@ -3,6 +3,7 @@ package frc.robot.subsystems.Shooter;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -11,6 +12,7 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -20,7 +22,8 @@ import frc.robot.Constants;
 public class ShooterConstants {
     
     public static int kMotorID = 27;
-    public static int kShooterEncoderID = 28 ;
+    public static int kSubMotorID = 28;
+    public static int kShooterEncoderID = 29;
     public static double kReduction =(1.0/1.0);
     public static int kIdleSpeed = 1000;
     public static int kShooterSpeed = 2000; 
@@ -76,7 +79,14 @@ public class ShooterConstants {
                 .withMotionMagicAcceleration(160)      // Target acceleration of 160 rps/s (0.5 seconds)
                 .withMotionMagicJerk(1600)               // Target jerk of 1600 rps/s/s (0.1 seconds))    
 
-            );
+        ).withFeedback(
+            new FeedbackConfigs()
+                .withFeedbackRemoteSensorID(kShooterEncoderID)
+                .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder)
+                .withSensorToMechanismRatio(1.0)
+                .withRotorToSensorRatio(1.0)
+        );
+        
     public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
         .withMagnetSensor(
             new MagnetSensorConfigs()

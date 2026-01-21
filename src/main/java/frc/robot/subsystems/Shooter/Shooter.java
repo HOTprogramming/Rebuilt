@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +31,16 @@ public class Shooter extends SubsystemBase {
 
 //Constructor for Shooter Object
     public Shooter() {
+      NetworkTableInstance instance = NetworkTableInstance.getDefault();
+
+      NetworkTable table = instance.getTable("HOT/Shooter");
+      
+      shooterPosition = table.getDoubleTopic("Velocity (RPS)").publish();
+      shooterVelocity = table.getDoubleTopic("Position-Motor (ROT)").publish();
+      shooterAppliedVolts = table.getDoubleTopic("Applied Volts").publish();
+      shooterSupplyCurrent = table.getDoubleTopic("Supply Current").publish();
+      shooterTorqueCurrent = table.getDoubleTopic("Torque Current").publish();
+      shooterTemp = table.getDoubleTopic("Motor Temp").publish();
     }
 
     private void setShooterSpeed(int shooterSpeed) {

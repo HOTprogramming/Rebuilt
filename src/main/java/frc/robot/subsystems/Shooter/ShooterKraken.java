@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.sim.PhysicsSim;
+import frc.robot.sim.PhysicsSimWithCan;
 import frc.robot.subsystems.Shooter.Shooter.shooterStats;
 
 public class ShooterKraken {
@@ -36,7 +37,7 @@ public class ShooterKraken {
     *     2-means run Motion Magic Voltage Control Mode  
     *     3-means run Motion Magic Torque Control mode  
     *****************************************************************/           
-  private int controlMode = 3; 
+  private int controlMode = 1; 
   
   // Hardware
   private TalonFX m_talonFX = new TalonFX(ShooterConstants.kMotorID, ShooterConstants.canbus);
@@ -95,11 +96,12 @@ public class ShooterKraken {
 
     /* Optimize out the other signals, since they're not useful */
     m_talonFX.optimizeBusUtilization();
+    m_canCoder.optimizeBusUtilization();
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
       isSimulation = true; 
-      PhysicsSim.getInstance().addTalonFX(m_talonFX, m_canCoder, 1.0, 0.001);
+      PhysicsSimWithCan.getInstance().addTalonFX(m_talonFX, m_canCoder, 1.0, 0.001);
     }
   }
 
