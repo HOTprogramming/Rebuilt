@@ -110,7 +110,9 @@ public class Intake extends SubsystemBase{
         RRollerAppliedVolts.set(roundTo1Decimal(ioStats.RRollerAppliedVolts));
         RRollerTemp.set(roundTo1Decimal(ioStats.RRollerTempCelsius));
     }
-
+    private void rollerStop() {
+        mIntakeKraken.stop();
+    }
     private void setLeftRollerSpeed(double speed) { 
         mIntakeKraken.runVelocity(speed,1);
     }
@@ -187,14 +189,14 @@ public class Intake extends SubsystemBase{
     public Command turnOffLeftIntake() {
         return runOnce(() ->
         {
-            setLeftRollerSpeed(0.0);
+            rollerStop();
         });
     }
 
     public Command turnOffRightIntake() {
         return runOnce(() ->
         {
-            setRightRollerSpeed(0.0);
+            rollerStop();
         });
     }
 

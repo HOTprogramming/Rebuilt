@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Intake;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -10,6 +12,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
 import frc.robot.Constants;
 
 public class IntakeConstants {
@@ -28,7 +32,7 @@ public class IntakeConstants {
     public static int kIntakeMotorIDRExtend = 16;
     public static int kIntakeMotorIDLRoller = 17;
     public static int kIntakeMotorIDRRoller = 18;
-
+    public static double kEncoderOffset = -0.072266;
     public static String kBusName = "sim";
 
     public static final TalonFXConfiguration LeftRollerConfigs = new TalonFXConfiguration()
@@ -214,6 +218,19 @@ public class IntakeConstants {
                 .withMotionMagicExpo_kV(0.12)          // kV is around 0.12 V/rps
                 .withMotionMagicExpo_kA(0.1)          // Use a slower kA of 0.1 V/(rps/s)
             );
+
+        public static final CANcoderConfiguration LeftIntakeEncoderConfigs = new CANcoderConfiguration() 
+        .withMagnetSensor(
+            new MagnetSensorConfigs()
+                .withMagnetOffset(kEncoderOffset)    //The offset applied to the absolute integrated rotor sensor.
+                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+        );
+        public static final CANcoderConfiguration RightIntakeEncoderConfigs = new CANcoderConfiguration() 
+        .withMagnetSensor(
+            new MagnetSensorConfigs()
+                .withMagnetOffset(kEncoderOffset)    //The offset applied to the absolute integrated rotor sensor.
+                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+        );
     
              public static final IntakeConfigs IntakeConfigs =
         switch (Constants.getRobot()) {
@@ -221,43 +238,57 @@ public class IntakeConstants {
              LeftRollerConfigs,
              RightRollerConfigs,
              LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs 
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
             );
             case SIMBOT -> new IntakeConfigs(
              LeftRollerConfigs,
              RightRollerConfigs,
              LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
             );
             case DEVBOT -> new IntakeConfigs(
              LeftRollerConfigs,
              RightRollerConfigs,
              LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs 
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
             );
             case CAMERABOT -> new IntakeConfigs( 
              LeftRollerConfigs,
              RightRollerConfigs,
              LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
             );
             case COMP24 -> new IntakeConfigs(
              LeftRollerConfigs,
              RightRollerConfigs,
              LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs 
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
             );
             case COMP25 -> new IntakeConfigs(
              LeftRollerConfigs,
              RightRollerConfigs,
              LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs 
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
             );
             case MINIBOT -> new IntakeConfigs(
              LeftRollerConfigs,
              RightRollerConfigs,
              LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs 
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
             );
         };
 
@@ -265,6 +296,8 @@ public class IntakeConstants {
             TalonFXConfiguration LeftRollerConfigs,
             TalonFXConfiguration RightRollerConfigs,
             TalonFXConfiguration LeftIntakeExtendConfigs,
-            TalonFXConfiguration RightIntakeExtendConfigs
+            TalonFXConfiguration RightIntakeExtendConfigs,
+            CANcoderConfiguration RightIntakeEncoderConfigs,
+            CANcoderConfiguration LeftIntakeEncoderConfigs 
         ) {}
 }

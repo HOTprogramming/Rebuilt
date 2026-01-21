@@ -340,4 +340,8 @@ public class IntakeKraken {
         }
       }
    }
+   public void stop(){
+        m_LRoller.setControl(m_brake);
+        m_RRoller.setControl(m_brake);
+    }
   }
