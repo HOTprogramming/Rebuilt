@@ -60,7 +60,7 @@ public class ClimberKraken {
     private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
     private final MotionMagicExpoVoltage m_mmExpoVoltage = new MotionMagicExpoVoltage(0).withSlot(2);
     private final MotionMagicExpoTorqueCurrentFOC m_mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0).withSlot(1);
-
+    private final MotionMagicExpoTorqueCurrentFOC m_mmspinExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0).withSlot(2);
 
     private final NeutralOut m_brake = new NeutralOut();   /* Keep a neutral out so we can disable the motor */
 
@@ -123,6 +123,7 @@ public class ClimberKraken {
             m_talonFX.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
         case 3:      /* Use Motion Magic Position Torque */
             m_talonFX.setControl(m_mmExpoTorque.withPosition(desiredRotations));
+            m_talonFX2.setControl(m_mmspinExpoTorque.withPosition(desiredRotations));
         }
     }
 
@@ -143,12 +144,12 @@ public class ClimberKraken {
         climberSupplyCurrent = m_talonFX.getSupplyCurrent();
         climberTorqueCurrent = m_talonFX.getTorqueCurrent();
         climberTempCelsius = m_talonFX.getDeviceTemp();
-        spinnerPosition = m_talonFX.getPosition();
-        spinnerVelocity = m_talonFX.getVelocity();
-        spinnerAppliedVolts = m_talonFX.getMotorVoltage();
-        spinnerSupplyCurrent = m_talonFX.getSupplyCurrent();
-        spinnerTorqueCurrent = m_talonFX.getTorqueCurrent();
-        spinnerTempCelsius = m_talonFX.getDeviceTemp();
+        spinnerPosition = m_talonFX2.getPosition();
+        spinnerVelocity = m_talonFX2.getVelocity();
+        spinnerAppliedVolts = m_talonFX2.getMotorVoltage();
+        spinnerSupplyCurrent = m_talonFX2.getSupplyCurrent();
+        spinnerTorqueCurrent = m_talonFX2.getTorqueCurrent();
+        spinnerTempCelsius = m_talonFX2.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -167,10 +168,12 @@ public class ClimberKraken {
     );
     
     m_talonFX.optimizeBusUtilization();
+    m_talonFX2.optimizeBusUtilization();
 
     if(Utils.isSimulation()){
         isSimulation = true;
         PhysicsSim.getInstance().addTalonFX(m_talonFX, 0.01);
+        PhysicsSim.getInstance().addTalonFX(m_talonFX2, 0.01);
         }
 
     }
