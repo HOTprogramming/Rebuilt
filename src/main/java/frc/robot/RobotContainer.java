@@ -8,6 +8,9 @@ import org.json.simple.parser.ParseException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,6 +57,12 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
+
+      driver.rightTrigger().whileTrue(drivetrain.run(()->
+      drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+          new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
+      );
 
       NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
       NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
