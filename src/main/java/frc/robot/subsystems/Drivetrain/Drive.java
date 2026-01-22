@@ -252,6 +252,7 @@ public class Drive extends SubsystemBase {
         return false;
     }
 
+
     public Command generateOnTheFly() {
         return runOnce(() -> {
             List<Pose2d> currentPathPoses = pathGroup.get(currentPathIndex).getPathPoses();
@@ -343,7 +344,7 @@ public class Drive extends SubsystemBase {
      }
  
      public void facePoint(double driveX, double driveY, Pose2d point) {
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
+        driveKraken.setSwerveRequest(ROBOT_CENTRIC
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
