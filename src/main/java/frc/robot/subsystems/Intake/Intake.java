@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Intake;
 
-import java.security.Key;
-
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
