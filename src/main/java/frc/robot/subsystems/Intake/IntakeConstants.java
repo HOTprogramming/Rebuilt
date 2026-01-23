@@ -2,6 +2,7 @@ package frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -10,6 +11,7 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -23,9 +25,10 @@ public class IntakeConstants {
     public static double kRightRetractPosition = 0.0;
 
     public static double kLeftExpel = -1000.0;
-    public static int kLeftExpelEncoderID;
     public static double kRightExpel = -1000.0;
-    public static int kRightExpelEncoderID;
+
+    public static int kLeftIntakeEncoderID = 20;
+    public static int kRightIntakeEncoderID = 21;
 
     public static double kLeftIntake = 2000.0;
     public static double kRightIntake = 2000.0;
@@ -177,6 +180,12 @@ public class IntakeConstants {
                 .withMotionMagicCruiseVelocity(0.0)   // Unlimited cruise velocity
                 .withMotionMagicExpo_kV(0.12)          // kV is around 0.12 V/rps
                 .withMotionMagicExpo_kA(0.1)          // Use a slower kA of 0.1 V/(rps/s)
+         ).withFeedback(
+            new FeedbackConfigs() 
+                .withFeedbackRemoteSensorID(kLeftIntakeEncoderID)        
+                .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
+                .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
+                .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
 
             public static final TalonFXConfiguration RightIntakeExtendConfigs = new TalonFXConfiguration()
@@ -219,6 +228,12 @@ public class IntakeConstants {
                 .withMotionMagicCruiseVelocity(0.0)   // Unlimited cruise velocity
                 .withMotionMagicExpo_kV(0.12)          // kV is around 0.12 V/rps
                 .withMotionMagicExpo_kA(0.1)          // Use a slower kA of 0.1 V/(rps/s)
+        ).withFeedback(
+            new FeedbackConfigs() 
+                .withFeedbackRemoteSensorID(kRightIntakeEncoderID)        
+                .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
+                .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
+                .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
 
         public static final CANcoderConfiguration LeftIntakeEncoderConfigs = new CANcoderConfiguration() 
