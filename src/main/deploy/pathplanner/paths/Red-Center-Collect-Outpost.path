@@ -1,0 +1,84 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 13.106,
+        "y": 4.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 13.483917679341667,
+        "y": 5.133749662441164
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 14.401,
+        "y": 7.223
+      },
+      "prevControl": {
+        "x": 13.77229467061702,
+        "y": 6.976980091615843
+      },
+      "nextControl": {
+        "x": 14.635920565132844,
+        "y": 7.314927224425245
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 15.91,
+        "y": 7.365
+      },
+      "prevControl": {
+        "x": 15.53490999014736,
+        "y": 7.376466588956873
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Red Side Outpost Pickup"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.937163375224415,
+      "maxWaypointRelativePos": 1.149012567324961,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Red-Center",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

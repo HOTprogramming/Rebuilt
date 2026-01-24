@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.896486486486487,
+        "y": 2.5539752252252255
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.151621245217327,
+        "y": 2.5664950878203596
+      },
+      "isLocked": false,
+      "linkedName": "Shoot (Blue Outpost Side)"
+    },
+    {
+      "anchor": {
+        "x": 1.0385135135135142,
+        "y": 2.5539752252252255
+      },
+      "prevControl": {
+        "x": 1.3959242422756941,
+        "y": 2.557134740206611
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Blue-Any",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 28.810793742973022
+  },
+  "useDefaultConstraints": true
+}

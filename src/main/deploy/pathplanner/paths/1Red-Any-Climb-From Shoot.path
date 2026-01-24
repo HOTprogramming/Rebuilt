@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 14.514,
+        "y": 5.446
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 15.258865230273162,
+        "y": 5.433479483218642
+      },
+      "isLocked": false,
+      "linkedName": "Shoot (Red Outpost Side)"
+    },
+    {
+      "anchor": {
+        "x": 15.371,
+        "y": 5.446
+      },
+      "prevControl": {
+        "x": 15.013589244662189,
+        "y": 5.442843492739604
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Red-Any",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -151.189
+  },
+  "useDefaultConstraints": true
+}

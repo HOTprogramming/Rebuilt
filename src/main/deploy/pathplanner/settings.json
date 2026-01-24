@@ -3,14 +3,14 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Blue-Any",
-    "Blue-Center",
     "Blue-Left",
     "Blue-Right",
+    "Blue-Any",
+    "Blue-Center",
+    "Red-Left",
     "Red-Right",
-    "Red-Center",
     "Red-Any",
-    "Red-Left"
+    "Red-Center"
   ],
   "autoFolders": [
     "Blue Autos",
@@ -40,5 +40,10 @@
   "brModuleY": -0.273,
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
-  "robotFeatures": []
+  "robotFeatures": [
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.1,\"y\":0.0},\"end\":{\"x\":0.25,\"y\":0.0},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.25,\"y\":0.0},\"end\":{\"x\":0.2,\"y\":0.05},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.25,\"y\":0.0},\"end\":{\"x\":0.2,\"y\":-0.05},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Circle\",\"type\":\"circle\",\"data\":{\"center\":{\"x\":0.245,\"y\":0.0},\"radius\":0.005,\"strokeWidth\":0.02,\"filled\":false}}"
+  ]
 }
