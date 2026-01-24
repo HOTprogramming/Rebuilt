@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Collect Right Blue"
+            "pathName": "Blue-Right-Collect-Half Neutral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Ramp to Shoot Right Blue"
+            "pathName": "Blue-Right-Shoot-Ramp From Neutral"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CLIMBE Right Blue"
+            "pathName": "Blue-Any-Climb-From Shoot"
           }
         }
       ]
