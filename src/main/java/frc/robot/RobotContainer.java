@@ -25,17 +25,17 @@ import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
 
-  private SendableChooser<String> chooser = new SendableChooser<>();
+  SendableChooser<String> SideColor = new SendableChooser<>();
+  SendableChooser<String> Autos = new SendableChooser<>();
   private Command autoCommand;
   private String autoString;
+
+  Optional<Alliance> Ally = DriverStation.getAlliance();
 
   private Drive drivetrain;
   
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  
-  SendableChooser<String> SideColor = new SendableChooser<>();
-  SendableChooser<String> Autos = new SendableChooser<>();
 
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
@@ -53,9 +53,22 @@ public class RobotContainer {
     Autos.addOption("Left-Scatter-Neutral", "Left-Scatter-Neutral");
     SmartDashboard.putData("Autos",Autos);
 
-    SideColor.setDefaultOption("None","None");
-    SideColor.addOption("Red","Red");
-    SideColor.addOption("Blue","Blue");
+    if (Ally.isPresent()) {
+      Alliance Al = Ally.get();
+      if (Al == Alliance.Red) {
+        SideColor.addOption("None","None");
+        SideColor.setDefaultOption("Red","Red");
+        SideColor.addOption("Blue","Blue");
+      } else {
+        SideColor.addOption("None","None");
+        SideColor.addOption("Red","Red");
+        SideColor.setDefaultOption("Blue","Blue");
+      }
+    } else  {
+      SideColor.setDefaultOption("None","None");
+      SideColor.addOption("Red","Red");
+      SideColor.addOption("Blue","Blue");
+    }
     SmartDashboard.putData("Side Color",SideColor);
 
     configureBindings();
