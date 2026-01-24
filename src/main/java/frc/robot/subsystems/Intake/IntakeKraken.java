@@ -22,7 +22,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.sim.PhysicsSim;
-import frc.robot.subsystems.Intake.Intake.IntakeStats;
+
 
 public class IntakeKraken {
   // Hardware
@@ -86,8 +86,8 @@ public class IntakeKraken {
     *     2-means run Motion Magic Voltage Control Mode  
     *     3-means run Motion Magic Torque Control mode  
     *****************************************************************/           
-  private int controlPos = 3; 
-  private int controlVel = 3;
+  private int controlPos = 0; 
+  private int controlVel = 0;
   private StatusCode statuscode = null;
 
   public IntakeKraken(){
@@ -97,30 +97,30 @@ public class IntakeKraken {
     // Apply Configuration from Intake Constants to motor 
     statuscode = m_LExtend.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftIntakeExtendConfigs(), 1.0); 
     if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Intake shooter Motor ");
+      System.out.println("Configuration Failed on Left Extend shooter Motor ");
     } 
     statuscode = m_RExtend.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightIntakeExtendConfigs(), 1.0); 
     if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Intake shooter Motor ");
+      System.out.println("Configuration Failed on Right Extend shooter Motor ");
     } 
     statuscode = m_LRoller.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftRollerConfigs(), 1.0); 
     if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Intake shooter Motor ");
+      System.out.println("Configuration Failed on Left Roller shooter Motor ");
     } 
     statuscode = m_RRoller.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightRollerConfigs(), 1.0); 
     if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Intake shooter Motor ");
+      System.out.println("Configuration Failed on Right Roller shooter Motor ");
     } 
-    statuscode = m_LeftCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftIntakeEncoderConfigs(),1.0);
+    //statuscode = m_LeftCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftIntakeEncoderConfigs(),1.0);
 
-    if (!statuscode.isOK()) {
-      System.out.println("Configuration Failed on LeftIntake CanCoder");
-    }
-    statuscode = m_RightCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightIntakeEncoderConfigs(),1.0);
+    //if (!statuscode.isOK()) {
+      //System.out.println("Configuration Failed on LeftIntake CanCoder");
+    //}
+    //statuscode = m_RightCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightIntakeEncoderConfigs(),1.0);
 
-    if (!statuscode.isOK()) {
-      System.out.println("Configuration Failed on RightIntake CanCoder");
-    }
+    //if (!statuscode.isOK()) {
+     // System.out.println("Configuration Failed on RightIntake CanCoder");
+    //}
 
     // Set signals
     LeftIntakePosition = m_LExtend.getPosition();
@@ -249,14 +249,16 @@ public class IntakeKraken {
     stats.LExtendSupplyCurrentAmps = LeftIntakeSupplyCurrent.getValueAsDouble();
     stats.LExtendTorqueCurrentAmps = LeftIntakeTorqueCurrent.getValueAsDouble();
     stats.LExtendTempCelsius = LeftIntakeTempCelsius.getValueAsDouble();
-    stats.LeftIntakeEncoderPosition = 
-    stats.LeftIntakeEncoderVelocity = 
+    stats.LeftIntakeEncoderPosition = LeftIntakeEncoderPosition.getValueAsDouble();
+    stats.LeftIntakeEncoderVelocity = LeftIntakeEncoderVelocity.getValueAsDouble();
     stats.RExtendPositionRads = RightIntakePosition.getValueAsDouble();
     stats.RExtendVelocityRpm = RightIntakeVelocity.getValueAsDouble();
     stats.RExtendAppliedVolts = RightIntakeAppliedVolts.getValueAsDouble();
     stats.RExtendSupplyCurrentAmps = RightIntakeSupplyCurrent.getValueAsDouble();
     stats.RExtendTorqueCurrentAmps = RightIntakeTorqueCurrent.getValueAsDouble();
     stats.RExtendTempCelsius = RightIntakeTempCelsius.getValueAsDouble();
+    stats.RightIntakeEncoderPosition = RightIntakeEncoderPosition.getValueAsDouble();
+    stats.RightIntakeEncoderVelocity = RightIntakeEncoderVelocity.getValueAsDouble();
     stats.LRollerPositionRads = LeftRollerPosition.getValueAsDouble();
     stats.LRollerVelocityRpm = LeftRollerVelocity.getValueAsDouble();
     stats.LRollerAppliedVolts = LeftRollerAppliedVolts.getValueAsDouble();

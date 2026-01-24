@@ -64,12 +64,8 @@ public class RobotContainer {
 
       driver.a().whileTrue(m_intake.extendLeftIntake()).whileFalse(m_intake.retractLeftIntake());
       driver.b().whileTrue(m_intake.extendRightIntake()).whileFalse(m_intake.retractRightIntake());
-      driver.x().whileTrue(m_intake.turnOnLeftIntake()).whileFalse(m_intake.turnOffLeftIntake());
-      driver.y().whileTrue(m_intake.turnOnRightIntake()).whileFalse(m_intake.turnOffRightIntake());
-      driver.leftBumper().toggleOnTrue(m_intake.expelLeftIntake()).toggleOnFalse(m_intake.turnOffLeftExpel());
-      driver.rightBumper().toggleOnTrue(m_intake.expelRightIntake()).toggleOnFalse(m_intake.turnOffRightExpel());
-      
-
+      driver.leftBumper().whileTrue(m_intake.expelLeftIntake()).whileFalse(m_intake.turnOffLeftExpel());
+      driver.rightBumper().whileTrue(m_intake.expelRightIntake()).whileFalse(m_intake.turnOffRightExpel());
   }
 
   public void updateAutonCommand() throws ParseException {

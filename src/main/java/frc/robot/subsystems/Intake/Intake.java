@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.Set;
+
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -111,6 +113,7 @@ public class Intake extends SubsystemBase{
     private void rollerStop() {
         mIntakeKraken.stop();
     }
+
     private void setLeftRollerSpeed(double speed) { 
         mIntakeKraken.runVelocity(speed,1);
     }
@@ -136,17 +139,20 @@ public class Intake extends SubsystemBase{
         return runOnce(() ->
         {
             setLeftIntakePosition(IntakeConstants.kLeftDeployedPosition);
+            setLeftRollerSpeed(IntakeConstants.kLeftIntake);
         });
     }
      public Command retractLeftIntake() {
         return runOnce(() ->
         {
             setLeftIntakePosition(IntakeConstants.kLeftRetractPosition);
+            rollerStop();
         });
     }
     public Command expelLeftIntake() {
         return runOnce(() ->
           {
+            setLeftIntakePosition(IntakeConstants.kLeftDeployedPosition);
             setLeftRollerSpeed(IntakeConstants.kLeftExpel);
         });
     } 
@@ -154,6 +160,7 @@ public class Intake extends SubsystemBase{
     public Command expelRightIntake() {
         return runOnce(() ->
           {
+            setRightIntakePosition(IntakeConstants.kRightDeployedPosition);
             setRightRollerSpeed(IntakeConstants.kRightExpel);
         });
     }
@@ -161,39 +168,12 @@ public class Intake extends SubsystemBase{
     public Command turnOffLeftExpel() {
         return runOnce(() ->
           {
-            setLeftRollerSpeed(0.0);
+            rollerStop();
         });
     }
     public Command turnOffRightExpel() {
         return runOnce(() ->
           {
-            setRightRollerSpeed(0.0);
-        });
-    }
-    public Command turnOnLeftIntake() {
-        return runOnce(() ->
-        {
-            setLeftRollerSpeed(IntakeConstants.kLeftIntake);
-        });
-    }
-
-    public Command turnOnRightIntake() {
-        return runOnce(() ->
-        {
-            setLeftRollerSpeed(IntakeConstants.kRightIntake);
-        });
-    }
-
-    public Command turnOffLeftIntake() {
-        return runOnce(() ->
-        {
-            rollerStop();
-        });
-    }
-
-    public Command turnOffRightIntake() {
-        return runOnce(() ->
-        {
             rollerStop();
         });
     }
@@ -202,6 +182,7 @@ public class Intake extends SubsystemBase{
         return runOnce(() ->
         {
             setRightIntakePosition(IntakeConstants.kRightDeployedPosition);
+            setRightRollerSpeed(IntakeConstants.kRightIntake);
         });
     }
 
@@ -209,8 +190,11 @@ public class Intake extends SubsystemBase{
         return runOnce(() ->
         {
             setRightIntakePosition(IntakeConstants.kRightRetractPosition);
+            rollerStop();
         }); 
     }
+}
+
     
    
 
@@ -249,6 +233,9 @@ public class Intake extends SubsystemBase{
     public double RRollerAppliedVolts = 0.0;
     public double RRollerSupplyCurrentAmps = 0.0;
     public double RRollerTorqueCurrentAmps = 0.0;
-    public double RRollerTempCelsius = 0.0;      
-}
+    public double RRollerTempCelsius = 0.0;
+    public double LeftIntakeEncoderVelocity;
+    public double LeftIntakeEncoderPosition;
+    public double RightIntakeEncoderPosition;
+    public double RightIntakeEncoderVelocity;      
 }
