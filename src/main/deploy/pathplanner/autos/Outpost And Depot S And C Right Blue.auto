@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go To Outpost Right Blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go To Depot Right Blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go To Shoot Right Blue"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go To Climb Blue"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Blue Autos",
+  "choreoAuto": false
+}

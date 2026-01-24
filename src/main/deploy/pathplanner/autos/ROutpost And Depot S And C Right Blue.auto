@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RGo To Outpost Right Blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RGo To Depot Right Blue"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RGo To Shoot Right Blue"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RGo To Climb Blue"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Red Autos",
+  "choreoAuto": false
+}
