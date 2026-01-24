@@ -7,10 +7,10 @@
     "Blue-Center",
     "Blue-Left",
     "Blue-Right",
-    "Red-Any",
+    "Red-Right",
     "Red-Center",
-    "Red-Left",
-    "Red-Right"
+    "Red-Any",
+    "Red-Left"
   ],
   "autoFolders": [
     "Blue Autos",

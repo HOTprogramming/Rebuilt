@@ -8,6 +8,9 @@ import org.json.simple.parser.ParseException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +38,10 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     chooser.addOption("Test", "Test");
+    chooser.addOption("Blue-Left-Shoot&Climb-Ramp From Neutral", "Blue-Left-Shoot&Climb-Ramp From Neutral");
+    chooser.addOption("Blue-Right-Shoot&Climb-Ramp From Neutral", "Blue-Right-Shoot&Climb-Ramp From Neutral");
+    chooser.addOption("Red-Left-Shoot&Climb-Ramp From Neutral", "Red-Left-Shoot&Climb-Ramp From Neutral");
+    chooser.addOption("Red-Right-Shoot&Climb-Ramp From Neutral", "Red-Right-Shoot&Climb-Ramp From Neutral");    
     chooser.addOption("Blue-Left-Shoot&Climb-Depot&Outpost","Blue-Left-Shoot&Climb-Depot&Outpost");
     chooser.addOption("Blue-Right-Shoot&Climb-Outpost&Depot","Blue-Right-Shoot&Climb-Outpost&Depot");
     chooser.addOption("Red-Left-Shoot&Climb-Depot&Outpost","Red-Left-Shoot&Climb-Depot&Outpost");
@@ -54,6 +61,12 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
+
+      driver.rightTrigger().whileTrue(drivetrain.run(()->
+      drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+          new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
+      );
 
       NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
       NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
