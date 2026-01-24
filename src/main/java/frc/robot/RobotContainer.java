@@ -48,14 +48,13 @@ public class RobotContainer {
     Autos.addOption("Test", "Test");
     SmartDashboard.putData("Autos",Autos);
     
-    if (Ally.isPresent()) {
+    if (Ally.isPresent()) {//DON'T TOUCH ANY OF THIS IF STATEMENT OR I WILL FIND YOU
       Alliance Al = Ally.get();
+      SideColor.addOption("None","None");
       if (Al == Alliance.Red) {
-        SideColor.addOption("None","None");
         SideColor.setDefaultOption("Red","Red");
         SideColor.addOption("Blue","Blue");
       } else {
-        SideColor.addOption("None","None");
         SideColor.addOption("Red","Red");
         SideColor.setDefaultOption("Blue","Blue");
       }
