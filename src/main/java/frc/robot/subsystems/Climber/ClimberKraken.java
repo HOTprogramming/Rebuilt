@@ -30,7 +30,6 @@ public class ClimberKraken {
     private TalonFX m_talonFX = new TalonFX(ClimberConstants.kClimbermotorID, canbus);
     private TalonFX m_talonFX2 = new TalonFX(ClimberConstants.kClimberspinnerID, canbus);
     private static ClimberKraken instance = null;
-    private double getAppliedVolts = 0.0;
     private boolean isSimulation = false;
 
     private final StatusSignal<Angle> climberPosition;
@@ -56,7 +55,7 @@ public class ClimberKraken {
       
     //Control 
     private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
-    private final PositionVoltage m_spinpositionVoltage = new PositionVoltage(0).withSlot(0);
+    private final PositionVoltage m_spinpositionVoltage = new PositionVoltage(0).withSlot(1);
     private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
     private final MotionMagicExpoVoltage m_mmExpoVoltage = new MotionMagicExpoVoltage(0).withSlot(2);
     private final MotionMagicExpoTorqueCurrentFOC m_mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0).withSlot(1);
@@ -112,22 +111,29 @@ public class ClimberKraken {
     *     2-means run Motion Magic Expo Voltage Control Mode  
     *     3-means run Motion Magic Expo Torque Control mode  
     ***************************************************************************/
+    
     public void runPosition(double desiredRotations) {      
         switch (controlMode) {
         case 0:      /* Use Position Voltage */
             m_talonFX.setControl(m_positionVoltage.withPosition(desiredRotations));
-            m_talonFX2.setControl(m_spinpositionVoltage.withPosition(desiredRotations));
         case 1:      /* Use Position Torque */
             m_talonFX.setControl(m_positionTorque.withPosition(desiredRotations));
         case 2:      /* Use Motion Magic Position Voltage */
             m_talonFX.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
         case 3:      /* Use Motion Magic Position Torque */
             m_talonFX.setControl(m_mmExpoTorque.withPosition(desiredRotations));
-            m_talonFX2.setControl(m_mmspinExpoTorque.withPosition(desiredRotations));
+        }
+    }
+    public void spinrunPosition(double desiredRotations) {
+        switch (controlMode) {
+            case 0:
+                m_talonFX2.setControl(m_spinpositionVoltage.withPosition(desiredRotations));
+            case 3:
+                m_talonFX2.setControl(m_mmspinExpoTorque.withPosition(desiredRotations));
         }
     }
 
-    
+
     public ClimberKraken() {
         StatusCode statuscode = m_talonFX.getConfigurator().apply(ClimberConstants.ClimberConfigs.climberWheelConfigs(), 1.0); 
         StatusCode statuscode2 = m_talonFX2.getConfigurator().apply(ClimberConstants.ClimberConfigs.climberWheelConfigs(), 1.0);

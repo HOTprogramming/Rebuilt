@@ -50,12 +50,12 @@ public class Climber extends SubsystemBase {
 
         NetworkTable table = inst.getTable("HOT/Climber");
 
-        climberVelocity = table.getDoubleTopic("velocity").publish();
-        climberPosition = table.getDoubleTopic("Position-Motor").publish();
-        climberSupplyCurrent = table.getDoubleTopic("Supply Current").publish();
-        climberTorqueCurrent = table.getDoubleTopic("Torque Current").publish();
-        climberTemp = table.getDoubleTopic("Motor Temp").publish();
-        climberAppliedVolts = table.getDoubleTopic("Applied Volts").publish();
+        climberVelocity = table.getDoubleTopic("Deploy Velocity").publish();
+        climberPosition = table.getDoubleTopic("Deploy Position-Motor").publish();
+        climberSupplyCurrent = table.getDoubleTopic("Deploy Supply Current").publish();
+        climberTorqueCurrent = table.getDoubleTopic("Deploy Torque Current").publish();
+        climberTemp = table.getDoubleTopic("Deploy Motor Temp").publish();
+        climberAppliedVolts = table.getDoubleTopic("Deploy Applied Volts").publish();
         spinnerVelocity = table.getDoubleTopic("spin velocity").publish();
         spinnerPosition = table.getDoubleTopic("spin Position-Motor").publish();
         spinnerSupplyCurrent = table.getDoubleTopic("spin Supply Current").publish();
@@ -88,7 +88,9 @@ public void periodic() {
     private void runPosition(double targetPos){
         m_ClimbKraken.runPosition(targetPos);
     }
-
+    private void spinrunPosition(double targetPos){
+        m_ClimbKraken.spinrunPosition(targetPos);
+    }
 
     public Command deployCommand() {
         return runOnce( () -> runPosition(ClimberConstants.deployPosition));
@@ -99,6 +101,9 @@ public void periodic() {
     }
 
     public Command rotateCommand() {
-        return runOnce ( () -> runPosition(ClimberConstants.spinPosition));
+        return runOnce ( () -> spinrunPosition(ClimberConstants.spinPosition));
+    }
+    public Command spinhomeCommand() {
+        return runOnce ( () -> spinrunPosition(ClimberConstants.spinhomePosition));
     }
 }
