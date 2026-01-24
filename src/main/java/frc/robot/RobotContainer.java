@@ -4,6 +4,8 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.util.Optional;
+
 import org.json.simple.parser.ParseException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -11,6 +13,8 @@ import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,31 +33,42 @@ public class RobotContainer {
   
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  
+  SendableChooser<String> BlueAutos = new SendableChooser<>();
+  SendableChooser<String> RedAutos = new SendableChooser<>();
+  SendableChooser<String> SideColor = new SendableChooser<>();
 
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
     drivetrain = new Drive(new DriveKraken());
 
-    chooser.setDefaultOption("Auto", "Auto");
-    chooser.addOption("Test", "Test");
-    chooser.addOption("Blue-Left-Shoot&Climb-Ramp From Neutral", "Blue-Left-Shoot&Climb-Ramp From Neutral");
-    chooser.addOption("Blue-Right-Shoot&Climb-Ramp From Neutral", "Blue-Right-Shoot&Climb-Ramp From Neutral");
-    chooser.addOption("Red-Left-Shoot&Climb-Ramp From Neutral", "Red-Left-Shoot&Climb-Ramp From Neutral");
-    chooser.addOption("Red-Right-Shoot&Climb-Ramp From Neutral", "Red-Right-Shoot&Climb-Ramp From Neutral");    
-    chooser.addOption("Blue-Left-Shoot&Climb-Depot&Outpost","Blue-Left-Shoot&Climb-Depot&Outpost");
-    chooser.addOption("Blue-Right-Shoot&Climb-Outpost&Depot","Blue-Right-Shoot&Climb-Outpost&Depot");
-    chooser.addOption("Red-Left-Shoot&Climb-Depot&Outpost","Red-Left-Shoot&Climb-Depot&Outpost");
-    chooser.addOption("Red-Right-Shoot&Climb-Outpost&Depot","Red-Right-Shoot&Climb-Outpost&Depot");
-    chooser.addOption("Blue-Center-Shoot&Climb-Outpost", "Blue-Center-Shoot&Climb-Outpost");
-    chooser.addOption("Red-Center-Shoot&Climb-Outpost", "Red-Center-Shoot&Climb-Outpost");
-    chooser.addOption("Blue-Right-Scatter-Neutral", "Blue-Right-Scatter-Neutral");
-    chooser.addOption("Blue-Left-Scatter-Neutral", "Blue-Left-Scatter-Neutral");
-    chooser.addOption("Red-Right-Scatter-Neutral", "Red-Right-Scatter-Neutral");
-    chooser.addOption("Red-Left-Scatter-Neutral", "Red-Left-Scatter-Neutral");
+    
 
-    SmartDashboard.putData(chooser);
+    BlueAutos.setDefaultOption("Auto", "Auto");
+    BlueAutos.addOption("Test", "Test");
+    BlueAutos.addOption("Blue-Left-Shoot&Climb-Ramp From Neutral", "Blue-Left-Shoot&Climb-Ramp From Neutral");
+    BlueAutos.addOption("Blue-Right-Shoot&Climb-Ramp From Neutral", "Blue-Right-Shoot&Climb-Ramp From Neutral");  
+    BlueAutos.addOption("Blue-Left-Shoot&Climb-Depot&Outpost","Blue-Left-Shoot&Climb-Depot&Outpost");
+    BlueAutos.addOption("Blue-Right-Shoot&Climb-Outpost&Depot","Blue-Right-Shoot&Climb-Outpost&Depot");
+    BlueAutos.addOption("Blue-Center-Shoot&Climb-Outpost", "Blue-Center-Shoot&Climb-Outpost");
+    BlueAutos.addOption("Blue-Right-Scatter-Neutral", "Blue-Right-Scatter-Neutral");
+    BlueAutos.addOption("Blue-Left-Scatter-Neutral", "Blue-Left-Scatter-Neutral");
+    SmartDashboard.putData("Blue Autos",BlueAutos);
+    
+    RedAutos.setDefaultOption("Auto", "Auto");
+    RedAutos.addOption("Test", "Test");
+    RedAutos.addOption("Red-Left-Shoot&Climb-Ramp From Neutral", "Red-Left-Shoot&Climb-Ramp From Neutral");
+    RedAutos.addOption("Red-Right-Shoot&Climb-Ramp From Neutral", "Red-Right-Shoot&Climb-Ramp From Neutral");
+    RedAutos.addOption("Red-Left-Shoot&Climb-Depot&Outpost","Red-Left-Shoot&Climb-Depot&Outpost");
+    RedAutos.addOption("Red-Right-Shoot&Climb-Outpost&Depot","Red-Right-Shoot&Climb-Outpost&Depot"); 
+    RedAutos.addOption("Red-Center-Shoot&Climb-Outpost", "Red-Center-Shoot&Climb-Outpost");
+    RedAutos.addOption("Red-Right-Scatter-Neutral", "Red-Right-Scatter-Neutral");
+    RedAutos.addOption("Red-Left-Scatter-Neutral", "Red-Left-Scatter-Neutral");
+    SmartDashboard.putData("Red Autos",RedAutos);
+
+    SideColor.setDefaultOption("Red","Red");
+    SideColor.addOption("Blue","Blue");
+    SmartDashboard.putData("Side Color",SideColor);
 
     configureBindings();
   }
@@ -82,9 +97,13 @@ public class RobotContainer {
   }
 
   public void updateAutonCommand() {
+    String BlueSelect = BlueAutos.getSelected();
+    String RedSelect = RedAutos.getSelected();
+    String ColorSelect = SideColor.getSelected();
     if (autoString != null) {
-      if (chooser.getSelected() != autoString) {
-        autoString = chooser.getSelected();
+      if (ColorSelect == "Red") {
+        if (RedSelect != autoString) {
+        autoString = RedSelect;
         autoCommand = new PathPlannerAuto(autoString);
         try {
           drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
@@ -96,8 +115,27 @@ public class RobotContainer {
           System.err.println("no auto Paths: " + e.toString());
         }
       }
+      } else {
+        if (BlueSelect != autoString) {
+        autoString = BlueSelect;
+        autoCommand = new PathPlannerAuto(autoString);
+        try {
+          drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
+        } catch (IOException e) {
+          System.err.println("No Auto File: " + e.toString());
+        } catch (ParseException e) {
+          System.err.println("idk good luck: " + e.toString());
+        } catch (IndexOutOfBoundsException e) {
+          System.err.println("no auto Paths: " + e.toString());
+        }
+      }
+      }
     } else {
-      autoString = chooser.getSelected();
+      if (ColorSelect == "Red") {
+        autoString = RedSelect;
+      } else {
+        autoString = BlueSelect;
+      }
     }
   }
 
