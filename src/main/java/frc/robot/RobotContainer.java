@@ -4,6 +4,8 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.util.Optional;
+
 import org.json.simple.parser.ParseException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -11,6 +13,8 @@ import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +25,7 @@ import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
 
-  private SendableChooser<String> chooser = new SendableChooser<>();
+  SendableChooser<String> Autos = new SendableChooser<>();
   private Command autoCommand;
   private String autoString;
 
@@ -29,17 +33,18 @@ public class RobotContainer {
   
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-  
 
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
     drivetrain = new Drive(new DriveKraken());
 
-    chooser.setDefaultOption("Auto", "Auto");
-    chooser.addOption("Test", "Test");
-
-    SmartDashboard.putData(chooser);
+    //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
+    //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
+    Autos.setDefaultOption("Auto", "Auto");
+    Autos.addOption("Test", "Test");
+    Autos.addOption("Path","Path");
+    SmartDashboard.putData("Autos",Autos);
 
     configureBindings();
   }
@@ -68,9 +73,22 @@ public class RobotContainer {
   }
 
   public void updateAutonCommand() {
+    Optional<Alliance> Ally = DriverStation.getAlliance();
+    String AutoSelect;
+    String ColorSelect;
+    if (!Ally.isPresent()) {
+      ColorSelect = "";
+    } else {
+      if (Ally.get() == Alliance.Red) {
+        ColorSelect = "Red-";
+      } else {
+        ColorSelect = "Blue-";
+      }
+    }
+    AutoSelect = ColorSelect + Autos.getSelected();
     if (autoString != null) {
-      if (chooser.getSelected() != autoString) {
-        autoString = chooser.getSelected();
+      if (AutoSelect != autoString) {
+        autoString = AutoSelect;
         autoCommand = new PathPlannerAuto(autoString);
         try {
           drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
@@ -83,8 +101,8 @@ public class RobotContainer {
         }
       }
     } else {
-      autoString = chooser.getSelected();
-    }
+      autoString = AutoSelect;
+      }
   }
 
   public Command getAutonomousCommand() {
