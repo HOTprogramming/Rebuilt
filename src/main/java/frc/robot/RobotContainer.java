@@ -42,17 +42,12 @@ public class RobotContainer {
 
     drivetrain = new Drive(new DriveKraken());
 
+    //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
+    //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Auto", "Auto");
     Autos.addOption("Test", "Test");
-    Autos.addOption("Left-Shoot&Climb-Ramp From Neutral", "Left-Shoot&Climb-Ramp From Neutral");
-    Autos.addOption("Right-Shoot&Climb-Ramp From Neutral", "Right-Shoot&Climb-Ramp From Neutral");  
-    Autos.addOption("Left-Shoot&Climb-Depot&Outpost","Left-Shoot&Climb-Depot&Outpost");
-    Autos.addOption("Right-Shoot&Climb-Outpost&Depot","Right-Shoot&Climb-Outpost&Depot");
-    Autos.addOption("Center-Shoot&Climb-Outpost", "Center-Shoot&Climb-Outpost");
-    Autos.addOption("Right-Scatter-Neutral", "Right-Scatter-Neutral");
-    Autos.addOption("Left-Scatter-Neutral", "Left-Scatter-Neutral");
     SmartDashboard.putData("Autos",Autos);
-
+    
     if (Ally.isPresent()) {
       Alliance Al = Ally.get();
       if (Al == Alliance.Red) {
