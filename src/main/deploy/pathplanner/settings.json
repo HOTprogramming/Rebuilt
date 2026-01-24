@@ -3,7 +3,14 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Outpost Shoot Climb From Center"
+    "Blue-Left",
+    "Blue-Right",
+    "Blue-Any",
+    "Blue-Center",
+    "Red-Left",
+    "Red-Right",
+    "Red-Any",
+    "Red-Center"
   ],
   "autoFolders": [
     "Blue Autos",

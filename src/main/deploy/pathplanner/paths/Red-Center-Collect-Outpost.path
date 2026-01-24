@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.306013513513514,
-        "y": 4.004358108108108
+        "x": 13.106,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9280968468468473,
-        "y": 2.8706081081081085
+        "x": 13.483917679341667,
+        "y": 5.133749662441164
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0088400900900907,
-        "y": 0.7767454954954962
+        "x": 14.401,
+        "y": 7.223
       },
       "prevControl": {
-        "x": 2.637547041380993,
-        "y": 1.0227612590441115
+        "x": 13.77229467061702,
+        "y": 6.976980091615843
       },
       "nextControl": {
-        "x": 1.7739189189189197,
-        "y": 0.6848198198198201
+        "x": 14.635920565132844,
+        "y": 7.314927224425245
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.5,
-        "y": 0.635
+        "x": 15.91,
+        "y": 7.365
       },
       "prevControl": {
-        "x": 0.8750900900900904,
-        "y": 0.6235360360360369
+        "x": 15.53490999014736,
+        "y": 7.376466588956873
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Red Side Outpost Pickup"
     }
   ],
   "rotationTargets": [],
@@ -71,14 +71,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 0.0,
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Outpost Shoot Climb From Center",
+  "folder": "Red-Center",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

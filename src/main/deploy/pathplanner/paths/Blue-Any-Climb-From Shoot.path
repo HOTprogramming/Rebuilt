@@ -3,45 +3,34 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5,
-        "y": 0.635
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.2007651431955404,
-        "y": 1.4539965718409693
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 1.896486486486487,
         "y": 2.5539752252252255
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.151621245217327,
+        "y": 2.5664950878203596
+      },
+      "isLocked": false,
+      "linkedName": "Shoot (Blue Outpost Side)"
+    },
+    {
+      "anchor": {
+        "x": 1.0385135135135142,
+        "y": 2.5539752252252255
+      },
       "prevControl": {
-        "x": 1.3943157351085258,
-        "y": 2.2891144422446668
+        "x": 1.3959242422756941,
+        "y": 2.557134740206611
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot (Blue Outpost Side)"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.55,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.9030520646319562,
-      "maxWaypointRelativePos": 1.0,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
@@ -53,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 28.810793742973022
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Outpost Shoot Climb From Center",
+  "folder": "Blue-Any",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 28.810793742973022
   },
   "useDefaultConstraints": true
 }

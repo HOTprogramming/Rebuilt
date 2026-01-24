@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Outpost collect Blue Center"
+            "pathName": "Blue-Center-Collect-Outpost"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Go to Shoot Blue Center"
+            "pathName": "Blue-Center-Shoot-From Outpost"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go to Climb Blue Center"
+            "pathName": "Blue-Any-Climb-From Shoot"
           }
         }
       ]

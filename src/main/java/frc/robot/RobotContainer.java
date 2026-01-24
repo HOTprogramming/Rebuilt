@@ -38,8 +38,8 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     chooser.addOption("Test", "Test");
-    chooser.addOption("Outpost Shoot Climb Blue Center", "Outpost Shoot Climb Blue Center");
-    chooser.addOption("Outpost Shoot Climb Red Center", "Outpost Shoot Climb Red Center");
+    chooser.addOption("Blue-Center-Shoot&Climb-Outpost", "Blue-Center-Shoot&Climb-Outpost");
+    chooser.addOption("Red-Center-Shoot&Climb-Outpost", "Red-Center-Shoot&Climb-Outpost");
 
     SmartDashboard.putData(chooser);
 
