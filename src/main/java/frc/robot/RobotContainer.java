@@ -25,12 +25,9 @@ import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
 
-  SendableChooser<String> SideColor = new SendableChooser<>();
   SendableChooser<String> Autos = new SendableChooser<>();
   private Command autoCommand;
   private String autoString;
-
-  Optional<Alliance> Ally = DriverStation.getAlliance();
 
   private Drive drivetrain;
   
@@ -46,24 +43,8 @@ public class RobotContainer {
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Auto", "Auto");
     Autos.addOption("Test", "Test");
+    Autos.addOption("Path","Path");
     SmartDashboard.putData("Autos",Autos);
-    
-    if (Ally.isPresent()) {//DON'T TOUCH ANY OF THIS IF STATEMENT OR I WILL FIND YOU
-      Alliance Al = Ally.get();
-      SideColor.addOption("None","None");
-      if (Al == Alliance.Red) {
-        SideColor.setDefaultOption("Red","Red");
-        SideColor.addOption("Blue","Blue");
-      } else {
-        SideColor.addOption("Red","Red");
-        SideColor.setDefaultOption("Blue","Blue");
-      }
-    } else  {
-      SideColor.setDefaultOption("None","None");
-      SideColor.addOption("Red","Red");
-      SideColor.addOption("Blue","Blue");
-    }
-    SmartDashboard.putData("Side Color",SideColor);
 
     configureBindings();
   }
@@ -92,13 +73,19 @@ public class RobotContainer {
   }
 
   public void updateAutonCommand() {
-    String ColorSelect = SideColor.getSelected();
+    Optional<Alliance> Ally = DriverStation.getAlliance();
     String AutoSelect;
-    if (ColorSelect == "None") {
-      AutoSelect = "";
+    String ColorSelect;
+    if (!Ally.isPresent()) {
+      ColorSelect = "";
     } else {
-      AutoSelect = ColorSelect + "-" + Autos.getSelected();
+      if (Ally.get() == Alliance.Red) {
+        ColorSelect = "Red-";
+      } else {
+        ColorSelect = "Blue-";
+      }
     }
+    AutoSelect = ColorSelect + Autos.getSelected();
     if (autoString != null) {
       if (AutoSelect != autoString) {
         autoString = AutoSelect;
