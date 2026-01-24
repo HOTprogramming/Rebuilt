@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.102173423423423,
-        "y": 4.045427927927928
+        "x": 2.437826576576577,
+        "y": 4.014572072072072
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.234954954954954,
-        "y": 4.791047297297297
+        "x": 2.3050450450450457,
+        "y": 3.268952702702703
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SHOOTTOCLIMB(BLUE)"
     },
     {
       "anchor": {
-        "x": 15.286993243243241,
-        "y": 5.454954954954955
+        "x": 1.2530067567567573,
+        "y": 2.6050450450450455
       },
       "prevControl": {
-        "x": 13.959177927927927,
-        "y": 5.199605855855856
+        "x": 2.5808220720720727,
+        "y": 2.860394144144144
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -270.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Red-Any",
+  "folder": "Blue-Any",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

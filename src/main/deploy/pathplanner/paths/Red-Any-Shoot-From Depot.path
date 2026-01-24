@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.514,
-        "y": 5.446
+        "x": 16.022398648648647,
+        "y": 2.084346846846848
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.258865230273162,
-        "y": 5.433479483218642
+        "x": 15.022398648648647,
+        "y": 2.084346846846848
       },
       "isLocked": false,
-      "linkedName": "Shoot (Red Outpost Side)"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 15.371,
-        "y": 5.446
+        "x": 14.102173423423423,
+        "y": 4.045427927927928
       },
       "prevControl": {
-        "x": 15.013589244662189,
-        "y": 5.442843492739604
+        "x": 14.102173423423423,
+        "y": 3.0454279279279284
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SHOOTTOCLIMB(RED)"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -180.0
   },
   "reversed": false,
   "folder": "Red-Any",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -151.189
+    "rotation": -0.0
   },
   "useDefaultConstraints": true
 }

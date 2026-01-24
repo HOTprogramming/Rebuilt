@@ -12,20 +12,20 @@
         "y": 6.486565315315316
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost(RED)"
     },
     {
       "anchor": {
-        "x": 14.367736486486486,
-        "y": 4.0658558558558555
+        "x": 14.102173423423423,
+        "y": 4.045427927927928
       },
       "prevControl": {
-        "x": 14.674142779877346,
-        "y": 5.843087762354589
+        "x": 14.408579716814284,
+        "y": 5.822659834426662
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SHOOTTOCLIMB(RED)"
     }
   ],
   "rotationTargets": [],
@@ -45,7 +45,7 @@
     "rotation": -180.0
   },
   "reversed": false,
-  "folder": "Red-Left",
+  "folder": "Red-Any",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -0.0

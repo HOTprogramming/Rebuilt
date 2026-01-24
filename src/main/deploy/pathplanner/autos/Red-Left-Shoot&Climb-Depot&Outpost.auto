@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1Red-Left-Shoot-From Outpost"
+            "pathName": "Red-Any-Shoot-From Outpost"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3Red-Any-Climb-From Shoot"
+            "pathName": "Red-Any-Climb-From Shoot"
           }
         }
       ]

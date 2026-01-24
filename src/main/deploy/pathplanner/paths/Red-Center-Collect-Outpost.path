@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 15.91,
-        "y": 7.365
+        "x": 16.042826576576577,
+        "y": 7.3956081081081075
       },
       "prevControl": {
-        "x": 15.53490999014736,
-        "y": 7.376466588956873
+        "x": 15.667736566723937,
+        "y": 7.407074697064981
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Red Side Outpost Pickup"
+      "linkedName": "Outpost(RED)"
     }
   ],
   "rotationTargets": [],
@@ -72,7 +72,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 0.0
+    "rotation": -0.0
   },
   "reversed": false,
   "folder": "Red-Center",

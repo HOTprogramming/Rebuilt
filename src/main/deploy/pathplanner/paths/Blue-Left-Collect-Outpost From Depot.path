@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.49717342342342397,
+        "x": 0.5176013513513518,
         "y": 5.975653153153153
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.497173423423424,
+        "x": 1.5176013513513515,
         "y": 5.975653153153153
       },
       "isLocked": false,
-      "linkedName": "Part1"
+      "linkedName": "Depot"
     },
     {
       "anchor": {
@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 0.49717342342342397,
-        "y": 0.6643918918918927
+        "x": 0.5176013513513518,
+        "y": 0.6439639639639643
       },
       "prevControl": {
-        "x": 1.2325788288288293,
-        "y": 0.7052477477477488
+        "x": 1.2530067567567575,
+        "y": 0.6848198198198203
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Part2"
+      "linkedName": "Outpost"
     }
   ],
   "rotationTargets": [],

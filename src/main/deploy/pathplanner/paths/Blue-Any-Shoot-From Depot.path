@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.49717342342342397,
-        "y": 0.6643918918918927
+        "x": 0.5176013513513518,
+        "y": 5.975653153153153
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0190540540540542,
-        "y": 1.5734346846846847
+        "x": 1.5176013513513518,
+        "y": 5.975653153153153
       },
       "isLocked": false,
-      "linkedName": "Part2"
+      "linkedName": "Part2.2"
     },
     {
       "anchor": {
-        "x": 2.172263513513514,
-        "y": 3.994144144144145
+        "x": 2.437826576576577,
+        "y": 4.014572072072072
       },
       "prevControl": {
-        "x": 1.8658572201226535,
-        "y": 2.216912237645412
+        "x": 2.437826576576577,
+        "y": 5.014572072072072
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Part3"
+      "linkedName": "SHOOTTOCLIMB(BLUE)"
     }
   ],
   "rotationTargets": [],
@@ -45,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Blue-Left",
+  "folder": "Blue-Any",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
