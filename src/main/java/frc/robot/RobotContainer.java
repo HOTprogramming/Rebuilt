@@ -67,6 +67,7 @@ public class RobotContainer {
 
       driver.a().toggleOnTrue(m_climber.deployCommand());
       driver.b().toggleOnTrue(m_climber.retractCommand());
+      driver.b().toggleOnTrue(m_climber.latchCommand());
       driver.x().toggleOnTrue(m_climber.rotateCommand());
       driver.y().toggleOnTrue(m_climber.spinhomeCommand());
   }

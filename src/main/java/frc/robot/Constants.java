@@ -17,7 +17,7 @@ public final class Constants {
   public static final double loopPeriodSecs = 0.02;
   private static RobotType robotType = RobotType.COMP25;
   public static final boolean tuningMode = false;
-  public static final String canName = "sim";
+  public static final String canName = "rio";
 
   public static final double brownoutVoltage = 5.5;
 

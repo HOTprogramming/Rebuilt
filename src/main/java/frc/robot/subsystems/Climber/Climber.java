@@ -95,15 +95,19 @@ public void periodic() {
     public Command deployCommand() {
         return runOnce( () -> runPosition(ClimberConstants.deployPosition));
     }
-
     public Command retractCommand() {
         return runOnce ( () -> runPosition(ClimberConstants.retractPosition));
     }
-
     public Command rotateCommand() {
         return runOnce ( () -> spinrunPosition(ClimberConstants.spinPosition));
     }
     public Command spinhomeCommand() {
         return runOnce ( () -> spinrunPosition(ClimberConstants.spinhomePosition));
+    }
+    public Command latchCommand() {
+        return runOnce ( () -> spinrunPosition(ClimberConstants.lockPosition));
+    }
+    public Command LV1Command() {
+        return runOnce ( () -> spinrunPosition(ClimberConstants.lvlonePosition));
     }
 }

@@ -58,6 +58,7 @@ public class ClimberKraken {
     private final PositionVoltage m_spinpositionVoltage = new PositionVoltage(0).withSlot(1);
     private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
     private final MotionMagicExpoVoltage m_mmExpoVoltage = new MotionMagicExpoVoltage(0).withSlot(2);
+    private final MotionMagicExpoVoltage m_mmspinExpoVoltage = new MotionMagicExpoVoltage(0).withSlot(1);
     private final MotionMagicExpoTorqueCurrentFOC m_mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0).withSlot(1);
     private final MotionMagicExpoTorqueCurrentFOC m_mmspinExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0).withSlot(2);
 
@@ -112,7 +113,7 @@ public class ClimberKraken {
     *     3-means run Motion Magic Expo Torque Control mode  
     ***************************************************************************/
     
-    public void runPosition(double desiredRotations) {      
+    public void runPosition(double desiredRotations) {
         switch (controlMode) {
         case 0:      /* Use Position Voltage */
             m_talonFX.setControl(m_positionVoltage.withPosition(desiredRotations));
@@ -128,6 +129,8 @@ public class ClimberKraken {
         switch (controlMode) {
             case 0:
                 m_talonFX2.setControl(m_spinpositionVoltage.withPosition(desiredRotations));
+            case 2:
+                m_talonFX2.setControl(m_mmspinExpoVoltage.withPosition(desiredRotations));
             case 3:
                 m_talonFX2.setControl(m_mmspinExpoTorque.withPosition(desiredRotations));
         }

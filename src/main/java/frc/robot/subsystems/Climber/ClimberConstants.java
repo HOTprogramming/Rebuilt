@@ -14,13 +14,15 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class ClimberConstants {
-    public static int kClimbermotorID = 21; //IMPORTANT
-    public static int kClimberspinnerID = 22; //IMPORTANT
-    public static String kBusName = "sim";
-    public static double deployPosition = 200.0;
-    public static double retractPosition = 0.0;
-    public static double spinPosition = 400;
-    public static double spinhomePosition = 0;
+    public static int kClimbermotorID = 14; //IMPORTANT
+    public static int kClimberspinnerID = 18; //IMPORTANT
+    public static String kBusName = "rio"; //IMPORTANT
+    public static double deployPosition = 200.0; //IMPORTANT
+    public static double retractPosition = 0.0; //IMPORTANT
+    public static double spinPosition = 410; //IMPORTANT
+    public static double spinhomePosition = 0; //IMPORTANT
+    public static double lockPosition = 10; //IMPORTANT
+    public static double lvlonePosition = 80; //IMPORTANT
 
         public static final TalonFXConfiguration climberWheelConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
