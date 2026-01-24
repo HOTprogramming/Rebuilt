@@ -38,10 +38,10 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     chooser.addOption("Test", "Test");
-    chooser.addOption("Scatter Right Blue", "Scatter Right Blue");
-    chooser.addOption("Scatter Left Blue", "Scatter Left Blue");
-    chooser.addOption("Scatter Right Red", "Scatter Right Red");
-    chooser.addOption("Scatter Left Red", "Scatter Left Red");
+    chooser.addOption("Blue-Right-Scatter-Neutral", "Blue-Right-Scatter-Neutral");
+    chooser.addOption("Blue-Left-Scatter-Neutral", "Blue-Left-Scatter-Neutral");
+    chooser.addOption("Red-Right-Scatter-Neutral", "Red-Right-Scatter-Neutral");
+    chooser.addOption("Red-Left-Scatter-Neutral", "Red-Left-Scatter-Neutral");
 
     SmartDashboard.putData(chooser);
 

@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Scatter Left Red"
+            "pathName": "Blue-Left-Scatter-Neutral"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Red Autos",
+  "folder": "Blue Autos",
   "choreoAuto": false
 }
