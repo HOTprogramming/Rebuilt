@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 16.042826576576577,
+        "y": 7.3956081081081075
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 14.520945945945945,
+        "y": 6.486565315315316
+      },
+      "isLocked": false,
+      "linkedName": "Outpost(RED)"
+    },
+    {
+      "anchor": {
+        "x": 14.102173423423423,
+        "y": 4.045427927927928
+      },
+      "prevControl": {
+        "x": 14.408579716814284,
+        "y": 5.822659834426662
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "SHOOTTOCLIMB(RED)"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -180.0
+  },
+  "reversed": false,
+  "folder": "Red-Any",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -0.0
+  },
+  "useDefaultConstraints": true
+}

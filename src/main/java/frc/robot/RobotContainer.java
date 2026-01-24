@@ -38,6 +38,16 @@ public class RobotContainer {
 
     chooser.setDefaultOption("Auto", "Auto");
     chooser.addOption("Test", "Test");
+    chooser.addOption("Blue-Left-Shoot&Climb-Ramp From Neutral", "Blue-Left-Shoot&Climb-Ramp From Neutral");
+    chooser.addOption("Blue-Right-Shoot&Climb-Ramp From Neutral", "Blue-Right-Shoot&Climb-Ramp From Neutral");
+    chooser.addOption("Red-Left-Shoot&Climb-Ramp From Neutral", "Red-Left-Shoot&Climb-Ramp From Neutral");
+    chooser.addOption("Red-Right-Shoot&Climb-Ramp From Neutral", "Red-Right-Shoot&Climb-Ramp From Neutral");    
+    chooser.addOption("Blue-Left-Shoot&Climb-Depot&Outpost","Blue-Left-Shoot&Climb-Depot&Outpost");
+    chooser.addOption("Blue-Right-Shoot&Climb-Outpost&Depot","Blue-Right-Shoot&Climb-Outpost&Depot");
+    chooser.addOption("Red-Left-Shoot&Climb-Depot&Outpost","Red-Left-Shoot&Climb-Depot&Outpost");
+    chooser.addOption("Red-Right-Shoot&Climb-Outpost&Depot","Red-Right-Shoot&Climb-Outpost&Depot");
+    chooser.addOption("Blue-Center-Shoot&Climb-Outpost", "Blue-Center-Shoot&Climb-Outpost");
+    chooser.addOption("Red-Center-Shoot&Climb-Outpost", "Red-Center-Shoot&Climb-Outpost");
     chooser.addOption("Blue-Right-Scatter-Neutral", "Blue-Right-Scatter-Neutral");
     chooser.addOption("Blue-Left-Scatter-Neutral", "Blue-Left-Scatter-Neutral");
     chooser.addOption("Red-Right-Scatter-Neutral", "Red-Right-Scatter-Neutral");
