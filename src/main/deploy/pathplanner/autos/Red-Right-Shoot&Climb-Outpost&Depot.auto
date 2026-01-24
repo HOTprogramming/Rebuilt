@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RGo To Depot Left Blue"
+            "pathName": "Red-Right-Collect-Outpost"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RGo To Outpost Left Blue"
+            "pathName": "Red-Right-Collect-Depot From Outpost"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RGo To Shoot Left Blue"
+            "pathName": "Red-Right-Shoot-From Depot"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RGo To Climb Blue"
+            "pathName": "Red-Any-Climb-From Shoot"
           }
         }
       ]

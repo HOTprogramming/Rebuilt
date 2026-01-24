@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Outpost Right Blue"
+            "pathName": "Red-Left-Collect-Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Depot Right Blue"
+            "pathName": "Red-Left-Collect-Outpost From Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Shoot Right Blue"
+            "pathName": "Red-Left-Shoot-From Outpost"
           }
         },
         {
@@ -31,13 +31,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Climb Blue"
+            "pathName": "Red-Any-Climb-From Shoot"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue Autos",
+  "folder": "Red Autos",
   "choreoAuto": false
 }

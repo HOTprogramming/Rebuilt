@@ -2,7 +2,16 @@
   "robotWidth": 0.9,
   "robotLength": 0.9,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Blue-Any",
+    "Blue-Center",
+    "Blue-Left",
+    "Blue-Right",
+    "Red-Any",
+    "Red-Center",
+    "Red-Left",
+    "Red-Right"
+  ],
   "autoFolders": [
     "Blue Autos",
     "Red Autos"

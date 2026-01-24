@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Depot Left Blue"
+            "pathName": "Blue-Left-Collect-Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Outpost Left Blue"
+            "pathName": "Blue-Left-Collect-Outpost From Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Shoot Left Blue"
+            "pathName": "Blue-Left-Shoot-From Outpost"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Climb Blue"
+            "pathName": "Blue-Any-Climb-From Shoot"
           }
         }
       ]
