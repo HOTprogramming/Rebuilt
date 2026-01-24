@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveSim;
+import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
@@ -29,6 +30,7 @@ public class RobotContainer {
 
   private Drive drivetrain;
   private Shooter shooter;
+  private Hood hood;
   
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -43,6 +45,7 @@ public class RobotContainer {
     }
 
     shooter = new Shooter();
+    hood = new Hood();
 
     chooser.setDefaultOption("Auto", "Auto");
 
@@ -66,6 +69,12 @@ public class RobotContainer {
       ));
 
       driver.a().toggleOnTrue(shooter.goToShoot());
+      driver.b().toggleOnTrue(shooter.goToIdle());
+
+      driver.leftTrigger().toggleOnTrue(hood.goTo15());
+      driver.rightTrigger().toggleOnTrue(hood.goTo30());
+      driver.x().toggleOnTrue(hood.goTo45());
+      driver.y().toggleOnTrue(hood.goTo60());
   }
 
   public void updateAutonCommand() throws ParseException {
