@@ -351,15 +351,15 @@ public class DriveConstants {
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGainsComp24 = new Slot0Configs()
-        .withKP(100).withKI(0).withKD(0.2)
-        .withKS(0).withKV(1.5).withKA(0)
+        .withKP(100).withKI(0).withKD(0.5)
+        .withKS(0.1).withKV(1.66).withKA(0)
         //.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
         ;
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     private static final Slot0Configs driveGainsComp24 = new Slot0Configs()
-        .withKP(3.0).withKI(0).withKD(0)
-        .withKS(0.0).withKV(0.0).withKA(0.0);
+        .withKP(0.1).withKI(0).withKD(0)
+        .withKS(0.0).withKV(0.124).withKA(0.0);
 
     private static final ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT_TYPEComp24 = ClosedLoopOutputType.Voltage;
     private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT_TYPEComp24 = ClosedLoopOutputType.Voltage;
@@ -433,7 +433,7 @@ public class DriveConstants {
         ConstantCreatorComp24.createModuleConstants(
             kFrontLeftSteerMotorIdComp24, kFrontLeftDriveMotorIdComp24, kFrontLeftEncoderIdComp24, kFrontLeftEncoderOffsetComp24,
             kFrontLeftXPosComp24, kFrontLeftYPosComp24, kInvertLeftSide, kFrontLeftSteerMotorInvertedComp24, kFrontLeftEncoderInvertedComp24
-        ).withDriveMotorInverted(false);
+        ).withDriveMotorInverted(true);
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontRightComp24 =
         ConstantCreatorComp24.createModuleConstants(
             kFrontRightSteerMotorIdComp24, kFrontRightDriveMotorIdComp24, kFrontRightEncoderIdComp24, kFrontRightEncoderOffsetComp24,
