@@ -49,7 +49,6 @@ public class Hood extends SubsystemBase {
     // Setter //
     public void setHoodPosition(double mHoodPosition) {
         mHoodKraken.runPosition(mHoodPosition);
-        // 15, 30, 45, 60 ; one for each button
     }
     
     @Override  

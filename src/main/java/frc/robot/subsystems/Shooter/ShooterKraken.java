@@ -63,7 +63,7 @@ public class ShooterKraken {
     if(!statuscode.isOK()) { 
       System.out.println("Configuration Failed on Shooter Motor 1");
     }
-    StatusCode statuscode2 = m_talonFXOther.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
+    StatusCode statuscode2 = m_talonFXOther.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterOtherMotorConfigs(), 1.0); 
     if(!statuscode2.isOK()) { 
       System.out.println("Configuration Failed on Shooter Motor 2");
     }
@@ -90,11 +90,8 @@ public class ShooterKraken {
         shooterAppliedVolts,
         shooterSupplyCurrent,
         shooterTorqueCurrent,
-        shooterTempCelsius
-    );
+        shooterTempCelsius,
 
-    BaseStatusSignal.setUpdateFrequencyForAll(
-        100.0,
         shooterPositionOther,
         shooterVelocityOther,
         shooterAppliedVoltsOther,
@@ -173,10 +170,10 @@ public class ShooterKraken {
     switch (controlMode) {
       case 0:      /* Use velocity voltage */
         m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
-        m_talonFXOther.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+        m_talonFXOther.setControl(m_velocityVoltage.withVelocity(-desiredRotationsPerSecond));
       case 1:      /* Use velocity torque */
         m_talonFX.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
-        m_talonFXOther.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
+        m_talonFXOther.setControl(m_velocityTorque.withVelocity(-desiredRotationsPerSecond));
       }
   }
 

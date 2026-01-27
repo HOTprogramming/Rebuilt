@@ -101,6 +101,25 @@ public class HoodKraken {
         if(isSimulation) {
             PhysicsSim.getInstance().run();
         }
+
+        stats.MotorConnected =
+        BaseStatusSignal.refreshAll(
+          hoodPosition,
+          hoodVelocity,
+          hoodAppliedVolts,
+          hoodSupplyCurrent,
+          hoodTorqueCurrent,
+          hoodTempCelsius
+          )
+        .isOK();
+
+        // Set telemetry data to Status Signals //
+        stats.hoodPositionRads = hoodPosition.getValueAsDouble();
+        stats.hoodVelocityRpm = hoodVelocity.getValueAsDouble();
+        stats.hoodAppliedVolts = hoodAppliedVolts.getValueAsDouble();
+        stats.hoodSupplyCurrentAmps = hoodSupplyCurrent.getValueAsDouble();
+        stats.hoodTorqueCurrentAmps = hoodTorqueCurrent.getValueAsDouble();
+        stats.hoodTempCelsius = hoodTempCelsius.getValueAsDouble();
     }
 
     /***************************************************************************
@@ -115,5 +134,10 @@ public class HoodKraken {
         case 1:      /* Use Position Torque */
             m_talonFX.setControl(m_positionTorque.withPosition(desiredRotations));
         }
+    }
+
+    public void stop() {
+    /* tell the motor to brake */
+    m_talonFX.setControl(m_brake);
     }
 }
