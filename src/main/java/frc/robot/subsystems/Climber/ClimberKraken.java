@@ -45,7 +45,7 @@ public class ClimberKraken {
     private final StatusSignal<Current> spinnerTorqueCurrent;
     private final StatusSignal<Temperature> spinnerTempCelsius;
     /**************************************************************** 
-     * Change this variable to select which motor control feature runs 
+     *z Change this variable to select which motor control feature runs 
     *     0-means run Position Voltage Control Mode  
     *     1-means run Position Torque Control Mode  
     *     2-means run Motion Magic Expo Position Voltage Control Mode  

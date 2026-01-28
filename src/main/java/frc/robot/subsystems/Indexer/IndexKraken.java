@@ -25,11 +25,11 @@ import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import frc.robot.sim.PhysicsSim;
-import frc.robot.subsystems.Indexer.IndexConstants;
-import frc.robot.subsystems.Indexer.IndexKraken;
-import frc.robot.subsystems.Indexer.Index;
+
+import frc.robot.subsystems.Indexer.Index.IndexStats;
 
 public class IndexKraken {
+
     private CANBus canbus = new CANBus(IndexConstants.kBusName);
     private TalonFX m_talonFX = new TalonFX(IndexConstants.kIndexer2ID, canbus);
     private TalonFX m_talonFX2 = new TalonFX(IndexConstants.kIndexerID, canbus);
@@ -53,6 +53,11 @@ public class IndexKraken {
   
     private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
 
+    public static IndexKraken getInstance() {
+        return instance = instance == null ? new IndexKraken() : instance;
+    }
+    public void updateStats(IndexStats stats){
+       
         if(isSimulation){
             PhysicsSim.getInstance().run();
         }
@@ -66,15 +71,44 @@ public class IndexKraken {
             indexTempCelsius)
             .isOK();
 
+            stats.indexPositionRads = indexPosition.getValueAsDouble();
+            stats.indexVelocityRpm = indexVelocity.getValueAsDouble();
+            stats.indexAppliedVolt = indexAppliedVolts.getValueAsDouble();
+            stats.indexSupplyCurrentAmps = indexSupplyCurrent.getValueAsDouble();
+            stats.indexTorqueCurrentApls = indexTorqueCurrent.getValueAsDouble();
+            stats.indexTempCelsius = indexTempCelsius.getValueAsDouble();
+    }
+    public IndexKraken() {
+        indexPosition = m_talonFX.getPosition();
+        indexVelocity = m_talonFX.getVelocity();
+        indexAppliedVolts = m_talonFX.getMotorVoltage();
+        indexSupplyCurrent = m_talonFX.getSupplyCurrent();
+        indexTorqueCurrent = m_talonFX.getTorqueCurrent();
+        indexTempCelsius = m_talonFX.getDeviceTemp();
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        100.0,
+        indexPosition,
+        indexVelocity,
+        indexAppliedVolts,
+        indexSupplyCurrent,
+        indexTorqueCurrent,
+        indexTempCelsius
+    );}
+    // for the kicker
     public void runVelocity(double speed) {
             double desiredRotationsPerSecond = 60.0; //IMPORTANT
         switch (controlMode) {
             case 0:
             m_talonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_talonFX2.setControl(m_VelocityVoltage.withVelocity(-desiredRotationsPerSecond));
         }
     }
-
-
-
+    public void runVelocity2(double speed) {
+        double desiredRotationsPerSecond = 60.0; //IMPORTANT
+        switch (controlMode) {
+            case 0:
+            m_talonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+    }
+    }
+//end of kicker
 }
