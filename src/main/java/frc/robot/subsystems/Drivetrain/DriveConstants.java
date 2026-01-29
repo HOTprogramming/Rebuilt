@@ -1307,6 +1307,35 @@ public class DriveConstants {
                 teleopPidConstantsTheta
                 );
 
+            case ALPHABOT -> new DriveConfig(
+                FrontLeftAlphabot, 
+                FrontRightAlphabot, 
+                BackLeftAlphabot, 
+                BackRightAlphabot,
+                DrivetrainConstantsAlphabot,
+                kSpeedAt12Volts.in(MetersPerSecond),
+                kMaxAngularVelocity.in(RadiansPerSecond),
+                driveInitialConfigs.CurrentLimits,
+                steerInitialConfigs.CurrentLimits,
+                autoPidConstantsTranslation,
+                autoPidConstantsTheta,
+                teleopPidConstantsTheta
+                );
+
+            case COMP26 -> new DriveConfig(
+                FrontLeftComp26, 
+                FrontRightComp26, 
+                BackLeftComp26, 
+                BackRightComp26,
+                DrivetrainConstantsComp26,
+                kSpeedAt12Volts.in(MetersPerSecond),
+                kMaxAngularVelocity.in(RadiansPerSecond),
+                driveInitialConfigs.CurrentLimits,
+                steerInitialConfigs.CurrentLimits,
+                autoPidConstantsTranslation,
+                autoPidConstantsTheta,
+                teleopPidConstantsTheta
+                );
             case MINIBOT -> new DriveConfig(
                 FrontLeftMinibot, 
                 FrontRightMinibot, 
