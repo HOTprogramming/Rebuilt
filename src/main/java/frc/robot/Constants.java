@@ -43,7 +43,9 @@
       COMPBOT,
       COMP24,
       COMP25,
-      MINIBOT
+      MINIBOT,
+      ALPHABOT,
+      COMP26
     }
 
     public static boolean disableHAL = false;
