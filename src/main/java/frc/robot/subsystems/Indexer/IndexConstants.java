@@ -14,12 +14,16 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class IndexConstants {
-    public static int kIndexer2ID = 14; //IMPORTANT
-    public static int kIndexerID = 18; //IMPORTANT
+    public static int kLeftKickID = 14; //IMPORTANT
+    public static int kRightKickID = 18; //IMPORTANT
+    public static int kFloorID = 15; //IMPORTANT
+    public static int kLoaderID = 16; //IMPORTANT
     public static String kBusName = "rio"; //IMPORTANT
-    public static double motorspeed = 1000; //IMPORTANT
+    public static double kickerspeed = 1000; //IMPORTANT
+    public static double floorspeed = 200; //IMPORTANT
+    public static double loaderspeed = 500; //IMPORTANT
 
-        public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
+    public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(40)

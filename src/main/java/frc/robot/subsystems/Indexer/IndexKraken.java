@@ -31,8 +31,11 @@ import frc.robot.subsystems.Indexer.Index.IndexStats;
 public class IndexKraken {
 
     private CANBus canbus = new CANBus(IndexConstants.kBusName);
-    private TalonFX m_talonFX = new TalonFX(IndexConstants.kIndexer2ID, canbus);
-    private TalonFX m_talonFX2 = new TalonFX(IndexConstants.kIndexerID, canbus);
+    private TalonFX m_talonFX = new TalonFX(IndexConstants.kLeftKickID, canbus);
+    private TalonFX m_talonFX2 = new TalonFX(IndexConstants.kRightKickID, canbus);
+    private TalonFX m_TalonFX3 = new TalonFX(IndexConstants.kFloorID);
+    private TalonFX m_TalonFX4 = new TalonFX(IndexConstants.kLoaderID);
+    
     private static IndexKraken instance = null;
     private boolean isSimulation = false;
 
@@ -96,19 +99,35 @@ public class IndexKraken {
         indexTempCelsius
     );}
     // for the kicker
-    public void runVelocity(double speed) {
+    public void runKick2(double speed) {
             double desiredRotationsPerSecond = 60.0; //IMPORTANT
         switch (controlMode) {
             case 0:
             m_talonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
         }
     }
-    public void runVelocity2(double speed) {
+    public void runKick(double speed) {
         double desiredRotationsPerSecond = 60.0; //IMPORTANT
         switch (controlMode) {
             case 0:
             m_talonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
     }
     }
-//end of kicker
+    //end of kicker, start of floor
+    public void runFloor(double speed) {
+        double desiredRotationsPerSecond = 60.0; //IMPORTANT
+        switch (controlMode) {
+            case 0:
+            m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(-desiredRotationsPerSecond));
+        }
+    }
+    //end of floor, start of loader
+    public void runLoad(double speed) {
+        double desiredRotationsPerSecond = 60.0; //IMPORTANT
+        switch (controlMode) {
+            case 0:
+            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(-desiredRotationsPerSecond));
+    }
+}
 }

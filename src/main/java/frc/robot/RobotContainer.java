@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Climber.Climber;
+import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveSim;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
@@ -29,6 +30,7 @@ public class RobotContainer {
 
   private Drive drivetrain;
   private Climber m_climber;
+  private Index m_indexer;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -65,12 +67,18 @@ public class RobotContainer {
         }
       ));
 
-      driver.a().toggleOnTrue(m_climber.deployCommand());
-      driver.b().toggleOnTrue(m_climber.retractCommand());
-      driver.b().toggleOnTrue(m_climber.latchCommand());
-      driver.x().toggleOnTrue(m_climber.rotateCommand());
-      driver.y().toggleOnTrue(m_climber.spinhomeCommand());
-  }
+      // driver.a().toggleOnTrue(m_climber.deployCommand());
+      // driver.b().toggleOnTrue(m_climber.retractCommand());
+      // driver.b().toggleOnTrue(m_climber.latchCommand());
+      // driver.x().toggleOnTrue(m_climber.rotateCommand());
+      // driver.y().toggleOnTrue(m_climber.spinhomeCommand());
+      driver.a().toggleOnTrue(m_indexer.floorCommand());
+      driver.a().toggleOnTrue(m_indexer.loadCommand());
+      driver.a().toggleOnTrue(m_indexer.leftkickerCommand());
+      driver.b().toggleOnTrue(m_indexer.floorCommand());
+      driver.b().toggleOnTrue(m_indexer.loadCommand());
+      driver.b().toggleOnTrue(m_indexer.leftkickerCommand());
+    }
 
   public void updateAutonCommand() throws ParseException {
     if (autoString != null) {
