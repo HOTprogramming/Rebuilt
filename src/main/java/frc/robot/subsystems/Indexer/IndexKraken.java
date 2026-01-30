@@ -31,10 +31,10 @@ import frc.robot.subsystems.Indexer.Index.IndexStats;
 public class IndexKraken {
 
     private CANBus canbus = new CANBus(IndexConstants.kBusName);
-    private TalonFX m_talonFX = new TalonFX(IndexConstants.kLeftKickID, canbus);
-    private TalonFX m_talonFX2 = new TalonFX(IndexConstants.kRightKickID, canbus);
-    private TalonFX m_TalonFX3 = new TalonFX(IndexConstants.kFloorID);
-    private TalonFX m_TalonFX4 = new TalonFX(IndexConstants.kLoaderID);
+    private TalonFX m_TalonFX = new TalonFX(IndexConstants.kLeftKickID, canbus);
+    private TalonFX m_TalonFX2 = new TalonFX(IndexConstants.kRightKickID, canbus);
+    private TalonFX m_TalonFX3 = new TalonFX(IndexConstants.kFloorID, canbus);
+    private TalonFX m_TalonFX4 = new TalonFX(IndexConstants.kLoaderID, canbus);
     
     private static IndexKraken instance = null;
     private boolean isSimulation = false;
@@ -55,7 +55,8 @@ public class IndexKraken {
     private int controlMode = 0; /* 0-PositionVoltage, 1-PositionTorque, 2-MotionMagic Position Voltage, 3-MotionMagic Position Torque */ 
   
     private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
-
+    private final NeutralOut m_brake = new NeutralOut();
+    
     public static IndexKraken getInstance() {
         return instance = instance == null ? new IndexKraken() : instance;
     }
@@ -82,12 +83,12 @@ public class IndexKraken {
             stats.indexTempCelsius = indexTempCelsius.getValueAsDouble();
     }
     public IndexKraken() {
-        indexPosition = m_talonFX.getPosition();
-        indexVelocity = m_talonFX.getVelocity();
-        indexAppliedVolts = m_talonFX.getMotorVoltage();
-        indexSupplyCurrent = m_talonFX.getSupplyCurrent();
-        indexTorqueCurrent = m_talonFX.getTorqueCurrent();
-        indexTempCelsius = m_talonFX.getDeviceTemp();
+        indexPosition = m_TalonFX.getPosition();
+        indexVelocity = m_TalonFX.getVelocity();
+        indexAppliedVolts = m_TalonFX.getMotorVoltage();
+        indexSupplyCurrent = m_TalonFX.getSupplyCurrent();
+        indexTorqueCurrent = m_TalonFX.getTorqueCurrent();
+        indexTempCelsius = m_TalonFX.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -103,14 +104,14 @@ public class IndexKraken {
             double desiredRotationsPerSecond = 60.0; //IMPORTANT
         switch (controlMode) {
             case 0:
-            m_talonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_TalonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
         }
     }
     public void runKick(double speed) {
         double desiredRotationsPerSecond = 60.0; //IMPORTANT
         switch (controlMode) {
             case 0:
-            m_talonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
     }
     }
     //end of kicker, start of floor
@@ -119,15 +120,30 @@ public class IndexKraken {
         switch (controlMode) {
             case 0:
             m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(-desiredRotationsPerSecond));
         }
     }
     //end of floor, start of loader
     public void runLoad(double speed) {
-        double desiredRotationsPerSecond = 60.0; //IMPORTANT
+        double desiredRotationsPerSecond = 30.0; //IMPORTANT
         switch (controlMode) {
             case 0:
-            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(-desiredRotationsPerSecond));
+            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
     }
+}
+    public void dontrun(double speed) {
+        double desiredRotationsPerSecond = 0; //IMPORTANT
+        switch (controlMode) {
+            case 0:
+            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_TalonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+        }
+}
+public void stop() {
+    m_TalonFX.setControl(m_brake);
+    m_TalonFX2.setControl(m_brake);
+    m_TalonFX3.setControl(m_brake);
+    m_TalonFX4.setControl(m_brake);
 }
 }

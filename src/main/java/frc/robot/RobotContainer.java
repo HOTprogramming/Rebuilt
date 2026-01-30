@@ -45,7 +45,7 @@ public class RobotContainer {
     }
     
     m_climber = new Climber();
-
+    m_indexer = new Index();
     chooser.setDefaultOption("Auto", "Auto");
 
     // chooser.addOption("<PUT_AUTO_HERE>", "<PUT_AUTO_HERE>");
@@ -72,13 +72,14 @@ public class RobotContainer {
       // driver.b().toggleOnTrue(m_climber.latchCommand());
       // driver.x().toggleOnTrue(m_climber.rotateCommand());
       // driver.y().toggleOnTrue(m_climber.spinhomeCommand());
-      driver.a().toggleOnTrue(m_indexer.floorCommand());
-      driver.a().toggleOnTrue(m_indexer.loadCommand());
-      driver.a().toggleOnTrue(m_indexer.leftkickerCommand());
-      driver.b().toggleOnTrue(m_indexer.floorCommand());
-      driver.b().toggleOnTrue(m_indexer.loadCommand());
+      // driver.a().toggleOnTrue(m_indexer.floorCommand());
+      // driver.a().toggleOnTrue(m_indexer.loadCommand());
+      driver.a().toggleOnTrue(m_indexer.rightkickerCommand());
+      // driver.b().toggleOnTrue(m_indexer.floorCommand());
+      //driver.b().toggleOnTrue(m_indexer.loadCommand());
       driver.b().toggleOnTrue(m_indexer.leftkickerCommand());
-    }
+      driver.x().toggleOnTrue(m_indexer.offCommand());
+}
 
   public void updateAutonCommand() throws ParseException {
     if (autoString != null) {

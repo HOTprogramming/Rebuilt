@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Indexer;
 
+import java.lang.annotation.Target;
+
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -69,17 +71,23 @@ public void periodic() {
     private void load(double targetPos){
         m_IndexKraken.runLoad(targetPos);
     }
+    private void off(double targetPos){
+        m_IndexKraken.dontrun(targetPos);
+    }
 
     public Command floorCommand() {
         return runOnce( () -> floor(IndexConstants.floorspeed));
     }
-    public Command leftkickerCommand() {
+    public Command rightkickerCommand() {
         return runOnce( () -> kicker1(IndexConstants.kickerspeed));
     }
-    public Command rightkickerCommand() {
+    public Command leftkickerCommand() {
         return runOnce( () -> kicker2(IndexConstants.kickerspeed));
     }
     public Command loadCommand() {
         return runOnce( () -> load(IndexConstants.loaderspeed));
+    }
+    public Command offCommand() {
+        return runOnce( () -> off(IndexConstants.zerospeed));
     }
 }

@@ -18,10 +18,11 @@ public class IndexConstants {
     public static int kRightKickID = 18; //IMPORTANT
     public static int kFloorID = 15; //IMPORTANT
     public static int kLoaderID = 16; //IMPORTANT
-    public static String kBusName = "rio"; //IMPORTANT
-    public static double kickerspeed = 1000; //IMPORTANT
-    public static double floorspeed = 200; //IMPORTANT
-    public static double loaderspeed = 500; //IMPORTANT
+    public static String kBusName = "rio"; //IMPORTvwe2ANT
+    public static double kickerspeed = 500; //IMPORTANT
+    public static double floorspeed = 300; //IMPORTANT
+    public static double loaderspeed = 1000; //IMPORTANT
+    public static double zerospeed = 0;
 
     public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
