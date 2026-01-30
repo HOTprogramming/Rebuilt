@@ -4,6 +4,10 @@ import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import org.json.simple.parser.ParseException;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -241,41 +245,39 @@ public class Drive extends SubsystemBase {
         alert.set(true);
     }
             
-    public boolean drivetrainAtTarget() {
+    public BooleanSupplier drivetrainAtTarget() {
         if (path != null) {
-            
-            return Math.abs(
+            System.out.println("here");
+            return () -> Math.abs(
                 this.iOdata.state.Pose.getTranslation().getDistance(
                     path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation())) 
                     < OTF_end_tolerance;
         }
-        return false;
+        return () -> false;
     }
 
-
-    public Command generateOnTheFly() {
-        return runOnce(() -> {
-            List<Pose2d> currentPathPoses = pathGroup.get(currentPathIndex).getPathPoses();
-            PathPlannerPath nextPath = pathGroup.get(currentPathIndex + 1);
-            waypoints = PathPlannerPath.waypointsFromPoses(
-                currentPathPoses.get(currentPathPoses.size() - 1),
-                new Pose2d(pathXEntry.getDouble(0), pathYEntry.getDouble(0), Rotation2d.fromDegrees(pathRotEntry.getDouble(0))),
-                nextPath.getPathPoses().get(0)
-            );
-            path = new PathPlannerPath(
-            waypoints,
-            constraints,
-            null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-            new GoalEndState(nextPath.getIdealStartingState().velocityMPS(), nextPath.getInitialHeading()) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-            );
-            AutoBuilder.followPath(path).unless(this::drivetrainAtTarget).schedule();
-        });
-    }
 
     public Command runOnTheFly() {
         return Commands.sequence(
-            generateOnTheFly(),
-            AutoBuilder.followPath(path).unless(this::drivetrainAtTarget));
+            Commands.runOnce(() -> {
+                Pose2d target = new Pose2d(2.4, 7.2, Rotation2d.fromDegrees(0));
+                waypoints = PathPlannerPath.waypointsFromPoses(
+                    iOdata.state.Pose,
+                    target
+                );
+                path = new PathPlannerPath(
+                    waypoints,
+                    constraints,
+                    null,
+                    new GoalEndState(0, target.getRotation())
+                );
+            }),
+            // Defer path following until after the path is created so it can run in-sequence.
+            Commands.defer(
+                () -> AutoBuilder.followPath(path).until(drivetrainAtTarget()),
+                Set.of(this) 
+            )
+        );
     }
 
     public Command resetControllers() {
