@@ -15,7 +15,7 @@
    */
   public final class Constants {
     public static final double loopPeriodSecs = 0.02;
-    private static RobotType robotType = RobotType.COMPBOT;
+    private static RobotType robotType = RobotType.COMP24;
     public static final boolean tuningMode = false;
     public static final String canName = "robot";
 
@@ -62,5 +62,7 @@
     public static class OperatorConstants {
       public static final int kDriverControllerPort = 0;
     }
+
+    
 
   }
