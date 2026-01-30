@@ -41,6 +41,9 @@ public class RobotContainer {
 
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
+    Autos.setDefaultOption("Auto", "Path");
+    SmartDashboard.putData("Autos",Autos);
+
     configureBindings();
   }
 
