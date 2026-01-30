@@ -82,11 +82,11 @@ public class IntakeConstants {
                 .withKP(4.8)        // A position error of 2.5 rotations results in 12 V output
                 .withKI(0)          // no output for integrated error
                 .withKD(0.1)        // A velocity error of 1 rps results in 0.1 V output
-        //).withMotionMagic(
-        //    new MotionMagicConfigs()
-        //        .withMotionMagicCruiseVelocity(80.0)   // Target cruise velocity of 80 rps
-        //        .withMotionMagicAcceleration(160)      // Target acceleration of 160 rps/s (0.5 seconds)
-         //       .withMotionMagicJerk(1600)               // Target jerk of 1600 rps/s/s (0.1 seconds))    
+        ).withMotionMagic(
+            new MotionMagicConfigs()
+                .withMotionMagicCruiseVelocity(80.0)   // Target cruise velocity of 80 rps
+                .withMotionMagicAcceleration(160)      // Target acceleration of 160 rps/s (0.5 seconds)
+              .withMotionMagicJerk(1600)               // Target jerk of 1600 rps/s/s (0.1 seconds))    
 
             );
 
@@ -132,11 +132,11 @@ public class IntakeConstants {
                 .withKP(4.8)        // A position error of 2.5 rotations results in 12 V output
                 .withKI(0)          // no output for integrated error
                 .withKD(0.1)        // A velocity error of 1 rps results in 0.1 V output
-        //).withMotionMagic(
-        //    new MotionMagicConfigs()
-         //       .withMotionMagicCruiseVelocity(80.0)   // Target cruise velocity of 80 rps
-         //       .withMotionMagicAcceleration(160)      // Target acceleration of 160 rps/s (0.5 seconds)
-         //       .withMotionMagicJerk(1600)               // Target jerk of 1600 rps/s/s (0.1 seconds))    
+        ).withMotionMagic(
+            new MotionMagicConfigs()
+               .withMotionMagicCruiseVelocity(80.0)   // Target cruise velocity of 80 rps
+                .withMotionMagicAcceleration(160)      // Target acceleration of 160 rps/s (0.5 seconds)
+                .withMotionMagicJerk(1600)               // Target jerk of 1600 rps/s/s (0.1 seconds))    
 
             );
 
@@ -180,12 +180,12 @@ public class IntakeConstants {
                 .withMotionMagicCruiseVelocity(0.0)   // Unlimited cruise velocity
                 .withMotionMagicExpo_kV(0.12)          // kV is around 0.12 V/rps
                 .withMotionMagicExpo_kA(0.1)          // Use a slower kA of 0.1 V/(rps/s)
-         //).withFeedback(
-          //  new FeedbackConfigs() 
-          //      .withFeedbackRemoteSensorID(kLeftIntakeEncoderID)        
-          //      .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
-          //      .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
-          //      .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
+        ).withFeedback(
+           new FeedbackConfigs() 
+               .withFeedbackRemoteSensorID(kLeftIntakeEncoderID)        
+               .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
+                .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
+                .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
 
             public static final TalonFXConfiguration RightIntakeExtendConfigs = new TalonFXConfiguration()
@@ -228,12 +228,12 @@ public class IntakeConstants {
                 .withMotionMagicCruiseVelocity(0.0)   // Unlimited cruise velocity
                 .withMotionMagicExpo_kV(0.12)          // kV is around 0.12 V/rps
                 .withMotionMagicExpo_kA(0.1)          // Use a slower kA of 0.1 V/(rps/s)
-        //).withFeedback(
-            //new FeedbackConfigs() 
-             //   .withFeedbackRemoteSensorID(kRightIntakeEncoderID)        
-              //  .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
-               // .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
-                //.withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
+        ).withFeedback(
+        new FeedbackConfigs() 
+           .withFeedbackRemoteSensorID(kRightIntakeEncoderID)        
+              .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
+               .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
+                .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
 
         public static final CANcoderConfiguration LeftIntakeEncoderConfigs = new CANcoderConfiguration() 

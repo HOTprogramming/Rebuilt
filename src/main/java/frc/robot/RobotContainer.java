@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.json.simple.parser.ParseException;
 
+
 import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveSim;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Lights.Lights;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
@@ -29,6 +31,7 @@ public class RobotContainer {
 
   private Drive drivetrain;
   private static Intake m_intake = new Intake();
+  private static Lights m_Lights = new Lights();
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -62,10 +65,11 @@ public class RobotContainer {
         }
       ));
 
-      driver.a().whileTrue(m_intake.extendLeftIntake()).whileFalse(m_intake.retractLeftIntake());
-      driver.b().whileTrue(m_intake.extendRightIntake()).whileFalse(m_intake.retractRightIntake());
-      driver.leftBumper().whileTrue(m_intake.expelLeftIntake()).whileFalse(m_intake.turnOffLeftExpel());
-      driver.rightBumper().whileTrue(m_intake.expelRightIntake()).whileFalse(m_intake.turnOffRightExpel());
+      //driver.a().whileTrue(m_intake.extendLeftIntake()).whileFalse(m_intake.retractLeftIntake());
+      //driver.b().whileTrue(m_intake.extendRightIntake()).whileFalse(m_intake.retractRightIntake());
+      //driver.leftBumper().whileTrue(m_intake.expelLeftIntake()).whileFalse(m_intake.turnOffLeftExpel());
+      //driver.rightBumper().whileTrue(m_intake.expelRightIntake()).whileFalse(m_intake.turnOffRightExpel());
+      driver.a().toggleOnTrue(m_Lights.setRed());
   }
 
   public void updateAutonCommand() throws ParseException {

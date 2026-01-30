@@ -113,14 +113,14 @@ public class IntakeKraken {
     } 
     //statuscode = m_LeftCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftIntakeEncoderConfigs(),1.0);
 
-    //if (!statuscode.isOK()) {
-      //System.out.println("Configuration Failed on LeftIntake CanCoder");
-    //}
-    //statuscode = m_RightCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightIntakeEncoderConfigs(),1.0);
+    if (!statuscode.isOK()) {
+      System.out.println("Configuration Failed on LeftIntake CanCoder");
+    }
+    statuscode = m_RightCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightIntakeEncoderConfigs(),1.0);
 
-    //if (!statuscode.isOK()) {
-     // System.out.println("Configuration Failed on RightIntake CanCoder");
-    //}
+    if (!statuscode.isOK()) {
+      System.out.println("Configuration Failed on RightIntake CanCoder");
+    }
 
     // Set signals
     LeftIntakePosition = m_LExtend.getPosition();
