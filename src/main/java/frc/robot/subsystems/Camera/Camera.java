@@ -278,10 +278,10 @@ public class Camera extends SubsystemBase {
             SmartDashboard.putNumber("Camera" + key + "sees:", list.size());
         });
 
-        allowMultiTag = CameraPositions.TOP;
+        allowMultiTag = CameraPositions.BACK;
 
-        if (targetsSeenByCamera.containsKey(CameraPositions.TOP) && targetsSeenByCamera.get(CameraPositions.TOP).size() >=2 ) {
-            allowMultiTag = CameraPositions.TOP;
+        if (targetsSeenByCamera.containsKey(CameraPositions.BACK) && targetsSeenByCamera.get(CameraPositions.BACK).size() >=2 ) {
+            allowMultiTag = CameraPositions.BACK;
         } else if (targetsSeenByCamera.containsKey(CameraPositions.RIGHT) && targetsSeenByCamera.get(CameraPositions.RIGHT).size() >=2 ) {
             allowMultiTag = CameraPositions.RIGHT;
         } else if (targetsSeenByCamera.containsKey(CameraPositions.LEFT) && targetsSeenByCamera.get(CameraPositions.LEFT).size() >=2 ) {
@@ -300,7 +300,6 @@ public class Camera extends SubsystemBase {
 
         cameraMeasurements.forEach((key,measurement) -> {
             // ignore top camera when aligning to reef
-            if (!(key == CameraPositions.TOP && ignoring)) {
                 measurement.ifPresent(
                     est -> {
                         // Change our trust in the measurement based on the tags we can see
@@ -320,7 +319,7 @@ public class Camera extends SubsystemBase {
                         }
 
                     });
-            }
+            
             });
         // robotState.setVisionMeasurements(cameraMeasurements);
         // robotState.setCameraStdDeviations(cameraStdDeviations);
@@ -347,39 +346,12 @@ public class Camera extends SubsystemBase {
         if (numTags == 1 && avgDist > 4)
             estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
         else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
-        for (PhotonTrackedTarget target : targets) {
-            for (int id : DriverStation.getAlliance().get() == Alliance.Blue ? CameraConstants.REEF_TAGS_BLUE : CameraConstants.REEF_TAGS_RED) {
-                if (target.getFiducialId() == id && avgDist < 2) {
-                    estStdDevs = VecBuilder.fill(0.25, 0.25, 2);
-                        
-                    // SmartDashboard.put
-                    // SmartDashboard.putNumber("Tag X", drivetrain.tagTransform.getX());
-                    // SmartDashboard.putNumber("Tag Y", drivetrain.tagTransform.getY());
-                    // SmartDashboard.putNumber("Tag Rotation", Units.radiansToDegrees(drivetrain.tagTransform.getRotation().getAngle()));
-                }
-            }
-            for (int id : CameraConstants.IGNORE_ALWAYS) {
-                if (target.getFiducialId() == id) {
-                    estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-
-                }
-            }
-        }
 
         if (numTags == 1 && avgDist > 2.75) {
             estStdDevs =VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-            
         }
 
-        if (constant.getName().equals("TOP")) {
-            if (avgDist > 2.6) {
-                estStdDevs =VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 
-            } else {
-                estStdDevs = constant.getMultiTagStdDevs();
-
-            }
-        }
         return estStdDevs;
     }    
 }

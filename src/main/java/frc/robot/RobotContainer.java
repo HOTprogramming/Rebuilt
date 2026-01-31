@@ -48,6 +48,7 @@ public class RobotContainer {
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Auto", "Path");
+    Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
     
     SmartDashboard.putData("Autos",Autos);
 
@@ -67,7 +68,7 @@ public class RobotContainer {
       driver.rightTrigger().whileTrue(drivetrain.run(()->
       drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
           Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-          new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
+          new Pose2d(11.91,4.03,Rotation2d.fromDegrees(0))))
       );
 
       NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
