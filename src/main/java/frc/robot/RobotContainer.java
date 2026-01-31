@@ -63,6 +63,17 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
+
+      driver.rightTrigger().whileTrue(drivetrain.run(()->
+      drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+          new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
+      );
+
+      NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
+      NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
+
+      new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
   }
 
   public void updateAutonCommand() {
