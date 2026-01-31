@@ -71,6 +71,10 @@ public class RobotContainer {
           new Pose2d(11.91,4.03,Rotation2d.fromDegrees(0))))
       );
 
+      driver.start().whileTrue(drivetrain.run(()->
+      drivetrain.resetPidgeon())
+      );
+
       NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
