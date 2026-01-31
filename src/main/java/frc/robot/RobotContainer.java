@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Climber.Climber;
+import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Shooter.Shooter;
@@ -35,6 +37,9 @@ public class RobotContainer {
   private Shooter shooter;
   private Hood hood;
   
+  private Climber m_climber;
+  private Index m_indexer;
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -50,6 +55,9 @@ public class RobotContainer {
 
     shooter = new Shooter();
     hood = new Hood();
+
+    m_climber = new Climber();
+    m_indexer = new Index();
 
     configureBindings();
   }
