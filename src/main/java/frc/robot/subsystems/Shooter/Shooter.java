@@ -51,29 +51,24 @@ public class Shooter extends SubsystemBase {
       NetworkTable table = instance.getTable("HOT/Shooter");
       
       /* Creates the Display for the Network Tables */
-      shooterPosition = table.getDoubleTopic("Motor 1: Velocity (RPS)").publish();
-      shooterVelocity = table.getDoubleTopic("Motor 1: Position-Motor (ROT)").publish();
+      shooterPosition = table.getDoubleTopic("Motor 1: Position-Motor (ROT)").publish();
+      shooterVelocity = table.getDoubleTopic("Motor 1: Velocity (RPS)").publish();
       shooterAppliedVolts = table.getDoubleTopic("Motor 1: Applied Volts").publish();
       shooterSupplyCurrent = table.getDoubleTopic("Motor 1: Supply Current").publish();
       shooterTorqueCurrent = table.getDoubleTopic("Motor 1: Torque Current").publish();
       shooterTemp = table.getDoubleTopic("Motor 1: Motor Temp").publish();
 
-      shooterPositionOther = table.getDoubleTopic("Motor 2: Velocity (RPS)").publish();
-      shooterVelocityOther = table.getDoubleTopic("Motor 2: Position-Motor (ROT)").publish();
+      shooterPositionOther = table.getDoubleTopic("Motor 2: Position-Motor (ROT)").publish();
+      shooterVelocityOther = table.getDoubleTopic("Motor 2: Velocity (RPS)").publish();
       shooterAppliedVoltsOther = table.getDoubleTopic("Motor 2: Applied Volts").publish();
       shooterSupplyCurrentOther = table.getDoubleTopic("Motor 2: Supply Current").publish();
       shooterTorqueCurrentOther = table.getDoubleTopic("Motor 2: Torque Current").publish();
       shooterTempOther = table.getDoubleTopic("Motor 2: Motor Temp").publish();
     }
 
-    //Setter//
-    private void setShooterSpeed(int shooterSpeed) {
-      mShooterKraken.runVelocity(shooterSpeed);
-    }
-
     //Getter//
-    public int getShooterSpeed() {
-      return ShooterConstants.kShooterSpeed;
+    public double getShooterSpeed() {
+      return motorStats.shooterVelocityRpm;
     }
   
     @Override  
@@ -115,7 +110,7 @@ public class Shooter extends SubsystemBase {
     return runOnce(
         () -> {
           /* one-time action goes here */
-          setShooterSpeed(ShooterConstants.kIdleSpeed);
+          mShooterKraken.runVelocity(ShooterConstants.kIdleSpeed);
         });
     }
   /**
@@ -127,7 +122,7 @@ public class Shooter extends SubsystemBase {
     return runOnce(
         () -> {
           /* one-time action goes here */
-          setShooterSpeed(ShooterConstants.kShooterSpeed);
+          mShooterKraken.runVelocity(ShooterConstants.kShooterSpeed);
         });
     }
 }

@@ -159,21 +159,19 @@ public class ShooterKraken {
     }
 
     /*********************
-  * The runVelocity function can run (based on the controlMode Variable either:
+  * The runVelocity function can run based on the controlMode Variable either:
   *     0-means run Velocity Voltage Control Mode  
   *     1-means run Velocity Torque Control Mode  
   **********************/
-  public void runVelocity(double RPM) {      
-    //Convert rotations per minute into rotations per second 
-    double desiredRotationsPerSecond = (RPM/60.0); 
+  public void runVelocity(double desiredRotationsPerSecond) {      
 
     switch (controlMode) {
       case 0:      /* Use velocity voltage */
         m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
-        m_talonFXOther.setControl(m_velocityVoltage.withVelocity(-desiredRotationsPerSecond));
+        m_talonFXOther.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
       case 1:      /* Use velocity torque */
         m_talonFX.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
-        m_talonFXOther.setControl(m_velocityTorque.withVelocity(-desiredRotationsPerSecond));
+        m_talonFXOther.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
       }
   }
 

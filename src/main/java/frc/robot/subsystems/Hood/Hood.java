@@ -45,9 +45,9 @@ public class Hood extends SubsystemBase {
         hoodTemp = table.getDoubleTopic("Hood: Motor Temp").publish();
         hoodGoal = table.getDoubleTopic("Hood: Goal Position").publish();
     }
-
-    // Setter //
+    
     public void setHoodPosition(double mHoodPosition) {
+    // Setter //
         mHoodKraken.runPosition(mHoodPosition);
     }
     
