@@ -245,15 +245,15 @@ public class Drive extends SubsystemBase {
         alert.set(true);
     }
             
-    public BooleanSupplier drivetrainAtTarget() {
+    public boolean drivetrainAtTarget() {
         if (path != null) {
             System.out.println("here");
-            return () -> Math.abs(
+            return Math.abs(
                 this.iOdata.state.Pose.getTranslation().getDistance(
                     path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation())) 
                     < OTF_end_tolerance;
         }
-        return () -> false;
+        return false;
     }
 
 
@@ -274,7 +274,7 @@ public class Drive extends SubsystemBase {
             }),
             // Defer path following until after the path is created so it can run in-sequence.
             Commands.defer(
-                () -> AutoBuilder.followPath(path).until(drivetrainAtTarget()),
+                () -> AutoBuilder.followPath(path).until(this::drivetrainAtTarget),
                 Set.of(this) 
             )
         );
