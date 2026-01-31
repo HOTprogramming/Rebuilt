@@ -66,19 +66,6 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
-
-      // driver.a().toggleOnTrue(m_climber.deployCommand());
-      // driver.b().toggleOnTrue(m_climber.retractCommand());
-      // driver.b().toggleOnTrue(m_climber.latchCommand());
-      // driver.x().toggleOnTrue(m_climber.rotateCommand());
-      // driver.y().toggleOnTrue(m_climber.spinhomeCommand());
-      driver.a().toggleOnTrue(m_indexer.floorCommand());
-      driver.a().toggleOnTrue(m_indexer.loadCommand());
-      driver.a().toggleOnTrue(m_indexer.Kicker1Command());
-      driver.b().toggleOnTrue(m_indexer.floorCommand());
-      driver.b().toggleOnTrue(m_indexer.loadCommand());
-      driver.b().toggleOnTrue(m_indexer.Kicker2Command());
-      driver.x().toggleOnTrue(m_indexer.offCommand());
 }
 
   public void updateAutonCommand() throws ParseException {

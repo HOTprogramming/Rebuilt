@@ -19,9 +19,9 @@ public class IndexConstants {
     public static int kFloorID = 14; //IMPORTANT
     public static int kLoaderID = 18; //IMPORTANT
     public static String kBusName = "rio"; //IMPORTvwe2ANT
-    public static double kickerspeed = 1000; //IMPORTANT
-    public static double floorspeed = 300; //IMPORTANT
-    public static double loaderspeed = 1000; //IMPORTANT
+    public static double kickerSpeed = 1000; //IMPORTANT
+    public static double floorSpeed = 300; //IMPORTANT
+    public static double loaderSpeed = 1000; //IMPORTANT
     public static double zerospeed = 0;
 
     public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
