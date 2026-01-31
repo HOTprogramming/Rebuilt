@@ -5,6 +5,8 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -22,19 +24,28 @@ public class ShooterKraken {
   private boolean isSimulation = false; 
 
    /**************************************************************** 
-    * Change this variable to select which motor control feature runs 
+    * Change this variable to select which motor control feature runs
+    * Control Mode Shooter:
     *     0-means run Velocity Voltage Control Mode  
     *     1-means run Velocity Torque Control Mode  
+    * Control Mode Hood:
+    *     0-means run Position Voltage Control Mode  
+    *     1-means run Position Torque Control Mode
     *****************************************************************/           
-  private int controlMode = 0; 
+  private int controlModeShoot = 0; 
+  private int controlModeHood = 0;
   
   // Initialize Motors //
   private TalonFX m_talonFX = new TalonFX(ShooterConstants.kMotorID, ShooterConstants.canbus);
   private TalonFX m_talonFXOther = new TalonFX(ShooterConstants.kOtherMotorID, ShooterConstants.canbus);
+  private TalonFX m_talonFXHood = new TalonFX(ShooterConstants.kHoodMotorID, ShooterConstants.canbus);
 
   // Initialize Control Modes //
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);    /* Start at velocity 0, use slot 0 */
   private final VelocityTorqueCurrentFOC m_velocityTorque = new VelocityTorqueCurrentFOC(0).withSlot(1);  /* Start at velocity 0, use slot 1 */
+
+  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+  private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
 
   private final NeutralOut m_brake = new NeutralOut();   /* Keep a neutral out so we can disable the motor */
  
@@ -53,6 +64,13 @@ public class ShooterKraken {
   private final StatusSignal<Current> shooterTorqueCurrentOther;
   private final StatusSignal<Temperature> shooterTempCelsiusOther;
 
+  private final StatusSignal<Angle> hoodPosition;
+  private final StatusSignal<AngularVelocity> hoodVelocity;
+  private final StatusSignal<Voltage> hoodAppliedVolts;
+  private final StatusSignal<Current> hoodSupplyCurrent;
+  private final StatusSignal<Current> hoodTorqueCurrent;
+  private final StatusSignal<Temperature> hoodTempCelsius;
+
   public ShooterKraken() {
 
     /**********************************
@@ -66,6 +84,10 @@ public class ShooterKraken {
     StatusCode statuscode2 = m_talonFXOther.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterOtherMotorConfigs(), 1.0); 
     if(!statuscode2.isOK()) { 
       System.out.println("Configuration Failed on Shooter Motor 2");
+    }
+    StatusCode statuscode3 = m_talonFXHood.getConfigurator().apply(ShooterConstants.ShooterConfigs.hoodMotorConfigs(), 1.0); 
+    if(!statuscode3.isOK()) { 
+      System.out.println("Configuration Failed on Hood Motor");
     }
 
     // Initialize Telemetry data //
@@ -83,6 +105,13 @@ public class ShooterKraken {
     shooterTorqueCurrentOther = m_talonFXOther.getTorqueCurrent();
     shooterTempCelsiusOther = m_talonFXOther.getDeviceTemp();
 
+    hoodPosition = m_talonFXHood.getPosition();
+    hoodVelocity = m_talonFXHood.getVelocity();
+    hoodAppliedVolts = m_talonFXHood.getMotorVoltage();
+    hoodSupplyCurrent = m_talonFXHood.getSupplyCurrent();
+    hoodTorqueCurrent = m_talonFXHood.getTorqueCurrent();
+    hoodTempCelsius = m_talonFXHood.getDeviceTemp();
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
         shooterPosition,
@@ -97,18 +126,27 @@ public class ShooterKraken {
         shooterAppliedVoltsOther,
         shooterSupplyCurrentOther,
         shooterTorqueCurrentOther,
-        shooterTempCelsiusOther
+        shooterTempCelsiusOther,
+
+        hoodPosition,
+        hoodVelocity,
+        hoodAppliedVolts,
+        hoodSupplyCurrent,
+        hoodTorqueCurrent,
+        hoodTempCelsius
     );
 
     /* Optimize out the other signals, since they're not useful */
     m_talonFX.optimizeBusUtilization();
     m_talonFXOther.optimizeBusUtilization();
+    m_talonFXHood.optimizeBusUtilization();
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
       isSimulation = true; 
       PhysicsSim.getInstance().addTalonFX(m_talonFX, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_talonFXOther, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_talonFXHood, 0.001);
     }
   }
 
@@ -138,7 +176,14 @@ public class ShooterKraken {
           shooterAppliedVoltsOther,
           shooterSupplyCurrentOther,
           shooterTorqueCurrentOther,
-          shooterTempCelsiusOther
+          shooterTempCelsiusOther,
+
+          hoodPosition,
+          hoodVelocity,
+          hoodAppliedVolts,
+          hoodSupplyCurrent,
+          hoodTorqueCurrent,
+          hoodTempCelsius
           )
         .isOK();
       
@@ -156,16 +201,23 @@ public class ShooterKraken {
       stats.shooterSupplyCurrentAmpsOther = shooterSupplyCurrentOther.getValueAsDouble();
       stats.shooterTorqueCurrentAmpsOther = shooterTorqueCurrentOther.getValueAsDouble();
       stats.shooterTempCelsiusOther = shooterTempCelsiusOther.getValueAsDouble();
+
+      stats.hoodPositionRads = hoodPosition.getValueAsDouble();
+      stats.hoodVelocityRpm = hoodVelocity.getValueAsDouble();
+      stats.hoodAppliedVolts = hoodAppliedVolts.getValueAsDouble();
+      stats.hoodSupplyCurrentAmps = hoodSupplyCurrent.getValueAsDouble();
+      stats.hoodTorqueCurrentAmps = hoodTorqueCurrent.getValueAsDouble();
+      stats.hoodTempCelsius = hoodTempCelsius.getValueAsDouble();
     }
 
-    /*********************
+  /*********************
   * The runVelocity function can run based on the controlMode Variable either:
   *     0-means run Velocity Voltage Control Mode  
   *     1-means run Velocity Torque Control Mode  
   **********************/
   public void runVelocity(double desiredRotationsPerSecond) {      
 
-    switch (controlMode) {
+    switch (controlModeShoot) {
       case 0:      /* Use velocity voltage */
         m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
         m_talonFXOther.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
@@ -174,6 +226,20 @@ public class ShooterKraken {
         m_talonFXOther.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
       }
   }
+
+  /***************************************************************************
+  * The runVelocity function can run (based on the controlMode Variable either:
+  *     0-means run Position Voltage Control Mode  
+  *     1-means run Position Torque Control Mode  
+  ***************************************************************************/
+  public void runPosition(double desiredRotations) {      
+        switch (controlModeHood) {
+        case 0:      /* Use Position Voltage */
+            m_talonFXHood.setControl(m_positionVoltage.withPosition(desiredRotations));
+        case 1:      /* Use Position Torque */
+            m_talonFXHood.setControl(m_positionTorque.withPosition(desiredRotations));
+        }
+    }
 
   public void stop() {
     /* tell the motor to brake */

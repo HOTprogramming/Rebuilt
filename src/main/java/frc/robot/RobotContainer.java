@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
@@ -32,8 +31,7 @@ public class RobotContainer {
   private String autoString;
 
   private Drive drivetrain;
-  private Shooter shooter;
-  private Hood hood;
+  private Shooter m_shooter;
   
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -48,8 +46,7 @@ public class RobotContainer {
 
     drivetrain = new Drive(new DriveKraken());
 
-    shooter = new Shooter();
-    hood = new Hood();
+    m_shooter = new Shooter();
 
     configureBindings();
   }
@@ -63,6 +60,15 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
+
+    /* For Testing: Delete if needed. */
+    //driver.a().toggleOnTrue(m_shooter.goTo15());
+    //driver.b().toggleOnTrue(m_shooter.goTo30());
+    //driver.x().toggleOnTrue(m_shooter.goTo45());
+    //driver.y().toggleOnTrue(m_shooter.goTo60());
+
+    //driver.leftTrigger().toggleOnTrue(m_shooter.goToShoot());
+    //driver.rightTrigger().toggleOnTrue(m_shooter.goToIdle());
   }
 
   public void updateAutonCommand() {
