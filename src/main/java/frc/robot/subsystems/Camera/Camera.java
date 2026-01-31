@@ -179,12 +179,7 @@ public class Camera extends SubsystemBase {
         drivetrain = drive;
         constants = new CameraConstants();
         
-        try {
-            tags = AprilTagFieldLayout.loadFromResource("/home/lvuser/deploy/2026-rebuilt-welded.json");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        tags = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         CameraConstant cameraConstant = constants.cameraConstants.get(CameraPositions.FRONT);
         if (cameraConstant != null) {
