@@ -331,7 +331,7 @@ public class DriveConstants {
     ***************************************************************************************************/
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
-    private static final double kCoupleRatioComp24 = 3.5714285714285716;
+    private static final double kCoupleRatioComp24 = 3.8181818181818183;
     private static final double kDriveGearRatioComp24 = 5.01;
     private static final double kSteerGearRatioComp24 = 13.3714;
   
@@ -351,15 +351,15 @@ public class DriveConstants {
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGainsComp24 = new Slot0Configs()
-        .withKP(100).withKI(0).withKD(0.2)
-        .withKS(0).withKV(1.5).withKA(0)
+        .withKP(100).withKI(0).withKD(0.5)
+        .withKS(0.1).withKV(1.66).withKA(0)
         //.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
         ;
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     private static final Slot0Configs driveGainsComp24 = new Slot0Configs()
-        .withKP(3.0).withKI(0).withKD(0)
-        .withKS(0.0).withKV(0.0).withKA(0.0);
+        .withKP(0.1).withKI(0).withKD(0)
+        .withKS(0.0).withKV(0.124).withKA(0.0);
 
     private static final ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT_TYPEComp24 = ClosedLoopOutputType.Voltage;
     private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT_TYPEComp24 = ClosedLoopOutputType.Voltage;
@@ -388,12 +388,12 @@ public class DriveConstants {
             .withDriveFrictionVoltage(kDriveFrictionVoltageComp24);
 
     // Front Left
-    private static final int kFrontLeftDriveMotorIdComp24 = 7;
-    private static final int kFrontLeftSteerMotorIdComp24 = 8;
-    private static final int kFrontLeftEncoderIdComp24 = 40;
-    private static final Angle kFrontLeftEncoderOffsetComp24 = Rotations.of(0.440673828125);
-    private static final boolean kFrontLeftSteerMotorInvertedComp24 = false;
-    private static final boolean kFrontLeftEncoderInvertedComp24 = true;  //?????????????????????????????????
+    private static final int kFrontLeftDriveMotorIdComp24 = 1;
+    private static final int kFrontLeftSteerMotorIdComp24 = 2;
+    private static final int kFrontLeftEncoderIdComp24 = 43;
+    private static final Angle kFrontLeftEncoderOffsetComp24 = Rotations.of(0.318359375);
+    private static final boolean kFrontLeftSteerMotorInvertedComp24 = true;
+    private static final boolean kFrontLeftEncoderInvertedComp24 = false;  //?????????????????????????????????
     private static final Distance kFrontLeftXPosComp24 = Inches.of(10.125);
     private static final Distance kFrontLeftYPosComp24 = Inches.of(10.125);
 
@@ -401,7 +401,7 @@ public class DriveConstants {
     private static final int kFrontRightDriveMotorIdComp24 = 3;
     private static final int kFrontRightSteerMotorIdComp24 = 4;
     private static final int kFrontRightEncoderIdComp24 = 41;
-    private static final Angle kFrontRightEncoderOffsetComp24 = Rotations.of(0.098876953125);
+    private static final Angle kFrontRightEncoderOffsetComp24 = Rotations.of(-0.149169921875);
     private static final boolean kFrontRightSteerMotorInvertedComp24 = false;
     private static final boolean kFrontRightEncoderInvertedComp24 = false; //???????????????????????????????
     private static final Distance kFrontRightXPosComp24 = Inches.of(10.125);
@@ -411,19 +411,19 @@ public class DriveConstants {
     private static final int kBackLeftDriveMotorIdComp24 = 5;
     private static final int kBackLeftSteerMotorIdComp24 = 6;
     private static final int kBackLeftEncoderIdComp24 = 42;
-    private static final Angle kBackLeftEncoderOffsetComp24 = Rotations.of(-0.450439453125);
-    private static final boolean kBackLeftSteerMotorInvertedComp24 = false;  
-    private static final boolean kBackLeftEncoderInvertedComp24 = true;  //????????????????????????????????????
+    private static final Angle kBackLeftEncoderOffsetComp24 = Rotations.of(-0.035888671875);
+    private static final boolean kBackLeftSteerMotorInvertedComp24 = true;  
+    private static final boolean kBackLeftEncoderInvertedComp24 = false;  //????????????????????????????????????
     private static final Distance kBackLeftXPosComp24 = Inches.of(-10.125);
     private static final Distance kBackLeftYPosComp24 = Inches.of(10.125);
 
     // Back Right
-    private static final int kBackRightDriveMotorIdComp24 = 1;
-    private static final int kBackRightSteerMotorIdComp24 = 2;
-    private static final int kBackRightEncoderIdComp24 = 43;
-    private static final Angle kBackRightEncoderOffsetComp24 = Rotations.of(-0.44140625);
-    private static final boolean kBackRightSteerMotorInvertedComp24 = false;
-    private static final boolean kBackRightEncoderInvertedComp24 = true; //??????????????????????????????????????
+    private static final int kBackRightDriveMotorIdComp24 = 7;
+    private static final int kBackRightSteerMotorIdComp24 = 8;
+    private static final int kBackRightEncoderIdComp24 = 40;
+    private static final Angle kBackRightEncoderOffsetComp24 = Rotations.of(-0.274658203125);
+    private static final boolean kBackRightSteerMotorInvertedComp24 = true;
+    private static final boolean kBackRightEncoderInvertedComp24 = false; //??????????????????????????????????????
 
     private static final Distance kBackRightXPosComp24 = Inches.of(-10.125);
     private static final Distance kBackRightYPosComp24 = Inches.of(-10.125);
@@ -433,7 +433,7 @@ public class DriveConstants {
         ConstantCreatorComp24.createModuleConstants(
             kFrontLeftSteerMotorIdComp24, kFrontLeftDriveMotorIdComp24, kFrontLeftEncoderIdComp24, kFrontLeftEncoderOffsetComp24,
             kFrontLeftXPosComp24, kFrontLeftYPosComp24, kInvertLeftSide, kFrontLeftSteerMotorInvertedComp24, kFrontLeftEncoderInvertedComp24
-        ).withDriveMotorInverted(false);
+        ).withDriveMotorInverted(true);
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontRightComp24 =
         ConstantCreatorComp24.createModuleConstants(
             kFrontRightSteerMotorIdComp24, kFrontRightDriveMotorIdComp24, kFrontRightEncoderIdComp24, kFrontRightEncoderOffsetComp24,

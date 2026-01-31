@@ -4,14 +4,17 @@
 package frc.robot;
 
 import java.io.IOException;
-
+import java.util.Optional;
 
 import org.json.simple.parser.ParseException;
-
-import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,15 +23,20 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Drivetrain.DriveSim;
+import frc.robot.subsystems.Hood.Hood;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
-  private SendableChooser<String> chooser = new SendableChooser<>();
+
+  SendableChooser<String> Autos = new SendableChooser<>();
   private Command autoCommand;
   private String autoString;
 
   private Drive drivetrain;
+  private Shooter shooter;
+  private Hood hood;
+  
   private Climber m_climber;
   private Index m_indexer;
 
@@ -38,21 +46,18 @@ public class RobotContainer {
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
-    if(!Utils.isSimulation()){
-        drivetrain = new Drive(new DriveKraken());
-    } else {
-        drivetrain = new Drive(new DriveSim());
-    }
-    
+    //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
+    //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
+    Autos.setDefaultOption("Auto", "Path");
+    SmartDashboard.putData("Autos",Autos);
+
+    drivetrain = new Drive(new DriveKraken());
+
+    shooter = new Shooter();
+    hood = new Hood();
+
     m_climber = new Climber();
     m_indexer = new Index();
-    chooser.setDefaultOption("Auto", "Auto");
-
-    // chooser.addOption("<PUT_AUTO_HERE>", "<PUT_AUTO_HERE>");
-    
-    // NamedCommands.registerCommand("Put Command Name Here", Put Command Here);
-
-    SmartDashboard.putData(chooser);
 
     configureBindings();
   }
@@ -66,24 +71,50 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
-}
 
-  public void updateAutonCommand() throws ParseException {
+      driver.rightTrigger().whileTrue(drivetrain.run(()->
+      drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+          new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
+      );
+
+      NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
+      NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
+
+      new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
+  }
+
+  public void updateAutonCommand() {
+    Optional<Alliance> Ally = DriverStation.getAlliance();
+    String AutoSelect;
+    String ColorSelect;
+    if (!Ally.isPresent()) {
+      ColorSelect = "";
+    } else {
+      if (Ally.get() == Alliance.Red) {
+        ColorSelect = "Red-";
+      } else {
+        ColorSelect = "Blue-";
+      }
+    }
+    AutoSelect = ColorSelect + Autos.getSelected();
     if (autoString != null) {
-      if (chooser.getSelected() != autoString) {
-        autoString = chooser.getSelected();
+      if (AutoSelect != autoString) {
+        autoString = AutoSelect;
         autoCommand = new PathPlannerAuto(autoString);
         try {
           drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
         } catch (IOException e) {
-          System.err.println("No Auto File");
+          System.err.println("No Auto File: " + e.toString());
+        } catch (ParseException e) {
+          System.err.println("idk good luck: " + e.toString());
         } catch (IndexOutOfBoundsException e) {
-          System.err.println("no auto Paths");
+          System.err.println("no auto Paths: " + e.toString());
         }
       }
     } else {
-      autoString = chooser.getSelected();
-    }
+      autoString = AutoSelect;
+      }
   }
 
   public Command getAutonomousCommand() {
