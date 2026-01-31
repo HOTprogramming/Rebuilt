@@ -102,6 +102,12 @@ public class ClimberConstants {
             case MINIBOT -> new ClimberConfigs( 
                 climberWheelConfigs 
             );
+            case ALPHABOT -> new ClimberConfigs( 
+                climberWheelConfigs 
+            );
+            case COMP26 -> new ClimberConfigs( 
+                climberWheelConfigs 
+            );
 
         };
 

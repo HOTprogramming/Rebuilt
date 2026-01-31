@@ -153,6 +153,12 @@ public class ShooterConstants {
             case MINIBOT -> new ShooterConfigs( 
                 shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
             );
+            case ALPHABOT -> new ShooterConfigs( 
+                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+            );
+            case COMP26 -> new ShooterConfigs( 
+                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+            );
         };
 
 

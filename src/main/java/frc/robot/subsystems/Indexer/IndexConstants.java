@@ -102,6 +102,12 @@ public class IndexConstants {
             case MINIBOT -> new IndexConfigs( 
                 indexWheelConfigs 
             );
+            case ALPHABOT -> new IndexConfigs( 
+                indexWheelConfigs 
+            );
+            case COMP26 -> new IndexConfigs( 
+                indexWheelConfigs 
+            );
 
         };
 

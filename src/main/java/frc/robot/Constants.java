@@ -26,15 +26,17 @@ package frc.robot;
   }
 
 
-  public enum RobotType {
-    SIMBOT,
-    DEVBOT,
-    CAMERABOT,
-    COMPBOT,
-    COMP24,
-    COMP25,
-    MINIBOT
-  }
+    public enum RobotType {
+      SIMBOT,
+      DEVBOT,
+      CAMERABOT,
+      COMPBOT,
+      COMP24,
+      COMP25,
+      MINIBOT,
+      ALPHABOT,
+      COMP26
+    }
 
   public static boolean disableHAL = false;
 
