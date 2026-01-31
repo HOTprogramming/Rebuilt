@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
@@ -34,8 +33,7 @@ public class RobotContainer {
   private String autoString;
 
   private Drive drivetrain;
-  private Shooter shooter;
-  private Hood hood;
+  private Shooter m_shooter;
   
   private Climber m_climber;
   private Index m_indexer;
@@ -53,8 +51,7 @@ public class RobotContainer {
 
     drivetrain = new Drive(new DriveKraken());
 
-    shooter = new Shooter();
-    hood = new Hood();
+    m_shooter = new Shooter();
 
     m_climber = new Climber();
     m_indexer = new Index();
