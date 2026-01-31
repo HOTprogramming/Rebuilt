@@ -21,7 +21,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Drivetrain.DriveSim;
+import frc.robot.subsystems.Hood.Hood;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
@@ -40,28 +41,15 @@ public class RobotContainer {
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
-    drivetrain = new Drive(new DriveKraken());
-
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Auto", "Path");
     SmartDashboard.putData("Autos",Autos);
-    if(!Utils.isSimulation()){
-        drivetrain = new Drive(new DriveKraken());
-    } else {
-        drivetrain = new Drive(new DriveSim());
-    }
+
+    drivetrain = new Drive(new DriveKraken());
 
     shooter = new Shooter();
     hood = new Hood();
-
-    chooser.setDefaultOption("Auto", "Auto");
-
-    // chooser.addOption("<PUT_AUTO_HERE>", "<PUT_AUTO_HERE>");
-    
-    // NamedCommands.registerCommand("Put Command Name Here", Put Command Here);
-
-    SmartDashboard.putData(chooser);
 
     configureBindings();
   }
