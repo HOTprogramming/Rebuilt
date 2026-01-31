@@ -48,6 +48,7 @@ public class RobotContainer {
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Auto", "Path");
+    
     SmartDashboard.putData("Autos",Autos);
 
     configureBindings();
@@ -69,17 +70,14 @@ public class RobotContainer {
           new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
       );
 
-      NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
-      NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
-
-      new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
-
+      NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
   public void updateAutonCommand() {
     Optional<Alliance> Ally = DriverStation.getAlliance();
     String AutoSelect;
     String ColorSelect;
+    
     if (!Ally.isPresent()) {
       ColorSelect = "Red-";
     } else {
@@ -95,7 +93,7 @@ public class RobotContainer {
         autoString = AutoSelect;
         autoCommand = new PathPlannerAuto(autoString);
         try {
-          drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
+          PathPlannerAuto.getPathGroupFromAutoFile(autoString);
         } catch (IOException e) {
           System.err.println("No Auto File: " + e.toString());
         } catch (ParseException e) {

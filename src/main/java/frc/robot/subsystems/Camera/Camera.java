@@ -351,12 +351,7 @@ public class Camera extends SubsystemBase {
             for (int id : DriverStation.getAlliance().get() == Alliance.Blue ? CameraConstants.REEF_TAGS_BLUE : CameraConstants.REEF_TAGS_RED) {
                 if (target.getFiducialId() == id && avgDist < 2) {
                     estStdDevs = VecBuilder.fill(0.25, 0.25, 2);
-                    drivetrain.tagTransform = new Pose3d()
-                            .plus(target.getBestCameraToTarget())
-                            .plus(constant.getTransform().inverse());
-                            
-                   
-
+                        
                     // SmartDashboard.put
                     // SmartDashboard.putNumber("Tag X", drivetrain.tagTransform.getX());
                     // SmartDashboard.putNumber("Tag Y", drivetrain.tagTransform.getY());

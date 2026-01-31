@@ -1,0 +1,37 @@
+name: Verify Robot Constant
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-variable-value:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Search for the variable assignment
+      - name: Verify Variable Value
+        run: |
+          # Define your configuration here
+          FILE_PATH="src/main/java/frc/robot/Constants.java"
+          VAR_NAME="robotType"
+          EXPECTED_VALUE="RobotType.COMPBOT"
+
+          echo "Checking $FILE_PATH for $VAR_NAME = $EXPECTED_VALUE..."
+
+          # Use grep with PCRE (-P) for robust regex handling
+          # \s* handles optional spaces around the equals sign
+          if grep -Pq "$VAR_NAME\s*=\s*$EXPECTED_VALUE" "$FILE_PATH"; then
+            echo "✅ Success: $VAR_NAME is set to $EXPECTED_VALUE"
+            exit 0
+          else
+            echo "❌ Error: $VAR_NAME is NOT set to $EXPECTED_VALUE in $FILE_PATH"
+            echo "Found the following occurrences instead:"
+            grep "$VAR_NAME" "$FILE_PATH" || echo "(Variable not found in file)"
+            exit 1
+          fi
