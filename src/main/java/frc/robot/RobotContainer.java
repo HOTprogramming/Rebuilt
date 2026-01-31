@@ -50,6 +50,7 @@ public class RobotContainer {
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Auto", "Path");
     Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
+    Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
     
     SmartDashboard.putData("Autos",Autos);
 
@@ -106,7 +107,7 @@ public class RobotContainer {
           System.err.println("idk good luck: " + e.toString());
         } catch (IndexOutOfBoundsException e) {
           System.err.println("no auto Paths: " + e.toString());
-        }
+
       }
     } else {
       autoString = AutoSelect;
