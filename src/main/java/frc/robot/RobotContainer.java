@@ -72,12 +72,12 @@ public class RobotContainer {
       // driver.b().toggleOnTrue(m_climber.latchCommand());
       // driver.x().toggleOnTrue(m_climber.rotateCommand());
       // driver.y().toggleOnTrue(m_climber.spinhomeCommand());
-      // driver.a().toggleOnTrue(m_indexer.floorCommand());
-      // driver.a().toggleOnTrue(m_indexer.loadCommand());
-      driver.a().toggleOnTrue(m_indexer.rightkickerCommand());
-      // driver.b().toggleOnTrue(m_indexer.floorCommand());
-      //driver.b().toggleOnTrue(m_indexer.loadCommand());
-      driver.b().toggleOnTrue(m_indexer.leftkickerCommand());
+      driver.a().toggleOnTrue(m_indexer.floorCommand());
+      driver.a().toggleOnTrue(m_indexer.loadCommand());
+      driver.a().toggleOnTrue(m_indexer.Kicker1Command());
+      driver.b().toggleOnTrue(m_indexer.floorCommand());
+      driver.b().toggleOnTrue(m_indexer.loadCommand());
+      driver.b().toggleOnTrue(m_indexer.Kicker2Command());
       driver.x().toggleOnTrue(m_indexer.offCommand());
 }
 

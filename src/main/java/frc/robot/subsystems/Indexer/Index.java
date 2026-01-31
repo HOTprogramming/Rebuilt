@@ -78,14 +78,14 @@ public void periodic() {
     public Command floorCommand() {
         return runOnce( () -> floor(IndexConstants.floorspeed));
     }
-    public Command rightkickerCommand() {
-        return runOnce( () -> kicker1(IndexConstants.kickerspeed));
-    }
-    public Command leftkickerCommand() {
-        return runOnce( () -> kicker2(IndexConstants.kickerspeed));
-    }
     public Command loadCommand() {
         return runOnce( () -> load(IndexConstants.loaderspeed));
+    }
+    public Command Kicker1Command() {
+        return runOnce( () -> kicker1(IndexConstants.kickerspeed));
+    }
+    public Command Kicker2Command() {
+        return runOnce( () -> kicker2(IndexConstants.kickerspeed));
     }
     public Command offCommand() {
         return runOnce( () -> off(IndexConstants.zerospeed));

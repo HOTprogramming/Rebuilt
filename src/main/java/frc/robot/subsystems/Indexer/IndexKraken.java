@@ -25,7 +25,7 @@ import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import frc.robot.sim.PhysicsSim;
-
+import frc.robot.subsystems.Climber.ClimberConstants;
 import frc.robot.subsystems.Indexer.Index.IndexStats;
 
 public class IndexKraken {
@@ -83,12 +83,35 @@ public class IndexKraken {
             stats.indexTempCelsius = indexTempCelsius.getValueAsDouble();
     }
     public IndexKraken() {
+        StatusCode statuscode = m_TalonFX.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0); 
+        if (!statuscode.isOK()) {
+            System.out.println("Configuration Failed on Index Kicker Left Motor");
+
+        }
+        StatusCode statuscode2 = m_TalonFX2.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0);
+       
+        if (!statuscode2.isOK()) {
+            System.out.println("Configuration Failed on Index Kicker Right Motor");
+        }
+        StatusCode statuscode3 = m_TalonFX3.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0);
+       
+        if (!statuscode3.isOK()) {
+            System.out.println("Configuration Failed on Index Floor Motor");
+        }
+        StatusCode statuscode4 = m_TalonFX4.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0);
+       
+        if (!statuscode4.isOK()) {
+            System.out.println("Configuration Failed on Index Loader Motor");
+        }
+
+
         indexPosition = m_TalonFX.getPosition();
         indexVelocity = m_TalonFX.getVelocity();
         indexAppliedVolts = m_TalonFX.getMotorVoltage();
         indexSupplyCurrent = m_TalonFX.getSupplyCurrent();
         indexTorqueCurrent = m_TalonFX.getTorqueCurrent();
         indexTempCelsius = m_TalonFX.getDeviceTemp();
+        
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,

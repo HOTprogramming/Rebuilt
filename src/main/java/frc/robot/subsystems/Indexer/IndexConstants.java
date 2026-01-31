@@ -14,12 +14,12 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class IndexConstants {
-    public static int kLeftKickID = 14; //IMPORTANT
-    public static int kRightKickID = 18; //IMPORTANT
-    public static int kFloorID = 15; //IMPORTANT
-    public static int kLoaderID = 16; //IMPORTANT
+    public static int kLeftKickID = 0; //IMPORTANT
+    public static int kRightKickID = 0; //IMPORTANT
+    public static int kFloorID = 14; //IMPORTANT
+    public static int kLoaderID = 18; //IMPORTANT
     public static String kBusName = "rio"; //IMPORTvwe2ANT
-    public static double kickerspeed = 500; //IMPORTANT
+    public static double kickerspeed = 1000; //IMPORTANT
     public static double floorspeed = 300; //IMPORTANT
     public static double loaderspeed = 1000; //IMPORTANT
     public static double zerospeed = 0;
@@ -79,27 +79,27 @@ public class IndexConstants {
     * Based on the robot selected, load Intake configs with
     *   the selected robot configuration  
     ********************************************************/
-    public static final ClimberConfigs ClimberConfigs =
+    public static final IndexConfigs IndexConfigs =
         switch (Constants.getRobot()) {
-            case COMPBOT -> new ClimberConfigs(
+            case COMPBOT -> new IndexConfigs(
                 indexWheelConfigs 
             );
-            case SIMBOT -> new ClimberConfigs(
+            case SIMBOT -> new IndexConfigs(
                 indexWheelConfigs 
             );
-            case DEVBOT -> new ClimberConfigs(
+            case DEVBOT -> new IndexConfigs(
                 indexWheelConfigs 
             );
-            case CAMERABOT -> new ClimberConfigs( 
+            case CAMERABOT -> new IndexConfigs( 
                 indexWheelConfigs 
             );
-            case COMP24 -> new ClimberConfigs( 
+            case COMP24 -> new IndexConfigs( 
                 indexWheelConfigs 
             );
-            case COMP25 -> new ClimberConfigs( 
+            case COMP25 -> new IndexConfigs( 
                 indexWheelConfigs 
             );
-            case MINIBOT -> new ClimberConfigs( 
+            case MINIBOT -> new IndexConfigs( 
                 indexWheelConfigs 
             );
 
@@ -109,7 +109,7 @@ public class IndexConstants {
     /*****************
      * Define the Climber Config Class 
      *****************/
-    public record ClimberConfigs(
+    public record IndexConfigs(
         TalonFXConfiguration indexWheelConfigs 
     ) {}
 
