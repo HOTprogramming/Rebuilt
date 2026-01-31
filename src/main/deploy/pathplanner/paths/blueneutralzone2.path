@@ -28,12 +28,7 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.10124481327800838,
-      "rotationDegrees": -65.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -50,7 +45,7 @@
     "rotation": -65.0
   },
   "reversed": false,
-  "folder": "NeutralZone",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": -180.0

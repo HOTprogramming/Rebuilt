@@ -106,7 +106,7 @@ public class RobotContainer {
           System.err.println("idk good luck: " + e.toString());
         } catch (IndexOutOfBoundsException e) {
           System.err.println("no auto Paths: " + e.toString());
-        }
+
       }
     } else {
       autoString = AutoSelect;
