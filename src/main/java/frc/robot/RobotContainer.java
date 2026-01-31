@@ -87,7 +87,7 @@ public class RobotContainer {
         autoString = AutoSelect;
         autoCommand = new PathPlannerAuto(autoString);
         try {
-          drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
+          PathPlannerAuto.getPathGroupFromAutoFile(autoString);
         } catch (IOException e) {
           System.err.println("No Auto File: " + e.toString());
         } catch (ParseException e) {
