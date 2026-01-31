@@ -61,14 +61,16 @@ public class RobotContainer {
         }
       ));
 
-    /* For Testing: Delete if needed. */
-    //driver.a().toggleOnTrue(m_shooter.goTo15());
-    //driver.b().toggleOnTrue(m_shooter.goTo30());
-    //driver.x().toggleOnTrue(m_shooter.goTo45());
-    //driver.y().toggleOnTrue(m_shooter.goTo60());
+      driver.rightTrigger().whileTrue(drivetrain.run(()->
+      drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+          new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
+      );
 
-    //driver.leftTrigger().toggleOnTrue(m_shooter.goToShoot());
-    //driver.rightTrigger().toggleOnTrue(m_shooter.goToIdle());
+      NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
+      NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
+
+      new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
   }
 
   public void updateAutonCommand() {
