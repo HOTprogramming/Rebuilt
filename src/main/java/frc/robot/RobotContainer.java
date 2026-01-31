@@ -20,7 +20,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Climber.Climber;
+import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Drivetrain.Drive;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 
 public class RobotContainer {
@@ -30,20 +33,29 @@ public class RobotContainer {
   private String autoString;
 
   private Drive drivetrain;
+  private Shooter m_shooter;
   
+  private Climber m_climber;
+  private Index m_indexer;
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
   public RobotContainer() {
     //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
-    drivetrain = new Drive(new DriveKraken());
-
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Path", "Path");
     
     SmartDashboard.putData("Autos",Autos);
+
+    drivetrain = new Drive(new DriveKraken());
+
+    m_shooter = new Shooter();
+
+    m_climber = new Climber();
+    m_indexer = new Index();
 
     configureBindings();
   }
@@ -70,7 +82,6 @@ public class RobotContainer {
       NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
 
       new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
-
   }
 
   public void updateAutonCommand() {
