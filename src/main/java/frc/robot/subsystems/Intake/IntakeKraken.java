@@ -111,8 +111,7 @@ public class IntakeKraken {
     if(!statuscode.isOK()) { 
       System.out.println("Configuration Failed on Right Roller shooter Motor ");
     } 
-    //statuscode = m_LeftCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftIntakeEncoderConfigs(),1.0);
-
+    statuscode = m_LeftCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftIntakeEncoderConfigs(),1.0);
     if (!statuscode.isOK()) {
       System.out.println("Configuration Failed on LeftIntake CanCoder");
     }

@@ -19,26 +19,27 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.Constants;
 
 public class IntakeConstants {
-    public static double kLeftDeployedPosition = 200.0;
-    public static double kRightDeployedPosition = 200.0;
-    public static double kLeftRetractPosition = 0.0;
+    public static double kLeftDeployedPosition = 0.0;
+    public static double kRightDeployedPosition = 10.0;
+    public static double kLeftRetractPosition = 90.0;
     public static double kRightRetractPosition = 0.0;
 
     public static double kLeftExpel = -1000.0;
     public static double kRightExpel = -1000.0;
 
-    public static int kLeftIntakeEncoderID = 20;
+    public static int kLeftIntakeEncoderID = 46;
     public static int kRightIntakeEncoderID = 21;
 
     public static double kLeftIntake = 2000.0;
     public static double kRightIntake = 2000.0;
 
-    public static int kIntakeMotorIDLExtend = 17;
+    public static int kIntakeMotorIDLExtend = 19;
     public static int kIntakeMotorIDRExtend = 14;
-    public static int kIntakeMotorIDLRoller = 19;
-    public static int kIntakeMotorIDRRoller = 18;
-    public static double kEncoderOffset = -0.072266;
-    public static String kBusName = "rio";
+    public static int kIntakeMotorIDLRoller = 17;
+    public static int kIntakeMotorIDRRoller = 15;
+    public static double kLeftEncoderOffset = 0.15283203125;
+    public static double kRightEncoderOffset = 0;
+    public static String kBusName = "robot";
 
     public static final TalonFXConfiguration LeftRollerConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
@@ -63,11 +64,11 @@ public class IntakeConstants {
                 .withMotionMagicAcceleration(10.0)
         ).withSlot0(
             new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
-                .withKP(0.11)       // An error of 1 rotation per second results in 0.11 V output
-                .withKI(0.0)        // No output for integrated error
+                .withKP(0.1)       // An error of 1 rotation per second results in 0.11 V output
+                .withKI(0.1)        // No output for integrated error
                 .withKD(0.0)        // No output for error derivative
-                .withKS(0.1)        // To account for friction, add 0.1 V of static feedforward
-                .withKV(0.12)       // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
+                .withKS(0.4)        // To account for friction, add 0.1 V of static feedforward
+                .withKV(0.95)       // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
         ).withSlot1(
             new Slot1Configs()            /* Torque-based velocity does not require a velocity feed forward, as torque will accelerate the rotor up to the desired velocity by itself */
                 .withKP(5.0)        // An error of 1 rotation per second results in 5 A output
@@ -155,13 +156,13 @@ public class IntakeConstants {
                 .withPeakReverseTorqueCurrent(-120)
         ).withMotorOutput(
             new MotorOutputConfigs()
-                .withInverted(InvertedValue.CounterClockwise_Positive)    
+                .withInverted(InvertedValue.Clockwise_Positive)    
                 .withNeutralMode(NeutralModeValue.Coast)   
         ).withSlot0(
             new Slot0Configs()            /* Voltage-based position */
-                .withKP(2.4)        // An error of 1 rotation results in 2.4v output
+                .withKP(0.19)        // An error of 1 rotation results in 2.4v output
                 .withKI(0.0)        // No output for integrated error
-                .withKD(0.1)        // A velocity of 1 rps results in 0.1v output 
+                .withKD(0.0)        // A velocity of 1 rps results in 0.1v output 
         ).withSlot1(
             new Slot1Configs()            /* Torque-based position  */
                 .withKP(60.0)       // An error of 1 rotation results in 60 A output
@@ -183,8 +184,8 @@ public class IntakeConstants {
         ).withFeedback(
            new FeedbackConfigs() 
                .withFeedbackRemoteSensorID(kLeftIntakeEncoderID)        
-               .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
-                .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
+               .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder) 
+                .withSensorToMechanismRatio(1.0/360.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
                 .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
 
@@ -231,7 +232,7 @@ public class IntakeConstants {
         ).withFeedback(
         new FeedbackConfigs() 
            .withFeedbackRemoteSensorID(kRightIntakeEncoderID)        
-              .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder) 
+              .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder) 
                .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
                 .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
@@ -239,14 +240,14 @@ public class IntakeConstants {
         public static final CANcoderConfiguration LeftIntakeEncoderConfigs = new CANcoderConfiguration() 
         .withMagnetSensor(
             new MagnetSensorConfigs()
-                .withMagnetOffset(kEncoderOffset)    //The offset applied to the absolute integrated rotor sensor.
-                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                .withMagnetOffset(kLeftEncoderOffset)    //The offset applied to the absolute integrated rotor sensor.
+                .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
         );
         public static final CANcoderConfiguration RightIntakeEncoderConfigs = new CANcoderConfiguration() 
         .withMagnetSensor(
             new MagnetSensorConfigs()
-                .withMagnetOffset(kEncoderOffset)    //The offset applied to the absolute integrated rotor sensor.
-                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                .withMagnetOffset(kRightEncoderOffset)    //The offset applied to the absolute integrated rotor sensor.
+                .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
         );
     
              public static final IntakeConfigs IntakeConfigs =
