@@ -27,6 +27,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -34,7 +35,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;    
+import frc.robot.subsystems.Drivetrain.ShootingWhileMoving;
 
 class DriveIOdata { 
     public SwerveDriveState state = new SwerveDriveState();
@@ -171,6 +173,7 @@ public class Drive extends SubsystemBase {
                 this.iOdata.state.Pose.getY(), 
                 this.iOdata.state.Pose.getRotation().getRadians()});
         }
+
     }
             
     public boolean drivetrainAtTarget() {
@@ -252,14 +255,20 @@ public class Drive extends SubsystemBase {
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
         );
      }
+
+     public ShootingWhileMoving ShootingOnTarget = new ShootingWhileMoving(); 
  
      public void facePoint(double driveX, double driveY, Pose2d point) {
-        driveKraken.setSwerveRequest(ROBOT_CENTRIC
+          
+        double angle = ShootingOnTarget.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
+
+        driveKraken.setSwerveRequest(FIELD_CENTRIC
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
-            Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI))
-        );        
+            angle + Math.PI)
+            //Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI))
+        ));        
     }
 
     public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
