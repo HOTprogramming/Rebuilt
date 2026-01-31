@@ -49,6 +49,7 @@ public class RobotContainer {
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Auto", "Path");
     Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
+    Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
     
     SmartDashboard.putData("Autos",Autos);
 
