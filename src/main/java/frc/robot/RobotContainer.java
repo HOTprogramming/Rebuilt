@@ -89,7 +89,7 @@ public class RobotContainer {
     String AutoSelect;
     String ColorSelect;
     if (!Ally.isPresent()) {
-      ColorSelect = "";
+      ColorSelect = "Red-";
     } else {
       if (Ally.get() == Alliance.Red) {
         ColorSelect = "Red-";
