@@ -67,7 +67,7 @@ public class RobotContainer {
         }
       ));
 
-      driver.rightTrigger().whileTrue(drivetrain.run(()->
+      driver.a().whileTrue(drivetrain.run(()->
       drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
           Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
           new Pose2d(11.91,4.03,Rotation2d.fromDegrees(0))))
@@ -107,11 +107,11 @@ public class RobotContainer {
           System.err.println("idk good luck: " + e.toString());
         } catch (IndexOutOfBoundsException e) {
           System.err.println("no auto Paths: " + e.toString());
-
+        }
+      } else {
+        autoString = AutoSelect;
       }
-    } else {
-      autoString = AutoSelect;
-      }
+    }
   }
 
   public Command getAutonomousCommand() {
