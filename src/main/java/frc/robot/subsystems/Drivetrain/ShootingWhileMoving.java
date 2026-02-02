@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Drivetrain;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -10,10 +11,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ShootingWhileMoving {
     
     public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
-        double latency = 0.15; //needs to be tuned, in seconds
+        double latency = 0.1; //needs to be tuned, in seconds
+        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation()); 
         Translation2d futurePos = RobotPos.getTranslation().plus(
-            new Translation2d(RobotSpeed.vxMetersPerSecond, RobotSpeed.vyMetersPerSecond).times(latency)
+            new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency)
         );
+
 
         double goalX;
         if (allyRed) {
@@ -28,7 +31,7 @@ public class ShootingWhileMoving {
 
         double idealHorizontalSpeed = 10;
 
-        Translation2d robotVelVec = new Translation2d(RobotSpeed.vxMetersPerSecond, RobotSpeed.vyMetersPerSecond);
+        Translation2d robotVelVec = new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
         Translation2d shotVec = targetVec.div(dist).times(idealHorizontalSpeed).minus(robotVelVec);
 
         Translation2d aimPoint = RobotPos.getTranslation().plus(
@@ -37,7 +40,7 @@ public class ShootingWhileMoving {
 
         SmartDashboard.putNumberArray("Target Vec", new double[] {aimPoint.getX(), aimPoint.getY()}); 
 
-        double turretAngle = shotVec.getAngle().getRadians();
+        double turretAngle = shotVec.getAngle().getRadians() + Math.PI; //Turret faces backwards on robot
         double newHorizontalSpeed = shotVec.getNorm();
 
         SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
