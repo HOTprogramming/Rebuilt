@@ -178,7 +178,6 @@ public class Drive extends SubsystemBase {
             
     public boolean drivetrainAtTarget() {
         if (path != null) {
-            System.out.println("here");
             return Math.abs(
                 this.iOdata.state.Pose.getTranslation().getDistance(
                     path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation())) 

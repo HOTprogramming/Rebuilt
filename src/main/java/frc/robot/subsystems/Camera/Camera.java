@@ -260,7 +260,10 @@ public class Camera extends SubsystemBase {
 
         constants.cameraConstants.forEach((key,constant) -> {
             if (constant != null) {
-                cameraMeasurements.put(key,updateCameraMeasurment(key, constant, cameras.get(key), publishers.get(key), photonPoseEstimators.get(key), lastEstTimestamps.get(key)));
+                try{
+                    cameraMeasurements.put(key,updateCameraMeasurment(key, constant, cameras.get(key), publishers.get(key), photonPoseEstimators.get(key), lastEstTimestamps.get(key)));
+                } catch (Exception e) {
+                }
             }
         });
 
