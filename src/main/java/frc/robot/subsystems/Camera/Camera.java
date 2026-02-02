@@ -254,15 +254,8 @@ public class Camera extends SubsystemBase {
         return cameras.get(camera).isConnected();
     }
 
-    // public boolean getCameraSeesTag(CameraPositions camera) {
-    //     return 
-    // }
-
      @Override
     public void periodic() {
-
-        //drivetrain.seesReefTag = false;
-
         minimumTagsSeenByAnyCamera = 0;
 
         constants.cameraConstants.forEach((key,constant) -> {
@@ -296,8 +289,6 @@ public class Camera extends SubsystemBase {
             }
         });
 
-        // robotState.putTargetsSeenByCamera(targetsSeenByCamera);
-
         cameraMeasurements.forEach((key,measurement) -> {
             // ignore top camera when aligning to reef
                 measurement.ifPresent(
@@ -308,10 +299,6 @@ public class Camera extends SubsystemBase {
                         drivetrain.addVisionMeasurement(
                                 est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                         
-                        // SmartDashboard.putNumber(key + " X", est.estimatedPose.toPose2d().getX());
-                        // SmartDashboard.putNumber(key + " Y", est.estimatedPose.toPose2d().getY());
-                        // SmartDashboard.putNumber(key + " Rotation", est.estimatedPose.toPose2d().getRotation().getDegrees());
-
                         if(key == CameraPositions.RIGHT){
                             fieldRight.setRobotPose(est.estimatedPose.toPose2d()); 
                         } else {
@@ -321,8 +308,7 @@ public class Camera extends SubsystemBase {
                     });
             
             });
-        // robotState.setVisionMeasurements(cameraMeasurements);
-        // robotState.setCameraStdDeviations(cameraStdDeviations);
+
     }
 
     public Matrix<N3, N1> getEstimationStdDevs(Pose2d estimatedPose, PhotonCamera camera, CameraConstant constant, PhotonPoseEstimator estimator, boolean allowMultiTag) {
