@@ -27,7 +27,7 @@ public class DriveConstants {
     public static final double slowModeMultiplier = 0.5;
     public static final double kTranslationRateLimiter = 4; // unitless per second^2, this is from the joystick 0-1 command
     public static final double kRotationRateLimiter = 4; // unitless per second^2, this is from the joystick 0-1 command
-    public static final double OTF_end_tolerance = 0.2;
+    public static final double OTF_end_tolerance = .5;
 
     public static final double auto_align_theta_disable = .1;
     public static final double auto_align_top_speed_teleop = 2.4;
