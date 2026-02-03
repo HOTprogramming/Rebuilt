@@ -28,3 +28,18 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+
+    - name: Run Simulation (75s timeout)
+      shell: bash
+      env:
+        CI_FORCE_MODES: "true"
+      run: |
+        set +e
+        timeout 75s ./gradlew simulateJava
+        code=$?
+        if [ $code -eq 124 ]; then
+          echo "Simulation ran 75 seconds or longer; treating as success."
+          exit 0
+        fi
+        echo "Simulation exited before 75 seconds (code $code); failing job."
+        exit 1
