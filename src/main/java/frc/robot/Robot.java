@@ -44,6 +44,13 @@ public class Robot extends TimedRobot {
   private final boolean ciForceModes = "true".equalsIgnoreCase(System.getenv("CI_FORCE_MODES"))
       && "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
   private double simStartTime = -1.0;
+  private SimMode currentSimMode = null;
+
+  private enum SimMode {
+    DISABLED,
+    AUTO,
+    TELEOP
+  }
 
   public Robot() {
     /*Start Logging */
@@ -154,13 +161,13 @@ public class Robot extends TimedRobot {
     double elapsed = Timer.getFPGATimestamp() - simStartTime;
 
     if (elapsed < SIM_DISABLED_SECONDS) {
-      setDriverStationState(false, false);
+      setDriverStationState(SimMode.DISABLED);
     } else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS) {
-      setDriverStationState(true, true);
+      setDriverStationState(SimMode.AUTO);
     } else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS + SIM_TELEOP_SECONDS) {
-      setDriverStationState(true, false);
+      setDriverStationState(SimMode.TELEOP);
     } else {
-      setDriverStationState(true, false);
+      setDriverStationState(SimMode.TELEOP);
     }
   }
 
@@ -168,11 +175,19 @@ public class Robot extends TimedRobot {
   public void simulationInit() {
     if (ciForceModes) {
       simStartTime = Timer.getFPGATimestamp();
-      setDriverStationState(false, false);
+      setDriverStationState(SimMode.DISABLED);
     }
   }
 
-  private void setDriverStationState(boolean enabled, boolean autonomous) {
+  private void setDriverStationState(SimMode mode) {
+    if (mode != currentSimMode) {
+      System.out.println("CI sim mode -> " + mode);
+      currentSimMode = mode;
+    }
+
+    boolean enabled = mode != SimMode.DISABLED;
+    boolean autonomous = mode == SimMode.AUTO;
+
     DriverStationSim.setEnabled(enabled);
     DriverStationSim.setAutonomous(autonomous);
     DriverStationSim.setTest(false);
