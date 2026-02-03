@@ -26,18 +26,18 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     # Runs a single command using the runners shell
-    # - name: Compile and run tests on robot code
-    #   run: ./gradlew build
+    - name: Compile and run tests on robot code
+      run: ./gradlew build
 
-    - name: Run Simulation (60s timeout)
+    - name: Run Simulation (120s timeout)
       shell: bash
       run: |
         set +e
-        timeout 60s ./gradlew simulateJava
+        timeout 120s ./gradlew simulateJava
         code=$?
         if [ $code -eq 124 ]; then
-          echo "Simulation ran 60 seconds or longer; treating as success."
+          echo "Simulation ran 120 seconds or longer; treating as success."
           exit 0
         fi
-        echo "Simulation exited before 60 seconds (code $code); failing job."
+        echo "Simulation exited before 120 seconds (code $code); failing job."
         exit 1

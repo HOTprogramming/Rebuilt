@@ -55,7 +55,7 @@ public class RobotContainer {
     Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
     SmartDashboard.putData("Autos",Autos);
 
-    // drivetrain = new Drive(new DriveKraken());
+    drivetrain = new Drive(new DriveKraken());
     cameraSubsystem = new Camera(drivetrain);
     m_shooter = new Shooter();
     m_climber = new Climber();
