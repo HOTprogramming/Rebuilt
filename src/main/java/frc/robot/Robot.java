@@ -10,9 +10,11 @@ import edu.wpi.first.hal.simulation.RoboRioDataJNI;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -34,6 +36,14 @@ public class Robot extends TimedRobot {
   private boolean ppConfigured = false;
 
   private Command initAuto;
+
+  private static final double SIM_DISABLED_SECONDS = 10;
+  private static final double SIM_AUTO_SECONDS = 10;
+  private static final double SIM_TELEOP_SECONDS = 10;
+
+  private final boolean ciForceModes = "true".equalsIgnoreCase(System.getenv("CI_FORCE_MODES"))
+      && "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
+  private double simStartTime = -1.0;
 
   public Robot() {
     /*Start Logging */
@@ -133,6 +143,39 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
-    
+    if (!ciForceModes) {
+      return;
+    }
+
+    if (simStartTime < 0) {
+      simStartTime = Timer.getFPGATimestamp();
+    }
+
+    double elapsed = Timer.getFPGATimestamp() - simStartTime;
+
+    if (elapsed < SIM_DISABLED_SECONDS) {
+      setDriverStationState(false, false);
+    } else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS) {
+      setDriverStationState(true, true);
+    } else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS + SIM_TELEOP_SECONDS) {
+      setDriverStationState(true, false);
+    } else {
+      setDriverStationState(true, false);
+    }
+  }
+
+  @Override
+  public void simulationInit() {
+    if (ciForceModes) {
+      simStartTime = Timer.getFPGATimestamp();
+      setDriverStationState(false, false);
+    }
+  }
+
+  private void setDriverStationState(boolean enabled, boolean autonomous) {
+    DriverStationSim.setEnabled(enabled);
+    DriverStationSim.setAutonomous(autonomous);
+    DriverStationSim.setTest(false);
+    DriverStationSim.notifyNewData();
   }
 }

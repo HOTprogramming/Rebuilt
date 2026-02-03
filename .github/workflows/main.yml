@@ -31,6 +31,8 @@ jobs:
 
     - name: Run Simulation (120s timeout)
       shell: bash
+      env:
+        CI_FORCE_MODES: "true"
       run: |
         set +e
         timeout 120s ./gradlew simulateJava
