@@ -6,10 +6,11 @@ import static frc.robot.subsystems.Lights.LightsConstants.*;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Intake.IntakeConstants;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANdleConfiguration;
 import com.ctre.phoenix6.hardware.CANdle;
 
@@ -31,14 +32,14 @@ import com.ctre.phoenix6.signals.StripTypeValue;
 public class Lights extends SubsystemBase {
 
     private static final int kSlot0StartIdx = 8;
-    private static final int kSlot0EndIdx = 37;
+    private static final int kSlot0EndIdx = 18;
 
     private static final int kSlot1StartIdx = 38;
     private static final int kSlot1EndIdx = 67;
     
 
-
-  private final CANdle candle = new CANdle(CANdle_ID, "rio");
+  private CANBus canBus = new CANBus(LightsConstants.kBusName);
+  private final CANdle candle = new CANdle(CANdle_ID, canBus);
 
   public enum AnimationType {
     None,
@@ -63,18 +64,18 @@ public class Lights extends SubsystemBase {
 
   public Lights() {
     CANdleConfiguration cfg = new CANdleConfiguration();
-        /* set the LED strip type and brightness */
-        cfg.LED.StripType = StripTypeValue.GRB;
-        cfg.LED.BrightnessScalar = 0.5;
-        /* disable status LED when being controlled */
-        cfg.CANdleFeatures.StatusLedWhenActive = StatusLedWhenActiveValue.Disabled;
-           candle.getConfigurator().apply(cfg);
+    /* set the LED strip type and brightness */
+    cfg.LED.StripType = StripTypeValue.GRB;
+    cfg.LED.BrightnessScalar = 0.5;
+    /* disable status LED when being controlled */
+    cfg.CANdleFeatures.StatusLedWhenActive = StatusLedWhenActiveValue.Disabled;
+        candle.getConfigurator().apply(cfg);
   }
 
   public void apply(AnimationType anim) {
     current = anim;
   
-      switch (m_anim0State) {
+      switch (anim) {
                 default:
                 case ColorFlow:
                     candle.setControl(
@@ -144,17 +145,26 @@ public class Lights extends SubsystemBase {
             }
         }
 
-
-  private void setLightsRed() {
-        candle.setControl(new SolidColor(0, 3).withColor(kRed));    
-  }
-
    public Command setRed() {       
         return runOnce(() ->
         {
-            setLightsRed();
+            candle.setControl(new SolidColor(0, 18).withColor(kRed)); 
+        }); 
+  }
+
+  public Command setViolet() {       
+        return runOnce(() ->
+        {
+            candle.setControl(new SolidColor(0, 18).withColor(kViolet)); 
 
         }); 
   }
 
+   public Command setFire() {       
+        return runOnce(() ->
+        {
+             apply(AnimationType.Fire);
+
+        }); 
+  }
 }            
