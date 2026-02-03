@@ -36,7 +36,8 @@ jobs:
         timeout 60s ./gradlew simulateJava
         code=$?
         if [ $code -eq 124 ]; then
-          echo "Simulation timed out after 60 seconds; continuing without failure."
+          echo "Simulation ran 60 seconds or longer; treating as success."
           exit 0
         fi
-        exit $code
+        echo "Simulation exited before 60 seconds (code $code); failing job."
+        exit 1
