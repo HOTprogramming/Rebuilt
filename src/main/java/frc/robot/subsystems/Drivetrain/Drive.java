@@ -25,14 +25,14 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
+import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;    
@@ -83,9 +83,7 @@ public class Drive extends SubsystemBase {
     private DriveKraken driveKraken;
     private DriveIOdata iOdata;
 
-    private ShuffleboardTab driveTab;
-    private GenericEntry speedEntry;
-    private GenericEntry poseEntry;
+
     private PathConstraints constraints;
     private List<Waypoint> waypoints;
 
@@ -110,6 +108,10 @@ public class Drive extends SubsystemBase {
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 
+ private DoublePublisher robotReqSpeed;
+private DoublePublisher robotRealSpeed;
+private DoubleArrayPublisher robotPose;
+
     public Drive(DriveKraken driveKraken) { 
         this.driveKraken = driveKraken;
         this.iOdata = driveKraken.update();
@@ -121,21 +123,41 @@ public class Drive extends SubsystemBase {
         translationControllerAcross.setTolerance(auto_align_tolerance);
 
         Rotation2d.fromDegrees(0);
+ 
+         NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
-        driveTab = Shuffleboard.getTab("Drive");
-        speedEntry = driveTab.add("Speed", 0.0).getEntry();
-        poseEntry = driveTab.add("Pose", new Double[] {0.0, 0.0, 0.0}).getEntry();
+        NetworkTable table = inst.getTable("HOT/Drive");
 
+        robotReqSpeed = table.getDoubleTopic("Robot Requested Speed").publish();
+        robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
+        robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
+
+    
         double driveBaseRadius = 0;
         for (var moduleLocation : this.iOdata.m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
+
+    
 
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         configurePathPlanner();
 
         constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
+    }
+
+       private void UpdateTelemetry() {
+        robotReqSpeed.set(Math.hypot(
+                FIELD_CENTRIC.VelocityX,
+                FIELD_CENTRIC.VelocityY) );
+        robotRealSpeed.set((Math.hypot(
+                this.iOdata.state.Speeds.vxMetersPerSecond,
+                this.iOdata.state.Speeds.vyMetersPerSecond) ));
+        robotPose.set(new double[]{
+                this.iOdata.state.Pose.getX(), 
+                this.iOdata.state.Pose.getY(), 
+                this.iOdata.state.Pose.getRotation().getRadians()});
     }
 
     @Override
@@ -153,26 +175,8 @@ public class Drive extends SubsystemBase {
         }
 		
         this.iOdata = driveKraken.update();
-        if (this.iOdata.state.Speeds != null) {
-            speedEntry.setDouble(Math.hypot(
-                this.iOdata.state.Speeds.vxMetersPerSecond,
-                this.iOdata.state.Speeds.vyMetersPerSecond) / 5.0);
 
-            SmartDashboard.putNumber("act Speed", (Math.hypot(
-                this.iOdata.state.Speeds.vxMetersPerSecond,
-                this.iOdata.state.Speeds.vyMetersPerSecond) ));
-
-            SmartDashboard.putNumber("req Speed", (Math.hypot(
-                FIELD_CENTRIC.VelocityX,
-                FIELD_CENTRIC.VelocityY) ));
-        }
-        
-        if (this.iOdata.state.Pose != null) {
-            poseEntry.setDoubleArray(new Double[]{
-                this.iOdata.state.Pose.getX(), 
-                this.iOdata.state.Pose.getY(), 
-                this.iOdata.state.Pose.getRotation().getRadians()});
-        }
+         UpdateTelemetry();
 
     }
             
