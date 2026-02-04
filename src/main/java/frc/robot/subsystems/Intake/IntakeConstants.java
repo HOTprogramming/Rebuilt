@@ -19,9 +19,9 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.Constants;
 
 public class IntakeConstants {
-    public static double kLeftDeployedPosition = 0.0;
-    public static double kRightDeployedPosition = 10.0;
-    public static double kLeftRetractPosition = 90.0;
+    public static double kLeftDeployedPosition = 10.0;
+    public static double kLeftRetractPosition = 40.0;
+    public static double kRightDeployedPosition = 0.0;
     public static double kRightRetractPosition = 0.0;
 
     public static double kLeftExpel = -1000.0;

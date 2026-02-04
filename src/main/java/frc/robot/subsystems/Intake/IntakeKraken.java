@@ -86,12 +86,12 @@ public class IntakeKraken {
     *     2-means run Motion Magic Voltage Control Mode  
     *     3-means run Motion Magic Torque Control mode  
     *****************************************************************/           
-  private int controlPos = 0; 
   private int controlVel = 0;
+  private int controlPos = 0;
   private StatusCode statuscode = null;
 
   public IntakeKraken(){
-         /**********************************
+    /**********************************
     * Confiure the shooter Motor 
     ***********************************/
     // Apply Configuration from Intake Constants to motor 
@@ -281,32 +281,43 @@ public class IntakeKraken {
   *     2-means run Motion Magic Expo Voltage Control Mode  
   *     3-means run Motion Magic Expo Torque Control mode  
   ***************************************************************************/
-  public void runPosition(double desiredRotations,int Side) {    
+  
+  public void test(){
+    m_LExtend.setControl(m_positionVoltage.withPosition(10));
+  }
+  
+  public void runPosition(double desiredRotations,int Side) {     
     
-    //  double adjRotations = roundTo1Decimal(desiredRotations);
-    double adjRotations = desiredRotations;
     if(Side == 1) {
         switch (controlPos) {
-            case 0:      /* Use Position Voltage */
-                m_LExtend.setControl(m_positionVoltage.withPosition(adjRotations));
-            case 1:      /* Use Position Torque */
-                m_LExtend.setControl(m_positionTorque.withPosition(adjRotations));
-            case 2:      /* Use Motion Magic Position Voltage */
-                m_LExtend.setControl(m_mmExpoVoltage.withPosition(adjRotations));
-            case 3:      /* Use Motion Magic Position Torque */
-                m_LExtend.setControl(m_mmExpoTorque.withPosition(adjRotations));
+           case 0:      /* Use Position Voltage */
+                m_LExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
+                break;
+           case 1:      /* Use Position Torque */
+                m_LExtend.setControl(m_positionTorque.withPosition(desiredRotations));
+                break;
+           case 2:      /* Use Motion Magic Position Voltage */
+                m_LExtend.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
+                break;
+           case 3:      /* Use Motion Magic Position Torque */
+                m_LExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
+                break;
         }
-    }else {   
-        switch (controlPos) {
-            case 0:      /* Use Position Voltage */
-                m_RExtend.setControl(m_positionVoltage.withPosition(adjRotations));
-            case 1:      /* Use Position Torque */
-                m_RExtend.setControl(m_positionTorque.withPosition(adjRotations));
-            case 2:      /* Use Motion Magic Position Voltage */
-                m_RExtend.setControl(m_mmExpoVoltage.withPosition(adjRotations));
-            case 3:      /* Use Motion Magic Position Torque */
-                m_RExtend.setControl(m_mmExpoTorque.withPosition(adjRotations));
-        }
+     } else {   
+         switch (controlPos) {
+             case 0:      /* Use Position Voltage */
+                 m_RExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
+                 break;
+             case 1:      /* Use Position Torque */
+                 m_RExtend.setControl(m_positionTorque.withPosition(desiredRotations));
+                 break;
+             case 2:      /* Use Motion Magic Position Voltage */
+                 m_RExtend.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
+                 break;
+             case 3:      /* Use Motion Magic Position Torque */
+                 m_RExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
+                 break;
+         }
     }
   }
 
@@ -324,23 +335,31 @@ public class IntakeKraken {
         switch (controlVel) {
             case 0:      /* Use velocity voltage */
                 m_LRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+                break;
             case 1:      /* Use velocity torque */
                 m_LRoller.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
+                break;
             case 2:      /*Use Motion Magic Voltage */
                 m_LRoller.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
+                break;
             case 3:      /*Use Motion Magic Torque Current FOC */
-                m_LRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond));   
+                m_LRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond)); 
+                break;  
       }
   }else {
         switch (controlVel) {
             case 0:      /* Use velocity voltage */
                 m_RRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+                break;
             case 1:      /* Use velocity torque */
                 m_RRoller.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
+                break;
             case 2:      /*Use Motion Magic Voltage */
                 m_RRoller.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
+                break;
             case 3:      /*Use Motion Magic Torque Current FOC */
                 m_RRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond));
+                break;
         }
       }
    }

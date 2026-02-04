@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Intake;
 
-import java.util.Set;
-
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -110,25 +108,6 @@ public class Intake extends SubsystemBase{
         RRollerAppliedVolts.set(roundTo1Decimal(ioStats.RRollerAppliedVolts));
         RRollerTemp.set(roundTo1Decimal(ioStats.RRollerTempCelsius));
     }
-    private void rollerStop() {
-        mIntakeKraken.stop();
-    }
-
-    private void setLeftRollerSpeed(double speed) { 
-        mIntakeKraken.runVelocity(speed,1);
-    }
-
-    private void setRightRollerSpeed(double speed) { 
-        mIntakeKraken.runVelocity(speed,0);
-    }
-
-    private void setLeftIntakePosition(double intakePosition) {
-        mIntakeKraken.runPosition(intakePosition,1);
-    }
-
-    private void setRightIntakePosition(double intakePosition) {
-        mIntakeKraken.runPosition(intakePosition,0);
-    }
 
     /******************************************************************************************
      * COMMANDS 
@@ -138,69 +117,63 @@ public class Intake extends SubsystemBase{
     public Command extendLeftIntake() {
         return runOnce(() ->
         {
-            setLeftIntakePosition(IntakeConstants.kLeftDeployedPosition);
-            setLeftRollerSpeed(IntakeConstants.kLeftIntake);
+            mIntakeKraken.runPosition(IntakeConstants.kLeftDeployedPosition,1);
+            mIntakeKraken.runVelocity(IntakeConstants.kLeftIntake,1);
         });
     }
      public Command retractLeftIntake() {
         return runOnce(() ->
         {
-            setLeftIntakePosition(IntakeConstants.kLeftRetractPosition);
-            rollerStop();
+            mIntakeKraken.runPosition(IntakeConstants.kLeftRetractPosition,1);
+            mIntakeKraken.stop();
         });
     }
     public Command expelLeftIntake() {
         return runOnce(() ->
           {
-            setLeftIntakePosition(IntakeConstants.kLeftDeployedPosition);
-            setLeftRollerSpeed(IntakeConstants.kLeftExpel);
+            mIntakeKraken.runPosition(IntakeConstants.kLeftDeployedPosition,1);
+            mIntakeKraken.runVelocity(IntakeConstants.kLeftExpel,1);
         });
     } 
     
     public Command expelRightIntake() {
         return runOnce(() ->
           {
-            setRightIntakePosition(IntakeConstants.kRightDeployedPosition);
-            setRightRollerSpeed(IntakeConstants.kRightExpel);
+            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,0);
+            mIntakeKraken.runVelocity(IntakeConstants.kRightExpel,0);
         });
     }
     
     public Command turnOffLeftExpel() {
         return runOnce(() ->
           {
-            rollerStop();
+            mIntakeKraken.stop();
         });
     }
     public Command turnOffRightExpel() {
         return runOnce(() ->
           {
-            rollerStop();
+            mIntakeKraken.stop();
         });
     }
 
     public Command extendRightIntake() {
         return runOnce(() ->
         {
-            setRightIntakePosition(IntakeConstants.kRightDeployedPosition);
-            setRightRollerSpeed(IntakeConstants.kRightIntake);
+            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,0);
+            mIntakeKraken.runVelocity(IntakeConstants.kRightIntake,0);
         });
     }
 
     public Command retractRightIntake() {
         return runOnce(() ->
         {
-            setRightIntakePosition(IntakeConstants.kRightRetractPosition);
-            rollerStop();
+             mIntakeKraken.runPosition(IntakeConstants.kRightRetractPosition,0);
+             mIntakeKraken.stop();
         }); 
     }
 }
 
-    
-   
-
-
-
-  
     class IntakeStats {
     //Stats for the Intake/Expel Motor  
     public boolean MotorConnected = true;    
