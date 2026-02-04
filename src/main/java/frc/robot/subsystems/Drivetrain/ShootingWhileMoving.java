@@ -2,8 +2,11 @@ package frc.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -90,7 +93,7 @@ public class ShootingWhileMoving {
 
         
 
-        double turretAngle = shotVec.getAngle().getRadians() + Math.PI; //Turret faces backwards on robot
+        //double turretAngle = shotVec.getAngle().getRadians() + Math.PI; //Turret faces backwards on robot
         double newHorizontalSpeed = shotVec.getNorm();
 
         
@@ -104,12 +107,13 @@ public class ShootingWhileMoving {
         //position-based shooting solution with iterative TOF solver
         //Use chassis speeds, distance and future pos estimate from above solution
         // Account for imparted velocity by robot (turret) to offset
+        int i;
         double timeOfFlight = 0;
         double lastTimeOfFlight = 0;
         Translation2d lookaheadPos = releasePos;
         double lookaheadToTargetDistance = dist;
         
-        for (int i = 0; i < 10; i++) {
+        for (i = 0; i < 10; i++) {
             timeOfFlight = timeOfFlightMap.get(lookaheadToTargetDistance);
 
             // Exit if ToF has converged
@@ -137,6 +141,9 @@ public class ShootingWhileMoving {
         SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
         SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
         SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
+        SmartDashboard.putNumber("SolverErr", Math.abs(timeOfFlight - lastTimeOfFlight));
+        SmartDashboard.putNumber("SolverLoops", i);
+        
 
         return(turretAngle);
 
