@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "REDSnowblow1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "REDSnowblow2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "REDSnowblow3"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
