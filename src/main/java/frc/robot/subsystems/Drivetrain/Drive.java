@@ -178,7 +178,6 @@ public class Drive extends SubsystemBase {
             
     public boolean drivetrainAtTarget() {
         if (path != null) {
-            System.out.println("here");
             return Math.abs(
                 this.iOdata.state.Pose.getTranslation().getDistance(
                     path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation())) 
@@ -266,7 +265,7 @@ public class Drive extends SubsystemBase {
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
-            angle + Math.PI)
+            angle)
             //Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI))
         ));        
     }
