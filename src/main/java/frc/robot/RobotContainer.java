@@ -93,6 +93,11 @@ public class RobotContainer {
         drivetrain.resetPidgeon())
       );
 
+      driver.b().whileTrue(drivetrain.run(()->
+      drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+      Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+      new Rotation2d(Math.PI/4))));
+
       NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
