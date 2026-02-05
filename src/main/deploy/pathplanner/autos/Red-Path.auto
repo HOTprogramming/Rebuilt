@@ -9,6 +9,18 @@
           "data": {
             "pathName": "Red-Path"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OTF"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test"
+          }
         }
       ]
     }

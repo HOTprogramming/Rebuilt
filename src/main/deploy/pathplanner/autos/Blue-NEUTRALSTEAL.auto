@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test"
+            "pathName": "blueneutralzone1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blueneutralzone2"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Blue Autos",
   "choreoAuto": false
 }
