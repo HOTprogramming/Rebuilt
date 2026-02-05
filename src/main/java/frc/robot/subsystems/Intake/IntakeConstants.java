@@ -21,24 +21,24 @@ import frc.robot.Constants;
 public class IntakeConstants {
     public static double kLeftDeployedPosition = 10.0;
     public static double kLeftRetractPosition = 40.0;
-    public static double kRightDeployedPosition = 0.0;
-    public static double kRightRetractPosition = 0.0;
+    public static double kRightDeployedPosition = 10.0;
+    public static double kRightRetractPosition = 40.0;
 
     public static double kLeftExpel = -1000.0;
     public static double kRightExpel = -1000.0;
 
-    public static int kLeftIntakeEncoderID = 46;
-    public static int kRightIntakeEncoderID = 21;
+    public static int kLeftIntakeEncoderID = 21;
+    public static int kRightIntakeEncoderID = 46;
 
     public static double kLeftIntake = 2000.0;
     public static double kRightIntake = 2000.0;
 
-    public static int kIntakeMotorIDLExtend = 19;
-    public static int kIntakeMotorIDRExtend = 14;
-    public static int kIntakeMotorIDLRoller = 17;
-    public static int kIntakeMotorIDRRoller = 15;
-    public static double kLeftEncoderOffset = 0.15283203125;
-    public static double kRightEncoderOffset = 0;
+    public static int kIntakeMotorIDLExtend = 14;
+    public static int kIntakeMotorIDRExtend = 19;
+    public static int kIntakeMotorIDLRoller = 15;
+    public static int kIntakeMotorIDRRoller = 17;
+    public static double kLeftEncoderOffset = 0;
+    public static double kRightEncoderOffset = 0.15283203125;
     public static String kBusName = "robot";
 
     public static final TalonFXConfiguration LeftRollerConfigs = new TalonFXConfiguration()
@@ -189,7 +189,7 @@ public class IntakeConstants {
                 .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
 
-            public static final TalonFXConfiguration RightIntakeExtendConfigs = new TalonFXConfiguration()
+             public static final TalonFXConfiguration RightIntakeExtendConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(40)
@@ -204,13 +204,13 @@ public class IntakeConstants {
                 .withPeakReverseTorqueCurrent(-120)
         ).withMotorOutput(
             new MotorOutputConfigs()
-                .withInverted(InvertedValue.CounterClockwise_Positive)    
+                .withInverted(InvertedValue.Clockwise_Positive)    
                 .withNeutralMode(NeutralModeValue.Coast)   
         ).withSlot0(
             new Slot0Configs()            /* Voltage-based position */
-                .withKP(2.4)        // An error of 1 rotation results in 2.4v output
+                .withKP(0.19)        // An error of 1 rotation results in 2.4v output
                 .withKI(0.0)        // No output for integrated error
-                .withKD(0.1)        // A velocity of 1 rps results in 0.1v output 
+                .withKD(0.0)        // A velocity of 1 rps results in 0.1v output 
         ).withSlot1(
             new Slot1Configs()            /* Torque-based position  */
                 .withKP(60.0)       // An error of 1 rotation results in 60 A output
@@ -230,10 +230,10 @@ public class IntakeConstants {
                 .withMotionMagicExpo_kV(0.12)          // kV is around 0.12 V/rps
                 .withMotionMagicExpo_kA(0.1)          // Use a slower kA of 0.1 V/(rps/s)
         ).withFeedback(
-        new FeedbackConfigs() 
-           .withFeedbackRemoteSensorID(kRightIntakeEncoderID)        
-              .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder) 
-               .withSensorToMechanismRatio(1.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
+           new FeedbackConfigs() 
+               .withFeedbackRemoteSensorID(kRightIntakeEncoderID)        
+               .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder) 
+                .withSensorToMechanismRatio(1.0/360.0)  //The ratio of sensor rotations to the mechanism's output, where a ratio greater than 1 is a reduction.
                 .withRotorToSensorRatio(1.0)   //The ratio of motor rotor rotations to remote sensor rotations, where a ratio greater than 1 is a reduction.
             );
 
