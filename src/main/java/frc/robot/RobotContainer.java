@@ -67,6 +67,11 @@ public class RobotContainer {
           new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
       );
 
+      driver.a().toggleOnTrue(m_shooter.setHoodAngle(15));
+      driver.b().toggleOnTrue(m_shooter.setHoodAngle(30));
+      driver.x().toggleOnTrue(m_shooter.setHoodAngle(45));
+      driver.y().toggleOnTrue(m_shooter.setHoodAngle(60));
+
       NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
       NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
 

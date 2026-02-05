@@ -18,13 +18,9 @@ public class ShooterConstants {
     public static double kShootReduction =(1.0/1.0);
     public static double kIdleSpeed = (10.0);
     public static double kShooterSpeed = (40.0);
+    public static double kShooterError = (0.500);
 
-    public static int kHoodMotorID;
-    public static double hoodPosition0 = 0.0;
-    public static double hoodPosition1 = 15.0;
-    public static double hoodPosition2 = 30.0;
-    public static double hoodPosition3 = 45.0;
-    public static double hoodPosition4 = 60.0;
+    public static int kHoodMotorID = 14;
     public static double kHoodReduction = (1.0/1.0);
 
     public static CANBus canbus = new CANBus("rio");
