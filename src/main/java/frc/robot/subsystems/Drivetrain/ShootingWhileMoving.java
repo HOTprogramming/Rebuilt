@@ -53,12 +53,13 @@ public class ShootingWhileMoving {
     shotFlywheelSpeedMap.put(5.57, 275.0);
     shotFlywheelSpeedMap.put(5.60, 290.0);
 
+    timeOfFlightMap.put(7, 1.5);
     timeOfFlightMap.put(5.68, 1.16);
     timeOfFlightMap.put(4.55, 1.12);
     timeOfFlightMap.put(3.15, 1.11);
     timeOfFlightMap.put(1.88, 1.09);
     timeOfFlightMap.put(1.38, 0.90);
-        
+    timeOfFlightMap.put(1, 0.70);    
     }
 
     
@@ -81,6 +82,7 @@ public class ShootingWhileMoving {
         Translation2d goalLocation = new Translation2d(goalX, 4.03); //4.03 is both hubs' y pos
         Translation2d targetVec = goalLocation.minus(releasePos);
         double dist = targetVec.getNorm();
+        double altdist = goalLocation.getDistance(releasePos);
 
         double idealHorizontalSpeed = 5;
 
@@ -143,6 +145,11 @@ public class ShootingWhileMoving {
         SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
         SmartDashboard.putNumber("SolverErr", Math.abs(timeOfFlight - lastTimeOfFlight));
         SmartDashboard.putNumber("SolverLoops", i);
+        SmartDashboard.putNumber("Distance", dist);
+        SmartDashboard.putNumber("AltDistance", altdist);
+        SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
+        SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
+        SmartDashboard.putNumber("ShotAngle", turretRotation.getDegrees());
         
 
         return(turretAngle);
