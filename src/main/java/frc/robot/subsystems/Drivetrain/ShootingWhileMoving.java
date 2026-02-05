@@ -137,7 +137,7 @@ public class ShootingWhileMoving {
         Translation2d aimPointIterative = goalLocation.minus(robotDisplacement);
         
         //Aim from the CURRENT position to the VIRTUAL target
-        Rotation2d turretRotation = aimPointIterative.minus(releasePos).getAngle();
+        Rotation2d turretRotation = goalLocation.minus(lookaheadPos).getAngle();
         double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
         
         SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
