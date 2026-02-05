@@ -157,7 +157,7 @@ private DoubleArrayPublisher robotPose;
         robotPose.set(new double[]{
                 this.iOdata.state.Pose.getX(), 
                 this.iOdata.state.Pose.getY(), 
-                this.iOdata.state.Pose.getRotation().getRadians()});
+                this.iOdata.state.Pose.getRotation().getRadians()});        
     }
 
     @Override
