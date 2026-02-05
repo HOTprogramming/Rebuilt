@@ -15,14 +15,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Camera.Camera;
+import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
+import frc.robot.subsystems.Indexer.Index;
+
+
 
 public class RobotContainer {
 
@@ -31,22 +37,29 @@ public class RobotContainer {
   private String autoString;
 
   private Drive drivetrain;
-  private Shooter m_shooter;
-  
+  private Camera cameraSubsystem;
+  private final Shooter m_shooter;
+  private final Climber m_climber;
+  private final Index m_indexer;
+
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
   public RobotContainer() {
-    //RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
+    RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
-    Autos.setDefaultOption("Auto", "Path");
+    Autos.setDefaultOption("Path", "Path");
+    Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
+    Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
     SmartDashboard.putData("Autos",Autos);
 
     drivetrain = new Drive(new DriveKraken());
-
+    cameraSubsystem = new Camera(drivetrain);
     m_shooter = new Shooter();
+    m_climber = new Climber();
+    m_indexer = new Index();
 
     configureBindings();
   }
@@ -61,21 +74,22 @@ public class RobotContainer {
         }
       ));
 
-      driver.rightTrigger().whileTrue(drivetrain.run(()->
+      driver.a().whileTrue(drivetrain.run(()->
       drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
           Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-          new Pose2d(3.33,3.33,Rotation2d.fromDegrees(0))))
+          new Pose2d(11.91,4.03,Rotation2d.fromDegrees(0))))
       );
 
-      driver.a().toggleOnTrue(m_shooter.setHoodAngle(15));
-      driver.b().toggleOnTrue(m_shooter.setHoodAngle(30));
-      driver.x().toggleOnTrue(m_shooter.setHoodAngle(45));
-      driver.y().toggleOnTrue(m_shooter.setHoodAngle(60));
+      driver.start().whileTrue(drivetrain.run(()->
+        drivetrain.resetPidgeon())
+      );
 
-      NamedCommands.registerCommand("OTF", drivetrain.generateOnTheFly());
-      NamedCommands.registerCommand("R_OTF", drivetrain.runOnTheFly());
+      driver.b().whileTrue(drivetrain.run(()->
+      drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+      Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+      new Rotation2d(Math.PI/4))));
 
-      new EventTrigger("OTF").onTrue(Commands.runOnce(() -> drivetrain.generateOnTheFly()));
+      NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
   public void updateAutonCommand() {
@@ -83,7 +97,7 @@ public class RobotContainer {
     String AutoSelect;
     String ColorSelect;
     if (!Ally.isPresent()) {
-      ColorSelect = "";
+      ColorSelect = "Red-";
     } else {
       if (Ally.get() == Alliance.Red) {
         ColorSelect = "Red-";
@@ -97,7 +111,7 @@ public class RobotContainer {
         autoString = AutoSelect;
         autoCommand = new PathPlannerAuto(autoString);
         try {
-          drivetrain.setAutonStartPose(PathPlannerAuto.getPathGroupFromAutoFile(autoString).get(0).getStartingDifferentialPose());
+          PathPlannerAuto.getPathGroupFromAutoFile(autoString);
         } catch (IOException e) {
           System.err.println("No Auto File: " + e.toString());
         } catch (ParseException e) {
@@ -110,6 +124,7 @@ public class RobotContainer {
       autoString = AutoSelect;
       }
   }
+
 
   public Command getAutonomousCommand() {
     return autoCommand;

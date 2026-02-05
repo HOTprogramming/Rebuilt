@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 13.249558070199303,
+        "y": 0.8533206469058325
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 13.499351823995372,
+        "y": 0.8634735068215866
+      },
+      "isLocked": false,
+      "linkedName": "Redrotate"
+    },
+    {
+      "anchor": {
+        "x": 13.905111841214088,
+        "y": 1.4579743205867794
+      },
+      "prevControl": {
+        "x": 14.282153867615943,
+        "y": 0.8362361638977143
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 115.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": false
+}
