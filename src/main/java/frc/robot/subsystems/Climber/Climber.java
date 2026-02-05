@@ -26,6 +26,7 @@ public class Climber extends SubsystemBase {
     private DoublePublisher spinnerSupplyCurrent;
     private DoublePublisher spinnerTorqueCurrent;
     private DoublePublisher spinnerTemp;
+    
 
 
     class ClimberStats {
