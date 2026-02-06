@@ -211,19 +211,28 @@ public class IndexKraken {
         LoadSupplyCurrent,
         LoadTorqueCurrent,
         LoadTempCelsius
-    );}
+    );
+
+
+        if(Utils.isSimulation()){
+        PhysicsSim.getInstance().addTalonFX(m_TalonFX, 0.001);
+        PhysicsSim.getInstance().addTalonFX(m_TalonFX2, 0.001);
+        PhysicsSim.getInstance().addTalonFX(m_TalonFX3, 0.001);
+        PhysicsSim.getInstance().addTalonFX(m_TalonFX4, 0.001);
+        }
+
+    }
     public void startIndex(double speed) {
         
-        double desiredRotationsPerSecond = 60.0; //IMPORTANT
-        double desiredFloorRotationsPerSecond = 10.0; //IMPORTANT
-        double desiredLoadRotationsPerSecond = 40; //IMPORTANT
+        double indexerSpeed = 50.0; //IMPORTANT
+        double feederSpeed = 50.0; //IMPORTANT
         
         switch (controlMode) {
             case 0:
-            m_TalonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(desiredLoadRotationsPerSecond));
-            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(desiredFloorRotationsPerSecond));
+            m_TalonFX.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
+            m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
+            m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
     }
     }
 
