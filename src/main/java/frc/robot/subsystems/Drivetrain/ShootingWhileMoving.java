@@ -34,7 +34,7 @@ public class ShootingWhileMoving {
         Translation2d robotVelVec = new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
         Translation2d shotVec = targetVec.div(dist).times(idealHorizontalSpeed).minus(robotVelVec);
 
-        Translation2d aimPoint = RobotPos.getTranslation().plus(
+        Translation2d aimPoint = futurePos.plus(
             shotVec.div(shotVec.getNorm()).times(dist)
         );
 
@@ -42,6 +42,8 @@ public class ShootingWhileMoving {
 
         double turretAngle = shotVec.getAngle().getRadians() + Math.PI; //Turret faces backwards on robot
         double newHorizontalSpeed = shotVec.getNorm();
+
+        SmartDashboard.putNumber("New Horizonal Speed", newHorizontalSpeed);
 
         SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
 

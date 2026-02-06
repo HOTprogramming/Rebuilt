@@ -7,12 +7,18 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.json.simple.parser.ParseException;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
@@ -45,14 +51,20 @@ public class RobotContainer {
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
 
+
   public RobotContainer() {
     RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
 
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Path", "Path");
+
     Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
     Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
+    Autos.addOption("Grid Test", "Grid Test");
+
+    Autos.addOption("SNOWBLOW", "SNOWBLOW");
+    
     SmartDashboard.putData("Autos",Autos);
 
     drivetrain = new Drive(new DriveKraken());
@@ -91,6 +103,7 @@ public class RobotContainer {
 
       NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
+
 
   public void updateAutonCommand() {
     Optional<Alliance> Ally = DriverStation.getAlliance();
