@@ -77,31 +77,30 @@ public class RobotContainer {
   }
 
   private void configureBindings() {   
-      drivetrain.setDefaultCommand
-      (drivetrain.run(() -> {
+
+    // Drivetrain Controls
+    drivetrain.setDefaultCommand(drivetrain.run(() -> {
         drivetrain.teleopDrive(
           Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
           Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
-      ));
+    ));
 
-      driver.a().whileTrue(drivetrain.run(()->
-      drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-          new Pose2d(11.91,4.03,Rotation2d.fromDegrees(0))))
-      );
+    driver.a().whileTrue(drivetrain.run(()->
+      drivetrain.aim(
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0))
+    );
 
-      driver.start().whileTrue(drivetrain.run(()->
-        drivetrain.resetPidgeon())
-      );
+    driver.b().whileTrue(drivetrain.run(()->
+      drivetrain.lockRotation(
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        new Rotation2d(Math.PI/4)))
+    );
 
-      driver.b().whileTrue(drivetrain.run(()->
-      drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-      Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-      new Rotation2d(Math.PI/4))));
-
-      NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
+    NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
 
