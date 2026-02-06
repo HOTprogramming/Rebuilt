@@ -29,7 +29,7 @@ public class ShooterConstants {
     public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40)
+                .withStatorCurrentLimit(80)
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimit(40)
                 .withSupplyCurrentLimitEnable(true)
@@ -62,7 +62,7 @@ public class ShooterConstants {
     public static final TalonFXConfiguration shooterOtherMotorConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40)
+                .withStatorCurrentLimit(80)
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimit(40)
                 .withSupplyCurrentLimitEnable(true)
@@ -95,7 +95,7 @@ public class ShooterConstants {
     public static final TalonFXConfiguration hoodMotorConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40)
+                .withStatorCurrentLimit(80)
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimit(40)
                 .withSupplyCurrentLimitEnable(true)
