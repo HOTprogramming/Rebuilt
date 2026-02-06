@@ -32,7 +32,6 @@ public class RobotContainer {
   private final Camera camera;
   private final Shooter shooter;
   private final Index indexer;
-  private final Intake intake;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -55,7 +54,6 @@ public class RobotContainer {
     camera = new Camera(drivetrain);
     shooter = new Shooter();
     indexer = new Index();
-    intake = new Intake();
 
     configureBindings();
   }
@@ -88,10 +86,6 @@ public class RobotContainer {
 
     // Indexer Controls
     operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
-
-    // Intake Controls
-    operator.rightBumper().whileTrue(intake.extendRightIntake()).whileFalse(intake.retractRightIntake());
-    operator.leftBumper().whileTrue(intake.extendLeftIntake()).whileFalse(intake.retractLeftIntake());
 
     NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
