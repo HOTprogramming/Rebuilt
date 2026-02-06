@@ -120,7 +120,7 @@ public class RobotContainer {
       autoString = AutoSelect;
       }
   }
-}
+
 
   public Command getAutonomousCommand() {
     return autoCommand;

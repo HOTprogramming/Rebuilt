@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.755826210823356,
-        "y": 7.252136752129226
+        "x": 9.684488095238095,
+        "y": 7.220297619047619
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.781666666666668,
-        "y": 6.373561253561254
+        "x": 9.710328551081407,
+        "y": 6.3417221204796475
       },
       "isLocked": false,
       "linkedName": "Blow2"
@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 9.747165523056093,
-        "y": 0.3706228482129349
+        "y": 0.370622848212935
       },
       "isLocked": false,
       "linkedName": null
@@ -79,37 +79,37 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4562899786780384,
-      "rotationDegrees": 29.999999999999996
+      "rotationDegrees": -150.0
     },
     {
       "waypointRelativePos": 0.6908315565031979,
-      "rotationDegrees": -29.999999999999996
+      "rotationDegrees": 150.0
     },
     {
       "waypointRelativePos": 1.3987206823027676,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0.0
+    "velocity": 5.0,
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 2.0,
-    "rotation": 0.0
+    "velocity": 5.0,
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }

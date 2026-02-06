@@ -49,41 +49,153 @@
     {
       "anchor": {
         "x": 8.864613699292386,
-        "y": 7.116595641562423
+        "y": 6.572440476190476
       },
       "prevControl": {
-        "x": 8.880921191117547,
-        "y": 6.496424701391483
+        "x": 8.880261830554325,
+        "y": 5.952252548776418
       },
       "nextControl": {
-        "x": 8.855724940392568,
-        "y": 7.454633521510819
+        "x": 8.84227380952381,
+        "y": 7.457845238095238
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 9.755826210823356,
-        "y": 7.252136752129226
+        "x": 9.684488095238095,
+        "y": 7.220297619047619
       },
       "prevControl": {
-        "x": 9.52784583452958,
-        "y": 7.354727921461425
+        "x": 9.166202380952381,
+        "y": 7.263488095238095
+      },
+      "nextControl": {
+        "x": 10.302412855835987,
+        "y": 7.168803888997794
+      },
+      "isLocked": false,
+      "linkedName": "Blow2"
+    },
+    {
+      "anchor": {
+        "x": 10.32154761904762,
+        "y": 6.021761904761904
+      },
+      "prevControl": {
+        "x": 10.32154761904762,
+        "y": 6.853178571428572
+      },
+      "nextControl": {
+        "x": 10.32154761904762,
+        "y": 5.485449586569138
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.32154761904762,
+        "y": 4.369726190476191
+      },
+      "prevControl": {
+        "x": 10.325000734173098,
+        "y": 4.973185032872173
+      },
+      "nextControl": {
+        "x": 10.31809450392214,
+        "y": 3.766267348080209
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.32154761904762,
+        "y": 1.8430833333333339
+      },
+      "prevControl": {
+        "x": 10.398096551684944,
+        "y": 2.4756192503891143
+      },
+      "nextControl": {
+        "x": 10.116392857142857,
+        "y": 0.14785714285714335
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 12.977761904761905,
+        "y": 0.6661428571428576
+      },
+      "prevControl": {
+        "x": 12.45947619047619,
+        "y": 0.6121547619047626
+      },
+      "nextControl": {
+        "x": 13.496047619047621,
+        "y": 0.7201309523809526
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 14.554214285714286,
+        "y": 2.0806309523809534
+      },
+      "prevControl": {
+        "x": 14.279147562756323,
+        "y": 1.2439696700504794
+      },
+      "nextControl": {
+        "x": 14.813357142857141,
+        "y": 2.8688571428571437
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 14.84575,
+        "y": 4.2509523809523815
+      },
+      "prevControl": {
+        "x": 14.95372619047619,
+        "y": 3.47892261904762
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Blow2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.716417910447761,
-      "rotationDegrees": -29.999999999999996
+      "rotationDegrees": 150.0
     },
     {
       "waypointRelativePos": 1.5948827292110859,
-      "rotationDegrees": 29.999999999999996
+      "rotationDegrees": -150.0
+    },
+    {
+      "waypointRelativePos": 3.915352697095436,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 5.63485477178423,
+      "rotationDegrees": -150.0
+    },
+    {
+      "waypointRelativePos": 6.468049792531123,
+      "rotationDegrees": 150.0
+    },
+    {
+      "waypointRelativePos": 7.518672199170124,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
@@ -104,22 +216,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": 0.0
+    "velocity": 5.0,
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 2.0,
-    "rotation": 0.0
+    "velocity": 5.0,
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }
