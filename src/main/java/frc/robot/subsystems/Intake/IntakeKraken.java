@@ -367,4 +367,12 @@ public class IntakeKraken {
         m_LRoller.setControl(m_brake);
         m_RRoller.setControl(m_brake);
     }
+
+    public StatusSignal<Angle> getRotation(int Side) {
+      if (Side == 1) {
+        return m_LExtend.getPosition();
+      } else {
+        return m_RExtend.getPosition();
+      }
+    }
   }

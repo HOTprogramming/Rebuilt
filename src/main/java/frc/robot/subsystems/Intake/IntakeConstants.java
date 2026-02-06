@@ -41,6 +41,11 @@ public class IntakeConstants {
     public static double kRightEncoderOffset = 0.15283203125;
     public static String kBusName = "robot";
 
+    public static double kDeployedPositionTolerance = 1;
+    public static double kRetractedPositionTolerance = 3;
+    public static double kLeftRetractedPosition = 1;
+    public static double kRightRetractedPosition = 2;
+
     public static final TalonFXConfiguration LeftRollerConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()

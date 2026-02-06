@@ -1,9 +1,12 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase{
@@ -128,6 +131,13 @@ public class Intake extends SubsystemBase{
             mIntakeKraken.stop();
         });
     }
+    public Command retractRightIntake() {
+        return runOnce(() ->
+        {
+            mIntakeKraken.runPosition(IntakeConstants.kRightRetractPosition,1);
+            mIntakeKraken.stop();
+        });
+    }
     public Command expelLeftIntake() {
         return runOnce(() ->
           {
@@ -165,12 +175,24 @@ public class Intake extends SubsystemBase{
         });
     }
 
-    public Command retractRightIntake() {
-        return runOnce(() ->
-        {
-             mIntakeKraken.runPosition(IntakeConstants.kRightRetractPosition,0);
-             mIntakeKraken.stop();
-        }); 
+      public BooleanSupplier isLeftextended() {
+      return () -> mIntakeKraken.getRotation(1).isNear(IntakeConstants.kLeftDeployedPosition,IntakeConstants.kDeployedPositionTolerance);
+    }
+      public BooleanSupplier isRightextended() {
+      return () -> mIntakeKraken.getRotation(2).isNear(IntakeConstants.kRightDeployedPosition,IntakeConstants.kDeployedPositionTolerance);
+    }
+    public BooleanSupplier isLeftRetracted() {
+      return () -> mIntakeKraken.getRotation(1).isNear(IntakeConstants.kLeftRetractedPosition,IntakeConstants.kRetractedPositionTolerance);
+    }
+      public BooleanSupplier isRightRetracted() {
+      return () -> mIntakeKraken.getRotation(2).isNear(IntakeConstants.kRightRetractedPosition,IntakeConstants.kRetractedPositionTolerance);
+    }
+
+    public Command activateRightIntake() {
+        return Commands.sequence(retractLeftIntake().until(isLeftRetracted()),extendRightIntake());
+    }
+    public Command activateLeftIntake() {
+        return Commands.sequence(retractRightIntake().until(isRightRetracted()),extendLeftIntake());
     }
 }
 
