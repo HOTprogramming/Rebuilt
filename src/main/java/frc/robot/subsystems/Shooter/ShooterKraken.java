@@ -21,17 +21,16 @@ import frc.robot.subsystems.Shooter.Shooter.shooterStats;
 
 public class ShooterKraken {
   private static ShooterKraken instance = null;
-  private boolean isSimulation = false; 
 
-   /**************************************************************** 
-    * Change this variable to select which motor control feature runs
-    * Control Mode Shooter:
-    *     0-means run Velocity Voltage Control Mode  
-    *     1-means run Velocity Torque Control Mode  
-    * Control Mode Hood:
-    *     0-means run Position Voltage Control Mode  
-    *     1-means run Position Torque Control Mode
-    *****************************************************************/           
+  /**************************************************************** 
+  * Change this variable to select which motor control feature runs
+  * Control Mode Shooter:
+  *     0-means run Velocity Voltage Control Mode  
+  *     1-means run Velocity Torque Control Mode  
+  * Control Mode Hood:
+  *     0-means run Position Voltage Control Mode  
+  *     1-means run Position Torque Control Mode
+  *****************************************************************/           
   private int controlModeShoot = 0; 
   private int controlModeHood = 0;
   
@@ -113,27 +112,27 @@ public class ShooterKraken {
     hoodTempCelsius = m_talonFXHood.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-        100.0,
-        shooterPosition,
-        shooterVelocity,
-        shooterAppliedVolts,
-        shooterSupplyCurrent,
-        shooterTorqueCurrent,
-        shooterTempCelsius,
+      100.0,
+      shooterPosition,
+      shooterVelocity,
+      shooterAppliedVolts,
+      shooterSupplyCurrent,
+      shooterTorqueCurrent,
+      shooterTempCelsius,
 
-        shooterPositionOther,
-        shooterVelocityOther,
-        shooterAppliedVoltsOther,
-        shooterSupplyCurrentOther,
-        shooterTorqueCurrentOther,
-        shooterTempCelsiusOther,
+      shooterPositionOther,
+      shooterVelocityOther,
+      shooterAppliedVoltsOther,
+      shooterSupplyCurrentOther,
+      shooterTorqueCurrentOther,
+      shooterTempCelsiusOther,
 
-        hoodPosition,
-        hoodVelocity,
-        hoodAppliedVolts,
-        hoodSupplyCurrent,
-        hoodTorqueCurrent,
-        hoodTempCelsius
+      hoodPosition,
+      hoodVelocity,
+      hoodAppliedVolts,
+      hoodSupplyCurrent,
+      hoodTorqueCurrent,
+      hoodTempCelsius
     );
 
     /* Optimize out the other signals, since they're not useful */
@@ -143,7 +142,6 @@ public class ShooterKraken {
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
-      isSimulation = true; 
       PhysicsSim.getInstance().addTalonFX(m_talonFX, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_talonFXOther, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_talonFXHood, 0.001);
@@ -157,58 +155,56 @@ public class ShooterKraken {
     return instance = instance == null ? new ShooterKraken() : instance;
   }
 
-    public void updateStats(shooterStats stats) {
-      if(isSimulation) {
-        PhysicsSim.getInstance().run();
-      }
-
-      stats.MotorConnected =
-        BaseStatusSignal.refreshAll(
-          shooterPosition,
-          shooterVelocity,
-          shooterAppliedVolts,
-          shooterSupplyCurrent,
-          shooterTorqueCurrent,
-          shooterTempCelsius,
-          
-          shooterPositionOther,
-          shooterVelocityOther,
-          shooterAppliedVoltsOther,
-          shooterSupplyCurrentOther,
-          shooterTorqueCurrentOther,
-          shooterTempCelsiusOther,
-
-          hoodPosition,
-          hoodVelocity,
-          hoodAppliedVolts,
-          hoodSupplyCurrent,
-          hoodTorqueCurrent,
-          hoodTempCelsius
-          )
-        .isOK();
-      
-      // Set telemetry data to Status Signals //
-      stats.shooterPositionRads = shooterPosition.getValueAsDouble();
-      stats.shooterVelocityRpm = shooterVelocity.getValueAsDouble();
-      stats.shooterAppliedVolts = shooterAppliedVolts.getValueAsDouble();
-      stats.shooterSupplyCurrentAmps = shooterSupplyCurrent.getValueAsDouble();
-      stats.shooterTorqueCurrentAmps = shooterTorqueCurrent.getValueAsDouble();
-      stats.shooterTempCelsius = shooterTempCelsius.getValueAsDouble();
-
-      stats.shooterPositionRadsOther = shooterPositionOther.getValueAsDouble();
-      stats.shooterVelocityRpmOther = shooterVelocityOther.getValueAsDouble();
-      stats.shooterAppliedVoltsOther = shooterAppliedVoltsOther.getValueAsDouble();
-      stats.shooterSupplyCurrentAmpsOther = shooterSupplyCurrentOther.getValueAsDouble();
-      stats.shooterTorqueCurrentAmpsOther = shooterTorqueCurrentOther.getValueAsDouble();
-      stats.shooterTempCelsiusOther = shooterTempCelsiusOther.getValueAsDouble();
-
-      stats.hoodPositionRads = hoodPosition.getValueAsDouble();
-      stats.hoodVelocityRpm = hoodVelocity.getValueAsDouble();
-      stats.hoodAppliedVolts = hoodAppliedVolts.getValueAsDouble();
-      stats.hoodSupplyCurrentAmps = hoodSupplyCurrent.getValueAsDouble();
-      stats.hoodTorqueCurrentAmps = hoodTorqueCurrent.getValueAsDouble();
-      stats.hoodTempCelsius = hoodTempCelsius.getValueAsDouble();
+  public void updateStats(shooterStats stats) {
+    if(Utils.isSimulation()) {
+      PhysicsSim.getInstance().run();
     }
+
+    stats.MotorConnected =BaseStatusSignal.refreshAll(
+      shooterPosition,
+      shooterVelocity,
+      shooterAppliedVolts,
+      shooterSupplyCurrent,
+      shooterTorqueCurrent,
+      shooterTempCelsius,
+      
+      shooterPositionOther,
+      shooterVelocityOther,
+      shooterAppliedVoltsOther,
+      shooterSupplyCurrentOther,
+      shooterTorqueCurrentOther,
+      shooterTempCelsiusOther,
+
+      hoodPosition,
+      hoodVelocity,
+      hoodAppliedVolts,
+      hoodSupplyCurrent,
+      hoodTorqueCurrent,
+      hoodTempCelsius
+    ).isOK();
+      
+    // Set telemetry data to Status Signals //
+    stats.shooterPositionRads = shooterPosition.getValueAsDouble();
+    stats.shooterVelocityRpm = shooterVelocity.getValueAsDouble();
+    stats.shooterAppliedVolts = shooterAppliedVolts.getValueAsDouble();
+    stats.shooterSupplyCurrentAmps = shooterSupplyCurrent.getValueAsDouble();
+    stats.shooterTorqueCurrentAmps = shooterTorqueCurrent.getValueAsDouble();
+    stats.shooterTempCelsius = shooterTempCelsius.getValueAsDouble();
+
+    stats.shooterPositionRadsOther = shooterPositionOther.getValueAsDouble();
+    stats.shooterVelocityRpmOther = shooterVelocityOther.getValueAsDouble();
+    stats.shooterAppliedVoltsOther = shooterAppliedVoltsOther.getValueAsDouble();
+    stats.shooterSupplyCurrentAmpsOther = shooterSupplyCurrentOther.getValueAsDouble();
+    stats.shooterTorqueCurrentAmpsOther = shooterTorqueCurrentOther.getValueAsDouble();
+    stats.shooterTempCelsiusOther = shooterTempCelsiusOther.getValueAsDouble();
+
+    stats.hoodPositionRads = hoodPosition.getValueAsDouble();
+    stats.hoodVelocityRpm = hoodVelocity.getValueAsDouble();
+    stats.hoodAppliedVolts = hoodAppliedVolts.getValueAsDouble();
+    stats.hoodSupplyCurrentAmps = hoodSupplyCurrent.getValueAsDouble();
+    stats.hoodTorqueCurrentAmps = hoodTorqueCurrent.getValueAsDouble();
+    stats.hoodTempCelsius = hoodTempCelsius.getValueAsDouble();
+  }
 
   /*********************
   * The runVelocity function can run based on the controlMode Variable either:
@@ -216,7 +212,6 @@ public class ShooterKraken {
   *     1-means run Velocity Torque Control Mode  
   **********************/
   public void runVelocity(double desiredRotationsPerSecond) {      
-
     switch (controlModeShoot) {
       case 0:      /* Use velocity voltage */
         m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
@@ -224,7 +219,7 @@ public class ShooterKraken {
       case 1:      /* Use velocity torque */
         m_talonFX.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
         m_talonFXOther.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
-      }
+    }
   }
 
   /***************************************************************************
@@ -233,13 +228,13 @@ public class ShooterKraken {
   *     1-means run Position Torque Control Mode  
   ***************************************************************************/
   public void runPosition(double desiredRotations) {      
-        switch (controlModeHood) {
-        case 0:      /* Use Position Voltage */
-            m_talonFXHood.setControl(m_positionVoltage.withPosition(desiredRotations));
-        case 1:      /* Use Position Torque */
-            m_talonFXHood.setControl(m_positionTorque.withPosition(desiredRotations));
-        }
+    switch (controlModeHood) {
+      case 0:      /* Use Position Voltage */
+          m_talonFXHood.setControl(m_positionVoltage.withPosition(desiredRotations));
+      case 1:      /* Use Position Torque */
+          m_talonFXHood.setControl(m_positionTorque.withPosition(desiredRotations));
     }
+  }
 
   public void stop() {
     /* tell the motor to brake */

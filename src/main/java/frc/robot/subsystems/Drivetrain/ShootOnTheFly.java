@@ -8,7 +8,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class ShootingWhileMoving {
+public class ShootOnTheFly {
     
     public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
         double latency = 0.1; //needs to be tuned, in seconds

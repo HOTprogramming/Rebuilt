@@ -227,17 +227,6 @@ public class IndexKraken {
     }
     }
 
-    public void stopIndex(double speed) {
-        double desiredRotationsPerSecond = 0; //IMPORTANT
-        switch (controlMode) {
-            case 0:
-            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-        }
-}
-
 public void stop() {
     m_TalonFX.setControl(m_brake);
     m_TalonFX2.setControl(m_brake);

@@ -19,7 +19,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,16 +26,13 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;    
-import frc.robot.subsystems.Drivetrain.ShootingWhileMoving;
 
 class DriveIOdata { 
     public SwerveDriveState state = new SwerveDriveState();
@@ -75,7 +71,6 @@ class DriveIOdata {
 }
 
 public class Drive extends SubsystemBase {
-
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(kTranslationRateLimiter);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(kTranslationRateLimiter);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(kRotationRateLimiter);
@@ -83,15 +78,14 @@ public class Drive extends SubsystemBase {
     private DriveKraken driveKraken;
     private DriveIOdata iOdata;
 
-
     private PathConstraints constraints;
     private List<Waypoint> waypoints;
 
     private PathPlannerPath path;
 
-    double rampedX;
-    double rampedY;
-    double rampedTheta;
+    private double rampedX;
+    private double rampedY;
+    private double rampedTheta;
 
     private PIDController thetaController = new PIDController(10, 0, 0.2);
     private PIDController translationControllerIn = new PIDController(5, 0, 0);
@@ -108,9 +102,9 @@ public class Drive extends SubsystemBase {
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 
- private DoublePublisher robotReqSpeed;
-private DoublePublisher robotRealSpeed;
-private DoubleArrayPublisher robotPose;
+    private DoublePublisher robotReqSpeed;
+    private DoublePublisher robotRealSpeed;
+    private DoubleArrayPublisher robotPose;
 
     public Drive(DriveKraken driveKraken) { 
         this.driveKraken = driveKraken;
@@ -138,8 +132,6 @@ private DoubleArrayPublisher robotPose;
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
 
-    
-
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         configurePathPlanner();
@@ -147,7 +139,7 @@ private DoubleArrayPublisher robotPose;
         constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
     }
 
-       private void UpdateTelemetry() {
+    private void UpdateTelemetry() {
         robotReqSpeed.set(Math.hypot(
                 FIELD_CENTRIC.VelocityX,
                 FIELD_CENTRIC.VelocityY) );
@@ -176,8 +168,7 @@ private DoubleArrayPublisher robotPose;
 		
         this.iOdata = driveKraken.update();
 
-         UpdateTelemetry();
-
+        UpdateTelemetry();
     }
             
     public boolean drivetrainAtTarget() {
@@ -206,7 +197,6 @@ private DoubleArrayPublisher robotPose;
                 );
                 path.preventFlipping = true;
             }),
-            // Defer path following until after the path is created so it can run in-sequence.
             Commands.defer(
                 () -> AutoBuilder.followPath(path).until(this::drivetrainAtTarget),
                 Set.of(this) 
@@ -251,27 +241,34 @@ private DoubleArrayPublisher robotPose;
         );
     }
  
-     public void lockRotation(double driveX, double driveY, Rotation2d rtarget) {
+    public void lockRotation(double driveX, double driveY, Rotation2d rtarget) {
         driveKraken.setSwerveRequest(FIELD_CENTRIC
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
         );
-     }
+    }
 
-     public ShootingWhileMoving ShootingOnTarget = new ShootingWhileMoving(); 
- 
-     public void facePoint(double driveX, double driveY, Pose2d point) {
-          
-        double angle = ShootingOnTarget.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
+    public void facePoint(double driveX, double driveY, Pose2d point) {
+        driveKraken.setSwerveRequest(FIELD_CENTRIC
+            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
+            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
+            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
+            Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI)));
+    }
+
+    // Needs to be done better at some point
+    public ShootOnTheFly shootOnTheFly = new ShootOnTheFly(); 
+
+    public void aim(double driveX, double driveY){
+        double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
 
         driveKraken.setSwerveRequest(FIELD_CENTRIC
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
             angle)
-            //Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI))
-        ));        
+        ));
     }
 
     public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
