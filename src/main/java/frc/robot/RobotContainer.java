@@ -100,6 +100,16 @@ public class RobotContainer {
         new Rotation2d(Math.PI/4)))
     );
 
+    // Shooter Controls
+    operator.a().whileTrue(shooter.goToShoot());
+
+    // Intake Controls
+    operator.rightBumper().whileTrue(intake.activateRightIntake()).whileFalse(intake.retractRightIntake());
+    operator.leftBumper().whileTrue(intake.activateLeftIntake()).whileFalse(intake.retractLeftIntake());
+
+    // Indexer Controls
+    operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+
     NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
