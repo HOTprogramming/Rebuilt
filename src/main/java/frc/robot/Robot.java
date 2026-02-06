@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.hal.simulation.RoboRioDataJNI;
@@ -18,20 +20,37 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import frc.robot.subsystems.Drivetrain.Drive;
+import frc.robot.subsystems.Drivetrain.DriveKraken;
+import frc.util.HubTracker;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.Publisher;
+import edu.wpi.first.units.TimeUnit;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DataLogManager;
 
 
 public class Robot extends TimedRobot {
+
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
 
   private ShuffleboardTab tab;
 
+  private HubTracker hubTracker;
+
   private GenericEntry matchTimeEntry;
   private GenericEntry voltsEntry;
   private GenericEntry ampsEntry;
+
+  // private Time timeRemainingInCurrentShift; 
+
+  private DoublePublisher timeRemainingInCurrentShift;
 
   private boolean ppConfigured = false;
 
@@ -45,30 +64,50 @@ public class Robot extends TimedRobot {
       && "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
   private double simStartTime = -1.0;
   private SimMode currentSimMode = null;
-
-  private enum SimMode {
-    DISABLED,
-    AUTO,
-    TELEOP
-  }
-
-  public Robot() {
-    /*Start Logging */
-    DataLogManager.start();
-    DriverStation.startDataLog(DataLogManager.getLog(), true);
- 
-    /*Create Robot Contrainer */
-    m_robotContainer = new RobotContainer();
+  
+    private HubTracker hubTraker;
     
-    /*Initialize base Shuffleboard tab */
-    tab = Shuffleboard.getTab("tab");
-    matchTimeEntry = tab.add("Match time",0.0).getEntry();
-    voltsEntry = tab.add("Volts",0.0).getEntry();
-    ampsEntry = tab.add("Amps",0.0).getEntry();
+      private enum SimMode {
+        DISABLED,
+        AUTO,
+        TELEOP
+      }
+    
+      public Robot() {
+        /*Start Logging */
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog(), true);
+     
+        /*Create Robot Contrainer */
+        m_robotContainer = new RobotContainer();
+        
+        /*Initialize base Shuffleboard tab */
+        tab = Shuffleboard.getTab("tab");
+        matchTimeEntry = tab.add("Match time",0.0).getEntry();
+        voltsEntry = tab.add("Volts",0.0).getEntry();
+        ampsEntry = tab.add("Amps",0.0).getEntry();
+    
+        /* Create a default auto to initialize Path Planner  */
+        initAuto = new PathPlannerAuto("initAuto").ignoringDisable(true);
 
-    /* Create a default auto to initialize Path Planner  */
-    initAuto = new PathPlannerAuto("initAuto").ignoringDisable(true);
-  }
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        NetworkTable table = inst.getTable("HOT/Drive");
+
+      timeRemainingInCurrentShift = table.getDoubleTopic("Hub Time Remaining").publish();
+
+      }
+
+
+  private void UpdateTelemetry() {
+    try{
+      timeRemainingInCurrentShift.set(HubTracker.timeRemainingInCurrentShift().get().abs(Seconds));
+    } catch(Exception e) {
+      
+    }
+           //timeRemainingInCurrentShift {
+
+           }
+    
 
   @Override
   public void robotPeriodic() {
@@ -79,6 +118,8 @@ public class Robot extends TimedRobot {
     matchTimeEntry.setDouble(DriverStation.getMatchTime());
     voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
     ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
+
+    UpdateTelemetry(); 
   }
 
   @Override
