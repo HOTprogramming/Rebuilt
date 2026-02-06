@@ -34,6 +34,7 @@ public class IndexKraken {
     private TalonFX m_TalonFX = new TalonFX(IndexConstants.kLeftKickID, canbus);
     private TalonFX m_TalonFX2 = new TalonFX(IndexConstants.kRightKickID, canbus);
     private TalonFX m_TalonFX3 = new TalonFX(IndexConstants.kFloorID, canbus);
+    private TalonFX m_TalonFX4 = new TalonFX(IndexConstants.kLoaderID, canbus);
     
     private static IndexKraken instance = null;
     private boolean isSimulation = false;
@@ -56,9 +57,14 @@ public class IndexKraken {
     private final StatusSignal<Current> FloorSupplyCurrent;
     private final StatusSignal<Current> FloorTorqueCurrent;
     private final StatusSignal<Temperature> FloorTempCelsius;
-
-    /**************************************************************** 
-    * Change this variable to select which motor control feature runs 
+    private final StatusSignal<Angle> LoadPosition;
+    private final StatusSignal<AngularVelocity> LoadVelocity;
+    private final StatusSignal<Voltage> LoadAppliedVolts;
+    private final StatusSignal<Current> LoadSupplyCurrent;
+    private final StatusSignal<Current> LoadTorqueCurrent;
+    private final StatusSignal<Temperature> LoadTempCelsius;
+        /**************************************************************** 
+     * Change this variable to select which motor control feature runs 
     *     0-means run Position Voltage Control Mode  
     *     1-means run Position Torque Control Mode  
     *     2-means run Motion Magic Expo Position Voltage Control Mode  
@@ -96,8 +102,13 @@ public class IndexKraken {
             FloorAppliedVolts,
             FloorSupplyCurrent,
             FloorTorqueCurrent,
-            FloorTempCelsius
-            )
+            FloorTempCelsius,
+            LoadPosition,
+            LoadVelocity,
+            LoadAppliedVolts,
+            LoadSupplyCurrent,
+            LoadTorqueCurrent,
+            LoadTempCelsius)
             .isOK();
 
             stats.kickerLeftPositionRads = kickerLeftPosition.getValueAsDouble();
@@ -118,6 +129,12 @@ public class IndexKraken {
             stats.FloorSupplyCurrentAmps = FloorSupplyCurrent.getValueAsDouble();
             stats.FloorTorqueCurrentApls = FloorTorqueCurrent.getValueAsDouble();
             stats.FloorTempCelsius = FloorTempCelsius.getValueAsDouble();
+            stats.LoadPositionRads = LoadPosition.getValueAsDouble();
+            stats.LoadVelocityRpm = LoadVelocity.getValueAsDouble();
+            stats.LoadAppliedVolt = LoadAppliedVolts.getValueAsDouble();
+            stats.LoadSupplyCurrentAmps = LoadSupplyCurrent.getValueAsDouble();
+            stats.LoadTorqueCurrentApls = LoadTorqueCurrent.getValueAsDouble();
+            stats.LoadTempCelsius = LoadTempCelsius.getValueAsDouble();
 
     }
     public IndexKraken() {
@@ -135,6 +152,11 @@ public class IndexKraken {
        
         if (!statuscode3.isOK()) {
             System.out.println("Configuration Failed on Index Floor Motor");
+        }
+        StatusCode statuscode4 = m_TalonFX4.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0);
+       
+        if (!statuscode4.isOK()) {
+            System.out.println("Configuration Failed on Index Loader Motor");
         }
 
 
@@ -156,6 +178,12 @@ public class IndexKraken {
         FloorSupplyCurrent = m_TalonFX3.getSupplyCurrent();
         FloorTorqueCurrent = m_TalonFX3.getTorqueCurrent();
         FloorTempCelsius = m_TalonFX3.getDeviceTemp();
+        LoadPosition = m_TalonFX4.getPosition();
+        LoadVelocity = m_TalonFX4.getVelocity();
+        LoadAppliedVolts = m_TalonFX4.getMotorVoltage();
+        LoadSupplyCurrent = m_TalonFX4.getSupplyCurrent();
+        LoadTorqueCurrent = m_TalonFX4.getTorqueCurrent();
+        LoadTempCelsius = m_TalonFX4.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -176,13 +204,18 @@ public class IndexKraken {
         FloorAppliedVolts,
         FloorSupplyCurrent,
         FloorTorqueCurrent,
-        FloorTempCelsius
-    );
-
-    }
+        FloorTempCelsius,
+        LoadPosition,
+        LoadVelocity,
+        LoadAppliedVolts,
+        LoadSupplyCurrent,
+        LoadTorqueCurrent,
+        LoadTempCelsius
+    );}
     public void startIndex(double speed) {
         
         double desiredRotationsPerSecond = 60.0; //IMPORTANT
+        double desiredFloorRotationsPerSecond = 10.0; //IMPORTANT
         double desiredLoadRotationsPerSecond = 40; //IMPORTANT
         
         switch (controlMode) {
@@ -190,22 +223,14 @@ public class IndexKraken {
             m_TalonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
             m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
             m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(desiredLoadRotationsPerSecond));
-        }
+            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(desiredFloorRotationsPerSecond));
     }
-
-    public void stopIndex(double speed) {
-        double desiredRotationsPerSecond = 0; //IMPORTANT
-        switch (controlMode) {
-            case 0:
-            m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-            m_TalonFX.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
-        }
     }
 
 public void stop() {
     m_TalonFX.setControl(m_brake);
     m_TalonFX2.setControl(m_brake);
     m_TalonFX3.setControl(m_brake);
+    m_TalonFX4.setControl(m_brake);
 }
 }
