@@ -105,10 +105,6 @@ public class ClimberConstants {
             case ALPHABOT -> new ClimberConfigs( 
                 climberWheelConfigs 
             );
-            case COMP26 -> new ClimberConfigs( 
-                climberWheelConfigs 
-            );
-
         };
 
 

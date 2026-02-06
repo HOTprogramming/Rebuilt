@@ -105,10 +105,6 @@ public class IndexConstants {
             case ALPHABOT -> new IndexConfigs( 
                 indexWheelConfigs 
             );
-            case COMP26 -> new IndexConfigs( 
-                indexWheelConfigs 
-            );
-
         };
 
 

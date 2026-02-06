@@ -33,20 +33,19 @@ import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
-
-
+import frc.robot.subsystems.Intake.Intake;
 
 public class RobotContainer {
-
   SendableChooser<String> Autos = new SendableChooser<>();
   private Command autoCommand;
   private String autoString;
 
-  private Drive drivetrain;
-  private Camera cameraSubsystem;
-  private final Shooter m_shooter;
-  private final Climber m_climber;
-  private final Index m_indexer;
+  private final Drive drivetrain;
+  private final Camera camera;
+  private final Shooter shooter;
+  private final Climber climber;
+  private final Index indexer;
+  private final Intake intake;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -68,10 +67,11 @@ public class RobotContainer {
     SmartDashboard.putData("Autos",Autos);
 
     drivetrain = new Drive(new DriveKraken());
-    cameraSubsystem = new Camera(drivetrain);
-    m_shooter = new Shooter();
-    m_climber = new Climber();
-    m_indexer = new Index();
+    camera = new Camera(drivetrain);
+    shooter = new Shooter();
+    climber = new Climber();
+    indexer = new Index();
+    intake = new Intake();
 
     configureBindings();
   }
@@ -134,7 +134,7 @@ public class RobotContainer {
       }
     } else {
       autoString = AutoSelect;
-      }
+    }
   }
 
 

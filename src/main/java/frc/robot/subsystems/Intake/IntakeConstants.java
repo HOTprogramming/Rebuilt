@@ -313,6 +313,14 @@ public class IntakeConstants {
              RightIntakeEncoderConfigs,
              LeftIntakeEncoderConfigs
             );
+            case ALPHABOT -> new IntakeConfigs(
+             LeftRollerConfigs,
+             RightRollerConfigs,
+             LeftIntakeExtendConfigs,
+             RightIntakeExtendConfigs,
+             RightIntakeEncoderConfigs,
+             LeftIntakeEncoderConfigs
+            );
         };
 
         public record IntakeConfigs(

@@ -152,9 +152,6 @@ public class ShooterConstants {
             case ALPHABOT -> new ShooterConfigs( 
                 shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
             );
-            case COMP26 -> new ShooterConfigs( 
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
-            );
         };
 
 

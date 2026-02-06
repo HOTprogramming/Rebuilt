@@ -16,7 +16,7 @@ package frc.robot;
 public final class Constants {
 
   public static final double loopPeriodSecs = 0.02;
-  private static RobotType robotType = RobotType.COMPBOT;
+  private static RobotType robotType = RobotType.ALPHABOT;
   public static final boolean tuningMode = false;
   public static final String canName = "robot";
 
@@ -35,7 +35,6 @@ public final class Constants {
       COMP25,
       MINIBOT,
       ALPHABOT,
-      COMP26
     }
 
   public static boolean disableHAL = false;
