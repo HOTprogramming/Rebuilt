@@ -77,15 +77,14 @@ public class IntakeKraken {
   private final StatusSignal<Temperature> RightRollerTempCelsius;
 
   private static IntakeKraken instance = null;
-  private boolean isSimulation = false; 
 
-   /**************************************************************** 
-    * Change this variable to select which motor control feature runs 
-    *     0-means run Velocity Voltage Control Mode  
-    *     1-means run Velocity Torque Control Mode  
-    *     2-means run Motion Magic Voltage Control Mode  
-    *     3-means run Motion Magic Torque Control mode  
-    *****************************************************************/           
+  /**************************************************************** 
+  * Change this variable to select which motor control feature runs 
+  *     0-means run Velocity Voltage Control Mode  
+  *     1-means run Velocity Torque Control Mode  
+  *     2-means run Motion Magic Voltage Control Mode  
+  *     3-means run Motion Magic Torque Control mode  
+  *****************************************************************/           
   private int controlVel = 0;
   private int controlPos = 0;
   private StatusCode statuscode = null;
@@ -155,92 +154,93 @@ public class IntakeKraken {
     RightRollerTempCelsius = m_RRoller.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-        100.0,
-          LeftIntakePosition,
-        LeftIntakeVelocity,
-        LeftIntakeAppliedVolts,
-        LeftIntakeSupplyCurrent,
-        LeftIntakeTorqueCurrent,
-        LeftIntakeTempCelsius,
-        LeftIntakeEncoderPosition,
-        LeftIntakeEncoderVelocity,
-          RightIntakePosition,
-        RightIntakeVelocity,
-        RightIntakeAppliedVolts,
-        RightIntakeSupplyCurrent,
-        RightIntakeTorqueCurrent,
-        RightIntakeTempCelsius,
-        RightIntakeEncoderPosition,
-        RightIntakeEncoderVelocity,
-          LeftRollerPosition,
-        LeftRollerVelocity,
-        LeftRollerAppliedVolts,
-        LeftRollerSupplyCurrent,
-        LeftRollerTorqueCurrent,
-        LeftRollerTempCelsius,
-          RightRollerPosition,
-        RightRollerVelocity,
-        RightRollerAppliedVolts,
-        RightRollerSupplyCurrent,
-        RightRollerTorqueCurrent,
-        RightRollerTempCelsius
+      100.0,
+      LeftIntakePosition,
+      LeftIntakeVelocity,
+      LeftIntakeAppliedVolts,
+      LeftIntakeSupplyCurrent,
+      LeftIntakeTorqueCurrent,
+      LeftIntakeTempCelsius,
+      LeftIntakeEncoderPosition,
+      LeftIntakeEncoderVelocity,
+
+      RightIntakePosition,
+      RightIntakeVelocity,
+      RightIntakeAppliedVolts,
+      RightIntakeSupplyCurrent,
+      RightIntakeTorqueCurrent,
+      RightIntakeTempCelsius,
+      RightIntakeEncoderPosition,
+      RightIntakeEncoderVelocity,
+
+      LeftRollerPosition,
+      LeftRollerVelocity,
+      LeftRollerAppliedVolts,
+      LeftRollerSupplyCurrent,
+      LeftRollerTorqueCurrent,
+      LeftRollerTempCelsius,
+
+      RightRollerPosition,
+      RightRollerVelocity,
+      RightRollerAppliedVolts,
+      RightRollerSupplyCurrent,
+      RightRollerTorqueCurrent,
+      RightRollerTempCelsius
     );
 
     /* Optimize out the other signals, since they're not useful */
     m_LExtend.optimizeBusUtilization();
-     m_RExtend.optimizeBusUtilization();
-      m_LRoller.optimizeBusUtilization();
-       m_RRoller.optimizeBusUtilization();
+    m_RExtend.optimizeBusUtilization();
+    m_LRoller.optimizeBusUtilization();
+    m_RRoller.optimizeBusUtilization();
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
-      isSimulation = true; 
       PhysicsSim.getInstance().addTalonFX(m_LExtend, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_RExtend, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_LRoller, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_RRoller, 0.001);
-      }
     }
+  }
 
   public static IntakeKraken getInstance() {
     return instance = instance == null ? new IntakeKraken() : instance;
   }
+
   public void updateStats(IntakeStats stats) {
-  if(isSimulation){
+    if(Utils.isSimulation()){
       PhysicsSim.getInstance().run();
     }
 
-    stats.MotorConnected =
-        BaseStatusSignal.refreshAll(
-                LeftIntakePosition,
-                LeftIntakeVelocity,
-                LeftIntakeAppliedVolts,
-                LeftIntakeSupplyCurrent,
-                LeftIntakeTorqueCurrent,
-                LeftIntakeTempCelsius,
-                LeftIntakeEncoderPosition,
-                LeftIntakeEncoderVelocity,
-                LeftRollerPosition,
-                LeftRollerVelocity,
-                LeftRollerAppliedVolts,
-                LeftRollerSupplyCurrent,
-                LeftRollerTorqueCurrent,
-                LeftRollerTempCelsius,
-                RightIntakePosition,
-                RightIntakeVelocity,
-                RightIntakeAppliedVolts,
-                RightIntakeSupplyCurrent,
-                RightIntakeTorqueCurrent,
-                RightIntakeTempCelsius,
-                RightIntakeEncoderPosition,
-                RightIntakeEncoderVelocity,
-                RightRollerPosition,
-                RightRollerVelocity,
-                RightRollerAppliedVolts,
-                RightRollerSupplyCurrent,
-                RightRollerTorqueCurrent,
-                RightRollerTempCelsius)
-            .isOK();
+    stats.MotorConnected = BaseStatusSignal.refreshAll(
+      LeftIntakePosition,
+      LeftIntakeVelocity,
+      LeftIntakeAppliedVolts,
+      LeftIntakeSupplyCurrent,
+      LeftIntakeTorqueCurrent,
+      LeftIntakeTempCelsius,
+      LeftIntakeEncoderPosition,
+      LeftIntakeEncoderVelocity,
+      LeftRollerPosition,
+      LeftRollerVelocity,
+      LeftRollerAppliedVolts,
+      LeftRollerSupplyCurrent,
+      LeftRollerTorqueCurrent,
+      LeftRollerTempCelsius,
+      RightIntakePosition,
+      RightIntakeVelocity,
+      RightIntakeAppliedVolts,
+      RightIntakeSupplyCurrent,
+      RightIntakeTorqueCurrent,
+      RightIntakeTempCelsius,
+      RightIntakeEncoderPosition,
+      RightIntakeEncoderVelocity,
+      RightRollerPosition,
+      RightRollerVelocity,
+      RightRollerAppliedVolts,
+      RightRollerSupplyCurrent,
+      RightRollerTorqueCurrent,
+      RightRollerTempCelsius).isOK();
 
     stats.LExtendPositionRads = LeftIntakePosition.getValueAsDouble();
     stats.LExtendVelocityRpm = LeftIntakeVelocity.getValueAsDouble();
@@ -272,8 +272,6 @@ public class IntakeKraken {
     stats.RRollerTempCelsius = RightRollerTempCelsius.getValueAsDouble();
   }
 
-
-
   /***************************************************************************
   * The runVelocity function can run (based on the controlMode Variable either:
   *     0-means run Position Voltage Control Mode  
@@ -281,43 +279,37 @@ public class IntakeKraken {
   *     2-means run Motion Magic Expo Voltage Control Mode  
   *     3-means run Motion Magic Expo Torque Control mode  
   ***************************************************************************/
-  
-  public void test(){
-    m_LExtend.setControl(m_positionVoltage.withPosition(10));
-  }
-  
   public void runPosition(double desiredRotations,int Side) {     
-    
     if(Side == 1) {
-        switch (controlPos) {
-           case 0:      /* Use Position Voltage */
-                m_LExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
-                break;
-           case 1:      /* Use Position Torque */
-                m_LExtend.setControl(m_positionTorque.withPosition(desiredRotations));
-                break;
-           case 2:      /* Use Motion Magic Position Voltage */
-                m_LExtend.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
-                break;
-           case 3:      /* Use Motion Magic Position Torque */
-                m_LExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
-                break;
-        }
+      switch (controlPos) {
+        case 0:      /* Use Position Voltage */
+          m_LExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
+          break;
+        case 1:      /* Use Position Torque */
+          m_LExtend.setControl(m_positionTorque.withPosition(desiredRotations));
+          break;
+        case 2:      /* Use Motion Magic Position Voltage */
+          m_LExtend.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
+          break;
+        case 3:      /* Use Motion Magic Position Torque */
+          m_LExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
+          break;
+      }
      } else {   
-         switch (controlPos) {
-             case 0:      /* Use Position Voltage */
-                 m_RExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
-                 break;
-             case 1:      /* Use Position Torque */
-                 m_RExtend.setControl(m_positionTorque.withPosition(desiredRotations));
-                 break;
-             case 2:      /* Use Motion Magic Position Voltage */
-                 m_RExtend.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
-                 break;
-             case 3:      /* Use Motion Magic Position Torque */
-                 m_RExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
-                 break;
-         }
+      switch (controlPos) {
+        case 0:      /* Use Position Voltage */
+          m_RExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
+          break;
+        case 1:      /* Use Position Torque */
+          m_RExtend.setControl(m_positionTorque.withPosition(desiredRotations));
+          break;
+        case 2:      /* Use Motion Magic Position Voltage */
+          m_RExtend.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
+          break;
+        case 3:      /* Use Motion Magic Position Torque */
+          m_RExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
+          break;
+      }
     }
   }
 
@@ -332,47 +324,48 @@ public class IntakeKraken {
     //Convert rotations per minute into rotations per second 
     double desiredRotationsPerSecond = (RPM/60.0); 
     if(Side == 1) {
-        switch (controlVel) {
-            case 0:      /* Use velocity voltage */
-                m_LRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
-                break;
-            case 1:      /* Use velocity torque */
-                m_LRoller.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
-                break;
-            case 2:      /*Use Motion Magic Voltage */
-                m_LRoller.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
-                break;
-            case 3:      /*Use Motion Magic Torque Current FOC */
-                m_LRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond)); 
-                break;  
+      switch (controlVel) {
+        case 0:      /* Use velocity voltage */
+          m_LRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+          break;
+        case 1:      /* Use velocity torque */
+          m_LRoller.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
+          break;
+        case 2:      /*Use Motion Magic Voltage */
+          m_LRoller.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
+          break;
+        case 3:      /*Use Motion Magic Torque Current FOC */
+          m_LRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond)); 
+          break;  
       }
-  }else {
-        switch (controlVel) {
-            case 0:      /* Use velocity voltage */
-                m_RRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
-                break;
-            case 1:      /* Use velocity torque */
-                m_RRoller.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
-                break;
-            case 2:      /*Use Motion Magic Voltage */
-                m_RRoller.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
-                break;
-            case 3:      /*Use Motion Magic Torque Current FOC */
-                m_RRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond));
-                break;
-        }
-      }
-   }
-   public void stop(){
-        m_LRoller.setControl(m_brake);
-        m_RRoller.setControl(m_brake);
-    }
-
-    public StatusSignal<Angle> getRotation(int Side) {
-      if (Side == 1) {
-        return m_LExtend.getPosition();
-      } else {
-        return m_RExtend.getPosition();
+    }else {
+      switch (controlVel) {
+        case 0:      /* Use velocity voltage */
+          m_RRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+          break;
+        case 1:      /* Use velocity torque */
+          m_RRoller.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
+          break;
+        case 2:      /*Use Motion Magic Voltage */
+          m_RRoller.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
+          break;
+        case 3:      /*Use Motion Magic Torque Current FOC */
+          m_RRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond));
+          break;
       }
     }
   }
+
+  public void stop(){
+    m_LRoller.setControl(m_brake);
+    m_RRoller.setControl(m_brake);
+  }
+
+  public StatusSignal<Angle> getRotation(int Side) {
+    if (Side == 1) {
+      return m_LExtend.getPosition();
+    } else {
+      return m_RExtend.getPosition();
+    }
+  }
+}

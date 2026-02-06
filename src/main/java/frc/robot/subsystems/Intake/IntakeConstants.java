@@ -34,12 +34,12 @@ public class IntakeConstants {
     public static double kRightIntake = 2000.0;
 
     public static int kIntakeMotorIDLExtend = 14;
-    public static int kIntakeMotorIDRExtend = 19;
-    public static int kIntakeMotorIDLRoller = 15;
+    public static int kIntakeMotorIDRExtend = 15;
+    public static int kIntakeMotorIDLRoller = 16;
     public static int kIntakeMotorIDRRoller = 17;
     public static double kLeftEncoderOffset = 0;
-    public static double kRightEncoderOffset = 0.15283203125;
-    public static String kBusName = "robot";
+    public static double kRightEncoderOffset = 0;
+    public static String kBusName = Constants.canName;
 
     public static double kDeployedPositionTolerance = 1;
     public static double kRetractedPositionTolerance = 3;
