@@ -27,8 +27,8 @@ public class IntakeConstants {
     public static double kLeftExpel = -1000.0;
     public static double kRightExpel = -1000.0;
 
-    public static int kLeftIntakeEncoderID = 21;
-    public static int kRightIntakeEncoderID = 46;
+    public static int kLeftIntakeEncoderID = 44;
+    public static int kRightIntakeEncoderID = 45;
 
     public static double kLeftIntake = 2000.0;
     public static double kRightIntake = 2000.0;

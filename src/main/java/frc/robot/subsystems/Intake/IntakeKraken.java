@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.sim.PhysicsSim;
+import frc.robot.sim.PhysicsSimWithCan;
 
 
 public class IntakeKraken {
@@ -280,7 +281,7 @@ public class IntakeKraken {
   *     3-means run Motion Magic Expo Torque Control mode  
   ***************************************************************************/
   public void runPosition(double desiredRotations,int Side) {     
-    if(Side == 1) {
+    if(Side == 0) {
       switch (controlPos) {
         case 0:      /* Use Position Voltage */
           m_LExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
@@ -323,7 +324,7 @@ public class IntakeKraken {
   public void runVelocity(double RPM,int Side) {      
     //Convert rotations per minute into rotations per second 
     double desiredRotationsPerSecond = (RPM/60.0); 
-    if(Side == 1) {
+    if(Side == 0) {
       switch (controlVel) {
         case 0:      /* Use velocity voltage */
           m_LRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));

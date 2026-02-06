@@ -120,14 +120,14 @@ public class Intake extends SubsystemBase{
     public Command extendLeftIntake() {
         return runOnce(() ->
         {
-            mIntakeKraken.runPosition(IntakeConstants.kLeftDeployedPosition,1);
-            mIntakeKraken.runVelocity(IntakeConstants.kLeftIntake,1);
+            mIntakeKraken.runPosition(IntakeConstants.kLeftDeployedPosition,0);
+            mIntakeKraken.runVelocity(IntakeConstants.kLeftIntake,0);
         });
     }
      public Command retractLeftIntake() {
         return runOnce(() ->
         {
-            mIntakeKraken.runPosition(IntakeConstants.kLeftRetractPosition,1);
+            mIntakeKraken.runPosition(IntakeConstants.kLeftRetractPosition,0);
             mIntakeKraken.stop();
         });
     }
@@ -141,16 +141,16 @@ public class Intake extends SubsystemBase{
     public Command expelLeftIntake() {
         return runOnce(() ->
           {
-            mIntakeKraken.runPosition(IntakeConstants.kLeftDeployedPosition,1);
-            mIntakeKraken.runVelocity(IntakeConstants.kLeftExpel,1);
+            mIntakeKraken.runPosition(IntakeConstants.kLeftDeployedPosition,0);
+            mIntakeKraken.runVelocity(IntakeConstants.kLeftExpel,0);
         });
     } 
     
     public Command expelRightIntake() {
         return runOnce(() ->
           {
-            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,0);
-            mIntakeKraken.runVelocity(IntakeConstants.kRightExpel,0);
+            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,1);
+            mIntakeKraken.runVelocity(IntakeConstants.kRightExpel,1);
         });
     }
     
@@ -170,8 +170,8 @@ public class Intake extends SubsystemBase{
     public Command extendRightIntake() {
         return runOnce(() ->
         {
-            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,0);
-            mIntakeKraken.runVelocity(IntakeConstants.kRightIntake,0);
+            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,1);
+            mIntakeKraken.runVelocity(IntakeConstants.kRightIntake,1);
         });
     }
 

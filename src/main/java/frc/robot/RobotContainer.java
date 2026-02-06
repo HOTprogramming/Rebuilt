@@ -101,11 +101,11 @@ public class RobotContainer {
     );
 
     // Shooter Controls
-    operator.a().whileTrue(shooter.goToShoot());
+    operator.a().whileTrue(shooter.goToShoot()).whileFalse(shooter.goToIdle());
 
     // Intake Controls
-    operator.rightBumper().whileTrue(intake.activateRightIntake()).whileFalse(intake.retractRightIntake());
-    operator.leftBumper().whileTrue(intake.activateLeftIntake()).whileFalse(intake.retractLeftIntake());
+    operator.rightBumper().whileTrue(intake.extendRightIntake()).whileFalse(intake.retractRightIntake());
+    operator.leftBumper().whileTrue(intake.extendLeftIntake()).whileFalse(intake.retractLeftIntake());
 
     // Indexer Controls
     operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
