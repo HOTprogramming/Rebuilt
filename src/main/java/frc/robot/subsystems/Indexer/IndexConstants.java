@@ -27,9 +27,9 @@ public class IndexConstants {
     public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40)
+                .withStatorCurrentLimit(80)
                 .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(40)
+                .withSupplyCurrentLimit(80)
                 .withSupplyCurrentLimitEnable(true)
                 .withSupplyCurrentLowerLimit(30)
                 .withSupplyCurrentLowerTime(1)
