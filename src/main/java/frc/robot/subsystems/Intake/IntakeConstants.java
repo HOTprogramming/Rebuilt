@@ -19,27 +19,27 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.Constants;
 
 public class IntakeConstants {
-    public static double kLeftDeployedPosition = 10.0;
-    public static double kLeftRetractPosition = 40.0;
-    public static double kRightDeployedPosition = 10.0;
-    public static double kRightRetractPosition = 40.0;
+    public static double kLeftDeployedPosition = 0.0;
+    public static double kLeftRetractPosition = 0.0;
+    public static double kRightDeployedPosition = 0.0;
+    public static double kRightRetractPosition = 0.0;
 
     public static double kLeftExpel = -1000.0;
     public static double kRightExpel = -1000.0;
 
     public static int kLeftIntakeEncoderID = 21;
-    public static int kRightIntakeEncoderID = 46;
+    public static int kRightIntakeEncoderID = 40;
 
     public static double kLeftIntake = 2000.0;
     public static double kRightIntake = 2000.0;
 
     public static int kIntakeMotorIDLExtend = 14;
-    public static int kIntakeMotorIDRExtend = 19;
+    public static int kIntakeMotorIDRExtend = 18;
     public static int kIntakeMotorIDLRoller = 15;
     public static int kIntakeMotorIDRRoller = 17;
     public static double kLeftEncoderOffset = 0;
     public static double kRightEncoderOffset = 0.15283203125;
-    public static String kBusName = "robot";
+    public static String kBusName = "rio";
 
     public static double kDeployedPositionTolerance = 1;
     public static double kRetractedPositionTolerance = 3;

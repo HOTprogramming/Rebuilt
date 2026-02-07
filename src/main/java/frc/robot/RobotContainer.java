@@ -65,8 +65,8 @@ public class RobotContainer {
         }
       ));
 
-       driver.a().toggleOnTrue(m_intake.extendRightIntake());
-       driver.b().toggleOnFalse(m_intake.retractRightIntake());
+       driver.a().onTrue(Commands.sequence(m_intake.extendLeftIntake(), m_intake.retractRightIntake()));
+       driver.b().toggleOnTrue(Commands.sequence(m_intake.extendRightIntake(), m_intake.retractLeftIntake()));
       //driver.a().whileTrue(m_intake.test());
       //driver.b().whileTrue(m_intake.extendRightIntake()).whileFalse(m_intake.retractRightIntake());
       //driver.leftBumper().whileTrue(m_intake.expelLeftIntake()).whileFalse(m_intake.turnOffLeftExpel());

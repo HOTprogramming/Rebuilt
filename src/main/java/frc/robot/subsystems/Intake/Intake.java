@@ -189,10 +189,12 @@ public class Intake extends SubsystemBase{
     }
 
     public Command activateRightIntake() {
-        return Commands.sequence(retractLeftIntake().until(isLeftRetracted()),extendRightIntake());
+        return Commands.sequence(retractLeftIntake().until(isLeftRetracted()),
+        extendRightIntake().until(isLeftextended()));
     }
     public Command activateLeftIntake() {
-        return Commands.sequence(retractRightIntake().until(isRightRetracted()),extendLeftIntake());
+        return Commands.sequence(retractRightIntake().until(isRightRetracted()),
+        extendLeftIntake().until(isRightextended()));
     }
 }
 
