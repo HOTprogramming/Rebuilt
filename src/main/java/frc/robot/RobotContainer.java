@@ -84,10 +84,24 @@ public class RobotContainer {
         drivetrain.resetPidgeon())
       );
 
-      driver.b().whileTrue(drivetrain.run(()->
-      drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-      Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-      new Rotation2d(Math.PI/4))));
+      driver.b().whileTrue(drivetrain.run(()-> {
+        double rot = drivetrain.getPose().getRotation().getDegrees(); //robot angle, from -180 to 180
+        double fact; //factor to multiply PI/4 radians by to get the nearest 45 degree angle.
+        if (Math.abs(rot) > 90) { //This way of calculating fact reduces if statements.
+          fact = 3; //The absolute value of the correct angle is 3PI/4 (or 135 degrees), so fact is 3
+        } else {
+          fact = 1; //The absolute value of the correct angle is PI/4 (or 45 degrees), so fact is 1
+        }
+
+        if (rot < 0) {
+          fact *= -1; //Correct side of the robot
+        }
+        
+        drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        new Rotation2d(Math.PI/4 * fact));
+        }
+      ));
 
       NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
