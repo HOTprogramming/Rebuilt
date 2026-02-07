@@ -15,10 +15,10 @@ import frc.robot.Constants;
 
 public class IndexConstants {
     public static int kLeftKickID = 18; //IMPORTANT
-    public static int kRightKickID = 14; //IMPORTANT
-    public static int kFloorID = 0; //IMPORTANT
-    public static int kLoaderID = 0; //IMPORTANT
-    public static String kBusName = "rio"; //IMPORTANT
+    public static int kRightKickID = 19; //IMPORTANT
+    public static int kFloorID = 9; //IMPORTANT
+    public static int kLoaderID = 13; //IMPORTANT
+    public static String kBusName = "robot"; //IMPORTANT
     public static double kickerSpeed = 1000; //IMPORTANT
     public static double floorSpeed = 300; //IMPORTANT
     public static double loaderSpeed = 1000; //IMPORTANT
