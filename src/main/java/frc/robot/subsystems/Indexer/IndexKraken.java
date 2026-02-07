@@ -250,10 +250,16 @@ public class IndexKraken {
         
         switch (controlMode) {
             case 0:
-            m_LeftKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
-            m_RightKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
-            m_Floor.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
-            m_Loader.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+            // m_LeftKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
+            // m_RightKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
+            // m_Floor.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+            // m_Loader.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+
+            m_LeftKick.setVoltage(32);
+            m_RightKick.setVoltage(32);
+            m_Floor.setVoltage(32);
+            m_Loader.setVoltage(32);
+
         }
     }
 
