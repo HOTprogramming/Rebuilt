@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,7 +24,9 @@ public class ShootingWhileMoving {
         new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Rotation2d::interpolate);
     private static final InterpolatingDoubleTreeMap shotFlywheelSpeedMap =
         new InterpolatingDoubleTreeMap();
-    
+    LinearFilter vxfilt = LinearFilter.movingAverage(8);
+    LinearFilter vyfilt = LinearFilter.movingAverage(8);
+
     static {
 
     minDistance = 1.34;
@@ -66,7 +69,10 @@ public class ShootingWhileMoving {
     
     public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
         double latency = 0.1; //needs to be tuned, in seconds
-        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation()); 
+        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
+        double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
+        double vy_filt = vyfilt.calculate(fieldSpeeds.vyMetersPerSecond) ;
+
         Translation2d releasePos = RobotPos.getTranslation().plus(
             new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency)
         );
@@ -82,28 +88,37 @@ public class ShootingWhileMoving {
         Translation2d goalLocation = new Translation2d(goalX, 4.03); //4.03 is both hubs' y pos
         Translation2d targetVec = goalLocation.minus(releasePos);
         double dist = targetVec.getNorm();
-        double altdist = goalLocation.getDistance(releasePos);
+        Translation2d targetDirection = targetVec.div(dist); 
+        
+        //double idealHorizontalSpeed = 5; old code
+        double initialToF = timeOfFlightMap.get(dist);
+        double idealHorizontalSpeed = dist / initialToF;
 
-        double idealHorizontalSpeed = 5;
-
+        Translation2d targetVelocity = targetDirection.times(idealHorizontalSpeed);
+        
         Translation2d robotVelVec = new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
         Translation2d shotVec = targetVec.div(dist).times(idealHorizontalSpeed).minus(robotVelVec);
+        Translation2d shotVelocity = targetVelocity.minus(robotVelVec);
 
+        //Rotation2d turretRotation = shotVelocity.getAngle();
+        double requiredVelocity = shotVelocity.getNorm();
+        //double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+
+        Translation2d aimPoint = releasePos.plus(
+            shotVelocity.div(shotVelocity.getNorm()).times(dist)
+        );
+
+        /* Old code for non-iterative solution, aiming at the current position of the goal
         Translation2d aimPoint = releasePos.plus(
             shotVec.div(shotVec.getNorm()).times(dist)
         );
+        */
 
-        
-
-        //double turretAngle = shotVec.getAngle().getRadians() + Math.PI; //Turret faces backwards on robot
-        double newHorizontalSpeed = shotVec.getNorm();
-
-        
+        double newHorizontalSpeed = shotVelocity.getNorm();
 
         double totalExitVelocity = 15; //In m/s, needs to be measured when we get robot
         double ratio = Math.min(newHorizontalSpeed / totalExitVelocity, 1.0);
         double newPitch = Math.acos(ratio);
-        
         
 
         //position-based shooting solution with iterative TOF solver
@@ -123,8 +138,8 @@ public class ShootingWhileMoving {
             lastTimeOfFlight = timeOfFlight;
             
             // Predict future robot position at time of impact
-            double offsetX =  fieldSpeeds.vxMetersPerSecond * timeOfFlight;
-            double offsetY = fieldSpeeds.vyMetersPerSecond * timeOfFlight;
+            double offsetX =  vx_filt * timeOfFlight;
+            double offsetY = vy_filt * timeOfFlight;
             lookaheadPos = releasePos.plus(new Translation2d(offsetX, offsetY));
 
             // Update distance for next ToF lookup
@@ -146,11 +161,13 @@ public class ShootingWhileMoving {
         SmartDashboard.putNumber("SolverErr", Math.abs(timeOfFlight - lastTimeOfFlight));
         SmartDashboard.putNumber("SolverLoops", i);
         SmartDashboard.putNumber("Distance", dist);
-        SmartDashboard.putNumber("AltDistance", altdist);
         SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
         SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
-        SmartDashboard.putNumber("ShotAngle", turretRotation.getDegrees());
-        
+        SmartDashboard.putNumber("vx", fieldSpeeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("vy", fieldSpeeds.vyMetersPerSecond);
+        SmartDashboard.putNumber("vx_filtered", vx_filt);
+        SmartDashboard.putNumber("vy_filtered", vy_filt);
+        SmartDashboard.putNumber("Horiz Speed", newHorizontalSpeed);
 
         return(turretAngle);
 
