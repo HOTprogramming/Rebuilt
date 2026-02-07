@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -142,7 +143,7 @@ public class IndexKraken {
     public IndexKraken() {
         StatusCode statuscode = m_LeftKick.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
         .withMotorOutput( new MotorOutputConfigs()
-        .withInverted(InvertedValue.Clockwise_Positive)), 1.0); 
+        .withInverted(InvertedValue.CounterClockwise_Positive)), 1.0); 
 
         if (!statuscode.isOK()) {
             System.out.println("Configuration Failed on Index Kicker Left Motor");
@@ -159,7 +160,13 @@ public class IndexKraken {
 
         StatusCode statuscode3 = m_Floor.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
         .withMotorOutput( new MotorOutputConfigs()
-        .withInverted(InvertedValue.CounterClockwise_Positive)), 1.0);
+        .withInverted(InvertedValue.Clockwise_Positive)).withSlot0(new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
+                .withKP(0.2)       // An error of 1 rotation per second results in 0.11 V output
+                .withKI(0.0)        // No output for integrated error
+                .withKD(0.0)        // No output for error derivative
+                .withKS(0.3)        // To account for friction, add 0.1 V of static feedforward
+                .withKV(0.4)  
+                ), 1.0);
        
         if (!statuscode3.isOK()) {
             System.out.println("Configuration Failed on Index Floor Motor");

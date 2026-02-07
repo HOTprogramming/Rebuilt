@@ -151,7 +151,7 @@ public void periodic() {
         return runOnce( () -> kickerstart(IndexConstants.kickerSpeed));
     }
     public Command indexOffCommand() {
-        return runOnce( () -> off(IndexConstants.zerospeed));
+        return runOnce( () -> m_IndexKraken.stop());
     }
 
 }

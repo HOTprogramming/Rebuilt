@@ -14,8 +14,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class IndexConstants {
-    public static int kLeftKickID = 18; //IMPORTANT
-    public static int kRightKickID = 19; //IMPORTANT
+    public static int kLeftKickID = 14; //IMPORTANT
+    public static int kRightKickID = 15; //IMPORTANT
     public static int kFloorID = 9; //IMPORTANT
     public static int kLoaderID = 13; //IMPORTANT
     public static String kBusName = Constants.canName; //IMPORTANT
