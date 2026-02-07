@@ -216,6 +216,7 @@ public class ShooterKraken {
       case 0:      /* Use velocity voltage */
         m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
         m_talonFXOther.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+        break;
       case 1:      /* Use velocity torque */
         m_talonFX.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
         m_talonFXOther.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
@@ -228,13 +229,14 @@ public class ShooterKraken {
   *     1-means run Position Torque Control Mode  
   ***************************************************************************/
   public void runPosition(double desiredRotations) {      
-    switch (controlModeHood) {
-      case 0:      /* Use Position Voltage */
-          m_talonFXHood.setControl(m_positionVoltage.withPosition(desiredRotations));
-      case 1:      /* Use Position Torque */
-          m_talonFXHood.setControl(m_positionTorque.withPosition(desiredRotations));
+      switch (controlModeHood) {
+        case 0:      /* Use Position Voltage */
+            m_talonFXHood.setControl(m_positionVoltage.withPosition(desiredRotations));
+            break;
+        case 1:      /* Use Position Torque */
+            m_talonFXHood.setControl(m_positionTorque.withPosition(desiredRotations));
+        }
     }
-  }
 
   public void stop() {
     /* tell the motor to brake */

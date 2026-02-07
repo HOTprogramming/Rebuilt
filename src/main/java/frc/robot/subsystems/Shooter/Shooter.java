@@ -31,7 +31,6 @@ public class Shooter extends SubsystemBase {
   private DoublePublisher hoodSupplyCurrent;
   private DoublePublisher hoodTorqueCurrent;
   private DoublePublisher hoodTemp;
-  private DoublePublisher hoodGoal;
 
   /* Initializes the shooter stats */
   class shooterStats {
@@ -80,14 +79,23 @@ public class Shooter extends SubsystemBase {
     shooterTorqueCurrentOther = table.getDoubleTopic("Shooter 2: Torque Current").publish();
     shooterTempOther = table.getDoubleTopic("Shooter 2: Motor Temp").publish();
 
-    hoodPosition = table.getDoubleTopic("Hood: Position-Motor (ROT)").publish();
-    hoodVelocity = table.getDoubleTopic("Hood: Velocity (RPS)").publish();
-    hoodAppliedVolts = table.getDoubleTopic("Hood: Applied Volts").publish();
-    hoodSupplyCurrent = table.getDoubleTopic("Hood: Supply Current").publish();
-    hoodTorqueCurrent = table.getDoubleTopic("Hood: Torque Current").publish();
-    hoodTemp = table.getDoubleTopic("Hood: Motor Temp").publish();
-    hoodGoal = table.getDoubleTopic("Hood: Goal Position").publish();
-  }
+      hoodPosition = table.getDoubleTopic("Hood: Position-Motor (ROT)").publish();
+      hoodVelocity = table.getDoubleTopic("Hood: Velocity (RPS)").publish();
+      hoodAppliedVolts = table.getDoubleTopic("Hood: Applied Volts").publish();
+      hoodSupplyCurrent = table.getDoubleTopic("Hood: Supply Current").publish();
+      hoodTorqueCurrent = table.getDoubleTopic("Hood: Torque Current").publish();
+      hoodTemp = table.getDoubleTopic("Hood: Motor Temp").publish();
+    }
+
+    //Shooter - get Target Speed//
+    public double getTargetShootSpeed() {
+      return ShooterConstants.kTargetShootSpeed;
+    }
+
+    //Hood - get Target Angle//
+    public double getTargetHoodAngle() {
+      return ShooterConstants.kTargetHoodAngle;
+    }
 
   //Shooter - Getter//
   public double getShooterSpeed() {
@@ -134,6 +142,44 @@ public class Shooter extends SubsystemBase {
   **************************************************************/
 
   /**
+   * Turn off shooter motor
+   * 
+   * @return a command
+   */
+  public Command shooterOff() {
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+          mShooterKraken.runVelocity(0);
+        });
+    }  
+  /**
+   * Raise shooter speed by 2 rps
+   * 
+   * @return a command
+   */
+  public Command shootSpeedUp() {
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+          ShooterConstants.kTargetShootSpeed += 2;
+          mShooterKraken.runVelocity(ShooterConstants.kTargetShootSpeed); 
+        });
+    }
+    /**
+   * Lower shooter speed by 2 rps
+   * 
+   * @return a command
+   */
+  public Command shootSpeedDown() {
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+          ShooterConstants.kTargetShootSpeed -= 2;
+          mShooterKraken.runVelocity(ShooterConstants.kTargetShootSpeed);
+        });
+    }
+  /**
    * Return true if shooter flywheel is up to speed
    * 
    * @return a command
@@ -173,12 +219,38 @@ public class Shooter extends SubsystemBase {
    *
    * @return a command
    */
-  public Command setHoodAngle(double angle) {
-    return runOnce(
-      () -> {
-        /* one-time action goes here */
-        hoodGoal.set(angle);
-        mShooterKraken.runPosition(angle);
-      });
-  }
+    public Command setHoodAngle(double angle) {
+      return runOnce(
+        () -> {
+          /* one-time action goes here */
+          hoodPosition.set(angle);
+          mShooterKraken.runPosition(angle);
+        });
+    }
+    /**
+     * Raise hood angle by 15
+     * 
+     * @return a command
+     */
+    public Command hoodAngleUp() {
+      return runOnce(
+        () -> {
+          /* one-time action goes here */
+          ShooterConstants.kTargetHoodAngle += 0.1;
+          mShooterKraken.runPosition(ShooterConstants.kTargetHoodAngle);
+        });
+    }
+    /**
+     * Lower hood angle by 15
+     * 
+     * @return a command
+     */
+    public Command hoodAngleDown() {
+      return runOnce(
+        () -> {
+          /* one-time action goes here */
+          ShooterConstants.kTargetHoodAngle -= 0.1;
+          mShooterKraken.runPosition(ShooterConstants.kTargetHoodAngle);
+        });
+    }
 }

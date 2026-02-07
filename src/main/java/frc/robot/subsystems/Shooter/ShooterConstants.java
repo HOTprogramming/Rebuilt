@@ -18,8 +18,10 @@ public class ShooterConstants {
     public static double kShootReduction =(1.0/1.0);
     public static double kIdleSpeed = (10.0);
     public static double kShooterSpeed = (40.0);
+    public static double kTargetShootSpeed = kShooterSpeed;
     public static double kShooterError = (0.500);
 
+    public static double kTargetHoodAngle = 0;
     public static int kHoodMotorID = 12;
     public static double kHoodReduction = (1.0/1.0);
 

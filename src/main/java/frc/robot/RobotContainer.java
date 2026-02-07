@@ -5,6 +5,8 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
+
 import org.json.simple.parser.ParseException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -81,8 +83,13 @@ public class RobotContainer {
         new Rotation2d(Math.PI/4)
     )));
 
-    // Shooter Controls
-    operator.a().whileTrue(shooter.goToShoot()).whileFalse(shooter.goToIdle());
+    operator.povUp().toggleOnTrue(shooter.shootSpeedUp());
+    operator.povDown().toggleOnTrue(shooter.shootSpeedDown());
+    operator.povRight().toggleOnTrue(shooter.hoodAngleUp());
+    operator.povLeft().toggleOnTrue(shooter.hoodAngleDown());
+    operator.a().toggleOnTrue(shooter.goToIdle());
+    operator.x().toggleOnTrue(shooter.goToShoot());
+    operator.b().toggleOnTrue(shooter.shooterOff());
 
     // Indexer Controls
     operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
