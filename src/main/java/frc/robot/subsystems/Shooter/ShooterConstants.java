@@ -13,17 +13,19 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class ShooterConstants {
-    public static int kMotorID;
+    public static int kMotorID = 18;
     public static int kOtherMotorID;
     public static double kShootReduction =(1.0/1.0);
     public static double kIdleSpeed = (10.0);
     public static double kShooterSpeed = (40.0);
+    public static double kTargetShootSpeed = kShooterSpeed;
     public static double kShooterError = (0.500);
 
     public static int kHoodMotorID = 14;
+    public static double kTargetHoodAngle = 0;
     public static double kHoodReduction = (1.0/1.0);
 
-    public static CANBus canbus = new CANBus("rio");
+    public static CANBus canbus = new CANBus(Constants.canName);
 
     // Define configuration for Shooter Motor 1 //
     public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()

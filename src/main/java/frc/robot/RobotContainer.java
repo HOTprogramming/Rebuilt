@@ -5,6 +5,7 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
 import org.json.simple.parser.ParseException;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -80,10 +81,13 @@ public class RobotContainer {
           new Pose2d(11.91,4.03,Rotation2d.fromDegrees(0))))
       );
 
-      driver.a().toggleOnTrue(m_shooter.setHoodAngle(15));
-      driver.b().toggleOnTrue(m_shooter.setHoodAngle(30));
-      driver.x().toggleOnTrue(m_shooter.setHoodAngle(45));
-      driver.y().toggleOnTrue(m_shooter.setHoodAngle(60));
+      driver.povUp().toggleOnTrue(m_shooter.shootSpeedUp());
+      driver.povDown().toggleOnTrue(m_shooter.shootSpeedDown());
+      driver.povRight().toggleOnTrue(m_shooter.hoodAngleUp());
+      driver.povLeft().toggleOnTrue(m_shooter.hoodAngleDown());
+      driver.a().toggleOnTrue(m_shooter.goToIdle());
+      driver.x().toggleOnTrue(m_shooter.goToShoot());
+      driver.b().toggleOnTrue(m_shooter.shooterOff());
 
       driver.start().whileTrue(drivetrain.run(()->
         drivetrain.resetPidgeon())
