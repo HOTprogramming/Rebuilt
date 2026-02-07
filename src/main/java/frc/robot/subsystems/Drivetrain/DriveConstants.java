@@ -597,7 +597,7 @@ public class DriveConstants {
     private static final double kSteerGearRatioComp24 = 13.3714;
   
     // CAN bus that the devices are located on; All swerve devices must share the same CAN bus
-    public static final CANBus kCANBusComp24 = new CANBus("rio", "./logs/example.hoot");
+    public static final CANBus kCANBusComp24 = new CANBus("drivetrain", "./logs/example.hoot");
 
     public static final SwerveDrivetrainConstants DrivetrainConstantsComp24 = new SwerveDrivetrainConstants()
        .withCANBusName(kCANBusComp24.getName())
