@@ -10,7 +10,7 @@ public class Shooter extends SubsystemBase {
   private final shooterStats motorStats = new shooterStats();
   private final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
 
-/* Network Table entries */
+  /* Network Table entries */
   private DoublePublisher shooterPosition;
   private DoublePublisher shooterVelocity;
   private DoublePublisher shooterAppliedVolts;
@@ -58,26 +58,26 @@ public class Shooter extends SubsystemBase {
     public double hoodTempCelsius = 0.0;
   }
 
-//Constructor for Shooter Object//
-    public Shooter() {
-      NetworkTableInstance instance = NetworkTableInstance.getDefault();
+  //Constructor for Shooter Object//
+  public Shooter() {
+    NetworkTableInstance instance = NetworkTableInstance.getDefault();
 
-      NetworkTable table = instance.getTable("HOT/Shooter");
-      
-      /* Creates the Display for the Network Tables */
-      shooterPosition = table.getDoubleTopic("Shooter 1: Position-Motor (ROT)").publish();
-      shooterVelocity = table.getDoubleTopic("Shooter 1: Velocity (RPS)").publish();
-      shooterAppliedVolts = table.getDoubleTopic("Shooter 1: Applied Volts").publish();
-      shooterSupplyCurrent = table.getDoubleTopic("Shooter 1: Supply Current").publish();
-      shooterTorqueCurrent = table.getDoubleTopic("Shooter 1: Torque Current").publish();
-      shooterTemp = table.getDoubleTopic("Shooter 1: Motor Temp").publish();
+    NetworkTable table = instance.getTable("HOT/Shooter");
+    
+    /* Creates the Display for the Network Tables */
+    shooterPosition = table.getDoubleTopic("Shooter 1: Position-Motor (ROT)").publish();
+    shooterVelocity = table.getDoubleTopic("Shooter 1: Velocity (RPS)").publish();
+    shooterAppliedVolts = table.getDoubleTopic("Shooter 1: Applied Volts").publish();
+    shooterSupplyCurrent = table.getDoubleTopic("Shooter 1: Supply Current").publish();
+    shooterTorqueCurrent = table.getDoubleTopic("Shooter 1: Torque Current").publish();
+    shooterTemp = table.getDoubleTopic("Shooter 1: Motor Temp").publish();
 
-      shooterPositionOther = table.getDoubleTopic("Shooter 2: Position-Motor (ROT)").publish();
-      shooterVelocityOther = table.getDoubleTopic("Shooter 2: Velocity (RPS)").publish();
-      shooterAppliedVoltsOther = table.getDoubleTopic("Shooter 2: Applied Volts").publish();
-      shooterSupplyCurrentOther = table.getDoubleTopic("Shooter 2: Supply Current").publish();
-      shooterTorqueCurrentOther = table.getDoubleTopic("Shooter 2: Torque Current").publish();
-      shooterTempOther = table.getDoubleTopic("Shooter 2: Motor Temp").publish();
+    shooterPositionOther = table.getDoubleTopic("Shooter 2: Position-Motor (ROT)").publish();
+    shooterVelocityOther = table.getDoubleTopic("Shooter 2: Velocity (RPS)").publish();
+    shooterAppliedVoltsOther = table.getDoubleTopic("Shooter 2: Applied Volts").publish();
+    shooterSupplyCurrentOther = table.getDoubleTopic("Shooter 2: Supply Current").publish();
+    shooterTorqueCurrentOther = table.getDoubleTopic("Shooter 2: Torque Current").publish();
+    shooterTempOther = table.getDoubleTopic("Shooter 2: Motor Temp").publish();
 
       hoodPosition = table.getDoubleTopic("Hood: Position-Motor (ROT)").publish();
       hoodVelocity = table.getDoubleTopic("Hood: Velocity (RPS)").publish();
@@ -85,11 +85,6 @@ public class Shooter extends SubsystemBase {
       hoodSupplyCurrent = table.getDoubleTopic("Hood: Supply Current").publish();
       hoodTorqueCurrent = table.getDoubleTopic("Hood: Torque Current").publish();
       hoodTemp = table.getDoubleTopic("Hood: Motor Temp").publish();
-    }
-
-    //Shooter - Getter//
-    public double getShooterSpeed() {
-      return motorStats.shooterVelocityRpm;
     }
 
     //Shooter - get Target Speed//
@@ -101,15 +96,21 @@ public class Shooter extends SubsystemBase {
     public double getTargetHoodAngle() {
       return ShooterConstants.kTargetHoodAngle;
     }
-  
-    @Override  
-    /* This method will be called once per scheduler run */
-    public void periodic() {
+
+  //Shooter - Getter//
+  public double getShooterSpeed() {
+    return motorStats.shooterVelocityRpm;
+  }
+
+  @Override  
+  /* This method will be called once per scheduler run */
+  public void periodic() {
     //go update the signal data 
-      mShooterKraken.updateStats(motorStats);
-      
-      UpdateTelemetry();
-    }
+    mShooterKraken.updateStats(motorStats);
+    
+    UpdateTelemetry();
+  }
+
   /************************************************
    * Update the Network Tables with Motor Statistics 
    ************************************************/
@@ -139,30 +140,7 @@ public class Shooter extends SubsystemBase {
   /**************************************************************
   * Commands 
   **************************************************************/
-  /**
-   * Set shooter to idle speed
-   *
-   * @return a command
-   */
-  public Command goToIdle() {
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-          mShooterKraken.runVelocity(ShooterConstants.kIdleSpeed);
-        });
-    }
-  /**
-   * Set shooter to shoot speed
-   * 
-   * @return a command
-   */
-  public Command goToShoot() {
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-          mShooterKraken.runVelocity(ShooterConstants.kShooterSpeed);
-        });
-    }
+
   /**
    * Turn off shooter motor
    * 
@@ -210,7 +188,33 @@ public class Shooter extends SubsystemBase {
     return (getShooterSpeed() >= ShooterConstants.kShooterSpeed -ShooterConstants.kShooterError);
   }
 
-    /**
+  /**
+   * Set shooter to idle speed
+   *
+   * @return a command
+   */
+  public Command goToIdle() {
+    return runOnce(
+      () -> {
+        /* one-time action goes here */
+        mShooterKraken.runVelocity(ShooterConstants.kIdleSpeed);
+      });
+    }
+
+  /**
+   * Set shooter to shoot speed
+   * 
+   * @return a command
+   */
+  public Command goToShoot() {
+    return runOnce(
+      () -> {
+        /* one-time action goes here */
+        mShooterKraken.runVelocity(ShooterConstants.kShooterSpeed);
+      });
+    }
+
+  /**
    * Change the hood angle
    *
    * @return a command

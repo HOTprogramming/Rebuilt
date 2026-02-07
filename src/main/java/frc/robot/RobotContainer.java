@@ -10,9 +10,6 @@ import java.util.function.DoubleSupplier;
 import org.json.simple.parser.ParseException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.events.EventTrigger;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -21,27 +18,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Camera.Camera;
-import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
-
-
+import frc.robot.subsystems.Intake.Intake;
 
 public class RobotContainer {
-
   SendableChooser<String> Autos = new SendableChooser<>();
   private Command autoCommand;
   private String autoString;
 
-  private Drive drivetrain;
-  private Camera cameraSubsystem;
-  private final Shooter m_shooter;
-  private final Climber m_climber;
-  private final Index m_indexer;
+  private final Drive drivetrain;
+  private final Camera camera;
+  private final Shooter shooter;
+  private final Index indexer;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -52,29 +44,37 @@ public class RobotContainer {
     //IMPORTANT: When adding autons, they must have their name start with either "Blue-" or "Red-". When adding them to the chooser, do not include the "Blue-" or "Red-"
     //in the name. Example: an auton called "Red-Shoot Left" should be added with a blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot Left","Shoot Left");"
     Autos.setDefaultOption("Path", "Path");
+
     Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
     Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
+    Autos.addOption("Grid Test", "Grid Test");
+    Autos.addOption("SNOWBLOW", "SNOWBLOW");
+    
     SmartDashboard.putData("Autos",Autos);
 
     drivetrain = new Drive(new DriveKraken());
-    cameraSubsystem = new Camera(drivetrain);
-    m_shooter = new Shooter();
-    m_climber = new Climber();
-    m_indexer = new Index();
+    camera = new Camera(drivetrain);
+    shooter = new Shooter();
+    indexer = new Index();
 
     configureBindings();
   }
 
   private void configureBindings() {   
-      drivetrain.setDefaultCommand
-      (drivetrain.run(() -> {
-        drivetrain.teleopDrive(
-          Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-          Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
-        }
-      ));
 
+    // Drivetrain Controls
+    drivetrain.setDefaultCommand(drivetrain.run(() -> 
+      drivetrain.teleopDrive(
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
+    )));
+
+    driver.a().whileTrue(drivetrain.run(()->
+      drivetrain.aim(
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
+    )));
       driver.a().whileTrue(drivetrain.run(()->
       drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
           Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
@@ -93,12 +93,20 @@ public class RobotContainer {
         drivetrain.resetPidgeon())
       );
 
-      driver.b().whileTrue(drivetrain.run(()->
-      drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-      Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-      new Rotation2d(Math.PI/4))));
+    driver.b().whileTrue(drivetrain.run(()->
+      drivetrain.lockRotation(
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        new Rotation2d(Math.PI/4)
+    )));
 
-      NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
+    // Shooter Controls
+    operator.a().whileTrue(shooter.goToShoot()).whileFalse(shooter.goToIdle());
+
+    // Indexer Controls
+    operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+
+    NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
   public void updateAutonCommand() {
@@ -131,7 +139,7 @@ public class RobotContainer {
       }
     } else {
       autoString = AutoSelect;
-      }
+    }
   }
 
 
