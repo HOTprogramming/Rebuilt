@@ -18,7 +18,7 @@ public class IndexConstants {
     public static int kRightKickID = 19; //IMPORTANT
     public static int kFloorID = 9; //IMPORTANT
     public static int kLoaderID = 13; //IMPORTANT
-    public static String kBusName = "robot"; //IMPORTANT
+    public static String kBusName = Constants.canName; //IMPORTANT
     public static double kickerSpeed = 1000; //IMPORTANT
     public static double floorSpeed = 300; //IMPORTANT
     public static double loaderSpeed = 1000; //IMPORTANT
