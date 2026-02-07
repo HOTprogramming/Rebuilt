@@ -7,6 +7,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.StateSpaceUtil;
 import edu.wpi.first.units.measure.Angle;
@@ -17,6 +18,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
@@ -31,10 +33,10 @@ import frc.robot.subsystems.Indexer.Index.IndexStats;
 public class IndexKraken {
 
     private CANBus canbus = new CANBus(IndexConstants.kBusName);
-    private TalonFX m_TalonFX = new TalonFX(IndexConstants.kLeftKickID, canbus);
-    private TalonFX m_TalonFX2 = new TalonFX(IndexConstants.kRightKickID, canbus);
-    private TalonFX m_TalonFX3 = new TalonFX(IndexConstants.kFloorID, canbus);
-    private TalonFX m_TalonFX4 = new TalonFX(IndexConstants.kLoaderID, canbus);
+    private TalonFX m_LeftKick = new TalonFX(IndexConstants.kLeftKickID, canbus);
+    private TalonFX m_RightKick = new TalonFX(IndexConstants.kRightKickID, canbus);
+    private TalonFX m_Floor = new TalonFX(IndexConstants.kFloorID, canbus);
+    private TalonFX m_Loader = new TalonFX(IndexConstants.kLoaderID, canbus);
     
     private static IndexKraken instance = null;
     private boolean isSimulation = false;
@@ -138,52 +140,64 @@ public class IndexKraken {
 
     }
     public IndexKraken() {
-        StatusCode statuscode = m_TalonFX.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0); 
+        StatusCode statuscode = m_LeftKick.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
+        .withMotorOutput( new MotorOutputConfigs()
+        .withInverted(InvertedValue.Clockwise_Positive)), 1.0); 
+
         if (!statuscode.isOK()) {
             System.out.println("Configuration Failed on Index Kicker Left Motor");
 
         }
-        StatusCode statuscode2 = m_TalonFX2.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0);
+
+        StatusCode statuscode2 = m_RightKick.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
+        .withMotorOutput( new MotorOutputConfigs()
+        .withInverted(InvertedValue.CounterClockwise_Positive)), 1.0);
        
         if (!statuscode2.isOK()) {
             System.out.println("Configuration Failed on Index Kicker Right Motor");
         }
-        StatusCode statuscode3 = m_TalonFX3.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0);
+
+        StatusCode statuscode3 = m_Floor.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
+        .withMotorOutput( new MotorOutputConfigs()
+        .withInverted(InvertedValue.CounterClockwise_Positive)), 1.0);
        
         if (!statuscode3.isOK()) {
             System.out.println("Configuration Failed on Index Floor Motor");
         }
-        StatusCode statuscode4 = m_TalonFX4.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs(), 1.0);
+
+        StatusCode statuscode4 = m_Loader.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
+        .withMotorOutput( new MotorOutputConfigs()
+        .withInverted(InvertedValue.CounterClockwise_Positive)), 1.0);
        
         if (!statuscode4.isOK()) {
             System.out.println("Configuration Failed on Index Loader Motor");
         }
 
 
-        kickerLeftPosition = m_TalonFX.getPosition();
-        kickerLeftVelocity = m_TalonFX.getVelocity();
-        kickerLeftAppliedVolts = m_TalonFX.getMotorVoltage();
-        kickerLeftSupplyCurrent = m_TalonFX.getSupplyCurrent();
-        kickerLeftTorqueCurrent = m_TalonFX.getTorqueCurrent();
-        kickerLeftTempCelsius = m_TalonFX.getDeviceTemp();
-        kickerRightPosition = m_TalonFX2.getPosition();
-        kickerRightVelocity = m_TalonFX2.getVelocity();
-        kickerRightAppliedVolts = m_TalonFX2.getMotorVoltage();
-        kickerRightSupplyCurrent = m_TalonFX2.getSupplyCurrent();
-        kickerRightTorqueCurrent = m_TalonFX2.getTorqueCurrent();
-        kickerRightTempCelsius = m_TalonFX2.getDeviceTemp();
-        FloorPosition = m_TalonFX3.getPosition();
-        FloorVelocity = m_TalonFX3.getVelocity();
-        FloorAppliedVolts = m_TalonFX3.getMotorVoltage();
-        FloorSupplyCurrent = m_TalonFX3.getSupplyCurrent();
-        FloorTorqueCurrent = m_TalonFX3.getTorqueCurrent();
-        FloorTempCelsius = m_TalonFX3.getDeviceTemp();
-        LoadPosition = m_TalonFX4.getPosition();
-        LoadVelocity = m_TalonFX4.getVelocity();
-        LoadAppliedVolts = m_TalonFX4.getMotorVoltage();
-        LoadSupplyCurrent = m_TalonFX4.getSupplyCurrent();
-        LoadTorqueCurrent = m_TalonFX4.getTorqueCurrent();
-        LoadTempCelsius = m_TalonFX4.getDeviceTemp();
+        kickerLeftPosition = m_LeftKick.getPosition();
+        kickerLeftVelocity = m_LeftKick.getVelocity();
+        kickerLeftAppliedVolts = m_LeftKick.getMotorVoltage();
+        kickerLeftSupplyCurrent = m_LeftKick.getSupplyCurrent();
+        kickerLeftTorqueCurrent = m_LeftKick.getTorqueCurrent();
+        kickerLeftTempCelsius = m_LeftKick.getDeviceTemp();
+        kickerRightPosition = m_RightKick.getPosition();
+        kickerRightVelocity = m_RightKick.getVelocity();
+        kickerRightAppliedVolts = m_RightKick.getMotorVoltage();
+        kickerRightSupplyCurrent = m_RightKick.getSupplyCurrent();
+        kickerRightTorqueCurrent = m_RightKick.getTorqueCurrent();
+        kickerRightTempCelsius = m_RightKick.getDeviceTemp();
+        FloorPosition = m_Floor.getPosition();
+        FloorVelocity = m_Floor.getVelocity();
+        FloorAppliedVolts = m_Floor.getMotorVoltage();
+        FloorSupplyCurrent = m_Floor.getSupplyCurrent();
+        FloorTorqueCurrent = m_Floor.getTorqueCurrent();
+        FloorTempCelsius = m_Floor.getDeviceTemp();
+        LoadPosition = m_Loader.getPosition();
+        LoadVelocity = m_Loader.getVelocity();
+        LoadAppliedVolts = m_Loader.getMotorVoltage();
+        LoadSupplyCurrent = m_Loader.getSupplyCurrent();
+        LoadTorqueCurrent = m_Loader.getTorqueCurrent();
+        LoadTempCelsius = m_Loader.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -213,15 +227,15 @@ public class IndexKraken {
         LoadTempCelsius
     );
 
-
-        if(Utils.isSimulation()){
-        PhysicsSim.getInstance().addTalonFX(m_TalonFX, 0.001);
-        PhysicsSim.getInstance().addTalonFX(m_TalonFX2, 0.001);
-        PhysicsSim.getInstance().addTalonFX(m_TalonFX3, 0.001);
-        PhysicsSim.getInstance().addTalonFX(m_TalonFX4, 0.001);
-        }
+    if(Utils.isSimulation()){
+        PhysicsSim.getInstance().addTalonFX(m_LeftKick, 0.001);
+        PhysicsSim.getInstance().addTalonFX(m_RightKick, 0.001);
+        PhysicsSim.getInstance().addTalonFX(m_Floor, 0.001);
+        PhysicsSim.getInstance().addTalonFX(m_Loader, 0.001);
+    }
 
     }
+
     public void startIndex(double speed) {
         
         double indexerSpeed = 50.0; //IMPORTANT
@@ -229,17 +243,30 @@ public class IndexKraken {
         
         switch (controlMode) {
             case 0:
-            m_TalonFX.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
-            m_TalonFX2.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
-            m_TalonFX3.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
-            m_TalonFX4.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
-    }
+            m_LeftKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
+            m_RightKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
+            m_Floor.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+            m_Loader.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+        }
     }
 
+    
+
+    public void stopIndex(double speed) {
+        double desiredRotationsPerSecond = 0; //IMPORTANT
+        switch (controlMode) {
+            case 0:
+            m_Loader.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_Floor.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_RightKick.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+            m_LeftKick.setControl(m_VelocityVoltage.withVelocity(desiredRotationsPerSecond));
+        }
+}
+
 public void stop() {
-    m_TalonFX.setControl(m_brake);
-    m_TalonFX2.setControl(m_brake);
-    m_TalonFX3.setControl(m_brake);
-    m_TalonFX4.setControl(m_brake);
+    m_LeftKick.setControl(m_brake);
+    m_RightKick.setControl(m_brake);
+    m_Floor.setControl(m_brake);
+    m_Loader.setControl(m_brake);
 }
 }

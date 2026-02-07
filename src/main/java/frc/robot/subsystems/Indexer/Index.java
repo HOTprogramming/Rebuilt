@@ -142,8 +142,8 @@ public void periodic() {
     private void kickerstart(double targetPos){
         m_IndexKraken.startIndex(targetPos);
     }
-    private void off(){
-        m_IndexKraken.stop();
+    private void off(double targetPos){
+        m_IndexKraken.stopIndex(targetPos);
     }
 
 
@@ -151,7 +151,7 @@ public void periodic() {
         return runOnce( () -> kickerstart(IndexConstants.kickerSpeed));
     }
     public Command indexOffCommand() {
-        return runOnce( () -> off());
+        return runOnce( () -> off(IndexConstants.zerospeed));
     }
 
 }
