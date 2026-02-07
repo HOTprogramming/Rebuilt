@@ -13,8 +13,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class ShooterConstants {
-    public static int kMotorID = 9;
-    public static int kOtherMotorID = 10;
+    public static int kMotorID = 10;
+    public static int kOtherMotorID = 11;
     public static double kShootReduction =(1.0/1.0);
     public static double kIdleSpeed = (10.0);
     public static double kShooterSpeed = (40.0);
@@ -43,7 +43,7 @@ public class ShooterConstants {
                 .withPeakReverseTorqueCurrent(-40)
         ).withMotorOutput(
             new MotorOutputConfigs()
-                .withInverted(InvertedValue.CounterClockwise_Positive)    
+                .withInverted(InvertedValue.Clockwise_Positive)    
                 .withNeutralMode(NeutralModeValue.Coast)   
         ).withSlot0(
             new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
@@ -76,7 +76,7 @@ public class ShooterConstants {
                 .withPeakReverseTorqueCurrent(-40)
         ).withMotorOutput(
             new MotorOutputConfigs()
-                .withInverted(InvertedValue.Clockwise_Positive)    
+                .withInverted(InvertedValue.CounterClockwise_Positive)    
                 .withNeutralMode(NeutralModeValue.Coast)   
         ).withSlot0(
             new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
@@ -113,9 +113,11 @@ public class ShooterConstants {
                 .withNeutralMode(NeutralModeValue.Coast)   
         ).withSlot0(
             new Slot0Configs()            /* Voltage-based position */
-                .withKP(2.4)        // An error of 1 rotation results in 2.4v output
+                .withKP(2.5)        // An error of 1 rotation results in 2.4v output
                 .withKI(0.0)        // No output for integrated error
-                .withKD(0.1)        // A velocity of 1 rps results in 0.1v output 
+                .withKD(0)        // A velocity of 1 rps results in 0.1v output 
+                .withKS(.1)
+                .withKV(.1)
         ).withSlot1(
             new Slot1Configs()            /* Torque-based position  */
                 .withKP(60.0)       // An error of 1 rotation results in 60 A output

@@ -85,8 +85,6 @@ public class RobotContainer {
 
     operator.povUp().toggleOnTrue(shooter.shootSpeedUp());
     operator.povDown().toggleOnTrue(shooter.shootSpeedDown());
-    operator.povRight().toggleOnTrue(shooter.hoodAngleUp());
-    operator.povLeft().toggleOnTrue(shooter.hoodAngleDown());
     operator.a().toggleOnTrue(shooter.goToIdle());
     operator.x().toggleOnTrue(shooter.goToShoot());
     operator.b().toggleOnTrue(shooter.shooterOff());
