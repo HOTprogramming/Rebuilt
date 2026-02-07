@@ -75,23 +75,6 @@ public class RobotContainer {
         Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
         Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
     )));
-      driver.a().whileTrue(drivetrain.run(()->
-      drivetrain.facePoint(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-          Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-          new Pose2d(11.91,4.03,Rotation2d.fromDegrees(0))))
-      );
-
-      driver.povUp().toggleOnTrue(m_shooter.shootSpeedUp());
-      driver.povDown().toggleOnTrue(m_shooter.shootSpeedDown());
-      driver.povRight().toggleOnTrue(m_shooter.hoodAngleUp());
-      driver.povLeft().toggleOnTrue(m_shooter.hoodAngleDown());
-      driver.a().toggleOnTrue(m_shooter.goToIdle());
-      driver.x().toggleOnTrue(m_shooter.goToShoot());
-      driver.b().toggleOnTrue(m_shooter.shooterOff());
-
-      driver.start().whileTrue(drivetrain.run(()->
-        drivetrain.resetPidgeon())
-      );
 
     driver.b().whileTrue(drivetrain.run(()->
       drivetrain.lockRotation(
@@ -100,8 +83,13 @@ public class RobotContainer {
         new Rotation2d(Math.PI/4)
     )));
 
-    // Shooter Controls
-    operator.a().whileTrue(shooter.goToShoot()).whileFalse(shooter.goToIdle());
+    operator.povUp().toggleOnTrue(shooter.shootSpeedUp());
+    operator.povDown().toggleOnTrue(shooter.shootSpeedDown());
+    operator.povRight().toggleOnTrue(shooter.hoodAngleUp());
+    operator.povLeft().toggleOnTrue(shooter.hoodAngleDown());
+    operator.a().toggleOnTrue(shooter.goToIdle());
+    operator.x().toggleOnTrue(shooter.goToShoot());
+    operator.b().toggleOnTrue(shooter.shooterOff());
 
     // Indexer Controls
     operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
