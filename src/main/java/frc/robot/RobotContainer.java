@@ -83,13 +83,11 @@ public class RobotContainer {
         new Rotation2d(Math.PI/4)
     )));
 
-    operator.povUp().toggleOnTrue(shooter.shootSpeedUp());
-    operator.povDown().toggleOnTrue(shooter.shootSpeedDown());
-    operator.povRight().toggleOnTrue(shooter.hoodAngleUp());
-    operator.povLeft().toggleOnTrue(shooter.hoodAngleDown());
-    operator.a().toggleOnTrue(shooter.goToIdle());
-    operator.x().toggleOnTrue(shooter.goToShoot());
-    operator.b().toggleOnTrue(shooter.shooterOff());
+    operator.povUp().onTrue(shooter.shootSpeedUp());
+    operator.povDown().onTrue(shooter.shootSpeedDown());
+    operator.a().onTrue(shooter.goToIdle());
+    operator.x().onTrue(shooter.goToShoot());
+    operator.b().onTrue(shooter.shooterOff());
 
     // Indexer Controls
     operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
