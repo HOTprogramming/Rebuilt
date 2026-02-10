@@ -13,7 +13,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class ShootingWhileMoving {
+public class ShootOnTheFly {
     private static double minDistance;
     private static double maxDistance;
     private static double TOF_CONVERGENCE_THRESHOLD;

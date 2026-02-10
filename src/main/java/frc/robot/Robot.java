@@ -1,11 +1,10 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.hal.simulation.RoboRioDataJNI;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,11 +17,14 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import frc.util.HubTracker;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 
-
 public class Robot extends TimedRobot {
+
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -32,6 +34,8 @@ public class Robot extends TimedRobot {
   private GenericEntry matchTimeEntry;
   private GenericEntry voltsEntry;
   private GenericEntry ampsEntry;
+
+  private DoublePublisher timeRemainingInCurrentShift;
 
   private boolean ppConfigured = false;
 
@@ -45,7 +49,7 @@ public class Robot extends TimedRobot {
       && "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
   private double simStartTime = -1.0;
   private SimMode currentSimMode = null;
-
+    
   private enum SimMode {
     DISABLED,
     AUTO,
@@ -56,7 +60,7 @@ public class Robot extends TimedRobot {
     /*Start Logging */
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
- 
+  
     /*Create Robot Contrainer */
     m_robotContainer = new RobotContainer();
     
@@ -68,7 +72,20 @@ public class Robot extends TimedRobot {
 
     /* Create a default auto to initialize Path Planner  */
     initAuto = new PathPlannerAuto("initAuto").ignoringDisable(true);
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("HOT/Drive");
+
+    timeRemainingInCurrentShift = table.getDoubleTopic("Hub Time Remaining").publish();
   }
+
+  private void UpdateTelemetry() {
+    try{
+      timeRemainingInCurrentShift.set(HubTracker.timeRemainingInCurrentShift().get().abs(Seconds));
+    } catch(Exception e) {
+    }
+  }
+    
 
   @Override
   public void robotPeriodic() {
@@ -79,6 +96,8 @@ public class Robot extends TimedRobot {
     matchTimeEntry.setDouble(DriverStation.getMatchTime());
     voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
     ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
+
+    UpdateTelemetry(); 
   }
 
   @Override
@@ -91,7 +110,6 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putBoolean("Teleop", false);
     SmartDashboard.putBoolean("Auto", false);
-
   }
 
   @Override

@@ -106,6 +106,9 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private double rampedX;
     private double rampedY;
     private double rampedTheta;
+    private double rampedX;
+    private double rampedY;
+    private double rampedTheta;
 
     private PIDController translationControllerIn = new PIDController(5, 0, 0);
     private PIDController translationControllerAcross = new PIDController(5, 0, 0);
@@ -121,6 +124,9 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 
+    private DoublePublisher robotReqSpeed;
+    private DoublePublisher robotRealSpeed;
+    private DoubleArrayPublisher robotPose;
     private DoublePublisher robotReqSpeed;
     private DoublePublisher robotRealSpeed;
     private DoubleArrayPublisher robotPose;
@@ -317,6 +323,7 @@ thetaController.setPID(thetaP, thetaI, thetaD);
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
             angle)
+        ));
         ));
     }
 

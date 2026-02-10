@@ -847,7 +847,7 @@ public class DriveConstants {
     private static final double kSteerGearRatioDevbot = 13.3714;
 
     // CAN bus that the devices are located on; All swerve devices must share the same CAN bus
-    public static final CANBus kCANBusDevbot = new CANBus("robot", "./logs/example.hoot");
+    public static final CANBus kCANBusDevbot = new CANBus("rio", "./logs/example.hoot");
 
     public static final SwerveDrivetrainConstants DrivetrainConstantsDevbot = new SwerveDrivetrainConstants()
         .withCANBusName(kCANBusDevbot.getName())
@@ -983,7 +983,7 @@ public class DriveConstants {
     private static final boolean kInvertRightSideCambot = true;
 
     // CAN bus that the devices are located on; All swerve devices must share the same CAN bus
-    public static final CANBus kCANBusCambot = new CANBus("robot", "./logs/example.hoot");
+    public static final CANBus kCANBusCambot = new CANBus("rio", "./logs/example.hoot");
 
     public static final SwerveDrivetrainConstants DrivetrainConstantsCambot = new SwerveDrivetrainConstants()
      .withCANBusName(kCANBusCambot.getName())
@@ -1108,7 +1108,7 @@ public class DriveConstants {
     private static final double kSteerGearRatioCompbot = 12.1;
 
      // CAN bus that the devices are located on; All swerve devices must share the same CAN bus
-     public static final CANBus kCANBusCompbot = new CANBus("robot", "./logs/example.hoot");
+     public static final CANBus kCANBusCompbot = new CANBus("rio", "./logs/example.hoot");
 
      public static final SwerveDrivetrainConstants DrivetrainConstantsCompbot = new SwerveDrivetrainConstants()
          .withCANBusName(kCANBusCompbot.getName())
@@ -1322,20 +1322,6 @@ public class DriveConstants {
                 teleopPidConstantsTheta
                 );
 
-            case COMP26 -> new DriveConfig(
-                FrontLeftComp26, 
-                FrontRightComp26, 
-                BackLeftComp26, 
-                BackRightComp26,
-                DrivetrainConstantsComp26,
-                kSpeedAt12Volts.in(MetersPerSecond),
-                kMaxAngularVelocity.in(RadiansPerSecond),
-                driveInitialConfigs.CurrentLimits,
-                steerInitialConfigs.CurrentLimits,
-                autoPidConstantsTranslation,
-                autoPidConstantsTheta,
-                teleopPidConstantsTheta
-                );
             case MINIBOT -> new DriveConfig(
                 FrontLeftMinibot, 
                 FrontRightMinibot, 
