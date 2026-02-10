@@ -19,6 +19,7 @@ public final class Constants {
   private static RobotType robotType = RobotType.ALPHABOT;
   public static final boolean tuningMode = false;
   public static final String canName = "PBot";
+  public static final boolean compMode = true;
 
   public static final double brownoutVoltage = 5.5;
 

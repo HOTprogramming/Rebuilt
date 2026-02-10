@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Drivetrain;
 
 import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
+import frc.robot.Constants;
 import java.util.List;
 import java.util.Set;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -106,9 +107,7 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private double rampedX;
     private double rampedY;
     private double rampedTheta;
-    private double rampedX;
-    private double rampedY;
-    private double rampedTheta;
+
 
     private PIDController translationControllerIn = new PIDController(5, 0, 0);
     private PIDController translationControllerAcross = new PIDController(5, 0, 0);
@@ -127,28 +126,27 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private DoublePublisher robotReqSpeed;
     private DoublePublisher robotRealSpeed;
     private DoubleArrayPublisher robotPose;
-    private DoublePublisher robotReqSpeed;
-    private DoublePublisher robotRealSpeed;
-    private DoubleArrayPublisher robotPose;
 
     public Drive(DriveKraken driveKraken) { 
 
+    if (!Constants.compMode) {
+       
         tuningTable =
-    NetworkTableInstance.getDefault().getTable("Tuning/Drive");
+        NetworkTableInstance.getDefault().getTable("Tuning/Drive");
 
-thetaP_pub = tuningTable.getDoubleTopic("Theta kP").publish();
-thetaI_pub = tuningTable.getDoubleTopic("Theta kI").publish();
-thetaD_pub = tuningTable.getDoubleTopic("Theta kD").publish();
+    thetaP_pub = tuningTable.getDoubleTopic("Theta kP").publish();
+    thetaI_pub = tuningTable.getDoubleTopic("Theta kI").publish();
+    thetaD_pub = tuningTable.getDoubleTopic("Theta kD").publish();
 
-thetaP_pub.set(thetaP);
-thetaI_pub.set(thetaI);
-thetaD_pub.set(thetaD);
+    thetaP_pub.set(thetaP);
+    thetaI_pub.set(thetaI);
+    thetaD_pub.set(thetaD);
 
-thetaP_sub = tuningTable.getDoubleTopic("Theta kP").subscribe(thetaP);
-thetaI_sub = tuningTable.getDoubleTopic("Theta kI").subscribe(thetaI);
-thetaD_sub = tuningTable.getDoubleTopic("Theta kD").subscribe(thetaD);
+    thetaP_sub = tuningTable.getDoubleTopic("Theta kP").subscribe(thetaP);
+    thetaI_sub = tuningTable.getDoubleTopic("Theta kI").subscribe(thetaI);
+    thetaD_sub = tuningTable.getDoubleTopic("Theta kD").subscribe(thetaD);
 
-
+    }
 
         this.driveKraken = driveKraken;
 
@@ -313,7 +311,7 @@ thetaController.setPID(thetaP, thetaI, thetaD);
     }
 
     // Needs to be done better at some point
-    public ShootingWhileMoving shootOnTheFly = new ShootingWhileMoving(); 
+    public ShootOnTheFly shootOnTheFly = new ShootOnTheFly(); 
 
     public void aim(double driveX, double driveY){
         double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
@@ -323,7 +321,6 @@ thetaController.setPID(thetaP, thetaI, thetaD);
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
             angle)
-        ));
         ));
     }
 
