@@ -14,9 +14,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class ClimberConstants {
-    public static int kClimbermotorID = 0; //IMPORTANT
-    public static int kClimberspinnerID = 0; //IMPORTANT
-    public static String kBusName = "rio"; //IMPORTANT
+    public static int kClimbermotorID = 16; //IMPORTANT
+    public static int kClimberspinnerID = 17; //IMPORTANT
+    public static String kBusName = Constants.canName; //IMPORTANT
     public static double deployPosition = 200.0; //IMPORTANT
     public static double retractPosition = 0.0; //IMPORTANT
     public static double spinPosition = 410; //IMPORTANT
@@ -27,9 +27,9 @@ public class ClimberConstants {
         public static final TalonFXConfiguration climberWheelConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40)
+                .withStatorCurrentLimit(80)
                 .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(40)
+                .withSupplyCurrentLimit(60)
                 .withSupplyCurrentLimitEnable(true)
                 .withSupplyCurrentLowerLimit(30)
                 .withSupplyCurrentLowerTime(1)

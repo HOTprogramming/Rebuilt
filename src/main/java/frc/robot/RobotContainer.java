@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
+import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
@@ -34,6 +35,7 @@ public class RobotContainer {
   private final Camera camera;
   private final Shooter shooter;
   private final Index indexer;
+  private final Climber climber;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -56,6 +58,7 @@ public class RobotContainer {
     camera = new Camera(drivetrain);
     shooter = new Shooter();
     indexer = new Index();
+    climber = new Climber();
 
     configureBindings();
   }
@@ -83,6 +86,8 @@ public class RobotContainer {
         new Rotation2d(Math.PI/4)
     )));
 
+    // Shooter Controls
+
     operator.povUp().onTrue(shooter.shootSpeedUp());
     operator.povDown().onTrue(shooter.shootSpeedDown());
     operator.a().onTrue(shooter.goToIdle());
@@ -91,6 +96,9 @@ public class RobotContainer {
 
     // Indexer Controls
     operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+
+    // Climber Controls
+    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
     NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
