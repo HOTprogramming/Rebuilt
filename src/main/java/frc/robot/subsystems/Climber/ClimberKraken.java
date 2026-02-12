@@ -15,6 +15,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -113,6 +114,11 @@ public class ClimberKraken {
     *     3-means run Motion Magic Expo Torque Control mode  
     ***************************************************************************/
     
+    public void runManual(double percentOutputElbow, double percentOutputWrist) {
+        m_talonFX.setControl(new DutyCycleOut(percentOutputElbow));
+        m_talonFX2.setControl(new DutyCycleOut(percentOutputWrist));
+    }
+
     public void runPosition(double desiredRotations) {
         switch (controlMode) {
         case 0:      /* Use Position Voltage */
