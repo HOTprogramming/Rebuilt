@@ -16,10 +16,10 @@ package frc.robot;
 public final class Constants {
 
   public static final double loopPeriodSecs = 0.02;
-  private static RobotType robotType = RobotType.COMP24;
+  private static RobotType robotType = RobotType.ALPHABOT;
   public static final boolean tuningMode = false;
   public static final String canName = "PBot";
-  public static final boolean compMode = true;
+  public static final boolean compMode = false;
 
   public static final double brownoutVoltage = 5.5;
 
