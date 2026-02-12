@@ -8,8 +8,13 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import org.json.simple.parser.ParseException;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -61,6 +66,8 @@ public class RobotContainer {
     climber = new Climber();
 
     configureBindings();
+
+    //NamedCommands.registerCommand("Test Override", drivetrain.testOverride()); 
   }
 
   private void configureBindings() {   
@@ -85,6 +92,14 @@ public class RobotContainer {
         Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
         new Rotation2d(Math.PI/4)
     )));
+
+    driver.x() .whileTrue(
+        AutoBuilder.pathfindToPose(
+            new Pose2d(9.975, 4.078, Rotation2d.fromDegrees(0)), 
+            new PathConstraints(2.0, 3.0, 3.14, 6.28), 
+            0.0 // Goal end velocity
+        )
+    );
 
     // Shooter Controls
 
