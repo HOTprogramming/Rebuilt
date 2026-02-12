@@ -24,7 +24,7 @@ import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
-import frc.robot.subsystems.Intake.Intake;
+//import frc.robot.subsystems.Intake.Intake;
 
 public class RobotContainer {
   SendableChooser<String> Autos = new SendableChooser<>();

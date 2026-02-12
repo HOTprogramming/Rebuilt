@@ -196,15 +196,19 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
 
     @Override
     public void periodic() {
-thetaP = thetaP_sub.get();
-thetaI = thetaI_sub.get();
-thetaD = thetaD_sub.get();
+    if (!Constants.compMode) {
+        thetaP = thetaP_sub.get();
+        thetaI = thetaI_sub.get();
+        thetaD = thetaD_sub.get();
 
-thetaP_pub.set(thetaP);
-thetaI_pub.set(thetaI);
-thetaD_pub.set(thetaD);
+        thetaP_pub.set(thetaP);
+        thetaI_pub.set(thetaI);
+        thetaD_pub.set(thetaD);
+    }
 
 thetaController.setPID(thetaP, thetaI, thetaD);
+
+
 
         if (!(DriverStation.isTeleopEnabled()) || Math.abs(iOdata.pigeon.getX()) > 0.2 || Math.abs(iOdata.pigeon.getY()) > 0.2) {
             iOdata.state.Pose.getRotation();
