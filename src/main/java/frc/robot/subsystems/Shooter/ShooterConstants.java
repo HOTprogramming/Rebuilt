@@ -16,8 +16,8 @@ public class ShooterConstants {
     public static int kMotorID = 10;
     public static int kOtherMotorID = 11;
     public static double kShootReduction =(1.0/1.0);
-    public static double kIdleSpeed = (10.0);
-    public static double kShooterSpeed = (38.0);
+    public static double kIdleSpeed = (70.0);
+    public static double kShooterSpeed = (32.0);
     public static double kTargetShootSpeed = kShooterSpeed;
     public static double kShooterError = (0.500);
 
@@ -40,8 +40,8 @@ public class ShooterConstants {
         ).withTorqueCurrent(
             new TorqueCurrentConfigs()
             
-            .withPeakForwardTorqueCurrent(40)
-                .withPeakReverseTorqueCurrent(-40)
+            .withPeakForwardTorqueCurrent(80)
+                .withPeakReverseTorqueCurrent(-80)
         ).withMotorOutput(
             new MotorOutputConfigs()
                 .withInverted(InvertedValue.Clockwise_Positive)    
@@ -55,43 +55,11 @@ public class ShooterConstants {
                 .withKV(0.3)       // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
         ).withSlot1(
             new Slot1Configs()            /* Torque-based velocity does not require a velocity feed forward, as torque will accelerate the rotor up to the desired velocity by itself */
-                .withKP(5.0)        // An error of 1 rotation per second results in 5 A output
+                .withKP(19)        // An error of 1 rotation per second results in 5 A output
                 .withKI(0.0)        // No output for integrated error
                 .withKD(0.0)        // No output for error derivative
-                .withKS(2.5)        // To account for friction, add 2.5 A of static feedforward        
-        );
-
-    // Define configuration for Shooter Motor 2 //
-    public static final TalonFXConfiguration shooterOtherMotorConfigs = new TalonFXConfiguration()
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(120)
-                .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(80)
-                .withSupplyCurrentLimitEnable(true)
-                .withSupplyCurrentLowerLimit(30)
-                .withSupplyCurrentLowerTime(1)
-        ).withTorqueCurrent(
-            new TorqueCurrentConfigs()
-                .withPeakForwardTorqueCurrent(40)
-                .withPeakReverseTorqueCurrent(-40)
-        ).withMotorOutput(
-            new MotorOutputConfigs()
-                .withInverted(InvertedValue.CounterClockwise_Positive)    
-                .withNeutralMode(NeutralModeValue.Coast)   
-        ).withSlot0(
-            new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
-                .withKP(2)       // An error of 1 rotation per second results in 0.11 V output
-                .withKI(0.0)        // No output for integrated error
-                .withKD(0.05)        // No output for error derivative
-                .withKS(0.3)        // To account for friction, add 0.1 V of static feedforward
-                .withKV(0.1275)       // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
-        ).withSlot1(
-            new Slot1Configs()            /* Torque-based velocity does not require a velocity feed forward, as torque will accelerate the rotor up to the desired velocity by itself */
-                .withKP(5.0)        // An error of 1 rotation per second results in 5 A output
-                .withKI(0.0)        // No output for integrated error
-                .withKD(0.0)        // No output for error derivative
-                .withKS(2.5)        // To account for friction, add 2.5 A of static feedforward        
+                .withKS(12)
+                .withKV(.68)        // To account for friction, add 2.5 A of static feedforward        
         );
 
     //Define configuration for Hood Motor//
@@ -134,28 +102,28 @@ public class ShooterConstants {
     public static final ShooterConfigs ShooterConfigs =
         switch (Constants.getRobot()) {
             case COMPBOT -> new ShooterConfigs(
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+                shooterMotorConfigs, hoodMotorConfigs
             );
             case SIMBOT -> new ShooterConfigs(
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs 
+                shooterMotorConfigs, hoodMotorConfigs 
             );
             case DEVBOT -> new ShooterConfigs(
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+                shooterMotorConfigs, hoodMotorConfigs
             );
             case CAMERABOT -> new ShooterConfigs( 
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+                shooterMotorConfigs, hoodMotorConfigs
             );
             case COMP24 -> new ShooterConfigs( 
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+                shooterMotorConfigs, hoodMotorConfigs
             );
             case COMP25 -> new ShooterConfigs( 
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+                shooterMotorConfigs, hoodMotorConfigs
             );
             case MINIBOT -> new ShooterConfigs( 
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+                shooterMotorConfigs, hoodMotorConfigs
             );
             case ALPHABOT -> new ShooterConfigs( 
-                shooterMotorConfigs, shooterOtherMotorConfigs, hoodMotorConfigs
+                shooterMotorConfigs, hoodMotorConfigs
             );
         };
 
@@ -164,7 +132,7 @@ public class ShooterConstants {
      * Define the Shooter Config Class 
      *****************/
     public record ShooterConfigs(
-        TalonFXConfiguration shooterMotorConfigs, TalonFXConfiguration shooterOtherMotorConfigs, TalonFXConfiguration hoodMotorConfigs
+        TalonFXConfiguration shooterMotorConfigs, TalonFXConfiguration hoodMotorConfigs
     ) {}
 
 }

@@ -150,7 +150,7 @@ public class Shooter extends SubsystemBase {
     return runOnce(
         () -> {
           /* one-time action goes here */
-          mShooterKraken.runVelocity(0);
+          mShooterKraken.stop();
         });
     }  
   /**
