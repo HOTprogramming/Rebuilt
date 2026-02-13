@@ -101,6 +101,12 @@ public class RobotContainer {
         )
     );
 
+    driver.y().whileTrue(drivetrain.run(()->
+      drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        4.0,
+        new Rotation2d(0)
+    )));
+
     // Shooter Controls
 
     operator.povUp().onTrue(shooter.shootSpeedUp());
