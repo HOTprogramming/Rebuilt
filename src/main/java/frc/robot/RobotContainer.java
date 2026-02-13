@@ -96,7 +96,7 @@ public class RobotContainer {
     driver.x() .whileTrue(
         AutoBuilder.pathfindToPose(
             new Pose2d(9.975, 4.078, Rotation2d.fromDegrees(0)), 
-            new PathConstraints(2.0, 3.0, 3.14, 6.28), 
+            new PathConstraints(5.0, 3.0, 3.14, 6.28), 
             0.0 // Goal end velocity
         )
     );
