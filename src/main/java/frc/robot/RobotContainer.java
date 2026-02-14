@@ -25,6 +25,7 @@ import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Lights.Lights;
 
 public class RobotContainer {
   SendableChooser<String> Autos = new SendableChooser<>();
@@ -36,6 +37,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Index indexer;
   private final Climber climber;
+  private final Lights lights;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -59,6 +61,7 @@ public class RobotContainer {
     shooter = new Shooter();
     indexer = new Index();
     climber = new Climber();
+    lights = new Lights();
 
     configureBindings();
   }
@@ -88,11 +91,15 @@ public class RobotContainer {
 
     // Shooter Controls
 
-    operator.povUp().onTrue(shooter.shootSpeedUp());
-    operator.povDown().onTrue(shooter.shootSpeedDown());
-    operator.a().onTrue(shooter.goToIdle());
-    operator.x().onTrue(shooter.goToShoot());
-    operator.b().onTrue(shooter.shooterOff());
+    //operator.povUp().onTrue(shooter.shootSpeedUp());
+    //operator.povDown().onTrue(shooter.shootSpeedDown());
+    //operator.a().onTrue(shooter.goToIdle());
+    //operator.x().onTrue(shooter.goToShoot());
+    //operator.b().onTrue(shooter.shooterOff());
+
+    operator.a().onTrue(lights.setRainbow());
+    operator.b().onTrue(lights.setTwinkle());
+    operator.x().onTrue(lights.setPink());
 
     // Indexer Controls
     operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());

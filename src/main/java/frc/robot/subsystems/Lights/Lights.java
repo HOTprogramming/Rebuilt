@@ -34,17 +34,14 @@ public class Lights extends SubsystemBase {
     private static final int kSlot0StartIdx = 8;
     private static final int kSlot0EndIdx = 18;
 
-    private static final int kSlot1StartIdx = 38;
-    private static final int kSlot1EndIdx = 67;
-    
-
   private CANBus canBus = new CANBus(LightsConstants.kBusName);
   private final CANdle candle = new CANdle(CANdle_ID, canBus);
 
   public enum AnimationType {
     None,
     ColorFlow,
-    Fire,
+    Fire1,
+    Fire2,
     Larson,
     Rainbow,
     RgbFade,
@@ -56,9 +53,14 @@ public class Lights extends SubsystemBase {
   }
 
   private AnimationType m_anim0State = AnimationType.None;
-  private AnimationType m_anim1State = AnimationType.None;
   private static final RGBWColor kViolet = RGBWColor.fromHSV(Degrees.of(270), 0.9, 0.8);
+  private static final RGBWColor kBlue = RGBWColor.fromHex("#233AE800").orElseThrow();
+  private static final RGBWColor kGreen = RGBWColor.fromHex("#3DCE6500").orElseThrow();
+  private static final RGBWColor kYellow = RGBWColor.fromHex("#EFF21800").orElseThrow();
+  private static final RGBWColor kOrange = RGBWColor.fromHex("#F2820A00").orElseThrow();
   private static final RGBWColor kRed = RGBWColor.fromHex("#D9000000").orElseThrow();
+  private static final RGBWColor kPink = RGBWColor.fromHex("#F20C8B00").orElseThrow();
+  private static final RGBWColor kWhite = RGBWColor.fromHex("#FFFFFF00").orElseThrow();
 
   private AnimationType current = AnimationType.SetAll;
 
@@ -73,8 +75,7 @@ public class Lights extends SubsystemBase {
   }
 
   public void apply(AnimationType anim) {
-    current = anim;
-  
+    current = anim;  
       switch (anim) {
                 default:
                 case ColorFlow:
@@ -100,43 +101,38 @@ public class Lights extends SubsystemBase {
                             .withColor(kViolet)
                     );
                     break;
-                case Fire:
+                case Fire1:
                     candle.setControl(
                         new FireAnimation(kSlot0StartIdx, kSlot0EndIdx).withSlot(0)
                     );
                     break;
-            }
-          
-
-        /* if the selection for slot 1 changes, change animations */
-            switch (m_anim1State) {
-                 case Larson:
+                case Larson:
                     candle.setControl(
-                        new LarsonAnimation(kSlot1StartIdx, kSlot1EndIdx).withSlot(1)
+                        new LarsonAnimation(kSlot0StartIdx, kSlot0EndIdx).withSlot(1)
                             .withColor(kRed)
                     );
                     break;
-                 case RgbFade:
+                case RgbFade:
                     candle.setControl(
-                        new RgbFadeAnimation(kSlot1StartIdx, kSlot1EndIdx).withSlot(1)
+                        new RgbFadeAnimation(kSlot0StartIdx, kSlot0EndIdx).withSlot(1)
                     );
                     break;
-                 case SingleFade:
+                case SingleFade:
                     candle.setControl(
-                        new SingleFadeAnimation(kSlot1StartIdx, kSlot1EndIdx).withSlot(1)
+                        new SingleFadeAnimation(kSlot0StartIdx, kSlot0EndIdx).withSlot(1)
                             .withColor(kRed)
                     );
                     break;
-                 case Strobe:
+                case Strobe:
                     candle.setControl(
-                        new StrobeAnimation(kSlot1StartIdx, kSlot1EndIdx).withSlot(1)
+                        new StrobeAnimation(kSlot0StartIdx, kSlot0EndIdx).withSlot(1)
                             .withColor(kRed)
                     );
                     break;
-                 case Fire:
+                case Fire2:
                     /* direction can be reversed by either the Direction parameter or switching start and end */
                     candle.setControl(
-                        new FireAnimation(kSlot1StartIdx, kSlot1EndIdx).withSlot(1)
+                        new FireAnimation(kSlot0StartIdx, kSlot0EndIdx).withSlot(1)
                             .withDirection(AnimationDirectionValue.Backward)
                             .withCooling(0.4)
                             .withSparking(0.5)
@@ -145,26 +141,82 @@ public class Lights extends SubsystemBase {
             }
         }
 
-   public Command setRed() {       
+    public Command setRed() {       
         return runOnce(() ->
         {
             candle.setControl(new SolidColor(0, 18).withColor(kRed)); 
         }); 
-  }
+   }
 
-  public Command setViolet() {       
+   public Command setOrange() {       
+        return runOnce(() ->
+        {
+            candle.setControl(new SolidColor(0, 18).withColor(kOrange)); 
+        }); 
+   }
+
+   public Command setYellow() {       
+        return runOnce(() ->
+        {
+            candle.setControl(new SolidColor(0, 18).withColor(kYellow)); 
+        }); 
+   }
+
+   public Command setGreen() {       
+        return runOnce(() ->
+        {
+            candle.setControl(new SolidColor(0, 18).withColor(kGreen)); 
+        }); 
+   }
+
+   public Command setBlue() {       
+        return runOnce(() ->
+        {
+            candle.setControl(new SolidColor(0, 18).withColor(kBlue)); 
+        }); 
+    }
+
+    public Command setViolet() {       
         return runOnce(() ->
         {
             candle.setControl(new SolidColor(0, 18).withColor(kViolet)); 
 
         }); 
-  }
+    }
 
-   public Command setFire() {       
+    public Command setFire1() {       
         return runOnce(() ->
         {
-             apply(AnimationType.Fire);
+             apply(AnimationType.Fire1);
 
         }); 
-  }
+    }
+
+    public Command setPink() {       
+        return runOnce(() ->
+        {
+            candle.setControl(new SolidColor(0, 18).withColor(kPink)); 
+        }); 
+    }
+
+    public Command setWhite() {       
+        return runOnce(() ->
+        {
+            candle.setControl(new SolidColor(0, 18).withColor(kWhite)); 
+        }); 
+    }
+
+    public Command setRainbow() {
+        return runOnce(() ->
+        {
+            apply(AnimationType.Rainbow);
+        });
+    }
+
+    public Command setTwinkle() {
+        return runOnce(() ->
+        {
+            apply(AnimationType.Twinkle);
+        });
+    }
 }            
