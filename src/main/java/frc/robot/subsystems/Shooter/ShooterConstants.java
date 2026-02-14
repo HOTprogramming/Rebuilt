@@ -15,8 +15,8 @@ import frc.robot.Constants;
 public class ShooterConstants {
     public static int kMotorID = 10;
     public static int kSub1MotorID = 11;
-    public static int kSub2MotorID = -1;
-    public static int kSub3MotorID = -1;
+    public static int kSub2MotorID = 0;
+    public static int kSub3MotorID = 0;
     public static double kShootReduction =(1.0/1.0);
     public static double kIdleSpeed = (70.0);
     public static double kShooterSpeed = (32.0);
