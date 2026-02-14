@@ -95,17 +95,18 @@ public class RobotContainer {
 
     driver.x() .whileTrue(
         AutoBuilder.pathfindToPose(
-            new Pose2d(9.975, 4.078, Rotation2d.fromDegrees(0)), 
+            new Pose2d(8.296, 4.061, Rotation2d.fromDegrees(0)), 
             new PathConstraints(5.0, 3.0, 3.14, 6.28), 
             0.0 // Goal end velocity
         )
     );
     //translate to Y target on button press
-    driver.y().whileTrue(drivetrain.run(()->
+     driver.y().whileTrue(drivetrain.run(()->
       drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        7.40,
-        new Rotation2d(0)
+        new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
+
+
 
     // Shooter Controls
 

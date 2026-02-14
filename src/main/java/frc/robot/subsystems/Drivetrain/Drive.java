@@ -273,14 +273,15 @@ public class Drive extends SubsystemBase {
         
     }
     //align to fixed Y coordinate on field using Y translation controller
-    public void fixedY(double driveX, double yCoord, Rotation2d rtarget) {
-        double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), yCoord);
+    public void fixedY(double driveX, Rotation2d rtarget) {
+         double dynamicY = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
+        double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), dynamicY);
         driveKraken.setSwerveRequest(FIELD_CENTRIC
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY(!translationControllerY.atGoal() ? yOutput : 0.0)
+            .withVelocityY(!translationControllerY.atGoal() ? -yOutput : 0.0)
             .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
         );
-        SmartDashboard.putNumber("Target Y", yCoord);
+        SmartDashboard.putNumber("Target Y", dynamicY);
         SmartDashboard.putNumber("Current Y", iOdata.state.Pose.getY());
         SmartDashboard.putNumber("PID Y Output", yOutput);
     }
@@ -295,8 +296,8 @@ public class Drive extends SubsystemBase {
 
 public Command resetControllers() {
         return runOnce(() -> {
-            translationControllerX.reset(iOdata.state.Pose.getX(), -iOdata.state.Speeds.vxMetersPerSecond);
-            translationControllerY.reset(iOdata.state.Pose.getY(), -iOdata.state.Speeds.vyMetersPerSecond);
+            translationControllerX.reset(iOdata.state.Pose.getX(), iOdata.state.Speeds.vxMetersPerSecond);
+            translationControllerY.reset(iOdata.state.Pose.getY(), iOdata.state.Speeds.vyMetersPerSecond);
             translationControllerIn.reset();
             translationControllerAcross.reset();
         });
