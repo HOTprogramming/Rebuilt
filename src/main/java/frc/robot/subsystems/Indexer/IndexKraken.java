@@ -158,15 +158,16 @@ public class IndexKraken {
             System.out.println("Configuration Failed on Index Kicker Right Motor");
         }
 
+        Slot0Configs indexerConf = new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
+                .withKP(0.1)       // An error of 1 rotation per second results in 0.11 V output
+                .withKI(0.0)        // No output for integrated error
+                .withKD(0.01)        // No output for error derivative
+                .withKS(0.0)        // To account for friction, add 0.1 V of static feedforward
+                .withKV(0.1)  ;
+
         StatusCode statuscode3 = m_Floor.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
         .withMotorOutput( new MotorOutputConfigs()
-        .withInverted(InvertedValue.Clockwise_Positive)).withSlot0(new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
-                .withKP(0.2)       // An error of 1 rotation per second results in 0.11 V output
-                .withKI(0.0)        // No output for integrated error
-                .withKD(0.0)        // No output for error derivative
-                .withKS(0.3)        // To account for friction, add 0.1 V of static feedforward
-                .withKV(0.4)  
-                ), 1.0);
+        .withInverted(InvertedValue.Clockwise_Positive)).withSlot0(indexerConf), 1.0);
        
         if (!statuscode3.isOK()) {
             System.out.println("Configuration Failed on Index Floor Motor");
@@ -174,7 +175,7 @@ public class IndexKraken {
 
         StatusCode statuscode4 = m_Loader.getConfigurator().apply(IndexConstants.IndexConfigs.indexWheelConfigs()
         .withMotorOutput( new MotorOutputConfigs()
-        .withInverted(InvertedValue.CounterClockwise_Positive)), 1.0);
+        .withInverted(InvertedValue.CounterClockwise_Positive)).withSlot0(indexerConf), 1.0);
        
         if (!statuscode4.isOK()) {
             System.out.println("Configuration Failed on Index Loader Motor");
@@ -246,20 +247,17 @@ public class IndexKraken {
     public void startIndex(double speed) {
         
         double indexerSpeed = 50.0; //IMPORTANT
-        double feederSpeed = 50.0; //IMPORTANT
+        double feederSpeed = 100.0; //IMPORTANT
         
         switch (controlMode) {
             case 0:
             // m_LeftKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
             // m_RightKick.setControl(m_VelocityVoltage.withVelocity(indexerSpeed));
-            // m_Floor.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
-            // m_Loader.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+            m_Floor.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
+            m_Loader.setControl(m_VelocityVoltage.withVelocity(feederSpeed));
 
-            m_LeftKick.setVoltage(32);
-            m_RightKick.setVoltage(32);
-            m_Floor.setVoltage(32);
-            m_Loader.setVoltage(32);
-
+            m_LeftKick.setVoltage(28);
+            m_RightKick.setVoltage(28);
         }
     }
 

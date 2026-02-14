@@ -4,12 +4,15 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -31,7 +34,7 @@ public class ShooterKraken {
   *     0-means run Position Voltage Control Mode  
   *     1-means run Position Torque Control Mode
   *****************************************************************/           
-  private int controlModeShoot = 0; 
+  private int controlModeShoot = 1; 
   private int controlModeHood = 0;
   
   // Initialize Motors //
@@ -80,7 +83,7 @@ public class ShooterKraken {
     if(!statuscode.isOK()) { 
       System.out.println("Configuration Failed on Shooter Motor 1");
     }
-    StatusCode statuscode2 = m_talonFXOther.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterOtherMotorConfigs(), 1.0); 
+    StatusCode statuscode2 = m_talonFXOther.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
     if(!statuscode2.isOK()) { 
       System.out.println("Configuration Failed on Shooter Motor 2");
     }
@@ -88,6 +91,8 @@ public class ShooterKraken {
     if(!statuscode3.isOK()) { 
       System.out.println("Configuration Failed on Hood Motor");
     }
+
+    m_talonFXOther.setControl(new Follower(ShooterConstants.kMotorID, MotorAlignmentValue.Opposed));
 
     // Initialize Telemetry data //
     shooterPosition = m_talonFX.getPosition();
@@ -215,11 +220,9 @@ public class ShooterKraken {
     switch (controlModeShoot) {
       case 0:      /* Use velocity voltage */
         m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
-        m_talonFXOther.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
         break;
       case 1:      /* Use velocity torque */
         m_talonFX.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
-        m_talonFXOther.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
     }
   }
 
@@ -241,6 +244,5 @@ public class ShooterKraken {
   public void stop() {
     /* tell the motor to brake */
     m_talonFX.setControl(m_brake);
-    m_talonFXOther.setControl(m_brake);
   }
 }
