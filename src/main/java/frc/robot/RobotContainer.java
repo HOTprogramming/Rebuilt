@@ -100,12 +100,12 @@ public class RobotContainer {
             0.0 // Goal end velocity
         )
     );
-
+    //translate to Y target on button press
     driver.y().whileTrue(drivetrain.run(()->
       drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        4.0,
+        7.40,
         new Rotation2d(0)
-    )));
+    )).beforeStarting(drivetrain.resetControllers()));
 
     // Shooter Controls
 

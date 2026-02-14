@@ -272,7 +272,7 @@ public class Drive extends SubsystemBase {
 
         
     }
-
+    //align to fixed Y coordinate on field using Y translation controller
     public void fixedY(double driveX, double yCoord, Rotation2d rtarget) {
         double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), yCoord);
         driveKraken.setSwerveRequest(FIELD_CENTRIC
@@ -291,6 +291,15 @@ public class Drive extends SubsystemBase {
 
     public Command resetPidgeon() {
         return runOnce(() -> driveKraken.resetPidgeon());
+    }
+
+public Command resetControllers() {
+        return runOnce(() -> {
+            translationControllerX.reset(iOdata.state.Pose.getX(), -iOdata.state.Speeds.vxMetersPerSecond);
+            translationControllerY.reset(iOdata.state.Pose.getY(), -iOdata.state.Speeds.vyMetersPerSecond);
+            translationControllerIn.reset();
+            translationControllerAcross.reset();
+        });
     }
 
     private void configurePathPlanner() {
