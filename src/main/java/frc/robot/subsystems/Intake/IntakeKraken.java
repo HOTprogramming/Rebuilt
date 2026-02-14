@@ -28,11 +28,8 @@ public class IntakeKraken {
   // Hardware
   private CANBus canBus = new CANBus(IntakeConstants.kBusName);
   private TalonFX m_LExtend = new TalonFX(IntakeConstants.kIntakeMotorIDLExtend, canBus);
-  private TalonFX m_RExtend = new TalonFX(IntakeConstants.kIntakeMotorIDRExtend, canBus);
   private TalonFX m_LRoller = new TalonFX(IntakeConstants.kIntakeMotorIDLRoller, canBus);
-  private TalonFX m_RRoller = new TalonFX(IntakeConstants.kIntakeMotorIDRRoller, canBus);
   private CANcoder m_LeftCanCoder = new CANcoder(IntakeConstants.kLeftIntakeEncoderID, canBus);
-  private CANcoder m_RightCanCoder = new CANcoder(IntakeConstants.kRightIntakeEncoderID, canBus);
     //Control
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
   private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
@@ -53,28 +50,12 @@ public class IntakeKraken {
   private final StatusSignal<Angle> LeftIntakeEncoderPosition;
   private final StatusSignal<AngularVelocity> LeftIntakeEncoderVelocity;
 
-  private final StatusSignal<Angle> RightIntakePosition;
-  private final StatusSignal<AngularVelocity> RightIntakeVelocity;
-  private final StatusSignal<Voltage> RightIntakeAppliedVolts;
-  private final StatusSignal<Current> RightIntakeSupplyCurrent;
-  private final StatusSignal<Current> RightIntakeTorqueCurrent;
-  private final StatusSignal<Temperature> RightIntakeTempCelsius;
-  private final StatusSignal<Angle> RightIntakeEncoderPosition;
-  private final StatusSignal<AngularVelocity> RightIntakeEncoderVelocity;
-
   private final StatusSignal<Angle> LeftRollerPosition;
   private final StatusSignal<AngularVelocity> LeftRollerVelocity;
   private final StatusSignal<Voltage> LeftRollerAppliedVolts;
   private final StatusSignal<Current> LeftRollerSupplyCurrent;
   private final StatusSignal<Current> LeftRollerTorqueCurrent;
   private final StatusSignal<Temperature> LeftRollerTempCelsius;
-
-  private final StatusSignal<Angle> RightRollerPosition;
-  private final StatusSignal<AngularVelocity> RightRollerVelocity;
-  private final StatusSignal<Voltage> RightRollerAppliedVolts;
-  private final StatusSignal<Current> RightRollerSupplyCurrent;
-  private final StatusSignal<Current> RightRollerTorqueCurrent;
-  private final StatusSignal<Temperature> RightRollerTempCelsius;
 
   private static IntakeKraken instance = null;
   private boolean isSimulation = false; 
@@ -99,26 +80,13 @@ public class IntakeKraken {
     if(!statuscode.isOK()) { 
       System.out.println("Configuration Failed on Left Extend shooter Motor ");
     } 
-    statuscode = m_RExtend.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightIntakeExtendConfigs(), 1.0); 
-    if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Right Extend shooter Motor ");
-    } 
     statuscode = m_LRoller.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftRollerConfigs(), 1.0); 
     if(!statuscode.isOK()) { 
       System.out.println("Configuration Failed on Left Roller shooter Motor ");
     } 
-    statuscode = m_RRoller.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightRollerConfigs(), 1.0); 
-    if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Right Roller shooter Motor ");
-    } 
     statuscode = m_LeftCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.LeftIntakeEncoderConfigs(),1.0);
     if (!statuscode.isOK()) {
       System.out.println("Configuration Failed on LeftIntake CanCoder");
-    }
-    statuscode = m_RightCanCoder.getConfigurator().apply(IntakeConstants.IntakeConfigs.RightIntakeEncoderConfigs(),1.0);
-
-    if (!statuscode.isOK()) {
-      System.out.println("Configuration Failed on RightIntake CanCoder");
     }
 
     // Set signals
@@ -130,15 +98,6 @@ public class IntakeKraken {
     LeftIntakeTempCelsius = m_LExtend.getDeviceTemp();
     LeftIntakeEncoderPosition = m_LeftCanCoder.getPosition();
     LeftIntakeEncoderVelocity = m_LeftCanCoder.getVelocity();
-
-    RightIntakePosition = m_RExtend.getPosition();
-    RightIntakeVelocity = m_RExtend.getVelocity();
-    RightIntakeAppliedVolts = m_RExtend.getMotorVoltage();
-    RightIntakeSupplyCurrent = m_RExtend.getSupplyCurrent();
-    RightIntakeTorqueCurrent = m_RExtend.getTorqueCurrent();
-    RightIntakeTempCelsius = m_RExtend.getDeviceTemp();
-    RightIntakeEncoderPosition = m_RightCanCoder.getPosition();
-    RightIntakeEncoderVelocity = m_RightCanCoder.getVelocity();
   
     LeftRollerPosition = m_LRoller.getPosition();
     LeftRollerVelocity = m_LRoller.getVelocity();
@@ -146,13 +105,6 @@ public class IntakeKraken {
     LeftRollerSupplyCurrent = m_LRoller.getSupplyCurrent();
     LeftRollerTorqueCurrent = m_LRoller.getTorqueCurrent();
     LeftRollerTempCelsius = m_LRoller.getDeviceTemp();
-
-    RightRollerPosition = m_RRoller.getPosition();
-    RightRollerVelocity = m_RRoller.getVelocity();
-    RightRollerAppliedVolts = m_RRoller.getMotorVoltage();
-    RightRollerSupplyCurrent = m_RRoller.getSupplyCurrent();
-    RightRollerTorqueCurrent = m_RRoller.getTorqueCurrent();
-    RightRollerTempCelsius = m_RRoller.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -164,41 +116,23 @@ public class IntakeKraken {
         LeftIntakeTempCelsius,
         LeftIntakeEncoderPosition,
         LeftIntakeEncoderVelocity,
-          RightIntakePosition,
-        RightIntakeVelocity,
-        RightIntakeAppliedVolts,
-        RightIntakeSupplyCurrent,
-        RightIntakeTorqueCurrent,
-        RightIntakeTempCelsius,
-        RightIntakeEncoderPosition,
-        RightIntakeEncoderVelocity,
           LeftRollerPosition,
         LeftRollerVelocity,
         LeftRollerAppliedVolts,
         LeftRollerSupplyCurrent,
         LeftRollerTorqueCurrent,
-        LeftRollerTempCelsius,
-          RightRollerPosition,
-        RightRollerVelocity,
-        RightRollerAppliedVolts,
-        RightRollerSupplyCurrent,
-        RightRollerTorqueCurrent,
-        RightRollerTempCelsius
+        LeftRollerTempCelsius
     );
 
     /* Optimize out the other signals, since they're not useful */
     m_LExtend.optimizeBusUtilization();
-     m_RExtend.optimizeBusUtilization();
       m_LRoller.optimizeBusUtilization();
-       m_RRoller.optimizeBusUtilization();
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
       isSimulation = true; 
       PhysicsSim.getInstance().addTalonFX(m_LExtend, 0.001);
-      PhysicsSim.getInstance().addTalonFX(m_RExtend, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_LRoller, 0.001);
-      PhysicsSim.getInstance().addTalonFX(m_RRoller, 0.001);
       }
     }
 
@@ -225,21 +159,7 @@ public class IntakeKraken {
                 LeftRollerAppliedVolts,
                 LeftRollerSupplyCurrent,
                 LeftRollerTorqueCurrent,
-                LeftRollerTempCelsius,
-                RightIntakePosition,
-                RightIntakeVelocity,
-                RightIntakeAppliedVolts,
-                RightIntakeSupplyCurrent,
-                RightIntakeTorqueCurrent,
-                RightIntakeTempCelsius,
-                RightIntakeEncoderPosition,
-                RightIntakeEncoderVelocity,
-                RightRollerPosition,
-                RightRollerVelocity,
-                RightRollerAppliedVolts,
-                RightRollerSupplyCurrent,
-                RightRollerTorqueCurrent,
-                RightRollerTempCelsius)
+                LeftRollerTempCelsius)
             .isOK();
 
     stats.LExtendPositionRads = LeftIntakePosition.getValueAsDouble();
@@ -250,26 +170,12 @@ public class IntakeKraken {
     stats.LExtendTempCelsius = LeftIntakeTempCelsius.getValueAsDouble();
     stats.LeftIntakeEncoderPosition = LeftIntakeEncoderPosition.getValueAsDouble();
     stats.LeftIntakeEncoderVelocity = LeftIntakeEncoderVelocity.getValueAsDouble();
-    stats.RExtendPositionRads = RightIntakePosition.getValueAsDouble();
-    stats.RExtendVelocityRpm = RightIntakeVelocity.getValueAsDouble();
-    stats.RExtendAppliedVolts = RightIntakeAppliedVolts.getValueAsDouble();
-    stats.RExtendSupplyCurrentAmps = RightIntakeSupplyCurrent.getValueAsDouble();
-    stats.RExtendTorqueCurrentAmps = RightIntakeTorqueCurrent.getValueAsDouble();
-    stats.RExtendTempCelsius = RightIntakeTempCelsius.getValueAsDouble();
-    stats.RightIntakeEncoderPosition = RightIntakeEncoderPosition.getValueAsDouble();
-    stats.RightIntakeEncoderVelocity = RightIntakeEncoderVelocity.getValueAsDouble();
     stats.LRollerPositionRads = LeftRollerPosition.getValueAsDouble();
     stats.LRollerVelocityRpm = LeftRollerVelocity.getValueAsDouble();
     stats.LRollerAppliedVolts = LeftRollerAppliedVolts.getValueAsDouble();
     stats.LRollerSupplyCurrentAmps = LeftRollerSupplyCurrent.getValueAsDouble();
     stats.LRollerTorqueCurrentAmps = LeftRollerTorqueCurrent.getValueAsDouble();
     stats.LRollerTempCelsius = LeftRollerTempCelsius.getValueAsDouble();
-    stats.RRollerPositionRads = RightRollerPosition.getValueAsDouble();
-    stats.RRollerVelocityRpm = RightRollerVelocity.getValueAsDouble();
-    stats.RRollerAppliedVolts = RightRollerAppliedVolts.getValueAsDouble();
-    stats.RRollerSupplyCurrentAmps = RightRollerSupplyCurrent.getValueAsDouble();
-    stats.RRollerTorqueCurrentAmps = RightRollerTorqueCurrent.getValueAsDouble();
-    stats.RRollerTempCelsius = RightRollerTempCelsius.getValueAsDouble();
   }
 
 
@@ -303,22 +209,7 @@ public class IntakeKraken {
                 m_LExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
                 break;
         }
-     } else {   
-         switch (controlPos) {
-             case 0:      /* Use Position Voltage */
-                 m_RExtend.setControl(m_positionVoltage.withPosition(desiredRotations));
-                 break;
-             case 1:      /* Use Position Torque */
-                 m_RExtend.setControl(m_positionTorque.withPosition(desiredRotations));
-                 break;
-             case 2:      /* Use Motion Magic Position Voltage */
-                 m_RExtend.setControl(m_mmExpoVoltage.withPosition(desiredRotations));
-                 break;
-             case 3:      /* Use Motion Magic Position Torque */
-                 m_RExtend.setControl(m_mmExpoTorque.withPosition(desiredRotations));
-                 break;
-         }
-    }
+      }
   }
 
   /*********************
@@ -345,34 +236,10 @@ public class IntakeKraken {
             case 3:      /*Use Motion Magic Torque Current FOC */
                 m_LRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond)); 
                 break;  
-      }
-  }else {
-        switch (controlVel) {
-            case 0:      /* Use velocity voltage */
-                m_RRoller.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
-                break;
-            case 1:      /* Use velocity torque */
-                m_RRoller.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
-                break;
-            case 2:      /*Use Motion Magic Voltage */
-                m_RRoller.setControl(m_mmVelocityVoltage.withPosition(desiredRotationsPerSecond));
-                break;
-            case 3:      /*Use Motion Magic Torque Current FOC */
-                m_RRoller.setControl(m_mmVelocityTorque.withPosition(desiredRotationsPerSecond));
-                break;
         }
       }
    }
    public void stop(){
         m_LRoller.setControl(m_brake);
-        m_RRoller.setControl(m_brake);
     }
-
-    public StatusSignal<Angle> getRotation(int Side) {
-      if (Side == 1) {
-        return m_LExtend.getPosition();
-      } else {
-        return m_RExtend.getPosition();
-      }
-    }
-  }
+}

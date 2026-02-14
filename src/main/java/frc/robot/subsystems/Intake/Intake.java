@@ -20,26 +20,12 @@ public class Intake extends SubsystemBase{
     private DoublePublisher LExtendTorqueCurrent;
     private DoublePublisher LExtendTemp;
 
-    private DoublePublisher RExtendPosition;
-    private DoublePublisher RExtendVelocity;
-    private DoublePublisher RExtendAppliedVolts;
-    private DoublePublisher RExtendSupplyCurrent;
-    private DoublePublisher RExtendTorqueCurrent;
-    private DoublePublisher RExtendTemp;
-
     private DoublePublisher LRollerPosition;
     private DoublePublisher LRollerVelocity;
     private DoublePublisher LRollerAppliedVolts;
     private DoublePublisher LRollerSupplyCurrent;
     private DoublePublisher LRollerTorqueCurrent;
     private DoublePublisher LRollerTemp;
-
-    private DoublePublisher RRollerPosition;
-    private DoublePublisher RRollerVelocity;
-    private DoublePublisher RRollerAppliedVolts;
-    private DoublePublisher RRollerSupplyCurrent;
-    private DoublePublisher RRollerTorqueCurrent;
-    private DoublePublisher RRollerTemp;
  
     public Intake() {
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -52,13 +38,6 @@ public class Intake extends SubsystemBase{
         LExtendTemp = table.getDoubleTopic("LExtendMotor Temp").publish();
         LExtendAppliedVolts = table.getDoubleTopic("LExtendApplied Volts").publish();
 
-        RExtendVelocity = table.getDoubleTopic("RExtendVelocity-Motor (rot per b)").publish();
-        RExtendPosition = table.getDoubleTopic("RExtendPosition-Motor (rot)").publish();
-        RExtendSupplyCurrent = table.getDoubleTopic("RExtendSupply Current").publish();
-        RExtendTorqueCurrent = table.getDoubleTopic("RExtendTorque Current").publish();
-        RExtendTemp = table.getDoubleTopic("RExtendMotor Temp").publish();
-        RExtendAppliedVolts = table.getDoubleTopic("RExtendApplied Volts").publish();
-
         LRollerVelocity = table.getDoubleTopic("LRollerVelocity-Motor (rot per a)").publish();
         LRollerPosition = table.getDoubleTopic("LRollerPosition-Motor (rot)").publish();
         LRollerSupplyCurrent = table.getDoubleTopic("LRollerSupply Current").publish();
@@ -66,12 +45,6 @@ public class Intake extends SubsystemBase{
         LRollerTemp = table.getDoubleTopic("LRollerMotor Temp").publish();
         LRollerAppliedVolts = table.getDoubleTopic("LRollerApplied Volts").publish();
 
-        RRollerVelocity = table.getDoubleTopic("RRollerVelocity-Motor (rot per c)").publish();
-        RRollerPosition = table.getDoubleTopic("RRollerPosition-Motor (rot)").publish();
-        RRollerSupplyCurrent = table.getDoubleTopic("RRollerSupply Current").publish();
-        RRollerTorqueCurrent = table.getDoubleTopic("RRollerTorque Current").publish();
-        RRollerTemp = table.getDoubleTopic("RRollerMotor Temp").publish();
-        RRollerAppliedVolts = table.getDoubleTopic("RRollerApplied Volts").publish();
     }
     @Override
     public void periodic() {
@@ -90,13 +63,6 @@ public class Intake extends SubsystemBase{
         LExtendAppliedVolts.set(roundTo1Decimal(ioStats.LExtendAppliedVolts));
         LExtendTemp.set(roundTo1Decimal(ioStats.LExtendTempCelsius));
 
-        RExtendVelocity.set(roundTo1Decimal(ioStats.RExtendVelocityRpm));
-        RExtendPosition.set(roundTo1Decimal(ioStats.RExtendPositionRads));
-        RExtendSupplyCurrent.set(roundTo1Decimal(ioStats.RExtendSupplyCurrentAmps));
-        RExtendTorqueCurrent.set(roundTo1Decimal(ioStats.RExtendTorqueCurrentAmps));
-        RExtendAppliedVolts.set(roundTo1Decimal(ioStats.RExtendAppliedVolts));
-        RExtendTemp.set(roundTo1Decimal(ioStats.RExtendTempCelsius));
-
         LRollerVelocity.set(roundTo1Decimal(ioStats.LRollerVelocityRpm));
         LRollerPosition.set(roundTo1Decimal(ioStats.LRollerPositionRads));
         LRollerSupplyCurrent.set(roundTo1Decimal(ioStats.LRollerSupplyCurrentAmps));
@@ -104,12 +70,6 @@ public class Intake extends SubsystemBase{
         LRollerAppliedVolts.set(roundTo1Decimal(ioStats.LRollerAppliedVolts));
         LRollerTemp.set(roundTo1Decimal(ioStats.LRollerTempCelsius));
 
-        RRollerVelocity.set(roundTo1Decimal(ioStats.RRollerVelocityRpm));
-        RRollerPosition.set(roundTo1Decimal(ioStats.RRollerPositionRads));
-        RRollerSupplyCurrent.set(roundTo1Decimal(ioStats.RRollerSupplyCurrentAmps));
-        RRollerTorqueCurrent.set(roundTo1Decimal(ioStats.RRollerTorqueCurrentAmps));
-        RRollerAppliedVolts.set(roundTo1Decimal(ioStats.RRollerAppliedVolts));
-        RRollerTemp.set(roundTo1Decimal(ioStats.RRollerTempCelsius));
     }
 
     /******************************************************************************************
@@ -131,13 +91,6 @@ public class Intake extends SubsystemBase{
             mIntakeKraken.stop();
         });
     }
-    public Command retractRightIntake() {
-        return runOnce(() ->
-        {
-            mIntakeKraken.runPosition(IntakeConstants.kRightRetractPosition,1);
-            mIntakeKraken.stop();
-        });
-    }
     public Command expelLeftIntake() {
         return runOnce(() ->
           {
@@ -145,56 +98,11 @@ public class Intake extends SubsystemBase{
             mIntakeKraken.runVelocity(IntakeConstants.kLeftExpel,1);
         });
     } 
-    
-    public Command expelRightIntake() {
-        return runOnce(() ->
-          {
-            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,0);
-            mIntakeKraken.runVelocity(IntakeConstants.kRightExpel,0);
-        });
-    }
-    
     public Command turnOffLeftExpel() {
         return runOnce(() ->
           {
             mIntakeKraken.stop();
         });
-    }
-    public Command turnOffRightExpel() {
-        return runOnce(() ->
-          {
-            mIntakeKraken.stop();
-        });
-    }
-
-    public Command extendRightIntake() {
-        return runOnce(() ->
-        {
-            mIntakeKraken.runPosition(IntakeConstants.kRightDeployedPosition,0);
-            mIntakeKraken.runVelocity(IntakeConstants.kRightIntake,0);
-        });
-    }
-
-      public BooleanSupplier isLeftextended() {
-      return () -> mIntakeKraken.getRotation(1).isNear(IntakeConstants.kLeftDeployedPosition,IntakeConstants.kDeployedPositionTolerance);
-    }
-      public BooleanSupplier isRightextended() {
-      return () -> mIntakeKraken.getRotation(2).isNear(IntakeConstants.kRightDeployedPosition,IntakeConstants.kDeployedPositionTolerance);
-    }
-    public BooleanSupplier isLeftRetracted() {
-      return () -> mIntakeKraken.getRotation(1).isNear(IntakeConstants.kLeftRetractedPosition,IntakeConstants.kRetractedPositionTolerance);
-    }
-      public BooleanSupplier isRightRetracted() {
-      return () -> mIntakeKraken.getRotation(2).isNear(IntakeConstants.kRightRetractedPosition,IntakeConstants.kRetractedPositionTolerance);
-    }
-
-    public Command activateRightIntake() {
-        return Commands.sequence(retractLeftIntake().until(isLeftRetracted()),
-        extendRightIntake().until(isLeftextended()));
-    }
-    public Command activateLeftIntake() {
-        return Commands.sequence(retractRightIntake().until(isRightRetracted()),
-        extendLeftIntake().until(isRightextended()));
     }
 }
 
@@ -208,31 +116,13 @@ public class Intake extends SubsystemBase{
     public double LExtendTorqueCurrentAmps = 0.0;
     public double LExtendTempCelsius = 0.0;   
 
-    //Stats for the Intake/Expel Motor  
-    public double RExtendPositionRads = 0.0;
-    public double RExtendVelocityRpm = 0.0;
-    public double RExtendAppliedVolts = 0.0;
-    public double RExtendSupplyCurrentAmps = 0.0;
-    public double RExtendTorqueCurrentAmps = 0.0;
-    public double RExtendTempCelsius = 0.0; 
-    
     //Stats for the Intake/Expel Motor     
     public double LRollerPositionRads = 0.0;
     public double LRollerVelocityRpm = 0.0;
     public double LRollerAppliedVolts = 0.0;
     public double LRollerSupplyCurrentAmps = 0.0;
     public double LRollerTorqueCurrentAmps = 0.0;
-    public double LRollerTempCelsius = 0.0;      
-
-    //Stats for the Intake/Expel Motor     
-    public double RRollerPositionRads = 0.0;
-    public double RRollerVelocityRpm = 0.0;
-    public double RRollerAppliedVolts = 0.0;
-    public double RRollerSupplyCurrentAmps = 0.0;
-    public double RRollerTorqueCurrentAmps = 0.0;
-    public double RRollerTempCelsius = 0.0;
+    public double LRollerTempCelsius = 0.0;
     public double LeftIntakeEncoderVelocity;
-    public double LeftIntakeEncoderPosition;
-    public double RightIntakeEncoderPosition;
-    public double RightIntakeEncoderVelocity;      
-}
+    public double LeftIntakeEncoderPosition;     
+    }
