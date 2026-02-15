@@ -16,9 +16,9 @@ package frc.robot;
 public final class Constants {
 
   public static final double loopPeriodSecs = 0.02;
-  private static RobotType robotType = RobotType.ALPHABOT;
+  private static RobotType robotType = RobotType.CAMERABOT;
   public static final boolean tuningMode = false;
-  public static final String canName = "PBot";
+  public static final String canName = "robot";
 
   public static final double brownoutVoltage = 5.5;
 

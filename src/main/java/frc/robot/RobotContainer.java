@@ -65,6 +65,8 @@ public class RobotContainer {
 
   private void configureBindings() {   
 
+    driver.x().whileTrue(drivetrain.fuelFetchX());
+
     // Drivetrain Controls
     drivetrain.setDefaultCommand(drivetrain.run(() -> 
       drivetrain.teleopDrive(

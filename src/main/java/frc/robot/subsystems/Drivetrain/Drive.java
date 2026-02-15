@@ -24,8 +24,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -106,6 +108,9 @@ public class Drive extends SubsystemBase {
     private DoublePublisher robotRealSpeed;
     private DoubleArrayPublisher robotPose;
 
+    private NetworkTable objectDetection;
+    private DoubleSubscriber fuelFetchSub;
+
     public Drive(DriveKraken driveKraken) { 
         this.driveKraken = driveKraken;
         this.iOdata = driveKraken.update();
@@ -127,6 +132,10 @@ public class Drive extends SubsystemBase {
         robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
 
     
+        objectDetection = NetworkTableInstance.getDefault().getTable("ObjectDetection");
+
+        fuelFetchSub = objectDetection.getDoubleTopic("target x").subscribe(0.0);
+
         double driveBaseRadius = 0;
         for (var moduleLocation : this.iOdata.m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
@@ -210,6 +219,15 @@ public class Drive extends SubsystemBase {
 
     public Command setBrake() {
         return runOnce(() -> driveKraken.setNeutralMode(NeutralModeValue.Brake));
+    }
+
+    public Command fuelFetchX() {
+        return run(() -> {
+            driveKraken.setSwerveRequest(ROBOT_CENTRIC
+            .withVelocityY(0)
+            .withVelocityX(-translationControllerX.calculate(Units.inchesToMeters(fuelFetchSub.get()), 0) / 2)
+            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), 0)));
+        });
     }
 
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {

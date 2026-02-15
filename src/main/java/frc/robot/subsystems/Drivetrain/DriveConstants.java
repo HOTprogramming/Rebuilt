@@ -983,7 +983,7 @@ public class DriveConstants {
     private static final boolean kInvertRightSideCambot = true;
 
     // CAN bus that the devices are located on; All swerve devices must share the same CAN bus
-    public static final CANBus kCANBusCambot = new CANBus("rio", "./logs/example.hoot");
+    public static final CANBus kCANBusCambot = new CANBus("robot", "./logs/example.hoot");
 
     public static final SwerveDrivetrainConstants DrivetrainConstantsCambot = new SwerveDrivetrainConstants()
      .withCANBusName(kCANBusCambot.getName())
