@@ -11,33 +11,33 @@ public class Shooter extends SubsystemBase {
   private final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
 
   /* Network Table entries */
-  private DoublePublisher shooterPosition;
-  private DoublePublisher shooterVelocity;
-  private DoublePublisher shooterAppliedVolts;
-  private DoublePublisher shooterSupplyCurrent;
-  private DoublePublisher shooterTorqueCurrent;
-  private DoublePublisher shooterTemp;
+  private DoublePublisher shooterPositionLeftTop;
+  private DoublePublisher shooterVelocityLeftTop;
+  private DoublePublisher shooterAppliedVoltsLeftTop;
+  private DoublePublisher shooterSupplyCurrentLeftTop;
+  private DoublePublisher shooterTorqueCurrentLeftTop;
+  private DoublePublisher shooterTempLeftTop;
 
-  private DoublePublisher shooterPositionSub1;
-  private DoublePublisher shooterVelocitySub1;
-  private DoublePublisher shooterAppliedVoltsSub1;
-  private DoublePublisher shooterSupplyCurrentSub1;
-  private DoublePublisher shooterTorqueCurrentSub1;
-  private DoublePublisher shooterTempSub1;
+  private DoublePublisher shooterPositionLeftBottom;
+  private DoublePublisher shooterVelocityLeftBottom;
+  private DoublePublisher shooterAppliedVoltsLeftBottom;
+  private DoublePublisher shooterSupplyCurrentLeftBottom;
+  private DoublePublisher shooterTorqueCurrentLeftBottom;
+  private DoublePublisher shooterTempLeftBottom;
 
-  private DoublePublisher shooterPositionSub2;
-  private DoublePublisher shooterVelocitySub2;
-  private DoublePublisher shooterAppliedVoltsSub2;
-  private DoublePublisher shooterSupplyCurrentSub2;
-  private DoublePublisher shooterTorqueCurrentSub2;
-  private DoublePublisher shooterTempSub2;
+  private DoublePublisher shooterPositionRightTop;
+  private DoublePublisher shooterVelocityRightTop;
+  private DoublePublisher shooterAppliedVoltsRightTop;
+  private DoublePublisher shooterSupplyCurrentRightTop;
+  private DoublePublisher shooterTorqueCurrentRightTop;
+  private DoublePublisher shooterTempRightTop;
 
-  private DoublePublisher shooterPositionSub3;
-  private DoublePublisher shooterVelocitySub3;
-  private DoublePublisher shooterAppliedVoltsSub3;
-  private DoublePublisher shooterSupplyCurrentSub3;
-  private DoublePublisher shooterTorqueCurrentSub3;
-  private DoublePublisher shooterTempSub3;
+  private DoublePublisher shooterPositionRightBottom;
+  private DoublePublisher shooterVelocityRightBottom;
+  private DoublePublisher shooterAppliedVoltsRightBottom;
+  private DoublePublisher shooterSupplyCurrentRightBottom;
+  private DoublePublisher shooterTorqueCurrentRightBottom;
+  private DoublePublisher shooterTempRightBottom;
 
   private DoublePublisher hoodPosition;
   private DoublePublisher hoodVelocity;
@@ -49,36 +49,36 @@ public class Shooter extends SubsystemBase {
   /* Initializes the shooter stats */
   class shooterStats {
     public boolean MotorConnected = true;    
-    public double shooterPositionRads = 0.0;
-    public double shooterVelocityRpm = 0.0;
-    public double shooterAppliedVolts = 0.0;
-    public double shooterSupplyCurrentAmps = 0.0;
-    public double shooterTorqueCurrentAmps = 0.0;
-    public double shooterTempCelsius = 0.0;
+    public double shooterPositionRadsLeftTop = 0.0;
+    public double shooterVelocityRpmLeftTop = 0.0;
+    public double shooterAppliedVoltsLeftTop = 0.0;
+    public double shooterSupplyCurrentAmpsLeftTop = 0.0;
+    public double shooterTorqueCurrentAmpsLeftTop = 0.0;
+    public double shooterTempCelsiusLeftTop = 0.0;
 
-    public boolean MotorConnectedSub1 = true;    
-    public double shooterPositionRadsSub1 = 0.0;
-    public double shooterVelocityRpmSub1 = 0.0;
-    public double shooterAppliedVoltsSub1 = 0.0;
-    public double shooterSupplyCurrentAmpsSub1 = 0.0;
-    public double shooterTorqueCurrentAmpsSub1 = 0.0;
-    public double shooterTempCelsiusSub1 = 0.0;
+    public boolean MotorConnectedLeftBottom = true;    
+    public double shooterPositionRadsLeftBottom = 0.0;
+    public double shooterVelocityRpmLeftBottom = 0.0;
+    public double shooterAppliedVoltsLeftBottom = 0.0;
+    public double shooterSupplyCurrentAmpsLeftBottom = 0.0;
+    public double shooterTorqueCurrentAmpsLeftBottom = 0.0;
+    public double shooterTempCelsiusLeftBottom = 0.0;
 
-    public boolean MotorConnectedSub2 = true;    
-    public double shooterPositionRadsSub2 = 0.0;
-    public double shooterVelocityRpmSub2 = 0.0;
-    public double shooterAppliedVoltsSub2 = 0.0;
-    public double shooterSupplyCurrentAmpsSub2 = 0.0;
-    public double shooterTorqueCurrentAmpsSub2 = 0.0;
-    public double shooterTempCelsiusSub2 = 0.0;
+    public boolean MotorConnectedRightTop = true;    
+    public double shooterPositionRadsRightTop = 0.0;
+    public double shooterVelocityRpmRightTop = 0.0;
+    public double shooterAppliedVoltsRightTop = 0.0;
+    public double shooterSupplyCurrentAmpsRightTop = 0.0;
+    public double shooterTorqueCurrentAmpsRightTop = 0.0;
+    public double shooterTempCelsiusRightTop = 0.0;
 
-    public boolean MotorConnectedSub3 = true;    
-    public double shooterPositionRadsSub3 = 0.0;
-    public double shooterVelocityRpmSub3 = 0.0;
-    public double shooterAppliedVoltsSub3 = 0.0;
-    public double shooterSupplyCurrentAmpsSub3 = 0.0;
-    public double shooterTorqueCurrentAmpsSub3 = 0.0;
-    public double shooterTempCelsiusSub3 = 0.0;
+    public boolean MotorConnectedRightBottom = true;    
+    public double shooterPositionRadsRightBottom = 0.0;
+    public double shooterVelocityRpmRightBottom = 0.0;
+    public double shooterAppliedVoltsRightBottom = 0.0;
+    public double shooterSupplyCurrentAmpsRightBottom = 0.0;
+    public double shooterTorqueCurrentAmpsRightBottom = 0.0;
+    public double shooterTempCelsiusRightBottom = 0.0;
 
     public double hoodPositionRads = 0.0;
     public double hoodVelocityRpm = 0.0;
@@ -92,43 +92,51 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     NetworkTableInstance instance = NetworkTableInstance.getDefault();
 
-    NetworkTable table = instance.getTable("HOT/Shooter");
+    NetworkTable tableLeftTop = instance.getTable("HOT/Shooter/Shooter/Left Top (Master)");
     
     /* Creates the Display for the Network Tables */
-    shooterPosition = table.getDoubleTopic("Shooter Master: Position-Motor (ROT)").publish();
-    shooterVelocity = table.getDoubleTopic("Shooter Master: Velocity (RPS)").publish();
-    shooterAppliedVolts = table.getDoubleTopic("Shooter Master: Applied Volts").publish();
-    shooterSupplyCurrent = table.getDoubleTopic("Shooter Master: Supply Current").publish();
-    shooterTorqueCurrent = table.getDoubleTopic("Shooter Master: Torque Current").publish();
-    shooterTemp = table.getDoubleTopic("Shooter Master: Motor Temp").publish();
+    shooterPositionLeftTop = tableLeftTop.getDoubleTopic("Shooter Left Top (Master): Position-Motor (ROT)").publish();
+    shooterVelocityLeftTop = tableLeftTop.getDoubleTopic("Shooter Left Top (Master): Velocity (RPS)").publish();
+    shooterAppliedVoltsLeftTop = tableLeftTop.getDoubleTopic("Shooter Left Top (Master): Applied Volts").publish();
+    shooterSupplyCurrentLeftTop = tableLeftTop.getDoubleTopic("Shooter Left Top (Master): Supply Current").publish();
+    shooterTorqueCurrentLeftTop = tableLeftTop.getDoubleTopic("Shooter Left Top (Master): Torque Current").publish();
+    shooterTempLeftTop = tableLeftTop.getDoubleTopic("Shooter Left Top (Master): Motor Temp").publish();
 
-    shooterPositionSub1 = table.getDoubleTopic("Shooter Sub 1: Position-Motor (ROT)").publish();
-    shooterVelocitySub1 = table.getDoubleTopic("Shooter Sub 1: Velocity (RPS)").publish();
-    shooterAppliedVoltsSub1 = table.getDoubleTopic("Shooter Sub 1: Applied Volts").publish();
-    shooterSupplyCurrentSub1 = table.getDoubleTopic("Shooter Sub 1: Supply Current").publish();
-    shooterTorqueCurrentSub1 = table.getDoubleTopic("Shooter Sub 1: Torque Current").publish();
-    shooterTempSub1 = table.getDoubleTopic("Shooter Sub 1: Motor Temp").publish();
+    NetworkTable tableLeftBottom = instance.getTable("HOT/Shooter/Shooter/Follower/Left Bottom");
 
-    shooterPositionSub2 = table.getDoubleTopic("Shooter Sub 2: Position-Motor (ROT)").publish();
-    shooterVelocitySub2 = table.getDoubleTopic("Shooter Sub 2: Velocity (RPS)").publish();
-    shooterAppliedVoltsSub2 = table.getDoubleTopic("Shooter Sub 2: Applied Volts").publish();
-    shooterSupplyCurrentSub2 = table.getDoubleTopic("Shooter Sub 2: Supply Current").publish();
-    shooterTorqueCurrentSub2 = table.getDoubleTopic("Shooter Sub 2: Torque Current").publish();
-    shooterTempSub2 = table.getDoubleTopic("Shooter Sub 2: Motor Temp").publish();
+    shooterPositionLeftBottom = tableLeftBottom.getDoubleTopic("Shooter Left Bottom: Position-Motor (ROT)").publish();
+    shooterVelocityLeftBottom = tableLeftBottom.getDoubleTopic("Shooter Left Bottom: Velocity (RPS)").publish();
+    shooterAppliedVoltsLeftBottom = tableLeftBottom.getDoubleTopic("Shooter Left Bottom: Applied Volts").publish();
+    shooterSupplyCurrentLeftBottom = tableLeftBottom.getDoubleTopic("Shooter Left Bottom: Supply Current").publish();
+    shooterTorqueCurrentLeftBottom = tableLeftBottom.getDoubleTopic("Shooter Left Bottom: Torque Current").publish();
+    shooterTempLeftBottom = tableLeftBottom.getDoubleTopic("Shooter Left Bottom: Motor Temp").publish();
 
-    shooterPositionSub3 = table.getDoubleTopic("Shooter Sub 3: Position-Motor (ROT)").publish();
-    shooterVelocitySub3 = table.getDoubleTopic("Shooter Sub 3: Velocity (RPS)").publish();
-    shooterAppliedVoltsSub3 = table.getDoubleTopic("Shooter Sub 3: Applied Volts").publish();
-    shooterSupplyCurrentSub3 = table.getDoubleTopic("Shooter Sub 3: Supply Current").publish();
-    shooterTorqueCurrentSub3 = table.getDoubleTopic("Shooter Sub 3: Torque Current").publish();
-    shooterTempSub3 = table.getDoubleTopic("Shooter Sub 3: Motor Temp").publish();
+    NetworkTable tableRightTop = instance.getTable("HOT/Shooter/Shooter/Follower/Right Top");
 
-    hoodPosition = table.getDoubleTopic("Hood: Position-Motor (ROT)").publish();
-    hoodVelocity = table.getDoubleTopic("Hood: Velocity (RPS)").publish();
-    hoodAppliedVolts = table.getDoubleTopic("Hood: Applied Volts").publish();
-    hoodSupplyCurrent = table.getDoubleTopic("Hood: Supply Current").publish();
-    hoodTorqueCurrent = table.getDoubleTopic("Hood: Torque Current").publish();
-    hoodTemp = table.getDoubleTopic("Hood: Motor Temp").publish();
+    shooterPositionRightTop = tableRightTop.getDoubleTopic("Shooter Right Top: Position-Motor (ROT)").publish();
+    shooterVelocityRightTop = tableRightTop.getDoubleTopic("Shooter Right Top: Velocity (RPS)").publish();
+    shooterAppliedVoltsRightTop = tableRightTop.getDoubleTopic("Shooter Right Top: Applied Volts").publish();
+    shooterSupplyCurrentRightTop = tableRightTop.getDoubleTopic("Shooter Right Top: Supply Current").publish();
+    shooterTorqueCurrentRightTop = tableRightTop.getDoubleTopic("Shooter Right Top: Torque Current").publish();
+    shooterTempRightTop = tableRightTop.getDoubleTopic("Shooter Right Top: Motor Temp").publish();
+
+    NetworkTable tableRightBottom = instance.getTable("HOT/Shooter/Shooter/Follower/Right Bottom");
+
+    shooterPositionRightBottom = tableRightBottom.getDoubleTopic("Shooter Right Bottom: Position-Motor (ROT)").publish();
+    shooterVelocityRightBottom = tableRightBottom.getDoubleTopic("Shooter Right Bottom: Velocity (RPS)").publish();
+    shooterAppliedVoltsRightBottom = tableRightBottom.getDoubleTopic("Shooter Right Bottom: Applied Volts").publish();
+    shooterSupplyCurrentRightBottom = tableRightBottom.getDoubleTopic("Shooter Right Bottom: Supply Current").publish();
+    shooterTorqueCurrentRightBottom = tableRightBottom.getDoubleTopic("Shooter Right Bottom: Torque Current").publish();
+    shooterTempRightBottom = tableRightBottom.getDoubleTopic("Shooter Right Bottom: Motor Temp").publish();
+
+    NetworkTable tableHood = instance.getTable("HOT/Shooter/Hood");
+
+    hoodPosition = tableHood.getDoubleTopic("Hood: Position-Motor (ROT)").publish();
+    hoodVelocity = tableHood.getDoubleTopic("Hood: Velocity (RPS)").publish();
+    hoodAppliedVolts = tableHood.getDoubleTopic("Hood: Applied Volts").publish();
+    hoodSupplyCurrent = tableHood.getDoubleTopic("Hood: Supply Current").publish();
+    hoodTorqueCurrent = tableHood.getDoubleTopic("Hood: Torque Current").publish();
+    hoodTemp = tableHood.getDoubleTopic("Hood: Motor Temp").publish();
     }
 
     //Shooter - get Target Speed//
@@ -143,7 +151,7 @@ public class Shooter extends SubsystemBase {
 
   //Shooter - Getter//
   public double getShooterSpeed() {
-    return motorStats.shooterVelocityRpm;
+    return motorStats.shooterVelocityRpmLeftTop;
   }
 
   @Override  
@@ -159,33 +167,33 @@ public class Shooter extends SubsystemBase {
    * Update the Network Tables with Motor Statistics 
    ************************************************/
   private void UpdateTelemetry() {
-    shooterVelocity.set(motorStats.shooterVelocityRpm);
-    shooterPosition.set(motorStats.shooterPositionRads);
-    shooterSupplyCurrent.set(motorStats.shooterSupplyCurrentAmps);
-    shooterTorqueCurrent.set(motorStats.shooterTorqueCurrentAmps);
-    shooterAppliedVolts.set(motorStats.shooterAppliedVolts);
-    shooterTemp.set(motorStats.shooterTempCelsius);
+    shooterVelocityLeftTop.set(motorStats.shooterVelocityRpmLeftTop);
+    shooterPositionLeftTop.set(motorStats.shooterPositionRadsLeftTop);
+    shooterSupplyCurrentLeftTop.set(motorStats.shooterSupplyCurrentAmpsLeftTop);
+    shooterTorqueCurrentLeftTop.set(motorStats.shooterTorqueCurrentAmpsLeftTop);
+    shooterAppliedVoltsLeftTop.set(motorStats.shooterAppliedVoltsLeftTop);
+    shooterTempLeftTop.set(motorStats.shooterTempCelsiusLeftTop);
 
-    shooterVelocitySub1.set(motorStats.shooterVelocityRpmSub1);
-    shooterPositionSub1.set(motorStats.shooterPositionRadsSub1);
-    shooterSupplyCurrentSub1.set(motorStats.shooterSupplyCurrentAmpsSub1);
-    shooterTorqueCurrentSub1.set(motorStats.shooterTorqueCurrentAmpsSub1);
-    shooterAppliedVoltsSub1.set(motorStats.shooterAppliedVoltsSub1);
-    shooterTempSub1.set(motorStats.shooterTempCelsiusSub1);
+    shooterVelocityLeftBottom.set(motorStats.shooterVelocityRpmLeftBottom);
+    shooterPositionLeftBottom.set(motorStats.shooterPositionRadsLeftBottom);
+    shooterSupplyCurrentLeftBottom.set(motorStats.shooterSupplyCurrentAmpsLeftBottom);
+    shooterTorqueCurrentLeftBottom.set(motorStats.shooterTorqueCurrentAmpsLeftBottom);
+    shooterAppliedVoltsLeftBottom.set(motorStats.shooterAppliedVoltsLeftBottom);
+    shooterTempLeftBottom.set(motorStats.shooterTempCelsiusLeftBottom);
 
-    shooterVelocitySub2.set(motorStats.shooterVelocityRpmSub2);
-    shooterPositionSub2.set(motorStats.shooterPositionRadsSub2);
-    shooterSupplyCurrentSub2.set(motorStats.shooterSupplyCurrentAmpsSub2);
-    shooterTorqueCurrentSub2.set(motorStats.shooterTorqueCurrentAmpsSub2);
-    shooterAppliedVoltsSub2.set(motorStats.shooterAppliedVoltsSub2);
-    shooterTempSub2.set(motorStats.shooterTempCelsiusSub2);
+    shooterVelocityRightTop.set(motorStats.shooterVelocityRpmRightTop);
+    shooterPositionRightTop.set(motorStats.shooterPositionRadsRightTop);
+    shooterSupplyCurrentRightTop.set(motorStats.shooterSupplyCurrentAmpsRightTop);
+    shooterTorqueCurrentRightTop.set(motorStats.shooterTorqueCurrentAmpsRightTop);
+    shooterAppliedVoltsRightTop.set(motorStats.shooterAppliedVoltsRightTop);
+    shooterTempRightTop.set(motorStats.shooterTempCelsiusRightTop);
 
-    shooterVelocitySub3.set(motorStats.shooterVelocityRpmSub3);
-    shooterPositionSub3.set(motorStats.shooterPositionRadsSub3);
-    shooterSupplyCurrentSub3.set(motorStats.shooterSupplyCurrentAmpsSub3);
-    shooterTorqueCurrentSub3.set(motorStats.shooterTorqueCurrentAmpsSub3);
-    shooterAppliedVoltsSub3.set(motorStats.shooterAppliedVoltsSub3);
-    shooterTempSub3.set(motorStats.shooterTempCelsiusSub3);
+    shooterVelocityRightBottom.set(motorStats.shooterVelocityRpmRightBottom);
+    shooterPositionRightBottom.set(motorStats.shooterPositionRadsRightBottom);
+    shooterSupplyCurrentRightBottom.set(motorStats.shooterSupplyCurrentAmpsRightBottom);
+    shooterTorqueCurrentRightBottom.set(motorStats.shooterTorqueCurrentAmpsRightBottom);
+    shooterAppliedVoltsRightBottom.set(motorStats.shooterAppliedVoltsRightBottom);
+    shooterTempRightBottom.set(motorStats.shooterTempCelsiusRightBottom);
 
     hoodVelocity.set(motorStats.hoodVelocityRpm);
     hoodPosition.set(motorStats.hoodPositionRads);
