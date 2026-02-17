@@ -5,6 +5,7 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import org.json.simple.parser.ParseException;
@@ -22,14 +23,17 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
+import frc.util.FuelSim;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
+
 
 public class RobotContainer {
   SendableChooser<String> Autos = new SendableChooser<>();
@@ -44,6 +48,8 @@ public class RobotContainer {
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+
+  public FuelSim fuelSim;
 
   public RobotContainer() {
     RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the battery is good.
@@ -66,7 +72,9 @@ public class RobotContainer {
     climber = new Climber();
 
     configureBindings();
-
+    if (Robot.isSimulation()) {
+      configureFuelSim();
+    } 
     //NamedCommands.registerCommand("Test Override", drivetrain.testOverride()); 
   }
 
@@ -106,7 +114,12 @@ public class RobotContainer {
         new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
 
-
+    driver.rightBumper().whileTrue(
+      Commands.sequence(
+          drivetrain.runOnce(() -> drivetrain.launchSimFuel(fuelSim)),
+          Commands.waitSeconds(0.1)
+      ).repeatedly()
+    );
 
     // Shooter Controls
 
@@ -158,8 +171,30 @@ public class RobotContainer {
     }
   }
 
-
   public Command getAutonomousCommand() {
     return autoCommand;
   }
+
+  private void configureFuelSim() {
+    fuelSim = new FuelSim();
+    fuelSim.spawnStartingFuel();
+    
+    fuelSim.registerRobot(
+            0.75, // Robot width in meters
+        0.75, // Robot length in meters
+        0.1,  // Bumper height in meters
+        () -> drivetrain.iOdata.state.Pose, // How the sim finds your robot's position
+        () -> drivetrain.iOdata.state.Speeds); // How the sim finds your robot's velocity)
+    
+        fuelSim.start();
+    SmartDashboard.putData(Commands.runOnce(() -> {
+                fuelSim.clearFuel();
+                fuelSim.spawnStartingFuel();
+            })
+            .withName("Reset Fuel")
+            .ignoringDisable(true));
+}
+
+
+
 }

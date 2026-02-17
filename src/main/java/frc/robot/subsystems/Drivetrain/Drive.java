@@ -33,7 +33,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;    
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.util.FuelSim;
+import static edu.wpi.first.units.Units.*;
+  
 
 class DriveIOdata { 
     public SwerveDriveState state = new SwerveDriveState();
@@ -138,6 +142,7 @@ public class Drive extends SubsystemBase {
         configurePathPlanner();
 
         constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
+
     }
 
     private void UpdateTelemetry() {
@@ -331,5 +336,16 @@ public Command resetControllers() {
     private void setPose(Pose2d pose) {
         this.driveKraken.seedFieldRelative(pose);
     }
+public void launchSimFuel(FuelSim fuelSim) {
+    if (Robot.isSimulation() && fuelSim != null) {
+        // This takes the current robot pose and "spawns" fuel there
+        fuelSim.launchFuel(
+            MetersPerSecond.of(5), // Linear Velocity
+            Degrees.of(40),        // Launch Angle (vertical)
+            Degrees.of(0),         // Direction Angle (horizontal)
+            Meters.of(0.3)         // Distance from robot center
+);
+    }
+}
 }
 
