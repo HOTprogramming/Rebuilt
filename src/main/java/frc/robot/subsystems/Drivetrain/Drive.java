@@ -30,6 +30,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;    
@@ -266,9 +267,23 @@ public class Drive extends SubsystemBase {
         driveKraken.setSwerveRequest(FIELD_CENTRIC
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
-            angle)
+            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), angle)
         ));
+
+        
+    }
+    //align to fixed Y coordinate on field using Y translation controller
+    public void fixedY(double driveX, Rotation2d rtarget) {
+         double dynamicY = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
+        double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), dynamicY);
+        driveKraken.setSwerveRequest(FIELD_CENTRIC
+            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(!translationControllerY.atGoal() ? -yOutput : 0.0)
+            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
+        );
+        SmartDashboard.putNumber("Target Y", dynamicY);
+        SmartDashboard.putNumber("Current Y", iOdata.state.Pose.getY());
+        SmartDashboard.putNumber("PID Y Output", yOutput);
     }
 
     public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
@@ -277,6 +292,15 @@ public class Drive extends SubsystemBase {
 
     public Command resetPidgeon() {
         return runOnce(() -> driveKraken.resetPidgeon());
+    }
+
+public Command resetControllers() {
+        return runOnce(() -> {
+            translationControllerX.reset(iOdata.state.Pose.getX(), iOdata.state.Speeds.vxMetersPerSecond);
+            translationControllerY.reset(iOdata.state.Pose.getY(), iOdata.state.Speeds.vyMetersPerSecond);
+            translationControllerIn.reset();
+            translationControllerAcross.reset();
+        });
     }
 
     private void configurePathPlanner() {
