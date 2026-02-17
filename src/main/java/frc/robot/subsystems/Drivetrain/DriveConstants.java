@@ -489,8 +489,8 @@ public class DriveConstants {
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGainsAlphabot = new Slot0Configs()
         .withKP(100).withKI(0).withKD(0.5)
-        .withKS(0.1).withKV(1.16).withKA(0)
-        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+        .withKS(0.1).withKV(1.66).withKA(0)
+        // .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
         ;
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
@@ -499,7 +499,7 @@ public class DriveConstants {
         .withKS(0.0).withKV(0.124).withKA(0.0);
 
     private static final ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT_TYPEAlphabot = ClosedLoopOutputType.Voltage;
-    private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT_TYPEAlphabot = ClosedLoopOutputType.TorqueCurrentFOC;
+    private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT_TYPEAlphabot = ClosedLoopOutputType.Voltage;
     
     private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> ConstantCreatorAlphabot =
         new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>()
