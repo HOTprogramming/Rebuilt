@@ -64,14 +64,9 @@ public class RobotContainer {
           Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0);
         }
       ));
-
-       driver.a().onTrue(Commands.sequence(m_intake.extendLeftIntake(), m_intake.retractRightIntake()));
-       driver.b().toggleOnTrue(Commands.sequence(m_intake.extendRightIntake(), m_intake.retractLeftIntake()));
-      //driver.a().whileTrue(m_intake.test());
-      //driver.b().whileTrue(m_intake.extendRightIntake()).whileFalse(m_intake.retractRightIntake());
-      //driver.leftBumper().whileTrue(m_intake.expelLeftIntake()).whileFalse(m_intake.turnOffLeftExpel());
-      //driver.rightBumper().whileTrue(m_intake.expelRightIntake()).whileFalse(m_intake.turnOffRightExpel());
-      //driver.a().toggleOnTrue(m_Lights.setRed());
+      //driver.a().toggleOnTrue(m_intake.extendLeftIntake()).toggleOnFalse(m_intake.retractLeftIntake());
+      //driver.b().toggleOnTrue(m_intake.expelLeftIntake()).toggleOnFalse(m_intake.turnOffLeftExpel());
+        driver.a().toggleOnTrue(m_Lights.setGreen());
       //driver.b().toggleOnTrue(m_Lights.setViolet());
       //driver.x().toggleOnTrue(m_Lights.setFire());
   }
