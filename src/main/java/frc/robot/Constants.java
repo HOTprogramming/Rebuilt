@@ -28,27 +28,11 @@ public final class Constants {
   }
 
   public enum RobotType {
-      SIMBOT,
-      DEVBOT,
       CAMERABOT,
       COMPBOT,
       COMP24,
       COMP25,
       MINIBOT,
-      ALPHABOT,
+      ALPHABOT
     }
-
-  public static boolean disableHAL = false;
-
-  public static void disableHAL() {
-    disableHAL = true;
-  }
-
-  /** Checks whether the correct robot is selected when deploying. */
-  public static void main(String... args) {
-    if (robotType == RobotType.SIMBOT) {
-      System.err.println("Cannot deploy, invalid robot selected: " + robotType);
-      System.exit(1);
-    }
-  }
 }
