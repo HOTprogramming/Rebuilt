@@ -39,8 +39,6 @@ public class Robot extends TimedRobot {
 
   private boolean ppConfigured = false;
 
-  private Command initAuto;
-
   private static final double SIM_DISABLED_SECONDS = 10;
   private static final double SIM_AUTO_SECONDS = 10;
   private static final double SIM_TELEOP_SECONDS = 10;
@@ -60,6 +58,7 @@ public class Robot extends TimedRobot {
     /*Start Logging */
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
+	DriverStation.silenceJoystickConnectionWarning(true);
   
     /*Create Robot Contrainer */
     m_robotContainer = new RobotContainer();
@@ -69,9 +68,6 @@ public class Robot extends TimedRobot {
     matchTimeEntry = tab.add("Match time",0.0).getEntry();
     voltsEntry = tab.add("Volts",0.0).getEntry();
     ampsEntry = tab.add("Amps",0.0).getEntry();
-
-    /* Create a default auto to initialize Path Planner  */
-    initAuto = new PathPlannerAuto("initAuto").ignoringDisable(true);
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table = inst.getTable("HOT/Drive");
@@ -104,7 +100,6 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     /* Fire off the Pathplanner Auto to initialize Path Planner (Work around a bug) */
     if (!ppConfigured) {
-      initAuto.schedule();
       ppConfigured = true;
     }
     
@@ -120,7 +115,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledExit() {
     /*Clear our the fake Path Planner Auto Initialize  */
-    initAuto.cancel();
   }
 
   @Override
@@ -130,7 +124,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = Commands.waitSeconds(0.01).andThen(m_robotContainer.getAutonomousCommand());
 
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 
