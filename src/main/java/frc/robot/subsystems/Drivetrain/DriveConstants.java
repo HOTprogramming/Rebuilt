@@ -38,7 +38,6 @@ public class DriveConstants {
     public static final double auto_align_lights_tolerance = Units.inchesToMeters(1.5);
     public static final double auto_align_command = 0.035;
 
-    public static final double distance_safe_from_reef = 1.1;
     public static final double feild_center_line = 4.025;
 
     private static final PIDConstants autoPidConstantsTranslation = new PIDConstants(5, 0, 0);
@@ -53,80 +52,6 @@ public class DriveConstants {
     public static final TrapezoidProfile.Constraints DEFAULT_XY_CONSTRAINTS = new TrapezoidProfile.Constraints(
         kSpeedAt12Volts.in(MetersPerSecond),
         5);
-
-    public static final Map<Rotation2d, Pose2d> redPoses = new HashMap<>() {
-        {
-            put(Rotation2d.fromDegrees(0), new Pose2d(12.23, 4.03, Rotation2d.fromDegrees(0)));
-            put(Rotation2d.fromDegrees(60), new Pose2d(12.64, 3.31, Rotation2d.fromDegrees(60)));
-            put(Rotation2d.fromDegrees(120), new Pose2d(13.47, 3.31, Rotation2d.fromDegrees(120)));
-            put(Rotation2d.fromDegrees(180), new Pose2d(13.89, 4.03, Rotation2d.fromDegrees(180)));
-            put(Rotation2d.fromDegrees(-120), new Pose2d(13.47, 4.75, Rotation2d.fromDegrees(-120)));
-            put(Rotation2d.fromDegrees(-60), new Pose2d(12.64, 4.75, Rotation2d.fromDegrees(-60))); 
-        }
-    };
-
-    public static final Map<Rotation2d, Pose2d> bluePoses = new HashMap<>() {
-        {
-            put(Rotation2d.fromDegrees(0), new Pose2d(3.66, 4.03, Rotation2d.fromDegrees(0)));
-            put(Rotation2d.fromDegrees(60), new Pose2d(4.07, 3.31, Rotation2d.fromDegrees(60)));
-            put(Rotation2d.fromDegrees(120), new Pose2d(4.9, 3.31, Rotation2d.fromDegrees(120)));
-            put(Rotation2d.fromDegrees(180), new Pose2d(5.32, 4.03, Rotation2d.fromDegrees(180)));
-            put(Rotation2d.fromDegrees(-120), new Pose2d(4.90, 4.75, Rotation2d.fromDegrees(-120)));
-            put(Rotation2d.fromDegrees(-60), new Pose2d(4.07,4.75, Rotation2d.fromDegrees(-60))); 
-        }
-    };
-    // //                                  COMP GAINS
-    // public static final Map<Rotation2d, Double[]> redPoleShift = new HashMap<>() {
-    //     {   //                                                  left center right
-    //         put(Rotation2d.fromDegrees(0), new Double[] {6.0, -1.6, -6.0});
-    //         put(Rotation2d.fromDegrees(60), new Double[] {6.0, -1.6,  -6.0});
-    //         put(Rotation2d.fromDegrees(120), new Double[] {6.0, -1.6,  -6.0});
-    //         put(Rotation2d.fromDegrees(180), new Double[] {6.2, -1.6, -6.5});
-    //         put(Rotation2d.fromDegrees(-120), new Double[] {6.0, -1.6, -6.0});
-    //         put(Rotation2d.fromDegrees(-60), new Double[] {6.0, -1.6,  -6.0});
-    //     }
-    // };
-
-    // public static final Map<Rotation2d, Double[]> bluePoleShift = new HashMap<>() {
-    //     {   //                                                  left center right
-    //         put(Rotation2d.fromDegrees(0), new Double[] {6.0, -0.25, -6.0}); // left maybe -
-    //         put(Rotation2d.fromDegrees(60), new Double[] {6.0, -0.25,  -6.5});
-    //         put(Rotation2d.fromDegrees(120), new Double[] {6.0, -0.25, -6.2});
-    //         put(Rotation2d.fromDegrees(180), new Double[] {6.0, -0.25,  -6.0});
-    //         put(Rotation2d.fromDegrees(-120), new Double[] {6.0, -0.25, -6.3});
-    //         put(Rotation2d.fromDegrees(-60), new Double[] {6.5, -0.25, -6.0});
-    //     }
-    // };
-
-    public static final double robotToReefTagFace = 0.39;
-
-    //                             GM GAINS
-    public static final Map<Rotation2d, Double[]> redPoleShift = new HashMap<>() {
-        {   //                                                  left center right
-            put(Rotation2d.fromDegrees(0), new Double[] {6.75, -0.25, -6.0});
-            put(Rotation2d.fromDegrees(60), new Double[] {8.0, -0.25,  -7.0});
-            put(Rotation2d.fromDegrees(120), new Double[] {5.0, -0.25, -8.0});
-            put(Rotation2d.fromDegrees(180), new Double[] {6.0, -0.25, -7.5});
-            put(Rotation2d.fromDegrees(-120), new Double[] {6.5, -0.25, -7.0});
-            put(Rotation2d.fromDegrees(-60), new Double[] {5.5, -1.25, -8.0});
-        }
-    };
-
-    public static final Map<Rotation2d, Double[]> bluePoleShift = new HashMap<>() {
-        {   //                                                  left center right
-            put(Rotation2d.fromDegrees(0), new Double[] {6.0, -0.25, -7.5});
-            put(Rotation2d.fromDegrees(60), new Double[] {6.25, -0.25, -8.0});
-            put(Rotation2d.fromDegrees(120), new Double[] {5.5, -0.25, -8.0});
-            put(Rotation2d.fromDegrees(180), new Double[] {7.0, -0.25, -6.0});
-            put(Rotation2d.fromDegrees(-120), new Double[] {8.5, -0.25,  -7.0});
-            put(Rotation2d.fromDegrees(-60), new Double[] {5.0, -0.25, -8.0});
-        }
-    };
-
-    public static final Pose2d BLUE_REEF = new Pose2d(4.483, 4.025, Rotation2d.fromDegrees(0));
-    public static final Pose2d RED_REEF = new Pose2d(13.066, 4.025, Rotation2d.fromDegrees(0));
-    public static final double OFFSET_TO_RED = 8.583;
-    public static final Pose2d REEF_CENTER = new Pose2d(4.483, 4.025, Rotation2d.fromDegrees(0));
 
 
     // The closed-loop output type to use for the steer motors;
@@ -1372,18 +1297,5 @@ public class DriveConstants {
         PIDConstants AUTON_ROTATION_PID,
         PIDConstants TELEOP_ROTATION_PID
         ) {}
-
-        //Comp Gains:
-        // public static final double bargePosRedFar = 9.925;
-        // public static final double bargePosRedClose = 9.75;
-        // public static final double bargePosBlueFar = 7.86;
-        // public static final double bargePosBlueClose = 7.685;
-
-        //GM Gains:
-        public static final double bargePosRedFar = 10.0;
-        public static final double bargePosRedClose = 9.75;
-        public static final double bargePosBlueFar = 7.86;
-        public static final double bargePosBlueClose = 7.61;
-
-
+        
 }
