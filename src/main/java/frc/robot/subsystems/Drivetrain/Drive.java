@@ -331,5 +331,9 @@ public Command resetControllers() {
     private void setPose(Pose2d pose) {
         this.driveKraken.seedFieldRelative(pose);
     }
+
+    public Pose2d getPose() {
+        return this.iOdata.state.Pose;
+    }
 }
 
