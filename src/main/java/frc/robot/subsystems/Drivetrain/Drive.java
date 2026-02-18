@@ -214,8 +214,8 @@ public class Drive extends SubsystemBase {
     }
 
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-        rampedX = driveX;//xLimiter.calculate(driveX); 
-        rampedY = driveY;//yLimiter.calculate(driveY);    
+        rampedX = xLimiter.calculate(driveX); 
+        rampedY = yLimiter.calculate(driveY);    
         rampedTheta = rotLimiter.calculate(driveTheta); 
 
         driveKraken.setSwerveRequest(FIELD_CENTRIC
