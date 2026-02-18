@@ -1,4 +1,4 @@
-package frc.robot.sim;
+package frc.util.sim;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -9,7 +9,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.sim.PhysicsSimWithCan.SimProfile;
+import frc.util.sim.PhysicsSimWithCan.SimProfile;
 
 /**
  * Holds information about a simulated TalonFX.
