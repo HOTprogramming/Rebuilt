@@ -8,8 +8,13 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import org.json.simple.parser.ParseException;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -61,6 +66,8 @@ public class RobotContainer {
     climber = new Climber();
 
     configureBindings();
+
+    //NamedCommands.registerCommand("Test Override", drivetrain.testOverride()); 
   }
 
   private void configureBindings() {   
@@ -79,12 +86,37 @@ public class RobotContainer {
         Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
     )));
 
-    driver.b().whileTrue(drivetrain.run(()->
-      drivetrain.lockRotation(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-        new Rotation2d(Math.PI/4)
-    )));
+    driver.b().whileTrue(drivetrain.run(()-> {
+      double rot = drivetrain.getPose().getRotation().getDegrees(); //robot angle, from -180 to 180
+      double fact; //factor to multiply PI/4 radians by to get the nearest 45 degree angle.
+      if (Math.abs(rot) > 90) { //This way of calculating fact reduces if statements.
+        fact = 3; //The absolute value of the correct angle is 3PI/4 (or 135 degrees), so fact is 3
+      } else {
+        fact = 1; //The absolute value of the correct angle is PI/4 (or 45 degrees), so fact is 1
+      }
+
+      if (rot < 0) {
+        fact *= -1; //Correct side of the robot
+      }
+      
+      drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+      Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+      new Rotation2d(Math.PI/4 * fact));
+    }));
+
+    driver.x() .whileTrue(
+        AutoBuilder.pathfindToPose(
+            new Pose2d(8.296, 4.061, Rotation2d.fromDegrees(0)), 
+            new PathConstraints(5.0, 3.0, 3.14, 6.28), 
+            0.0 // Goal end velocity
+        )
+    );
+
+    //translate to Y target on button press
+     driver.y().whileTrue(drivetrain.run(()->
+      drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        new Rotation2d(3.142)
+    )).beforeStarting(drivetrain.resetControllers()));
 
     // Shooter Controls
 
