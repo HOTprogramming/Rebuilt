@@ -483,23 +483,23 @@ public class DriveConstants {
     // Simulated voltage necessary to overcome friction
     private static final double kSteerFrictionVoltageAlphabot = 0.2;
     private static final double kDriveFrictionVoltageAlphabot = 0.2;   
-    private static final double kSlipCurrentAlphabot = 300.0; // *tune later
+    private static final double kSlipCurrentAlphabot = 120.0; // *tune later
 
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGainsAlphabot = new Slot0Configs()
-        .withKP(100).withKI(0).withKD(0.5)
-        .withKS(0.1).withKV(1.16).withKA(0)
-        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+        .withKP(150).withKI(0).withKD(.5)
+        .withKS(.1).withKV(1.5).withKA(0)
+     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
         ;
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     private static final Slot0Configs driveGainsAlphabot = new Slot0Configs()
         .withKP(0.1).withKI(0).withKD(0)
-        .withKS(0.0).withKV(0.124).withKA(0.0);
+        .withKS(0).withKV(.124).withKA(0.0);
 
     private static final ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT_TYPEAlphabot = ClosedLoopOutputType.Voltage;
-    private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT_TYPEAlphabot = ClosedLoopOutputType.TorqueCurrentFOC;
+    private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT_TYPEAlphabot = ClosedLoopOutputType.Voltage;
     
     private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> ConstantCreatorAlphabot =
         new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>()
