@@ -265,22 +265,6 @@ public class IntakeConstants {
              RightIntakeEncoderConfigs,
              LeftIntakeEncoderConfigs
             );
-            case SIMBOT -> new IntakeConfigs(
-             LeftRollerConfigs,
-             RightRollerConfigs,
-             LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs,
-             RightIntakeEncoderConfigs,
-             LeftIntakeEncoderConfigs
-            );
-            case DEVBOT -> new IntakeConfigs(
-             LeftRollerConfigs,
-             RightRollerConfigs,
-             LeftIntakeExtendConfigs,
-             RightIntakeExtendConfigs,
-             RightIntakeEncoderConfigs,
-             LeftIntakeEncoderConfigs
-            );
             case CAMERABOT -> new IntakeConfigs( 
              LeftRollerConfigs,
              RightRollerConfigs,

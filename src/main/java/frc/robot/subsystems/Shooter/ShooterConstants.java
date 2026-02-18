@@ -106,12 +106,6 @@ public class ShooterConstants {
             case COMPBOT -> new ShooterConfigs(
                 shooterMotorConfigs, hoodMotorConfigs
             );
-            case SIMBOT -> new ShooterConfigs(
-                shooterMotorConfigs, hoodMotorConfigs 
-            );
-            case DEVBOT -> new ShooterConfigs(
-                shooterMotorConfigs, hoodMotorConfigs
-            );
             case CAMERABOT -> new ShooterConfigs( 
                 shooterMotorConfigs, hoodMotorConfigs
             );
