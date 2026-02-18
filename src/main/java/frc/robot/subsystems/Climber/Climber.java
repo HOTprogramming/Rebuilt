@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
     private final ClimberStats ioStats = new ClimberStats();
-    private final ClimberKraken m_ClimbKraken = ClimberKraken.getInstance();
+    public final ClimberKraken m_ClimbKraken = ClimberKraken.getInstance();
 
 
     private DoublePublisher climberPosition;
@@ -26,6 +26,7 @@ public class Climber extends SubsystemBase {
     private DoublePublisher spinnerSupplyCurrent;
     private DoublePublisher spinnerTorqueCurrent;
     private DoublePublisher spinnerTemp;
+    
 
 
     class ClimberStats {

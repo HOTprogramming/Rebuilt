@@ -20,7 +20,7 @@ jobs:
           # Define your configuration here
           FILE_PATH="src/main/java/frc/robot/Constants.java"
           VAR_NAME="robotType"
-          EXPECTED_VALUE="RobotType.COMPBOT"
+          EXPECTED_VALUE="RobotType.ALPHABOT"
 
           echo "Checking $FILE_PATH for $VAR_NAME = $EXPECTED_VALUE..."
 

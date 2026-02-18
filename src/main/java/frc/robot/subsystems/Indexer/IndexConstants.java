@@ -14,11 +14,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class IndexConstants {
-    public static int kLeftKickID = 18; //IMPORTANT
-    public static int kRightKickID = 14; //IMPORTANT
-    public static int kFloorID = 0; //IMPORTANT
-    public static int kLoaderID = 0; //IMPORTANT
-    public static String kBusName = "rio"; //IMPORTvwe2ANT
+    public static int kLeftKickID = 14; //IMPORTANT
+    public static int kRightKickID = 15; //IMPORTANT
+    public static int kFloorID = 9; //IMPORTANT
+    public static int kLoaderID = 13; //IMPORTANT
+    public static String kBusName = Constants.canName; //IMPORTANT
     public static double kickerSpeed = 1000; //IMPORTANT
     public static double floorSpeed = 300; //IMPORTANT
     public static double loaderSpeed = 1000; //IMPORTANT
@@ -27,9 +27,9 @@ public class IndexConstants {
     public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(40)
+                .withStatorCurrentLimit(80)
                 .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(40)
+                .withSupplyCurrentLimit(80)
                 .withSupplyCurrentLimitEnable(true)
                 .withSupplyCurrentLowerLimit(30)
                 .withSupplyCurrentLowerTime(1)
@@ -105,10 +105,6 @@ public class IndexConstants {
             case ALPHABOT -> new IndexConfigs( 
                 indexWheelConfigs 
             );
-            case COMP26 -> new IndexConfigs( 
-                indexWheelConfigs 
-            );
-
         };
 
 
