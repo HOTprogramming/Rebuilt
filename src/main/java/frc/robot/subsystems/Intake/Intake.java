@@ -1,134 +1,118 @@
 package frc.robot.subsystems.Intake;
 
-import static frc.robot.subsystems.Lights.LightsConstants.m_clearAllAnims;
-
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Lights.Lights;
 
-public class Intake extends SubsystemBase{
-    private final IntakeKraken mIntakeKraken = IntakeKraken.getInstance();
-    private Lights m_Lights = Lights.getInstance();
-    private final IntakeStats ioStats = new IntakeStats();
+public class Intake extends SubsystemBase {
+	private final IntakeKraken mIntakeKraken = IntakeKraken.getInstance();
+	private final IntakeStats ioStats = new IntakeStats();
 
-    private DoublePublisher ExtendPosition;
-    private DoublePublisher ExtendVelocity;
-    private DoublePublisher ExtendAppliedVolts;
-    private DoublePublisher ExtendSupplyCurrent;
-    private DoublePublisher ExtendTorqueCurrent;
-    private DoublePublisher ExtendTemp;
+	private DoublePublisher ExtendPosition;
+	private DoublePublisher ExtendVelocity;
+	private DoublePublisher ExtendAppliedVolts;
+	private DoublePublisher ExtendSupplyCurrent;
+	private DoublePublisher ExtendTorqueCurrent;
+	private DoublePublisher ExtendTemp;
 
-    private DoublePublisher RollerPosition;
-    private DoublePublisher RollerVelocity;
-    private DoublePublisher RollerAppliedVolts;
-    private DoublePublisher RollerSupplyCurrent;
-    private DoublePublisher RollerTorqueCurrent;
-    private DoublePublisher RollerTemp;
- 
-    public Intake() {
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        NetworkTable table = inst.getTable("HOT/Intake");
+	private DoublePublisher RollerPosition;
+	private DoublePublisher RollerVelocity;
+	private DoublePublisher RollerAppliedVolts;
+	private DoublePublisher RollerSupplyCurrent;
+	private DoublePublisher RollerTorqueCurrent;
+	private DoublePublisher RollerTemp;
 
-        ExtendVelocity = table.getDoubleTopic("ExtendVelocity-Motor (rot per s)").publish();
-        ExtendPosition = table.getDoubleTopic("ExtendPosition-Motor (rot)").publish();
-        ExtendSupplyCurrent = table.getDoubleTopic("ExtendSupply Current").publish();
-        ExtendTorqueCurrent = table.getDoubleTopic("ExtendTorque Current").publish();
-        ExtendTemp = table.getDoubleTopic("ExtendMotor Temp").publish();
-        ExtendAppliedVolts = table.getDoubleTopic("ExtendApplied Volts").publish();
+	public Intake() {
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
+		NetworkTable table = inst.getTable("HOT/Intake");
 
-        RollerVelocity = table.getDoubleTopic("RollerVelocity-Motor (rot per a)").publish();
-        RollerPosition = table.getDoubleTopic("RollerPosition-Motor (rot)").publish();
-        RollerSupplyCurrent = table.getDoubleTopic("RollerSupply Current").publish();
-        RollerTorqueCurrent = table.getDoubleTopic("RollerTorque Current").publish();
-        RollerTemp = table.getDoubleTopic("RollerMotor Temp").publish();
-        RollerAppliedVolts = table.getDoubleTopic("RollerApplied Volts").publish();
+		ExtendVelocity = table.getDoubleTopic("ExtendVelocity-Motor (rot per s)").publish();
+		ExtendPosition = table.getDoubleTopic("ExtendPosition-Motor (rot)").publish();
+		ExtendSupplyCurrent = table.getDoubleTopic("ExtendSupply Current").publish();
+		ExtendTorqueCurrent = table.getDoubleTopic("ExtendTorque Current").publish();
+		ExtendTemp = table.getDoubleTopic("ExtendMotor Temp").publish();
+		ExtendAppliedVolts = table.getDoubleTopic("ExtendApplied Volts").publish();
 
-    }
-    @Override
-    public void periodic() {
-        mIntakeKraken.updateStats(ioStats);
-        UpdateTelemetry();
-    }
-    private double roundTo1Decimal(double number) {
-        return Math.round(number * 10.0)/10.0;
-    }
+		RollerVelocity = table.getDoubleTopic("RollerVelocity-Motor (rot per a)").publish();
+		RollerPosition = table.getDoubleTopic("RollerPosition-Motor (rot)").publish();
+		RollerSupplyCurrent = table.getDoubleTopic("RollerSupply Current").publish();
+		RollerTorqueCurrent = table.getDoubleTopic("RollerTorque Current").publish();
+		RollerTemp = table.getDoubleTopic("RollerMotor Temp").publish();
+		RollerAppliedVolts = table.getDoubleTopic("RollerApplied Volts").publish();
+	}
 
-    private void UpdateTelemetry() {
-        ExtendVelocity.set(roundTo1Decimal(ioStats.ExtendVelocityRpm));
-        ExtendPosition.set(roundTo1Decimal(ioStats.ExtendPositionRads));
-        ExtendSupplyCurrent.set(roundTo1Decimal(ioStats.ExtendSupplyCurrentAmps));
-        ExtendTorqueCurrent.set(roundTo1Decimal(ioStats.ExtendTorqueCurrentAmps));
-        ExtendAppliedVolts.set(roundTo1Decimal(ioStats.ExtendAppliedVolts));
-        ExtendTemp.set(roundTo1Decimal(ioStats.ExtendTempCelsius));
+	@Override
+	public void periodic() {
+		mIntakeKraken.updateStats(ioStats);
 
-        RollerVelocity.set(roundTo1Decimal(ioStats.RollerVelocityRpm));
-        RollerPosition.set(roundTo1Decimal(ioStats.RollerPositionRads));
-        RollerSupplyCurrent.set(roundTo1Decimal(ioStats.RollerSupplyCurrentAmps));
-        RollerTorqueCurrent.set(roundTo1Decimal(ioStats.RollerTorqueCurrentAmps));
-        RollerAppliedVolts.set(roundTo1Decimal(ioStats.RollerAppliedVolts));
-        RollerTemp.set(roundTo1Decimal(ioStats.RollerTempCelsius));
+		UpdateTelemetry();
+	}
 
-    }
+	private double roundTo1Decimal(double number) {
+		return Math.round(number * 10.0) / 10.0;
+	}
 
-    /******************************************************************************************
-     * COMMANDS 
-     * @return a command 
-     ******************************************************************************************/
+	private void UpdateTelemetry() {
+		ExtendVelocity.set(roundTo1Decimal(ioStats.ExtendVelocityRpm));
+		ExtendPosition.set(roundTo1Decimal(ioStats.ExtendPositionRads));
+		ExtendSupplyCurrent.set(roundTo1Decimal(ioStats.ExtendSupplyCurrentAmps));
+		ExtendTorqueCurrent.set(roundTo1Decimal(ioStats.ExtendTorqueCurrentAmps));
+		ExtendAppliedVolts.set(roundTo1Decimal(ioStats.ExtendAppliedVolts));
+		ExtendTemp.set(roundTo1Decimal(ioStats.ExtendTempCelsius));
 
-    public Command extendLeftIntake() {
-        return runOnce(() ->
-        {
-            mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition,1);
-            mIntakeKraken.runVelocity(IntakeConstants.kIntake,1);
-            m_Lights.setGreen();
-        });
-    }
-     public Command retractLeftIntake() {
-        return runOnce(() ->
-        {
-            mIntakeKraken.runPosition(IntakeConstants.kRetractPosition,1);
-            m_Lights.setRed();
-            mIntakeKraken.stop();
-        });
-    }
-    public Command expelLeftIntake() {
-        return runOnce(() ->
-          {
-            mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition,1);
-            mIntakeKraken.runVelocity(IntakeConstants.kExpel,1);
-        });
-    } 
-    public Command turnOffLeftExpel() {
-        return runOnce(() ->
-          {
-            mIntakeKraken.stop();
-        });
-    }
+		RollerVelocity.set(roundTo1Decimal(ioStats.RollerVelocityRpm));
+		RollerPosition.set(roundTo1Decimal(ioStats.RollerPositionRads));
+		RollerSupplyCurrent.set(roundTo1Decimal(ioStats.RollerSupplyCurrentAmps));
+		RollerTorqueCurrent.set(roundTo1Decimal(ioStats.RollerTorqueCurrentAmps));
+		RollerAppliedVolts.set(roundTo1Decimal(ioStats.RollerAppliedVolts));
+		RollerTemp.set(roundTo1Decimal(ioStats.RollerTempCelsius));
+	}
+
+	public Command extend() {
+		return runOnce(() -> {
+			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+		});
+	}
+
+	public Command retract() {
+		return runOnce(() -> {
+			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
+			mIntakeKraken.stop();
+		});
+	}
+
+	public Command expel() {
+		return runOnce(() -> {
+			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
+			mIntakeKraken.runVelocity(IntakeConstants.kExpelSpeed);
+		});
+	}
+
+	public Command stop() {
+		return runOnce(() -> {
+			mIntakeKraken.stop();
+		});
+	}
 }
 
-    class IntakeStats {
-    //Stats for the Intake/Expel Motor  
-    public boolean MotorConnected = true;    
-    public double ExtendPositionRads = 0.0;
-    public double ExtendVelocityRpm = 0.0;
-    public double ExtendAppliedVolts = 0.0;
-    public double ExtendSupplyCurrentAmps = 0.0;
-    public double ExtendTorqueCurrentAmps = 0.0;
-    public double ExtendTempCelsius = 0.0;   
+class IntakeStats {
+	public boolean MotorConnected = true;
+	public double ExtendPositionRads = 0.0;
+	public double ExtendVelocityRpm = 0.0;
+	public double ExtendAppliedVolts = 0.0;
+	public double ExtendSupplyCurrentAmps = 0.0;
+	public double ExtendTorqueCurrentAmps = 0.0;
+	public double ExtendTempCelsius = 0.0;
 
-    //Stats for the Intake/Expel Motor     
-    public double RollerPositionRads = 0.0;
-    public double RollerVelocityRpm = 0.0;
-    public double RollerAppliedVolts = 0.0;
-    public double RollerSupplyCurrentAmps = 0.0;
-    public double RollerTorqueCurrentAmps = 0.0;
-    public double RollerTempCelsius = 0.0;
-    public double IntakeEncoderVelocity;
-    public double IntakeEncoderPosition;     
-    }
+	public double RollerPositionRads = 0.0;
+	public double RollerVelocityRpm = 0.0;
+	public double RollerAppliedVolts = 0.0;
+	public double RollerSupplyCurrentAmps = 0.0;
+	public double RollerTorqueCurrentAmps = 0.0;
+	public double RollerTempCelsius = 0.0;
+	public double IntakeEncoderVelocity;
+	public double IntakeEncoderPosition;
+}

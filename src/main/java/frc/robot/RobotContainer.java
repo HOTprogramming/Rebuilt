@@ -29,7 +29,7 @@ import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
-//import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.Intake;
 
 public class RobotContainer {
   SendableChooser<String> Autos = new SendableChooser<>();
@@ -41,6 +41,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Index indexer;
   private final Climber climber;
+  private final Intake intake;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -64,6 +65,7 @@ public class RobotContainer {
     shooter = new Shooter();
     indexer = new Index();
     climber = new Climber();
+	intake = new Intake();
 
     configureBindings();
 
@@ -131,6 +133,9 @@ public class RobotContainer {
 
     // Climber Controls
     climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
+
+	// Intake Controls
+	operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
 
     NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
