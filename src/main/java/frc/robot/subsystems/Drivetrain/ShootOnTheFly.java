@@ -1,0 +1,175 @@
+package frc.robot.subsystems.Drivetrain;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
+public class ShootOnTheFly {
+    private static double minDistance;
+    private static double maxDistance;
+    private static double TOF_CONVERGENCE_THRESHOLD;
+    private static int MAX_ITERATIONS;
+        
+    private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
+    private static final InterpolatingTreeMap<Double, Rotation2d> shotHoodAngleMap =
+        new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Rotation2d::interpolate);
+    private static final InterpolatingDoubleTreeMap shotFlywheelSpeedMap =
+        new InterpolatingDoubleTreeMap();
+    LinearFilter vxfilt = LinearFilter.movingAverage(8);
+    LinearFilter vyfilt = LinearFilter.movingAverage(8);
+
+    static {
+
+    minDistance = 1.34;
+    maxDistance = 5.60;
+    TOF_CONVERGENCE_THRESHOLD = 0.025;
+    MAX_ITERATIONS = 10;
+
+    shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0));
+    shotHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
+    shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
+    shotHoodAngleMap.put(2.81, Rotation2d.fromDegrees(27.0));
+    shotHoodAngleMap.put(3.82, Rotation2d.fromDegrees(29.0));
+    shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(30.0));
+    shotHoodAngleMap.put(4.40, Rotation2d.fromDegrees(31.0));
+    shotHoodAngleMap.put(4.77, Rotation2d.fromDegrees(32.0));
+    shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(32.0));
+    shotHoodAngleMap.put(5.60, Rotation2d.fromDegrees(35.0));
+
+    shotFlywheelSpeedMap.put(1.34, 210.0);
+    shotFlywheelSpeedMap.put(1.78, 220.0);
+    shotFlywheelSpeedMap.put(2.17, 220.0);
+    shotFlywheelSpeedMap.put(2.81, 230.0);
+    shotFlywheelSpeedMap.put(3.82, 250.0);
+    shotFlywheelSpeedMap.put(4.09, 255.0);
+    shotFlywheelSpeedMap.put(4.40, 260.0);
+    shotFlywheelSpeedMap.put(4.77, 265.0);
+    shotFlywheelSpeedMap.put(5.57, 275.0);
+    shotFlywheelSpeedMap.put(5.60, 290.0);
+
+    timeOfFlightMap.put(7.0, 1.5);
+    timeOfFlightMap.put(5.68, 1.16);
+    timeOfFlightMap.put(4.55, 1.12);
+    timeOfFlightMap.put(3.15, 1.11);
+    timeOfFlightMap.put(1.88, 1.09);
+    timeOfFlightMap.put(1.38, 0.90);
+    timeOfFlightMap.put(1.0, 0.70);    
+    }
+
+    
+    
+    public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
+        double latency = 0.1; //needs to be tuned, in seconds
+        ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
+        double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
+        double vy_filt = vyfilt.calculate(fieldSpeeds.vyMetersPerSecond) ;
+
+        Translation2d releasePos = RobotPos.getTranslation().plus(
+            new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency)
+        );
+
+
+        double goalX;
+        if (allyRed) {
+            goalX = 11.91; //Red hub x
+        } else {
+            goalX = 4.63; //Blue hub x
+        }
+
+        Translation2d goalLocation = new Translation2d(goalX, 4.03); //4.03 is both hubs' y pos
+        Translation2d targetVec = goalLocation.minus(releasePos);
+        double dist = targetVec.getNorm();
+        Translation2d targetDirection = targetVec.div(dist); 
+        
+        //double idealHorizontalSpeed = 5; old code
+        double initialToF = timeOfFlightMap.get(dist);
+        double idealHorizontalSpeed = dist / initialToF;
+
+        Translation2d targetVelocity = targetDirection.times(idealHorizontalSpeed);
+        
+        Translation2d robotVelVec = new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+        Translation2d shotVec = targetVec.div(dist).times(idealHorizontalSpeed).minus(robotVelVec);
+        Translation2d shotVelocity = targetVelocity.minus(robotVelVec);
+
+        //Rotation2d turretRotation = shotVelocity.getAngle();
+        double requiredVelocity = shotVelocity.getNorm();
+        //double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+
+        Translation2d aimPoint = releasePos.plus(
+            shotVelocity.div(shotVelocity.getNorm()).times(dist)
+        );
+
+        /* Old code for non-iterative solution, aiming at the current position of the goal
+        Translation2d aimPoint = releasePos.plus(
+            shotVec.div(shotVec.getNorm()).times(dist)
+        );
+        */
+
+        double newHorizontalSpeed = shotVelocity.getNorm();
+
+        double totalExitVelocity = 15; //In m/s, needs to be measured when we get robot
+        double ratio = Math.min(newHorizontalSpeed / totalExitVelocity, 1.0);
+        double newPitch = Math.acos(ratio);
+        
+
+        //position-based shooting solution with iterative TOF solver
+        //Use chassis speeds, distance and future pos estimate from above solution
+        // Account for imparted velocity by robot (turret) to offset
+        int i;
+        double timeOfFlight = 0;
+        double lastTimeOfFlight = 0;
+        Translation2d lookaheadPos = releasePos;
+        double lookaheadToTargetDistance = dist;
+        
+        for (i = 0; i < 10; i++) {
+            timeOfFlight = timeOfFlightMap.get(lookaheadToTargetDistance);
+
+            // Exit if ToF has converged
+            if (Math.abs(timeOfFlight - lastTimeOfFlight) < TOF_CONVERGENCE_THRESHOLD) break;
+            lastTimeOfFlight = timeOfFlight;
+            
+            // Predict future robot position at time of impact
+            double offsetX =  vx_filt * timeOfFlight;
+            double offsetY = vy_filt * timeOfFlight;
+            lookaheadPos = releasePos.plus(new Translation2d(offsetX, offsetY));
+
+            // Update distance for next ToF lookup
+            lookaheadToTargetDistance = goalLocation.getDistance(lookaheadPos);
+        }
+
+        // Calculate "Virtual Target" (Iterative Aim Point) for visualization
+        // It's the Goal minus the Robot's displacement during flight
+        Translation2d robotDisplacement = lookaheadPos.minus(releasePos);
+        Translation2d aimPointIterative = goalLocation.minus(robotDisplacement);
+        
+        //Aim from the CURRENT position to the VIRTUAL target
+        Rotation2d turretRotation = goalLocation.minus(lookaheadPos).getAngle();
+        double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+        
+        SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
+        SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
+        SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
+        SmartDashboard.putNumber("SolverErr", Math.abs(timeOfFlight - lastTimeOfFlight));
+        SmartDashboard.putNumber("SolverLoops", i);
+        SmartDashboard.putNumber("Distance", dist);
+        SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
+        SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
+        SmartDashboard.putNumber("vx", fieldSpeeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("vy", fieldSpeeds.vyMetersPerSecond);
+        SmartDashboard.putNumber("vx_filtered", vx_filt);
+        SmartDashboard.putNumber("vy_filtered", vy_filt);
+        SmartDashboard.putNumber("Horiz Speed", newHorizontalSpeed);
+
+        return(turretAngle);
+
+    }
+}

@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.sim.PhysicsSim;
+import frc.robot.sim.PhysicsSimWithCan;
 
 
 public class IntakeKraken {
@@ -58,15 +59,14 @@ public class IntakeKraken {
   private final StatusSignal<Temperature> RollerTempCelsius;
 
   private static IntakeKraken instance = null;
-  private boolean isSimulation = false; 
 
-   /**************************************************************** 
-    * Change this variable to select which motor control feature runs 
-    *     0-means run Velocity Voltage Control Mode  
-    *     1-means run Velocity Torque Control Mode  
-    *     2-means run Motion Magic Voltage Control Mode  
-    *     3-means run Motion Magic Torque Control mode  
-    *****************************************************************/           
+  /**************************************************************** 
+  * Change this variable to select which motor control feature runs 
+  *     0-means run Velocity Voltage Control Mode  
+  *     1-means run Velocity Torque Control Mode  
+  *     2-means run Motion Magic Voltage Control Mode  
+  *     3-means run Motion Magic Torque Control mode  
+  *****************************************************************/           
   private int controlVel = 0;
   private int controlPos = 0;
   private StatusCode statuscode = null;
@@ -139,8 +139,9 @@ public class IntakeKraken {
   public static IntakeKraken getInstance() {
     return instance = instance == null ? new IntakeKraken() : instance;
   }
+
   public void updateStats(IntakeStats stats) {
-  if(isSimulation){
+    if(Utils.isSimulation()){
       PhysicsSim.getInstance().run();
     }
 
@@ -177,8 +178,6 @@ public class IntakeKraken {
     stats.RollerTorqueCurrentAmps = RollerTorqueCurrent.getValueAsDouble();
     stats.RollerTempCelsius = RollerTempCelsius.getValueAsDouble();
   }
-
-
 
   /***************************************************************************
   * The runVelocity function can run (based on the controlMode Variable either:

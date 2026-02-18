@@ -1,0 +1,86 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 12.998803418803417,
+        "y": 0.6499002849002864
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 11.546039645418967,
+        "y": 0.5926853657320167
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 10.126222589744154,
+        "y": 0.6499002849002864
+      },
+      "prevControl": {
+        "x": 10.66918015161391,
+        "y": 0.6171224793436565
+      },
+      "nextControl": {
+        "x": 9.533437997894183,
+        "y": 0.6856860984760544
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.98245743978183,
+        "y": 0.7785730205169261
+      },
+      "prevControl": {
+        "x": 9.206780782859974,
+        "y": 0.668214342787237
+      },
+      "nextControl": {
+        "x": 8.679887731439706,
+        "y": 0.9274259774829898
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.750240134679654,
+        "y": 1.6145553188847623
+      },
+      "prevControl": {
+        "x": 8.8011373602796,
+        "y": 1.1872466107113326
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Blow1.0"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 5.0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}
