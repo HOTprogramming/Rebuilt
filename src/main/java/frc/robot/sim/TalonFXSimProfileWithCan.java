@@ -2,6 +2,7 @@ package frc.robot.sim;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -14,28 +15,28 @@ import frc.robot.sim.PhysicsSimWithCan.SimProfile;
  * Holds information about a simulated TalonFX.
  */
 class TalonFXSimProfileWithCan extends SimProfile {
-    private static final double kMotorResistance = 0.002; // Assume 2mOhm resistance for voltage drop calculation
-    private final TalonFXSimState _talonFXSim;
-    private final CANcoder _canCoder;
-    private final double _gearRatio;
+	private static final double kMotorResistance = 0.002; // Assume 2mOhm resistance for voltage drop calculation
+	private final TalonFXSimState _talonFXSim;
+	private final CANcoderSimState _canCoderSimState;
+	private final double _gearRatio;
 
-    private final DCMotorSim _motorSim;
+	private final DCMotorSim _motorSim;
 
-    /**
-     * Creates a new simulation profile for a TalonFX device.
-     *
-     * @param talonFX
-     *                        The TalonFX device
-     * @param canCoder
-     *                        The CANcoder associated with the TalonFX
-     * @param gearRatio
-     *                        The gear ratio from the TalonFX to the mechanism
-     * @param rotorInertia
-     *                        Rotational Inertia of the mechanism at the rotor
-     */
-    public TalonFXSimProfileWithCan(final TalonFX talonFX, final CANcoder canCoder, final double gearRatio, final double rotorInertia) {
-        this._talonFXSim = talonFX.getSimState();
-        this._canCoder = canCoder;
+	/**
+	 * Creates a new simulation profile for a TalonFX device.
+	 *
+	 * @param talonFX
+	 *                        The TalonFX device
+	 * @param canCoder
+	 *                        The CANcoder associated with the TalonFX
+	 * @param gearRatio
+	 *                        The gear ratio from the TalonFX to the mechanism
+	 * @param rotorInertia
+	 *                        Rotational Inertia of the mechanism at the rotor
+	 */
+	public TalonFXSimProfileWithCan(final TalonFX talonFX, final CANcoder canCoder, final double gearRatio, final double rotorInertia) {
+		this._talonFXSim = talonFX.getSimState();
+		this._canCoderSimState = canCoder.getSimState();
         this._gearRatio = gearRatio;
 
         var gearbox = DCMotor.getKrakenX60Foc(1);
@@ -64,7 +65,7 @@ class TalonFXSimProfileWithCan extends SimProfile {
 
         _talonFXSim.setSupplyVoltage(12 - _talonFXSim.getSupplyCurrent() * kMotorResistance);
 
-        _canCoder.getSimState().setRawPosition(position_rot / _gearRatio);
-        _canCoder.getSimState().setVelocity(velocity_rps / _gearRatio);
+        _canCoderSimState.setRawPosition((position_rot / _gearRatio)/360.0);
+        _canCoderSimState.setVelocity((velocity_rps / _gearRatio)/360.0);
     }
 }
