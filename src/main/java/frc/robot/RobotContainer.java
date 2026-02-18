@@ -102,8 +102,35 @@ public class RobotContainer {
       drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
       Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
       new Rotation2d(Math.PI/4 * fact));
-      }
-    ));
+    }));
+
+    driver.x() .whileTrue(
+        AutoBuilder.pathfindToPose(
+            new Pose2d(8.296, 4.061, Rotation2d.fromDegrees(0)), 
+            new PathConstraints(5.0, 3.0, 3.14, 6.28), 
+            0.0 // Goal end velocity
+        )
+    );
+
+    //translate to Y target on button press
+     driver.y().whileTrue(drivetrain.run(()->
+      drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        new Rotation2d(3.142)
+    )).beforeStarting(drivetrain.resetControllers()));
+
+    // Shooter Controls
+
+    operator.povUp().onTrue(shooter.shootSpeedUp());
+    operator.povDown().onTrue(shooter.shootSpeedDown());
+    operator.a().onTrue(shooter.goToIdle());
+    operator.x().onTrue(shooter.goToShoot());
+    operator.b().onTrue(shooter.shooterOff());
+
+    // Indexer Controls
+    operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+
+    // Climber Controls
+    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
     NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
