@@ -22,8 +22,8 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
-import frc.robot.sim.PhysicsSim;
 import frc.robot.subsystems.Climber.Climber.ClimberStats;
+import frc.util.sim.PhysicsSim;
 
 public class ClimberKraken {
 
