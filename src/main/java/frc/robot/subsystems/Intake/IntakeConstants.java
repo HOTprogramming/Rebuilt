@@ -145,16 +145,6 @@ public class IntakeConstants {
              IntakeExtendConfigs,
              IntakeEncoderConfigs
             );
-            case SIMBOT -> new IntakeConfigs(
-             RollerConfigs,
-             IntakeExtendConfigs,
-             IntakeEncoderConfigs
-            );
-            case DEVBOT -> new IntakeConfigs(
-             RollerConfigs,
-             IntakeExtendConfigs,
-             IntakeEncoderConfigs
-            );
             case CAMERABOT -> new IntakeConfigs( 
              RollerConfigs,
              IntakeExtendConfigs,
@@ -171,6 +161,11 @@ public class IntakeConstants {
              IntakeEncoderConfigs
             );
             case MINIBOT -> new IntakeConfigs(
+             RollerConfigs,
+             IntakeExtendConfigs,
+             IntakeEncoderConfigs
+            );
+			case ALPHABOT -> new IntakeConfigs(
              RollerConfigs,
              IntakeExtendConfigs,
              IntakeEncoderConfigs

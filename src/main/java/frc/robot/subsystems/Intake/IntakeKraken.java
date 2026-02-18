@@ -130,7 +130,6 @@ public class IntakeKraken {
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
-      isSimulation = true; 
       PhysicsSim.getInstance().addTalonFX(m_Extend, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_Roller, 0.001);
       }
