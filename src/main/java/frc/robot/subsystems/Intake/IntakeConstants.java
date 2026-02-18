@@ -26,10 +26,10 @@ public class IntakeConstants {
 	public static double kExpelSpeed = -2000.0;
 	public static double kIntakeSpeed = 2000.0;
 
-	public static int kIntakeEncoderID = 0;
-	public static int kIntakeMotorIDExtend = 0;
-	public static int kIntakeMotorIDRoller = 0;
-	public static double kEncoderOffset = 0;
+	public static int kIntakeEncoderID = 60;
+	public static int kIntakeMotorIDExtend = 61;
+	public static int kIntakeMotorIDRoller = 62;
+	public static double kEncoderOffset = 63;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()

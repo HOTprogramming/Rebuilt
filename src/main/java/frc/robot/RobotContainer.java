@@ -121,7 +121,6 @@ public class RobotContainer {
     )).beforeStarting(drivetrain.resetControllers()));
 
     // Shooter Controls
-
     operator.povUp().onTrue(shooter.shootSpeedUp());
     operator.povDown().onTrue(shooter.shootSpeedDown());
     operator.a().onTrue(shooter.goToIdle());
