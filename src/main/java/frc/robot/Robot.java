@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.util.HubTracker;
+//import frc.util.HubTracker;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -79,12 +79,12 @@ public class Robot extends TimedRobot {
     timeRemainingInCurrentShift = table.getDoubleTopic("Hub Time Remaining").publish();
   }
 
-  private void UpdateTelemetry() {
+  /*private void UpdateTelemetry() {
     try{
       timeRemainingInCurrentShift.set(HubTracker.timeRemainingInCurrentShift().get().abs(Seconds));
     } catch(Exception e) {
     }
-  }
+  }*/
     
 
   @Override
@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
     voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
     ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
 
-    UpdateTelemetry(); 
+    //UpdateTelemetry(); 
   }
 
   @Override
