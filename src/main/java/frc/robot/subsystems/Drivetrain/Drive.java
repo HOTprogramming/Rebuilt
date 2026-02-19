@@ -406,7 +406,7 @@ public Command resetControllers() {
             fuelSim.launchFuel(
                 MetersPerSecond.of(state.velocityMps()),
                 Degrees.of(state.angleDeg()),
-                Degrees.of(0),
+                Degrees.of(180),
                 Meters.of(0.3)
             );
         }
