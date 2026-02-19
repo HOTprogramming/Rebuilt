@@ -1,28 +1,50 @@
 package frc.robot.subsystems.Shooter;
 
-
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase; // Added for periodic loop
 
 import java.util.function.Supplier;
 
-public class ShooterVisualizer {
-    private Translation3d[] trajectory = new Translation3d[50];
-    private Supplier<Pose3d> poseSupplier;
-    private Supplier<ChassisSpeeds> fieldSpeedsSupplier;
+// Import the record from your Drive class
+import frc.robot.subsystems.Drivetrain.Drive.ShooterState;
 
-    public ShooterVisualizer(Supplier<Pose3d> poseSupplier, Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
+public class ShooterVisualizer extends SubsystemBase {
+    private Translation3d[] trajectory = new Translation3d[50];
+    private final Supplier<Pose3d> poseSupplier;
+    private final Supplier<ChassisSpeeds> fieldSpeedsSupplier;
+    private final Supplier<ShooterState> shotSupplier; // Added supplier for the Record
+
+    public ShooterVisualizer(
+            Supplier<Pose3d> poseSupplier, 
+            Supplier<ChassisSpeeds> fieldSpeedsSupplier,
+            Supplier<ShooterState> shotSupplier) {
         this.poseSupplier = poseSupplier;
         this.fieldSpeedsSupplier = fieldSpeedsSupplier;
+        this.shotSupplier = shotSupplier;
+    }
+
+    /**
+     * This runs automatically every 20ms in simulation.
+     * It pulls the latest state from your Drive.java and updates the line.
+     */
+    @Override
+    public void simulationPeriodic() {
+        ShooterState state = shotSupplier.get();
+        if (state != null) {
+            updateFuel(
+                MetersPerSecond.of(state.velocityMps()), 
+                Degrees.of(state.angleDeg())
+            );
+        }
     }
 
     private Translation3d launchVel(LinearVelocity vel, Angle angle) {
@@ -31,32 +53,38 @@ public class ShooterVisualizer {
 
         double horizontalVel = Math.cos(angle.in(Radians)) * vel.in(MetersPerSecond);
         double verticalVel = Math.sin(angle.in(Radians)) * vel.in(MetersPerSecond);
-        double xVel =
-                horizontalVel * Math.cos(robot.getRotation().toRotation2d().getRadians());
-        double yVel =
-                horizontalVel * Math.sin(robot.getRotation().toRotation2d().getRadians());
+        
+        // Adding Math.PI flips the horizontal launch direction by 180 degrees
+        double xVel = horizontalVel * Math.cos(robot.getRotation().toRotation2d().getRadians() + Math.PI);
+        double yVel = horizontalVel * Math.sin(robot.getRotation().toRotation2d().getRadians() + Math.PI);
 
+        // Vector addition: adds robot's current field-relative speed to the ball's speed
         xVel += fieldSpeeds.vxMetersPerSecond;
         yVel += fieldSpeeds.vyMetersPerSecond;
 
         return new Translation3d(xVel, yVel, verticalVel);
     }
 
-    public void updateFuel(LinearVelocity vel, Angle angle) {
-        Translation3d trajVel = launchVel(vel, Degrees.of(90).minus(angle));
+    private void updateFuel(LinearVelocity vel, Angle angle) {
+        Translation3d trajVel = launchVel(vel, angle);
+        double[] flatTrajectory = new double[trajectory.length * 3];
+
         for (int i = 0; i < trajectory.length; i++) {
-            double t = i * 0.04;
-            double x = trajVel.getX() * t + poseSupplier.get().getTranslation().getX();
-            double y = trajVel.getY() * t + poseSupplier.get().getTranslation().getY();
+            double t = i * 0.04; // 40ms intervals
+            double x = trajVel.getX() * t + poseSupplier.get().getX();
+            double y = trajVel.getY() * t + poseSupplier.get().getY();
             double z = trajVel.getZ() * t
-                    - 0.5 * 9.81 * t * t
-                    + poseSupplier.get().getTranslation().getZ();
+                    - 0.5 * 9.81 * t * t // Gravity: -1/2 * g * t^2
+                    + poseSupplier.get().getZ();
 
             trajectory[i] = new Translation3d(x, y, z);
+            
+            flatTrajectory[i * 3] = x;
+            flatTrajectory[i * 3 + 1] = y;
+            flatTrajectory[i * 3 + 2] = Math.max(0, z); // Don't render below the floor
         }
 
-        SmartDashboard.putNumberArray("Turret/Trajectory", trajectory);
+        // Send the line to AdvantageScope or Glass
+        SmartDashboard.putNumberArray("Shooter/Trajectory", flatTrajectory);
     }
-
-
 }

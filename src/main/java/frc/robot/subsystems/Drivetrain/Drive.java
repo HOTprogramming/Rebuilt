@@ -112,6 +112,8 @@ public class Drive extends SubsystemBase {
     private DoublePublisher robotRealSpeed;
     private DoubleArrayPublisher robotPose;
 
+    public record ShooterState(double velocityMps, double angleDeg) {}
+
     public Drive(DriveKraken driveKraken) { 
         this.driveKraken = driveKraken;
         this.iOdata = driveKraken.update();
@@ -338,14 +340,19 @@ public Command resetControllers() {
         this.driveKraken.seedFieldRelative(pose);
     }
 
+    public ShooterState getSimShotTarget() {
+        // This is your single source of truth
+        return new ShooterState(8.0, 40.0); 
+    }
+
     public void launchSimFuel(FuelSim fuelSim) {
         if (Robot.isSimulation() && fuelSim != null) {
-            // This takes the current robot pose and "spawns" fuel there
+            ShooterState state = getSimShotTarget();
             fuelSim.launchFuel(
-                MetersPerSecond.of(5), // Linear Velocity
-                Degrees.of(40),        // Launch Angle (vertical)
-                Degrees.of(0),         // Direction Angle (horizontal)
-                Meters.of(0.3)         // Distance from robot center
+                MetersPerSecond.of(state.velocityMps()),
+                Degrees.of(state.angleDeg()),
+                Degrees.of(0),
+                Meters.of(0.3)
             );
         }
     }

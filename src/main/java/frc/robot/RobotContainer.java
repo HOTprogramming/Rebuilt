@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -101,25 +102,30 @@ public class RobotContainer {
         new Rotation2d(Math.PI/4)
     )));
 
-    driver.x() .whileTrue(
+    /*driver.x() .whileTrue(
         AutoBuilder.pathfindToPose(
             new Pose2d(8.296, 4.061, Rotation2d.fromDegrees(0)), 
             new PathConstraints(5.0, 3.0, 3.14, 6.28), 
             0.0 // Goal end velocity
         )
-    );
+    );*/
     //translate to Y target on button press
      driver.y().whileTrue(drivetrain.run(()->
       drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
         new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
 
-    driver.rightBumper().whileTrue(
-      Commands.sequence(
-          drivetrain.runOnce(() -> drivetrain.launchSimFuel(fuelSim)),
-          Commands.waitSeconds(0.1)
-      ).repeatedly()
-    );
+driver.x().whileTrue(
+    drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))
+    .alongWith(
+        Commands.sequence(
+            // We use Commands.runOnce instead of drivetrain.runOnce 
+            // to avoid the automatic requirement tie-in
+            Commands.runOnce(() -> drivetrain.launchSimFuel(fuelSim)), 
+            Commands.waitSeconds(0.1)
+        ).repeatedly()
+    )
+);
 
     // Shooter Controls
 
@@ -177,7 +183,7 @@ public class RobotContainer {
 
   private void configureFuelSim() {
     fuelSim = new FuelSim();
-    fuelSim.spawnStartingFuel();
+    //fuelSim.spawnStartingFuel();
     
     fuelSim.registerRobot(
             0.75, // Robot width in meters

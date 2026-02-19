@@ -156,11 +156,6 @@ public class Shooter extends SubsystemBase {
   }
 
 
-   @Override
-    public void simulationPeriodic() {
-        ShooterVisualizer.updateFuel(
-                TurretCalculator.angularToLinearVelocity(inputs.flywheelSpeed, FLYWHEEL_RADIUS), inputs.hoodPosition);
-    }
   /************************************************
    * Update the Network Tables with Motor Statistics 
    ************************************************/
