@@ -186,7 +186,7 @@ public class RobotContainer {
         () -> drivetrain.getPose(), // How the sim finds your robot's position
         () -> drivetrain.getChassisSpeeds()); // How the sim finds your robot's velocity)
     
-        fuelSim.start();
+    fuelSim.start();
     SmartDashboard.putData(Commands.runOnce(() -> {
                 fuelSim.clearFuel();
                 fuelSim.spawnStartingFuel();
