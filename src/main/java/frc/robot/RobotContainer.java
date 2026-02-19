@@ -183,8 +183,8 @@ public class RobotContainer {
             0.75, // Robot width in meters
         0.75, // Robot length in meters
         0.1,  // Bumper height in meters
-        () -> drivetrain.iOdata.state.Pose, // How the sim finds your robot's position
-        () -> drivetrain.iOdata.state.Speeds); // How the sim finds your robot's velocity)
+        () -> drivetrain.getPose(), // How the sim finds your robot's position
+        () -> drivetrain.getChassisSpeeds()); // How the sim finds your robot's velocity)
     
         fuelSim.start();
     SmartDashboard.putData(Commands.runOnce(() -> {

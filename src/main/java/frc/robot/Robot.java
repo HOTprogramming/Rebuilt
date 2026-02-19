@@ -187,6 +187,7 @@ public class Robot extends TimedRobot {
     } else {
       setDriverStationState(SimMode.TELEOP);
     }
+
     m_robotContainer.fuelSim.updateSim();
   }
 

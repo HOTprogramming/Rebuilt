@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
@@ -336,16 +337,28 @@ public Command resetControllers() {
     private void setPose(Pose2d pose) {
         this.driveKraken.seedFieldRelative(pose);
     }
-public void launchSimFuel(FuelSim fuelSim) {
-    if (Robot.isSimulation() && fuelSim != null) {
-        // This takes the current robot pose and "spawns" fuel there
-        fuelSim.launchFuel(
-            MetersPerSecond.of(5), // Linear Velocity
-            Degrees.of(40),        // Launch Angle (vertical)
-            Degrees.of(0),         // Direction Angle (horizontal)
-            Meters.of(0.3)         // Distance from robot center
-);
+
+    public void launchSimFuel(FuelSim fuelSim) {
+        if (Robot.isSimulation() && fuelSim != null) {
+            // This takes the current robot pose and "spawns" fuel there
+            fuelSim.launchFuel(
+                MetersPerSecond.of(5), // Linear Velocity
+                Degrees.of(40),        // Launch Angle (vertical)
+                Degrees.of(0),         // Direction Angle (horizontal)
+                Meters.of(0.3)         // Distance from robot center
+            );
+        }
+    }
+
+    public Pose2d getPose() {
+        return this.iOdata.state.Pose;
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        return new ChassisSpeeds(
+            this.iOdata.state.Speeds.vxMetersPerSecond,
+            this.iOdata.state.Speeds.vyMetersPerSecond,
+            this.iOdata.state.Speeds.omegaRadiansPerSecond
+        );
     }
 }
-}
-
