@@ -1,4 +1,4 @@
-package frc.robot.sim;
+package frc.util.sim;
 
 import java.util.ArrayList;
 
