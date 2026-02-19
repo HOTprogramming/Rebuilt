@@ -37,10 +37,10 @@ public class ShooterKraken {
   private int controlModeHood = 0;
   
   // Initialize Motors //
-  private TalonFX m_talonFX = new TalonFX(ShooterConstants.kMotorID, ShooterConstants.canbus);
-  private TalonFX m_talonFXSub1 = new TalonFX(ShooterConstants.kSub1MotorID, ShooterConstants.canbus);
-  private TalonFX m_talonFXSub2 = new TalonFX(ShooterConstants.kSub2MotorID, ShooterConstants.canbus);
-  private TalonFX m_talonFXSub3 = new TalonFX(ShooterConstants.kSub3MotorID, ShooterConstants.canbus);
+  private TalonFX m_talonFXLeftTop = new TalonFX(ShooterConstants.kMotorIDLeftTop, ShooterConstants.canbus);
+  private TalonFX m_talonFXLeftBottom = new TalonFX(ShooterConstants.kMotorIDLeftBottom, ShooterConstants.canbus);
+  private TalonFX m_talonFXRightTop = new TalonFX(ShooterConstants.kMotorIDRightTop, ShooterConstants.canbus);
+  private TalonFX m_talonFXRightBottom = new TalonFX(ShooterConstants.kMotorIDRightBottom, ShooterConstants.canbus);
   private TalonFX m_talonFXHood = new TalonFX(ShooterConstants.kHoodMotorID, ShooterConstants.canbus);
 
   // Initialize Control Modes //
@@ -51,35 +51,37 @@ public class ShooterKraken {
   private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
 
   private final NeutralOut m_brake = new NeutralOut();   /* Keep a neutral out so we can disable the motor */
+
+  StatusCode statuscode;
  
   // Status Signals //
-  private final StatusSignal<Angle> shooterPosition;
-  private final StatusSignal<AngularVelocity> shooterVelocity;
-  private final StatusSignal<Voltage> shooterAppliedVolts;
-  private final StatusSignal<Current> shooterSupplyCurrent;
-  private final StatusSignal<Current> shooterTorqueCurrent;
-  private final StatusSignal<Temperature> shooterTempCelsius;
+  private final StatusSignal<Angle> shooterPositionLeftTop;
+  private final StatusSignal<AngularVelocity> shooterVelocityLeftTop;
+  private final StatusSignal<Voltage> shooterAppliedVoltsLeftTop;
+  private final StatusSignal<Current> shooterSupplyCurrentLeftTop;
+  private final StatusSignal<Current> shooterTorqueCurrentLeftTop;
+  private final StatusSignal<Temperature> shooterTempCelsiusLeftTop;
 
-  private final StatusSignal<Angle> shooterPositionSub1;
-  private final StatusSignal<AngularVelocity> shooterVelocitySub1;
-  private final StatusSignal<Voltage> shooterAppliedVoltsSub1;
-  private final StatusSignal<Current> shooterSupplyCurrentSub1;
-  private final StatusSignal<Current> shooterTorqueCurrentSub1;
-  private final StatusSignal<Temperature> shooterTempCelsiusSub1;
+  private final StatusSignal<Angle> shooterPositionLeftBottom;
+  private final StatusSignal<AngularVelocity> shooterVelocityLeftBottom;
+  private final StatusSignal<Voltage> shooterAppliedVoltsLeftBottom;
+  private final StatusSignal<Current> shooterSupplyCurrentLeftBottom;
+  private final StatusSignal<Current> shooterTorqueCurrentLeftBottom;
+  private final StatusSignal<Temperature> shooterTempCelsiusLeftBottom;
 
-  private final StatusSignal<Angle> shooterPositionSub2;
-  private final StatusSignal<AngularVelocity> shooterVelocitySub2;
-  private final StatusSignal<Voltage> shooterAppliedVoltsSub2;
-  private final StatusSignal<Current> shooterSupplyCurrentSub2;
-  private final StatusSignal<Current> shooterTorqueCurrentSub2;
-  private final StatusSignal<Temperature> shooterTempCelsiusSub2;
+  private final StatusSignal<Angle> shooterPositionRightTop;
+  private final StatusSignal<AngularVelocity> shooterVelocityRightTop;
+  private final StatusSignal<Voltage> shooterAppliedVoltsRightTop;
+  private final StatusSignal<Current> shooterSupplyCurrentRightTop;
+  private final StatusSignal<Current> shooterTorqueCurrentRightTop;
+  private final StatusSignal<Temperature> shooterTempCelsiusRightTop;
 
-  private final StatusSignal<Angle> shooterPositionSub3;
-  private final StatusSignal<AngularVelocity> shooterVelocitySub3;
-  private final StatusSignal<Voltage> shooterAppliedVoltsSub3;
-  private final StatusSignal<Current> shooterSupplyCurrentSub3;
-  private final StatusSignal<Current> shooterTorqueCurrentSub3;
-  private final StatusSignal<Temperature> shooterTempCelsiusSub3;
+  private final StatusSignal<Angle> shooterPositionRightBottom;
+  private final StatusSignal<AngularVelocity> shooterVelocityRightBottom;
+  private final StatusSignal<Voltage> shooterAppliedVoltsRightBottom;
+  private final StatusSignal<Current> shooterSupplyCurrentRightBottom;
+  private final StatusSignal<Current> shooterTorqueCurrentRightBottom;
+  private final StatusSignal<Temperature> shooterTempCelsiusRightBottom;
 
   private final StatusSignal<Angle> hoodPosition;
   private final StatusSignal<AngularVelocity> hoodVelocity;
@@ -94,59 +96,59 @@ public class ShooterKraken {
     * Confiure the Shooter Motor 
     ***********************************/
     // Apply Configuration from Shooter Constants to motor //
-    StatusCode statuscode = m_talonFX.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
+    statuscode = m_talonFXLeftTop.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
     if(!statuscode.isOK()) { 
-      System.out.println("Configuration Failed on Shooter Master Motor");
+      System.out.println("Configuration Failed on Shooter Left Top (Master) Motor");
     }
-    StatusCode statuscode2 = m_talonFXSub1.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
-    if(!statuscode2.isOK()) { 
-      System.out.println("Configuration Failed on Shooter Sub Motor 1");
+    statuscode = m_talonFXLeftBottom.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
+    if(!statuscode.isOK()) { 
+      System.out.println("Configuration Failed on Shooter Left Bottom Motor");
     }
-    StatusCode statuscode3 = m_talonFXSub1.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
-    if(!statuscode3.isOK()) { 
-      System.out.println("Configuration Failed on Shooter Sub Motor 2");
+    statuscode = m_talonFXRightTop.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
+    if(!statuscode.isOK()) { 
+      System.out.println("Configuration Failed on Shooter Right Top Motor");
     }
-    StatusCode statuscode4 = m_talonFXSub1.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
-    if(!statuscode4.isOK()) { 
-      System.out.println("Configuration Failed on Shooter Sub Motor 3");
+    statuscode = m_talonFXRightBottom.getConfigurator().apply(ShooterConstants.ShooterConfigs.shooterMotorConfigs(), 1.0); 
+    if(!statuscode.isOK()) { 
+      System.out.println("Configuration Failed on Shooter Right Bottom Motor");
     }
-    StatusCode statuscode5 = m_talonFXHood.getConfigurator().apply(ShooterConstants.ShooterConfigs.hoodMotorConfigs(), 1.0); 
-    if(!statuscode5.isOK()) { 
+    statuscode = m_talonFXHood.getConfigurator().apply(ShooterConstants.ShooterConfigs.hoodMotorConfigs(), 1.0); 
+    if(!statuscode.isOK()) { 
       System.out.println("Configuration Failed on Hood Motor");
     }
 
-    m_talonFXSub1.setControl(new Follower(ShooterConstants.kMotorID, MotorAlignmentValue.Opposed));
-    m_talonFXSub2.setControl(new Follower(ShooterConstants.kMotorID, MotorAlignmentValue.Opposed));
-    m_talonFXSub3.setControl(new Follower(ShooterConstants.kMotorID, MotorAlignmentValue.Opposed));
+    m_talonFXLeftBottom.setControl(new Follower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Opposed));
+    m_talonFXRightTop.setControl(new Follower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Opposed));
+    m_talonFXRightBottom.setControl(new Follower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Opposed));
 
     // Initialize Telemetry data //
-    shooterPosition = m_talonFX.getPosition();
-    shooterVelocity = m_talonFX.getVelocity();
-    shooterAppliedVolts = m_talonFX.getMotorVoltage();
-    shooterSupplyCurrent = m_talonFX.getSupplyCurrent();
-    shooterTorqueCurrent = m_talonFX.getTorqueCurrent();
-    shooterTempCelsius = m_talonFX.getDeviceTemp();
+    shooterPositionLeftTop = m_talonFXLeftTop.getPosition();
+    shooterVelocityLeftTop = m_talonFXLeftTop.getVelocity();
+    shooterAppliedVoltsLeftTop = m_talonFXLeftTop.getMotorVoltage();
+    shooterSupplyCurrentLeftTop = m_talonFXLeftTop.getSupplyCurrent();
+    shooterTorqueCurrentLeftTop = m_talonFXLeftTop.getTorqueCurrent();
+    shooterTempCelsiusLeftTop = m_talonFXLeftTop.getDeviceTemp();
 
-    shooterPositionSub1 = m_talonFXSub1.getPosition();
-    shooterVelocitySub1 = m_talonFXSub1.getVelocity();
-    shooterAppliedVoltsSub1 = m_talonFXSub1.getMotorVoltage();
-    shooterSupplyCurrentSub1 = m_talonFXSub1.getSupplyCurrent();
-    shooterTorqueCurrentSub1 = m_talonFXSub1.getTorqueCurrent();
-    shooterTempCelsiusSub1 = m_talonFXSub1.getDeviceTemp();
+    shooterPositionLeftBottom = m_talonFXLeftBottom.getPosition();
+    shooterVelocityLeftBottom = m_talonFXLeftBottom.getVelocity();
+    shooterAppliedVoltsLeftBottom = m_talonFXLeftBottom.getMotorVoltage();
+    shooterSupplyCurrentLeftBottom = m_talonFXLeftBottom.getSupplyCurrent();
+    shooterTorqueCurrentLeftBottom = m_talonFXLeftBottom.getTorqueCurrent();
+    shooterTempCelsiusLeftBottom = m_talonFXLeftBottom.getDeviceTemp();
 
-    shooterPositionSub2 = m_talonFXSub2.getPosition();
-    shooterVelocitySub2 = m_talonFXSub2.getVelocity();
-    shooterAppliedVoltsSub2 = m_talonFXSub2.getMotorVoltage();
-    shooterSupplyCurrentSub2 = m_talonFXSub2.getSupplyCurrent();
-    shooterTorqueCurrentSub2 = m_talonFXSub2.getTorqueCurrent();
-    shooterTempCelsiusSub2 = m_talonFXSub2.getDeviceTemp();
+    shooterPositionRightTop = m_talonFXRightTop.getPosition();
+    shooterVelocityRightTop = m_talonFXRightTop.getVelocity();
+    shooterAppliedVoltsRightTop = m_talonFXRightTop.getMotorVoltage();
+    shooterSupplyCurrentRightTop = m_talonFXRightTop.getSupplyCurrent();
+    shooterTorqueCurrentRightTop = m_talonFXRightTop.getTorqueCurrent();
+    shooterTempCelsiusRightTop = m_talonFXRightTop.getDeviceTemp();
 
-    shooterPositionSub3 = m_talonFXSub3.getPosition();
-    shooterVelocitySub3 = m_talonFXSub3.getVelocity();
-    shooterAppliedVoltsSub3 = m_talonFXSub3.getMotorVoltage();
-    shooterSupplyCurrentSub3 = m_talonFXSub3.getSupplyCurrent();
-    shooterTorqueCurrentSub3 = m_talonFXSub3.getTorqueCurrent();
-    shooterTempCelsiusSub3 = m_talonFXSub3.getDeviceTemp();
+    shooterPositionRightBottom = m_talonFXRightBottom.getPosition();
+    shooterVelocityRightBottom = m_talonFXRightBottom.getVelocity();
+    shooterAppliedVoltsRightBottom = m_talonFXRightBottom.getMotorVoltage();
+    shooterSupplyCurrentRightBottom = m_talonFXRightBottom.getSupplyCurrent();
+    shooterTorqueCurrentRightBottom = m_talonFXRightBottom.getTorqueCurrent();
+    shooterTempCelsiusRightBottom = m_talonFXRightBottom.getDeviceTemp();
 
     hoodPosition = m_talonFXHood.getPosition();
     hoodVelocity = m_talonFXHood.getVelocity();
@@ -157,33 +159,33 @@ public class ShooterKraken {
 
     BaseStatusSignal.setUpdateFrequencyForAll(
       100.0,
-      shooterPosition,
-      shooterVelocity,
-      shooterAppliedVolts,
-      shooterSupplyCurrent,
-      shooterTorqueCurrent,
-      shooterTempCelsius,
+      shooterPositionLeftTop,
+      shooterVelocityLeftTop,
+      shooterAppliedVoltsLeftTop,
+      shooterSupplyCurrentLeftTop,
+      shooterTorqueCurrentLeftTop,
+      shooterTempCelsiusLeftTop,
 
-      shooterPositionSub1,
-      shooterVelocitySub1,
-      shooterAppliedVoltsSub1,
-      shooterSupplyCurrentSub1,
-      shooterTorqueCurrentSub1,
-      shooterTempCelsiusSub1,
+      shooterPositionLeftBottom,
+      shooterVelocityLeftBottom,
+      shooterAppliedVoltsLeftBottom,
+      shooterSupplyCurrentLeftBottom,
+      shooterTorqueCurrentLeftBottom,
+      shooterTempCelsiusLeftBottom,
 
-      shooterPositionSub2,
-      shooterVelocitySub2,
-      shooterAppliedVoltsSub2,
-      shooterSupplyCurrentSub2,
-      shooterTorqueCurrentSub2,
-      shooterTempCelsiusSub2,
+      shooterPositionRightTop,
+      shooterVelocityRightTop,
+      shooterAppliedVoltsRightTop,
+      shooterSupplyCurrentRightTop,
+      shooterTorqueCurrentRightTop,
+      shooterTempCelsiusRightTop,
 
-      shooterPositionSub3,
-      shooterVelocitySub3,
-      shooterAppliedVoltsSub3,
-      shooterSupplyCurrentSub3,
-      shooterTorqueCurrentSub3,
-      shooterTempCelsiusSub3,
+      shooterPositionRightBottom,
+      shooterVelocityRightBottom,
+      shooterAppliedVoltsRightBottom,
+      shooterSupplyCurrentRightBottom,
+      shooterTorqueCurrentRightBottom,
+      shooterTempCelsiusRightBottom,
 
       hoodPosition,
       hoodVelocity,
@@ -194,18 +196,18 @@ public class ShooterKraken {
     );
 
     /* Optimize out the other signals, since they're not useful */
-    m_talonFX.optimizeBusUtilization();
-    m_talonFXSub1.optimizeBusUtilization();
-    m_talonFXSub2.optimizeBusUtilization();
-    m_talonFXSub3.optimizeBusUtilization();
+    m_talonFXLeftTop.optimizeBusUtilization();
+    m_talonFXLeftBottom.optimizeBusUtilization();
+    m_talonFXRightTop.optimizeBusUtilization();
+    m_talonFXRightBottom.optimizeBusUtilization();
     m_talonFXHood.optimizeBusUtilization();
 
     /* Defines the motor to the Physics Simulation-only in Simulation */
     if(Utils.isSimulation()){
-      PhysicsSim.getInstance().addTalonFX(m_talonFX, 0.001);
-      PhysicsSim.getInstance().addTalonFX(m_talonFXSub1, 0.001);
-      PhysicsSim.getInstance().addTalonFX(m_talonFXSub2, 0.001);
-      PhysicsSim.getInstance().addTalonFX(m_talonFXSub3, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_talonFXLeftTop, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_talonFXLeftBottom, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_talonFXRightTop, 0.001);
+      PhysicsSim.getInstance().addTalonFX(m_talonFXRightBottom, 0.001);
       PhysicsSim.getInstance().addTalonFX(m_talonFXHood, 0.001);
     }
   }
@@ -223,33 +225,33 @@ public class ShooterKraken {
     }
 
     stats.MotorConnected =BaseStatusSignal.refreshAll(
-      shooterPosition,
-      shooterVelocity,
-      shooterAppliedVolts,
-      shooterSupplyCurrent,
-      shooterTorqueCurrent,
-      shooterTempCelsius,
+      shooterPositionLeftTop,
+      shooterVelocityLeftTop,
+      shooterAppliedVoltsLeftTop,
+      shooterSupplyCurrentLeftTop,
+      shooterTorqueCurrentLeftTop,
+      shooterTempCelsiusLeftTop,
       
-      shooterPositionSub1,
-      shooterVelocitySub1,
-      shooterAppliedVoltsSub1,
-      shooterSupplyCurrentSub1,
-      shooterTorqueCurrentSub1,
-      shooterTempCelsiusSub1,
+      shooterPositionLeftBottom,
+      shooterVelocityLeftBottom,
+      shooterAppliedVoltsLeftBottom,
+      shooterSupplyCurrentLeftBottom,
+      shooterTorqueCurrentLeftBottom,
+      shooterTempCelsiusLeftBottom,
 
-      shooterPositionSub2,
-      shooterVelocitySub2,
-      shooterAppliedVoltsSub2,
-      shooterSupplyCurrentSub2,
-      shooterTorqueCurrentSub2,
-      shooterTempCelsiusSub2,
+      shooterPositionRightTop,
+      shooterVelocityRightTop,
+      shooterAppliedVoltsRightTop,
+      shooterSupplyCurrentRightTop,
+      shooterTorqueCurrentRightTop,
+      shooterTempCelsiusRightTop,
 
-      shooterPositionSub3,
-      shooterVelocitySub3,
-      shooterAppliedVoltsSub3,
-      shooterSupplyCurrentSub3,
-      shooterTorqueCurrentSub3,
-      shooterTempCelsiusSub3,
+      shooterPositionRightBottom,
+      shooterVelocityRightBottom,
+      shooterAppliedVoltsRightBottom,
+      shooterSupplyCurrentRightBottom,
+      shooterTorqueCurrentRightBottom,
+      shooterTempCelsiusRightBottom,
 
       hoodPosition,
       hoodVelocity,
@@ -260,34 +262,34 @@ public class ShooterKraken {
     ).isOK();
       
     // Set telemetry data to Status Signals //
-    stats.shooterPositionRads = shooterPosition.getValueAsDouble();
-    stats.shooterVelocityRpm = shooterVelocity.getValueAsDouble();
-    stats.shooterAppliedVolts = shooterAppliedVolts.getValueAsDouble();
-    stats.shooterSupplyCurrentAmps = shooterSupplyCurrent.getValueAsDouble();
-    stats.shooterTorqueCurrentAmps = shooterTorqueCurrent.getValueAsDouble();
-    stats.shooterTempCelsius = shooterTempCelsius.getValueAsDouble();
+    stats.shooterPositionRadsLeftTop = shooterPositionLeftTop.getValueAsDouble();
+    stats.shooterVelocityRpmLeftTop = shooterVelocityLeftTop.getValueAsDouble();
+    stats.shooterAppliedVoltsLeftTop = shooterAppliedVoltsLeftTop.getValueAsDouble();
+    stats.shooterSupplyCurrentAmpsLeftTop = shooterSupplyCurrentLeftTop.getValueAsDouble();
+    stats.shooterTorqueCurrentAmpsLeftTop = shooterTorqueCurrentLeftTop.getValueAsDouble();
+    stats.shooterTempCelsiusLeftTop = shooterTempCelsiusLeftTop.getValueAsDouble();
 
-    stats.shooterPositionRadsSub1 = shooterPositionSub1.getValueAsDouble();
-    stats.shooterVelocityRpmSub1 = shooterVelocitySub1.getValueAsDouble();
-    stats.shooterAppliedVoltsSub1 = shooterAppliedVoltsSub1.getValueAsDouble();
-    stats.shooterSupplyCurrentAmpsSub1 = shooterSupplyCurrentSub1.getValueAsDouble();
-    stats.shooterTorqueCurrentAmpsSub1 = shooterTorqueCurrentSub1.getValueAsDouble();
-    stats.shooterTempCelsiusSub1 = shooterTempCelsiusSub1.getValueAsDouble();
+    stats.shooterPositionRadsLeftBottom = shooterPositionLeftBottom.getValueAsDouble();
+    stats.shooterVelocityRpmLeftBottom = shooterVelocityLeftBottom.getValueAsDouble();
+    stats.shooterAppliedVoltsLeftBottom = shooterAppliedVoltsLeftBottom.getValueAsDouble();
+    stats.shooterSupplyCurrentAmpsLeftBottom = shooterSupplyCurrentLeftBottom.getValueAsDouble();
+    stats.shooterTorqueCurrentAmpsLeftBottom = shooterTorqueCurrentLeftBottom.getValueAsDouble();
+    stats.shooterTempCelsiusLeftBottom = shooterTempCelsiusLeftBottom.getValueAsDouble();
 
-    stats.shooterPositionRadsSub2 = shooterPositionSub2.getValueAsDouble();
-    stats.shooterVelocityRpmSub2 = shooterVelocitySub2.getValueAsDouble();
-    stats.shooterAppliedVoltsSub2 = shooterAppliedVoltsSub2.getValueAsDouble();
-    stats.shooterSupplyCurrentAmpsSub2 = shooterSupplyCurrentSub2.getValueAsDouble();
-    stats.shooterTorqueCurrentAmpsSub2 = shooterTorqueCurrentSub2.getValueAsDouble();
-    stats.shooterTempCelsiusSub2 = shooterTempCelsiusSub2.getValueAsDouble();
+    stats.shooterPositionRadsRightTop = shooterPositionRightTop.getValueAsDouble();
+    stats.shooterVelocityRpmRightTop = shooterVelocityRightTop.getValueAsDouble();
+    stats.shooterAppliedVoltsRightTop = shooterAppliedVoltsRightTop.getValueAsDouble();
+    stats.shooterSupplyCurrentAmpsRightTop = shooterSupplyCurrentRightTop.getValueAsDouble();
+    stats.shooterTorqueCurrentAmpsRightTop = shooterTorqueCurrentRightTop.getValueAsDouble();
+    stats.shooterTempCelsiusRightTop = shooterTempCelsiusRightTop.getValueAsDouble();
 
 
-    stats.shooterPositionRadsSub3 = shooterPositionSub3.getValueAsDouble();
-    stats.shooterVelocityRpmSub3 = shooterVelocitySub3.getValueAsDouble();
-    stats.shooterAppliedVoltsSub3 = shooterAppliedVoltsSub3.getValueAsDouble();
-    stats.shooterSupplyCurrentAmpsSub3 = shooterSupplyCurrentSub3.getValueAsDouble();
-    stats.shooterTorqueCurrentAmpsSub3 = shooterTorqueCurrentSub3.getValueAsDouble();
-    stats.shooterTempCelsiusSub3 = shooterTempCelsiusSub3.getValueAsDouble();
+    stats.shooterPositionRadsRightBottom = shooterPositionRightBottom.getValueAsDouble();
+    stats.shooterVelocityRpmRightBottom = shooterVelocityRightBottom.getValueAsDouble();
+    stats.shooterAppliedVoltsRightBottom = shooterAppliedVoltsRightBottom.getValueAsDouble();
+    stats.shooterSupplyCurrentAmpsRightBottom = shooterSupplyCurrentRightBottom.getValueAsDouble();
+    stats.shooterTorqueCurrentAmpsRightBottom = shooterTorqueCurrentRightBottom.getValueAsDouble();
+    stats.shooterTempCelsiusRightBottom = shooterTempCelsiusRightBottom.getValueAsDouble();
 
     stats.hoodPositionRads = hoodPosition.getValueAsDouble();
     stats.hoodVelocityRpm = hoodVelocity.getValueAsDouble();
@@ -305,10 +307,10 @@ public class ShooterKraken {
   public void runVelocity(double desiredRotationsPerSecond) {      
     switch (controlModeShoot) {
       case 0:      /* Use velocity voltage */
-        m_talonFX.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
+        m_talonFXLeftTop.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
         break;
       case 1:      /* Use velocity torque */
-        m_talonFX.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
+        m_talonFXLeftTop.setControl(m_velocityTorque.withVelocity(desiredRotationsPerSecond));
     }
   }
 
@@ -329,6 +331,6 @@ public class ShooterKraken {
 
   public void stop() {
     /* tell the motor to brake */
-    m_talonFX.setControl(m_brake);
+    m_talonFXLeftTop.setControl(m_brake);
   }
 }

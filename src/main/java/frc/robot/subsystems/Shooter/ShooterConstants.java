@@ -13,10 +13,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class ShooterConstants {
-    public static int kMotorID = 10;
-    public static int kSub1MotorID = 11;
-    public static int kSub2MotorID = 0;
-    public static int kSub3MotorID = 0;
+    public static int kMotorIDLeftTop = 0;
+    public static int kMotorIDLeftBottom = 0;
+    public static int kMotorIDRightTop = 0;
+    public static int kMotorIDRightBottom = 0;
     public static double kShootReduction =(1.0/1.0);
     public static double kIdleSpeed = (70.0);
     public static double kShooterSpeed = (32.0);
@@ -24,7 +24,7 @@ public class ShooterConstants {
     public static double kShooterError = (0.500);
 
     public static double kTargetHoodAngle = 0;
-    public static int kHoodMotorID = 12;
+    public static int kHoodMotorID = 0;
     public static double kHoodReduction = (1.0/1.0);
 
     public static CANBus canbus = new CANBus(Constants.canName);
