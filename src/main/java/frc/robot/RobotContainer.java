@@ -46,6 +46,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Index indexer;
   private final Climber climber;
+  private final Intake intake;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
@@ -71,6 +72,7 @@ public class RobotContainer {
     shooter = new Shooter();
     indexer = new Index();
     climber = new Climber();
+	intake = new Intake();
 
     configureBindings();
     if (Robot.isSimulation()) {
@@ -95,12 +97,23 @@ public class RobotContainer {
         Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
     )));
 
-    driver.b().whileTrue(drivetrain.run(()->
-      drivetrain.lockRotation(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-        new Rotation2d(Math.PI/4)
-    )));
+    driver.b().whileTrue(drivetrain.run(()-> {
+      double rot = drivetrain.getPose().getRotation().getDegrees(); //robot angle, from -180 to 180
+      double fact; //factor to multiply PI/4 radians by to get the nearest 45 degree angle.
+      if (Math.abs(rot) > 90) { //This way of calculating fact reduces if statements.
+        fact = 3; //The absolute value of the correct angle is 3PI/4 (or 135 degrees), so fact is 3
+      } else {
+        fact = 1; //The absolute value of the correct angle is PI/4 (or 45 degrees), so fact is 1
+      }
+
+      if (rot < 0) {
+        fact *= -1; //Correct side of the robot
+      }
+      
+      drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+      Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+      new Rotation2d(Math.PI/4 * fact));
+    }));
 
     /*driver.x() .whileTrue(
         AutoBuilder.pathfindToPose(
@@ -128,7 +141,6 @@ driver.x().whileTrue(
 );
 
     // Shooter Controls
-
     operator.povUp().onTrue(shooter.shootSpeedUp());
     operator.povDown().onTrue(shooter.shootSpeedDown());
     operator.a().onTrue(shooter.goToIdle());
@@ -140,6 +152,9 @@ driver.x().whileTrue(
 
     // Climber Controls
     climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
+
+	// Intake Controls
+	operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
 
     NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }

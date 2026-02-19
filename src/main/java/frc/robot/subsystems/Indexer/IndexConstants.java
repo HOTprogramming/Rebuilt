@@ -84,12 +84,6 @@ public class IndexConstants {
             case COMPBOT -> new IndexConfigs(
                 indexWheelConfigs 
             );
-            case SIMBOT -> new IndexConfigs(
-                indexWheelConfigs 
-            );
-            case DEVBOT -> new IndexConfigs(
-                indexWheelConfigs 
-            );
             case CAMERABOT -> new IndexConfigs( 
                 indexWheelConfigs 
             );

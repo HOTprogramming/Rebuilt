@@ -5,10 +5,14 @@ import static frc.robot.subsystems.Lights.LightsConstants.*;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Intake.IntakeConstants;
+import frc.robot.subsystems.Intake.Intake;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANdleConfiguration;
@@ -30,6 +34,8 @@ import com.ctre.phoenix6.signals.StatusLedWhenActiveValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
 
 public class Lights extends SubsystemBase {
+
+    StringPublisher NetworkTableColor;
 
     private static final int kSlot0StartIdx = 8;
     private static final int kSlot0EndIdx = 18;
@@ -59,6 +65,7 @@ public class Lights extends SubsystemBase {
   private AnimationType m_anim1State = AnimationType.None;
   private static final RGBWColor kViolet = RGBWColor.fromHSV(Degrees.of(270), 0.9, 0.8);
   private static final RGBWColor kRed = RGBWColor.fromHex("#D9000000").orElseThrow();
+  private static final RGBWColor KGREEN_COLOR = RGBWColor.fromHex("#00FF00").orElseThrow();
 
   private AnimationType current = AnimationType.SetAll;
 
@@ -70,6 +77,15 @@ public class Lights extends SubsystemBase {
     /* disable status LED when being controlled */
     cfg.CANdleFeatures.StatusLedWhenActive = StatusLedWhenActiveValue.Disabled;
         candle.getConfigurator().apply(cfg);
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("HOT/Lights");
+
+    NetworkTableColor = table.getStringTopic("COLOR").publish();
+  }
+  private static Lights instance = null;
+  public static Lights getInstance() {
+    return instance = instance == null ? new Lights() : instance;
   }
 
   public void apply(AnimationType anim) {
@@ -166,5 +182,9 @@ public class Lights extends SubsystemBase {
              apply(AnimationType.Fire);
 
         }); 
+    }
+    public Command setGreen() {
+        return runOnce(() ->
+        candle.setControl(new SolidColor(0, 18).withColor(KGREEN_COLOR)));
   }
 }            

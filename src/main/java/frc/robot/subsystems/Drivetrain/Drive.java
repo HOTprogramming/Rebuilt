@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Drivetrain;
 
 import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
+import frc.robot.Constants;
 import java.util.List;
 import java.util.Set;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -77,6 +78,24 @@ class DriveIOdata {
 }
 
 public class Drive extends SubsystemBase {
+private double thetaP = 10.0;
+private double thetaI = 0.0;
+private double thetaD = 0.2;
+
+private final PIDController thetaController =
+    new PIDController(thetaP, thetaI, thetaD);
+
+// NetworkTables
+private NetworkTable tuningTable;
+
+private DoublePublisher thetaP_pub;
+private DoublePublisher thetaI_pub;
+private DoublePublisher thetaD_pub;
+
+private edu.wpi.first.networktables.DoubleSubscriber thetaP_sub;
+private edu.wpi.first.networktables.DoubleSubscriber thetaI_sub;
+private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
+
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(kTranslationRateLimiter);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(kTranslationRateLimiter);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(kRotationRateLimiter);
@@ -93,12 +112,12 @@ public class Drive extends SubsystemBase {
     private double rampedY;
     private double rampedTheta;
 
-    private PIDController thetaController = new PIDController(10, 0, 0.2);
+
     private PIDController translationControllerIn = new PIDController(5, 0, 0);
     private PIDController translationControllerAcross = new PIDController(5, 0, 0);
     private ProfiledPIDController translationControllerY = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
     private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
-
+ 
     private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
         .withDeadband(0.2).withRotationalDeadband(0.0)
         .withDriveRequestType(DriveRequestType.Velocity).withDesaturateWheelSpeeds(false);
@@ -115,7 +134,28 @@ public class Drive extends SubsystemBase {
     public record ShooterState(double velocityMps, double angleDeg) {}
 
     public Drive(DriveKraken driveKraken) { 
+
+    if (!Constants.compMode) {
+       
+        tuningTable =
+        NetworkTableInstance.getDefault().getTable("Tuning/Drive");
+
+    thetaP_pub = tuningTable.getDoubleTopic("Theta kP").publish();
+    thetaI_pub = tuningTable.getDoubleTopic("Theta kI").publish();
+    thetaD_pub = tuningTable.getDoubleTopic("Theta kD").publish();
+
+    thetaP_pub.set(thetaP);
+    thetaI_pub.set(thetaI);
+    thetaD_pub.set(thetaD);
+
+    thetaP_sub = tuningTable.getDoubleTopic("Theta kP").subscribe(thetaP);
+    thetaI_sub = tuningTable.getDoubleTopic("Theta kI").subscribe(thetaI);
+    thetaD_sub = tuningTable.getDoubleTopic("Theta kD").subscribe(thetaD);
+
+    }
+
         this.driveKraken = driveKraken;
+
         this.iOdata = driveKraken.update();
 
         translationControllerX.setTolerance(auto_align_tolerance);
@@ -163,12 +203,27 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
+    if (!Constants.compMode) {
+        thetaP = thetaP_sub.get();
+        thetaI = thetaI_sub.get();
+        thetaD = thetaD_sub.get();
+
+        thetaP_pub.set(thetaP);
+        thetaI_pub.set(thetaI);
+        thetaD_pub.set(thetaD);
+    }
+
+thetaController.setPID(thetaP, thetaI, thetaD);
+
+
+
         if (!(DriverStation.isTeleopEnabled()) || Math.abs(iOdata.pigeon.getX()) > 0.2 || Math.abs(iOdata.pigeon.getY()) > 0.2) {
             iOdata.state.Pose.getRotation();
         }
 
         if (DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
+            
                 this.driveKraken.setOperatorPerspective(
                     allianceColor == Alliance.Red ? kRedAlliancePerspectiveRotation : kBlueAlliancePerspectiveRotation
                 ); 

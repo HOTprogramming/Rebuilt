@@ -18,8 +18,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.sim.PhysicsSim;
 import frc.robot.subsystems.Shooter.Shooter.shooterStats;
+import frc.util.sim.PhysicsSim;
 
 public class ShooterKraken {
   private static ShooterKraken instance = null;
