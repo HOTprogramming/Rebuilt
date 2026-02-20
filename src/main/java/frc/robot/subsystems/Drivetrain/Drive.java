@@ -2,6 +2,8 @@ package frc.robot.subsystems.Drivetrain;
 
 import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 import frc.robot.Constants;
+import frc.robot.RobotState;
+
 import java.util.List;
 import java.util.Set;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -197,17 +199,20 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
 
     @Override
     public void periodic() {
-    if (!Constants.compMode) {
-        thetaP = thetaP_sub.get();
-        thetaI = thetaI_sub.get();
-        thetaD = thetaD_sub.get();
+		
+		RobotState.pose = iOdata.state.Pose;
 
-        thetaP_pub.set(thetaP);
-        thetaI_pub.set(thetaI);
-        thetaD_pub.set(thetaD);
-    }
+		if (!Constants.compMode) {
+			thetaP = thetaP_sub.get();
+			thetaI = thetaI_sub.get();
+			thetaD = thetaD_sub.get();
 
-thetaController.setPID(thetaP, thetaI, thetaD);
+			thetaP_pub.set(thetaP);
+			thetaI_pub.set(thetaI);
+			thetaD_pub.set(thetaD);
+		}
+
+		thetaController.setPID(thetaP, thetaI, thetaD);
 
 
 
