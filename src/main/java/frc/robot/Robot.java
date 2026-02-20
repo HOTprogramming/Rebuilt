@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Seconds;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.hal.simulation.RoboRioDataJNI;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;

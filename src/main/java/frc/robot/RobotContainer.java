@@ -5,9 +5,6 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -148,7 +145,7 @@ driver.x().whileTrue(
     operator.b().onTrue(shooter.shooterOff());
 
     // Indexer Controls
-    operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+    driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
     // Climber Controls
     climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
