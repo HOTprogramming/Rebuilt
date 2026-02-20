@@ -1,0 +1,778 @@
+{
+  "version": 1.0,
+  "grid_size": 128,
+  "tabs": [
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "IsRedAlliance",
+            "x": 256.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/FMSInfo/IsRedAlliance",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Volts",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Voltage View",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Volts",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 4.0,
+              "max_value": 13.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Match time",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 640.0,
+            "height": 256.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Match time",
+              "period": 0.06,
+              "data_type": "double",
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Auto",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Auto",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Speed",
+            "x": 512.0,
+            "y": 256.0,
+            "width": 512.0,
+            "height": 256.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/Shuffleboard/Drive/Speed",
+              "period": 0.033,
+              "data_type": "double",
+              "start_angle": -140.0,
+              "end_angle": 140.0,
+              "min_value": 0.0,
+              "max_value": 100.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "Teleop",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 256.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Teleop",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Autonomous",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Match time",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Match time",
+              "period": 0.06,
+              "data_type": "double",
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "Volts",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Voltage View",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Volts",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 4.0,
+              "max_value": 13.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Auto",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Auto",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "IsRedAlliance",
+            "x": 256.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/FMSInfo/IsRedAlliance",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Amps",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Amps",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -140.0,
+              "end_angle": 140.0,
+              "min_value": 0.0,
+              "max_value": 100.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "SendableChooser[0]",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/SendableChooser[0]",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Teleop",
+            "x": 512.0,
+            "y": 256.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Teleop",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "errors",
+            "x": 640.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Alerts/errors",
+              "period": 0.06,
+              "data_type": "string[]"
+            }
+          },
+          {
+            "title": "warnings",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Alerts/warnings",
+              "period": 0.06,
+              "data_type": "string[]"
+            }
+          },
+          {
+            "title": "Autos",
+            "x": 896.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Autos",
+              "period": 0.06,
+              "sort_options": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Programmers",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Alerts",
+            "x": 512.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "errors",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/PathPlanner/errors",
+                  "period": 0.06,
+                  "data_type": "string[]",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "warnings",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/PathPlanner/warnings",
+                  "period": 0.06,
+                  "data_type": "string[]",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "infos",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/PathPlanner/infos",
+                  "period": 0.06,
+                  "data_type": "string[]",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Drive",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Robot Pose",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/HOT/Drive/Robot Pose",
+                  "period": 0.06,
+                  "data_type": "double[]",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Hub Time Remaining",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/HOT/Drive/Hub Time Remaining",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Robot Real Speed",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/HOT/Drive/Robot Real Speed",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "Shooter",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Shooter Master: Applied Volts",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/HOT/Shooter/Shooter Master: Applied Volts",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Shooter Sub 2: Applied Volts",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/HOT/Shooter/Shooter Sub 2: Applied Volts",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Shooter Sub 3: Applied Volts",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/HOT/Shooter/Shooter Sub 3: Applied Volts",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Shooter Sub 1: Applied Volts",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/HOT/Shooter/Shooter Sub 1: Applied Volts",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "List Layout",
+            "x": 1280.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": []
+          }
+        ],
+        "containers": [
+          {
+            "title": "Robot Real Speed",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/HOT/Drive/Robot Real Speed",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -140.0,
+              "end_angle": 140.0,
+              "min_value": 0.0,
+              "max_value": 100.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "Match time",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Match time",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Autos",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Autos",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Amps",
+            "x": 512.0,
+            "y": 384.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Amps",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": -1.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Volts",
+            "x": 256.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Voltage View",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Volts",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 4.0,
+              "max_value": 13.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "FMSInfo",
+            "x": 896.0,
+            "y": 384.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "FMSInfo",
+            "properties": {
+              "topic": "/FMSInfo",
+              "period": 0.06
+            }
+          },
+          {
+            "title": "Shooter Master: Applied Volts",
+            "x": 1280.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/HOT/Shooter/Shooter Master: Applied Volts",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Robot Real Speed",
+            "x": 1280.0,
+            "y": 512.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/HOT/Drive/Robot Real Speed",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Drivers",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "Alerts",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "errors",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/PathPlanner/errors",
+                  "period": 0.06,
+                  "data_type": "string[]",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "warnings",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/PathPlanner/warnings",
+                  "period": 0.06,
+                  "data_type": "string[]",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "infos",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/PathPlanner/infos",
+                  "period": 0.06,
+                  "data_type": "string[]",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "Speed (m/s)",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 384.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/HOT/Drive/Robot Real Speed",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": -140.0,
+              "end_angle": 140.0,
+              "min_value": 0.0,
+              "max_value": 100.0,
+              "number_of_labels": 8,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "Autos",
+            "x": 640.0,
+            "y": 256.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Autos",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Volts",
+            "x": 1024.0,
+            "y": 256.0,
+            "width": 512.0,
+            "height": 256.0,
+            "type": "Voltage View",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Volts",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 4.0,
+              "max_value": 13.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Amps",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 512.0,
+            "height": 256.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Amps",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": -1.0,
+              "max_value": 1.0,
+              "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Match time",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 256.0,
+            "type": "Match Time",
+            "properties": {
+              "topic": "/Shuffleboard/tab/Match time",
+              "period": 0.06,
+              "data_type": "double",
+              "time_display_mode": "Minutes and Seconds",
+              "red_start_time": 15,
+              "yellow_start_time": 30
+            }
+          },
+          {
+            "title": "FMSInfo",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 640.0,
+            "height": 128.0,
+            "type": "FMSInfo",
+            "properties": {
+              "topic": "/FMSInfo",
+              "period": 0.06
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Shooter",
+      "grid_layout": {
+        "layouts": [],
+        "containers": []
+      }
+    }
+  ]
+}
