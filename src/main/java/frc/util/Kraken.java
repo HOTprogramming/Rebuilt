@@ -4,6 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
@@ -14,6 +15,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.networktables.DoublePublisher;
@@ -67,6 +69,10 @@ public class Kraken {
 
 	public final String subsystem;
 	public final String deviceName;
+
+	public Kraken(int id, TalonFXConfiguration config, InvertedValue inverted, String subsystem, String deviceName) {
+		this(id, Constants.canName, config.withMotorOutput(config.MotorOutput.withInverted(inverted)), subsystem, deviceName);
+	}
 
 	public Kraken(int id, TalonFXConfiguration config, String subsystem, String deviceName) {
 		this(id, Constants.canName, config, subsystem, deviceName);
