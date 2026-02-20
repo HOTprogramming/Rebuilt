@@ -27,9 +27,9 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
-import frc.robot.sim.PhysicsSim;
 import frc.robot.subsystems.Indexer.IndexConstants;
 import frc.robot.subsystems.Indexer.Index.IndexStats;
+import frc.util.sim.PhysicsSim;
 
 public class IndexKraken {
 

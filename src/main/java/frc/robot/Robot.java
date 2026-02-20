@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.util.HubTracker;
+//import frc.util.HubTracker;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -39,8 +39,6 @@ public class Robot extends TimedRobot {
 
   private boolean ppConfigured = false;
 
-  private Command initAuto;
-
   private static final double SIM_DISABLED_SECONDS = 10;
   private static final double SIM_AUTO_SECONDS = 10;
   private static final double SIM_TELEOP_SECONDS = 10;
@@ -60,6 +58,7 @@ public class Robot extends TimedRobot {
     /*Start Logging */
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
+	DriverStation.silenceJoystickConnectionWarning(true);
   
     /*Create Robot Contrainer */
     m_robotContainer = new RobotContainer();
@@ -70,21 +69,18 @@ public class Robot extends TimedRobot {
     voltsEntry = tab.add("Volts",0.0).getEntry();
     ampsEntry = tab.add("Amps",0.0).getEntry();
 
-    /* Create a default auto to initialize Path Planner  */
-    initAuto = new PathPlannerAuto("initAuto").ignoringDisable(true);
-
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table = inst.getTable("HOT/Drive");
 
     timeRemainingInCurrentShift = table.getDoubleTopic("Hub Time Remaining").publish();
   }
 
-  private void UpdateTelemetry() {
+  /*private void UpdateTelemetry() {
     try{
       timeRemainingInCurrentShift.set(HubTracker.timeRemainingInCurrentShift().get().abs(Seconds));
     } catch(Exception e) {
     }
-  }
+  }*/
     
 
   @Override
@@ -97,14 +93,13 @@ public class Robot extends TimedRobot {
     voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
     ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
 
-    UpdateTelemetry(); 
+    //UpdateTelemetry(); 
   }
 
   @Override
   public void disabledInit() {
     /* Fire off the Pathplanner Auto to initialize Path Planner (Work around a bug) */
     if (!ppConfigured) {
-      initAuto.schedule();
       ppConfigured = true;
     }
     
@@ -120,7 +115,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledExit() {
     /*Clear our the fake Path Planner Auto Initialize  */
-    initAuto.cancel();
   }
 
   @Override
@@ -130,7 +124,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = Commands.waitSeconds(0.01).andThen(m_robotContainer.getAutonomousCommand());
 
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 

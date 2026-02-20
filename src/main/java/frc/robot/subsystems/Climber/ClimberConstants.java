@@ -84,12 +84,6 @@ public class ClimberConstants {
             case COMPBOT -> new ClimberConfigs(
                 climberWheelConfigs 
             );
-            case SIMBOT -> new ClimberConfigs(
-                climberWheelConfigs 
-            );
-            case DEVBOT -> new ClimberConfigs(
-                climberWheelConfigs 
-            );
             case CAMERABOT -> new ClimberConfigs( 
                 climberWheelConfigs 
             );
