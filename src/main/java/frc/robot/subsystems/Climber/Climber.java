@@ -165,25 +165,7 @@ public class Climber extends SubsystemBase {
 	private Command spinOutBeambreak() {
 		return run(() -> setWristVelocity(100)).onlyWhile(isBeamBreakTripped());
 	}
-
-	public Command stow() {
-		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
-	}
-
-	public Command deploy() {
-		return run(() -> setElbowPosition(ClimberConstants.deployedPos)).until(isDeployed());
-	}
-
-	public Command climb() {
-		return run(() -> setElbowPosition(ClimberConstants.climbedPos)).until(isClimbed());
-	}
-
-	public Command lift() {
-		return run(() -> setElbowPosition(ClimberConstants.liftClimbPos)).until(isLifted());
-	}
-
-	public Command stop() {
-		return runOnce(() -> {});
-	}
-
+	
+	
 }
+
