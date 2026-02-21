@@ -83,9 +83,9 @@ public class RobotContainer {
     // Drivetrain Controls
     drivetrain.setDefaultCommand(drivetrain.run(() -> 
       drivetrain.teleopDrive(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()*0.5 : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX()*0.5 : 0,
+        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX()*0.5 : 0
     )));
 
     driver.a().whileTrue(drivetrain.run(()->
@@ -125,17 +125,19 @@ public class RobotContainer {
         new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
 
-driver.x().whileTrue(
-    drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))
+	driver.x().whileTrue(
+    drivetrain.run(() -> drivetrain.aim(-driver.getLeftY() * 0.5, -driver.getLeftX() * 0.5)) //too fast in sim
     .alongWith(
         Commands.sequence(
             // We use Commands.runOnce instead of drivetrain.runOnce 
             // to avoid the automatic requirement tie-in
             Commands.runOnce(() -> drivetrain.launchSimFuel(fuelSim)), 
-            Commands.waitSeconds(0.1)
+            Commands.waitSeconds(0.25)
         ).repeatedly()
     )
 );
+
+	driver.start().onTrue(drivetrain.shooterCharacterizer(driver, fuelSim));
 
     // Shooter Controls
     operator.povUp().onTrue(shooter.shootSpeedUp());
@@ -207,7 +209,7 @@ driver.x().whileTrue(
     fuelSim.start();
     SmartDashboard.putData(Commands.runOnce(() -> {
                 fuelSim.clearFuel();
-                fuelSim.spawnStartingFuel();
+                //fuelSim.spawnStartingFuel();
             })
             .withName("Reset Fuel")
             .ignoringDisable(true));

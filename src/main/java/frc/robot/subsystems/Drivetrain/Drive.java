@@ -4,6 +4,7 @@ import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 import frc.robot.Constants;
 import frc.robot.RobotState;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -34,10 +35,12 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Robot;
 import frc.util.FuelSim;
 import static edu.wpi.first.units.Units.*;
@@ -134,7 +137,10 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private DoubleArrayPublisher robotPose;
 
     public record ShooterState(double velocityMps, double angleDeg) {}
-
+	private int lastScoreCount = 0;
+	private double measuredTOF = 0;
+	private double lastLaunchTime = 0;
+	
     public Drive(DriveKraken driveKraken) { 
 
     if (!Constants.compMode) {
@@ -238,6 +244,7 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
         this.iOdata = driveKraken.update();
 
         UpdateTelemetry();
+		updateScoreTelemetry();
     }
             
     public boolean drivetrainAtTarget() {
@@ -400,22 +407,135 @@ public Command resetControllers() {
         this.driveKraken.seedFieldRelative(pose);
     }
 
-    public ShooterState getSimShotTarget() {
-        // This is your single source of truth
-        return new ShooterState(8.0, 40.0); 
-    }
+	public ShooterState getSimShotTarget() {
+		// 1. Check a "Tuning Mode" toggle on the Dashboard
+		// If this is true, use sliders. If false, use the Lookup Table.
+		boolean tuningMode = SmartDashboard.getBoolean("Tuning/ModeActive", false);
+	
+		if (tuningMode) {
+			double vel = SmartDashboard.getNumber("Tuning/ShotVelocity", 5.0);
+			double angle = SmartDashboard.getNumber("Tuning/ShotAngle", 40.0);
+			return new ShooterState(vel, angle);
+		} else {
+			// 2. Auto-Mode: Get distance to the Red Hub
+			Translation2d redHub = new Translation2d(11.91, 4.03);
+			double dist = iOdata.state.Pose.getTranslation().getDistance(redHub);
+	
+			// 3. Lookup values from your ShootOnTheFly maps
+			double vel = ShootOnTheFly.getFlywheelSpeed(dist);
+			double angle = ShootOnTheFly.getHoodAngle(dist).getDegrees();
+	
+			return new ShooterState(vel, angle);
+		}
+	}
 
-    public void launchSimFuel(FuelSim fuelSim) {
-        if (Robot.isSimulation() && fuelSim != null) {
-            ShooterState state = getSimShotTarget();
-            fuelSim.launchFuel(
-                MetersPerSecond.of(state.velocityMps()),
-                Degrees.of(state.angleDeg()),
-                Degrees.of(180),
-                Meters.of(0.3)
-            );
-        }
+public void launchSimFuel(FuelSim fuelSim) {
+    if (Robot.isSimulation() && fuelSim != null) {
+        // 1. Start the stopwatch
+        lastLaunchTime = Timer.getFPGATimestamp();
+
+        ShooterState state = getSimShotTarget();
+        
+        // 2. Launch using your preferred 180-degree heading
+        fuelSim.launchFuel(
+            MetersPerSecond.of(state.velocityMps()),
+            Degrees.of(state.angleDeg()),
+            Degrees.of(180), 
+            Meters.of(0.3)   
+        );
+
+        System.out.println("Shot Fired! Time logged.");
     }
+}
+
+	public void updateScoreTelemetry() {
+		// Access the static Hub instances inside FuelSim
+		int blueScore = FuelSim.Hub.BLUE_HUB.getScore();
+		int redScore = FuelSim.Hub.RED_HUB.getScore();
+	
+		SmartDashboard.putNumber("Sim/Blue Hub Score", blueScore);
+		SmartDashboard.putNumber("Sim/Red Hub Score", redScore);
+		
+	}
+
+
+	public void resetPose(Pose2d pose) {
+		// In Phoenix 6, this "seeds" the odometry with a new position
+		this.driveKraken.seedFieldRelative(pose);
+		
+		// For Simulation: This updates the 'ghost' robot in the sim environment
+		if (Robot.isSimulation()) {
+			// We look for the pose inside your iOdata to keep it in sync
+			this.iOdata.state.Pose = pose;
+		}
+	}
+
+	public Command shooterCharacterizer(CommandXboxController driver, FuelSim fuelSim) {
+		double[] testDistances = {1.34, 2.17, 3.15, 4.09, 5.57};
+		StringBuilder finalTable = new StringBuilder(); // Storage for results
+		
+		var sequence = Commands.runOnce(() -> {
+			System.out.println("--- TUNING STARTED ---");
+			finalTable.append("\n/* --- GENERATED LOOKUP TABLE --- */\n");
+		});
+	
+		for (double dist : testDistances) {
+			sequence = sequence.andThen(
+				Commands.sequence(
+					// 1. Teleport
+					Commands.runOnce(() -> {
+						Translation2d redGoal = new Translation2d(11.91, 4.03); 
+						this.resetPose(new Pose2d(redGoal.getX() + (dist * 0.707), redGoal.getY() + (dist * 0.707), redGoal.minus(new Translation2d(redGoal.getX() + (dist * 0.707), redGoal.getY() + (dist * 0.707))).getAngle()));
+						System.out.println("\n>>> CURRENT DISTANCE: " + dist + "m (Press X to shoot, BACK for next)");
+					}),
+					
+					// 2. The Tuning Window (Inside the for-loop)
+					Commands.run(() -> {
+						// A. Fire the ball
+						if (driver.getHID().getXButtonPressed()) {
+							lastLaunchTime = Timer.getFPGATimestamp();
+							this.launchSimFuel(fuelSim);
+						}
+
+						// B. Watch for score increase to measure TOF
+						int currentScore = FuelSim.Hub.RED_HUB.getScore();
+						if (currentScore > lastScoreCount) {
+							measuredTOF = Timer.getFPGATimestamp() - lastLaunchTime;
+							lastScoreCount = currentScore; // Sync the count
+							System.out.println("Score Detected! Measured TOF: " + measuredTOF);
+						}
+					})
+					.until(driver.back()),
+					// 3. Store Results (Inside the for-loop)
+					Commands.runOnce(() -> {
+						double v = SmartDashboard.getNumber("Tuning/ShotVelocity", 5.0);
+						double a = SmartDashboard.getNumber("Tuning/ShotAngle", 40.0);
+						
+						// Fallback: If we didn't score this round, calculate the math version
+						if (measuredTOF <= 0) {
+							double horizontalVel = v * Math.cos(Math.toRadians(a));
+							measuredTOF = (horizontalVel > 0) ? dist / horizontalVel : 0;
+						}
+
+						finalTable.append(String.format("// Data for %.2fm\n", dist));
+						finalTable.append(String.format("shotFlywheelSpeedMap.put(%.2f, %.2f);\n", dist, v));
+						finalTable.append(String.format("shotHoodAngleMap.put(%.2f, Rotation2d.fromDegrees(%.2f));\n", dist, a));
+						finalTable.append(String.format("timeOfFlightMap.put(%.2f, %.2f); // Measured\n\n", dist, measuredTOF));
+						
+						// Reset measuredTOF for the next distance in the loop
+						measuredTOF = 0;
+					}),
+					Commands.waitSeconds(0.5)
+				)
+			);
+		}
+	
+		// 4. The Grand Finale: Print everything at once!
+		return sequence.finallyDo(() -> {
+			System.out.println("\n\n" + finalTable.toString());
+			System.out.println("--- ALL DISTANCES COMPLETE ---");
+		});
+	}
 
     public Pose2d getPose() {
         return this.iOdata.state.Pose;

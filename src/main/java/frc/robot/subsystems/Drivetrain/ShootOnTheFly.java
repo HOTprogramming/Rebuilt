@@ -27,45 +27,42 @@ public class ShootOnTheFly {
     LinearFilter vxfilt = LinearFilter.movingAverage(8);
     LinearFilter vyfilt = LinearFilter.movingAverage(8);
 
-    static {
+	static {
+        // Updated based on sim characterization results
+        minDistance = 1.34;
+        maxDistance = 5.57;
+        TOF_CONVERGENCE_THRESHOLD = 0.025;
+        MAX_ITERATIONS = 10;
 
-    minDistance = 1.34;
-    maxDistance = 5.60;
-    TOF_CONVERGENCE_THRESHOLD = 0.025;
-    MAX_ITERATIONS = 10;
+        // Hood Angles (Note: Conversion to Rotation2d from Degrees)
+        shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(79.00));
+        shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(63.00));
+        shotHoodAngleMap.put(3.15, Rotation2d.fromDegrees(63.00));
+        shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(60.00));
+        shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(53.00));
 
-    shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0));
-    shotHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
-    shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
-    shotHoodAngleMap.put(2.81, Rotation2d.fromDegrees(27.0));
-    shotHoodAngleMap.put(3.82, Rotation2d.fromDegrees(29.0));
-    shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(30.0));
-    shotHoodAngleMap.put(4.40, Rotation2d.fromDegrees(31.0));
-    shotHoodAngleMap.put(4.77, Rotation2d.fromDegrees(32.0));
-    shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(32.0));
-    shotHoodAngleMap.put(5.60, Rotation2d.fromDegrees(35.0));
+        // Flywheel Speeds (MPS)
+        shotFlywheelSpeedMap.put(1.34, 6.25);
+        shotFlywheelSpeedMap.put(2.17, 7.00);
+        shotFlywheelSpeedMap.put(3.15, 7.00);
+        shotFlywheelSpeedMap.put(4.09, 7.60);
+        shotFlywheelSpeedMap.put(5.57, 8.50);
 
-    shotFlywheelSpeedMap.put(1.34, 210.0);
-    shotFlywheelSpeedMap.put(1.78, 220.0);
-    shotFlywheelSpeedMap.put(2.17, 220.0);
-    shotFlywheelSpeedMap.put(2.81, 230.0);
-    shotFlywheelSpeedMap.put(3.82, 250.0);
-    shotFlywheelSpeedMap.put(4.09, 255.0);
-    shotFlywheelSpeedMap.put(4.40, 260.0);
-    shotFlywheelSpeedMap.put(4.77, 265.0);
-    shotFlywheelSpeedMap.put(5.57, 275.0);
-    shotFlywheelSpeedMap.put(5.60, 290.0);
-
-    timeOfFlightMap.put(7.0, 1.5);
-    timeOfFlightMap.put(5.68, 1.16);
-    timeOfFlightMap.put(4.55, 1.12);
-    timeOfFlightMap.put(3.15, 1.11);
-    timeOfFlightMap.put(1.88, 1.09);
-    timeOfFlightMap.put(1.38, 0.90);
-    timeOfFlightMap.put(1.0, 0.70);    
+        // Time of Flight (Seconds - Measured)
+        timeOfFlightMap.put(1.34, 0.92);
+        timeOfFlightMap.put(2.17, 0.92);
+        timeOfFlightMap.put(3.15, 0.96);
+        timeOfFlightMap.put(4.09, 1.06);
+        timeOfFlightMap.put(5.57, 1.12);
     }
 
-    
+    public static double getFlywheelSpeed(double distance) {
+		return shotFlywheelSpeedMap.get(distance);
+	}
+	
+	public static Rotation2d getHoodAngle(double distance) {
+		return shotHoodAngleMap.get(distance);
+	}
     
     public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
         double latency = 0.1; //needs to be tuned, in seconds
