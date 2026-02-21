@@ -119,18 +119,21 @@ public class RobotContainer {
     )).beforeStarting(drivetrain.resetControllers()));
 
     // Shooter Controls
-    operator.povUp().onTrue(shooter.shootSpeedUp());
-    operator.povDown().onTrue(shooter.shootSpeedDown());
-    operator.a().onTrue(shooter.goToIdle());
-    operator.x().onTrue(shooter.goToShoot());
-    operator.b().onTrue(shooter.shooterOff());
+    // operator.povUp().onTrue(shooter.shootSpeedUp());
+    // operator.povDown().onTrue(shooter.shootSpeedDown());
+    // operator.a().onTrue(shooter.goToIdle());
+    // operator.x().onTrue(shooter.goToShoot());
+    // operator.b().onTrue(shooter.shooterOff());
 
     // Indexer Controls
     driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
     // Climber Controls
-    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
+    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual( 
+		Math.abs(operator.getRightX()) >= 0.15 ? operator.getRightX() * 0.3 : 0,
+        Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.3 : 0)));
 	operator.y().onTrue(climber.zeroSpinner());
+	operator.x().onTrue(climber.spinToZero());
 
 	// Intake Controls
 	operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
