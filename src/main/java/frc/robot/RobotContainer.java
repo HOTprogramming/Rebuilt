@@ -130,6 +130,7 @@ public class RobotContainer {
 
     // Climber Controls
     climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
+	operator.y().onTrue(climber.zeroSpinner());
 
 	// Intake Controls
 	operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());

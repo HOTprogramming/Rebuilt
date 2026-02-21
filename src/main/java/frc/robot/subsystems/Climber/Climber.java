@@ -1,16 +1,36 @@
 package frc.robot.subsystems.Climber;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
 	public final ClimberKraken m_ClimbKraken = ClimberKraken.getInstance();
 
-	public Climber() {}
+	private BooleanPublisher climberBeambreak;
+	double zeroPosA = 0;
+	double zeroPos = 0;
+	DoubleSupplier zeropossup = () -> zeroPos;
+	
+	public Climber() {
+
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+		NetworkTable table = inst.getTable("HOT/Climber");
+
+		climberBeambreak = table.getBooleanTopic("Beambreak").publish();
+	}
 
 	@Override
 	public void periodic() {
 		m_ClimbKraken.updateStats();
+		climberBeambreak.set(m_ClimbKraken.getBeambreakStatus());
 	}
 
 	private void runPosition(double targetPos) {
@@ -21,27 +41,33 @@ public class Climber extends SubsystemBase {
 		m_ClimbKraken.spinrunPosition(targetPos);
 	}
 
-	public Command deployCommand() {
-		return runOnce(() -> runPosition(ClimberConstants.deployPosition));
+	private void spinRunVelocity(double targetVel) {
+		m_ClimbKraken.spinRunVelocity(targetVel);
 	}
 
-	public Command retractCommand() {
-		return runOnce(() -> runPosition(ClimberConstants.retractPosition));
+	private BooleanSupplier isBeamBreakTripped() {
+		return () -> m_ClimbKraken.getBeambreakStatus();
 	}
 
-	public Command rotateCommand() {
-		return runOnce(() -> spinrunPosition(ClimberConstants.spinPosition));
+	public Command zeroSpinner() {
+		return Commands.sequence(spintoBeambreak(), 
+		runOnce(() -> zeroPosA = m_ClimbKraken.getSpinPosition()),
+		spinOutBeambreak(),
+		runOnce(() -> zeroPos = (zeroPosA + m_ClimbKraken.getSpinPosition()) / 2)
+
+		);
 	}
 
-	public Command spinhomeCommand() {
-		return runOnce(() -> spinrunPosition(ClimberConstants.spinhomePosition));
+	public Command spinToZero() {
+		return run(() -> spinrunPosition(zeropossup.getAsDouble())); 
 	}
 
-	public Command latchCommand() {
-		return runOnce(() -> spinrunPosition(ClimberConstants.lockPosition));
+	public Command spintoBeambreak() {
+		return run(() -> spinRunVelocity(10)).until(isBeamBreakTripped()); 
 	}
-
-	public Command LV1Command() {
-		return runOnce(() -> spinrunPosition(ClimberConstants.lvlonePosition));
+	public Command spinOutBeambreak() {
+		return run(() -> spinRunVelocity(5)).onlyWhile(isBeamBreakTripped());
 	}
+	
+	
 }
