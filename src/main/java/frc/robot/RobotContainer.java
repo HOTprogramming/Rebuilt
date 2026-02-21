@@ -154,8 +154,11 @@ public class RobotContainer {
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
     // Climber Controls
-    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
+    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual( 
+		Math.abs(operator.getRightX()) >= 0.15 ? operator.getRightX() * 0.3 : 0,
+        Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.3 : 0)));
 	operator.y().onTrue(climber.zeroSpinner());
+	operator.x().onTrue(climber.spinToZero());
 
 		// Intake Controls
 		// operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());

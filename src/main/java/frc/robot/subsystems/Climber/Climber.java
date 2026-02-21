@@ -48,26 +48,29 @@ public class Climber extends SubsystemBase {
 	private BooleanSupplier isBeamBreakTripped() {
 		return () -> m_ClimbKraken.getBeambreakStatus();
 	}
+	private BooleanSupplier isZeroed() {
+		return () -> Math.abs(zeroPos - m_ClimbKraken.getSpinPosition()) < 1;
+	}
 
 	public Command zeroSpinner() {
 		return Commands.sequence(spintoBeambreak(), 
 		runOnce(() -> zeroPosA = m_ClimbKraken.getSpinPosition()),
 		spinOutBeambreak(),
 		runOnce(() -> zeroPos = (zeroPosA + m_ClimbKraken.getSpinPosition()) / 2)
-
 		);
 	}
 
 	public Command spinToZero() {
-		return run(() -> spinrunPosition(zeropossup.getAsDouble())); 
+		return run(() -> spinrunPosition(zeropossup.getAsDouble())).until(isZeroed()); 
 	}
 
 	public Command spintoBeambreak() {
-		return run(() -> spinRunVelocity(10)).until(isBeamBreakTripped()); 
+		return run(() -> spinRunVelocity(40)).until(isBeamBreakTripped()); 
 	}
 	public Command spinOutBeambreak() {
-		return run(() -> spinRunVelocity(5)).onlyWhile(isBeamBreakTripped());
+		return run(() -> spinRunVelocity(20)).onlyWhile(isBeamBreakTripped());
 	}
 	
 	
 }
+
