@@ -56,7 +56,8 @@ public class Climber extends SubsystemBase {
 		return Commands.sequence(spintoBeambreak(), 
 		runOnce(() -> zeroPosA = m_ClimbKraken.getSpinPosition()),
 		spinOutBeambreak(),
-		runOnce(() -> zeroPos = (zeroPosA + m_ClimbKraken.getSpinPosition()) / 2)
+		runOnce(() -> zeroPos = (zeroPosA + m_ClimbKraken.getSpinPosition()) / 2),
+		spinToZero()
 		);
 	}
 
@@ -70,7 +71,13 @@ public class Climber extends SubsystemBase {
 	public Command spinOutBeambreak() {
 		return run(() -> spinRunVelocity(20)).onlyWhile(isBeamBreakTripped());
 	}
-	
-	
+	public Command stow() {
+		return run(() -> runPosition(ClimberConstants.storedPos));
+	}
+	public Command deploy() {
+		return run(() -> runPosition(ClimberConstants.deployedPos));
+	}
+	public Command climb() {
+		return run(() -> runPosition(ClimberConstants.climbedPos));
+	}
 }
-
