@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +24,8 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotController;
+
 
 public class Robot extends TimedRobot {
 
@@ -33,8 +36,6 @@ public class Robot extends TimedRobot {
   private ShuffleboardTab tab;
 
   private GenericEntry matchTimeEntry;
-  private GenericEntry voltsEntry;
-  private GenericEntry ampsEntry;
 
   private DoublePublisher timeRemainingInCurrentShift;
   private BooleanPublisher hubActive;
@@ -58,6 +59,8 @@ public class Robot extends TimedRobot {
   }
 
   public Robot() {
+
+
     /*Start Logging */
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
@@ -69,8 +72,6 @@ public class Robot extends TimedRobot {
     /*Initialize base Shuffleboard tab */
     tab = Shuffleboard.getTab("tab");
     matchTimeEntry = tab.add("Match time",0.0).getEntry();
-    voltsEntry = tab.add("Volts",0.0).getEntry();
-    ampsEntry = tab.add("Amps",0.0).getEntry();
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table = inst.getTable("HOT/Drive");
@@ -97,8 +98,9 @@ public class Robot extends TimedRobot {
 
     /* Update base Shuffleboard tab with Roborio data  */
     matchTimeEntry.setDouble(DriverStation.getMatchTime());
-    voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
-    ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
+	double batteryVoltage = RobotController.getBatteryVoltage();
+	SmartDashboard.putNumber("Battery Voltage", batteryVoltage);
+
 
     UpdateTelemetry(); 
   }
