@@ -159,6 +159,9 @@ public class RobotContainer {
         Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.3 : 0)));
 	operator.y().onTrue(climber.zeroSpinner());
 	operator.x().onTrue(climber.spinToZero());
+	operator.a().onTrue(climber.deploy());
+	operator.b().onTrue(climber.stow());
+	operator.rightBumper().onTrue(climber.climb());
 
 		// Intake Controls
 		// operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
