@@ -43,7 +43,7 @@ public class ShootOnTheFly {
 
         // Flywheel Speeds (MPS)
         shotFlywheelSpeedMap.put(1.34, 6.25);
-        shotFlywheelSpeedMap.put(2.17, 7.00);
+        shotFlywheelSpeedMap.put(2.17, 6.50);
         shotFlywheelSpeedMap.put(3.15, 7.00);
         shotFlywheelSpeedMap.put(4.09, 7.60);
         shotFlywheelSpeedMap.put(5.57, 8.50);
@@ -65,7 +65,7 @@ public class ShootOnTheFly {
 	}
     
     public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
-        double latency = 0.1; //needs to be tuned, in seconds
+        double latency = 0.2; //needs to be tuned, in seconds
         ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
         double vy_filt = vyfilt.calculate(fieldSpeeds.vyMetersPerSecond) ;

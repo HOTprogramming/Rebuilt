@@ -193,7 +193,9 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
         configurePathPlanner();
 
         constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
-
+		SmartDashboard.setDefaultBoolean("Tuning/ModeActive", false);
+    	SmartDashboard.setDefaultNumber("Tuning/ShotVelocity", 5.0);
+    	SmartDashboard.setDefaultNumber("Tuning/ShotAngle", 40.0);
     }
 
     private void UpdateTelemetry() {
@@ -407,6 +409,7 @@ public Command resetControllers() {
         this.driveKraken.seedFieldRelative(pose);
     }
 
+	// This method determines the target shooter velocity and angle for simulation.
 	public ShooterState getSimShotTarget() {
 		// 1. Check a "Tuning Mode" toggle on the Dashboard
 		// If this is true, use sliders. If false, use the Lookup Table.
@@ -424,30 +427,34 @@ public Command resetControllers() {
 			// 3. Lookup values from your ShootOnTheFly maps
 			double vel = ShootOnTheFly.getFlywheelSpeed(dist);
 			double angle = ShootOnTheFly.getHoodAngle(dist).getDegrees();
-	
+			SmartDashboard.putNumber("Shooter/ReferenceDistance", dist);
+        	SmartDashboard.putNumber("Shooter/ReferenceVelocity", vel);
+        	SmartDashboard.putNumber("Shooter/ReferenceAngle", angle);
 			return new ShooterState(vel, angle);
 		}
 	}
 
-public void launchSimFuel(FuelSim fuelSim) {
-    if (Robot.isSimulation() && fuelSim != null) {
-        // 1. Start the stopwatch
-        lastLaunchTime = Timer.getFPGATimestamp();
+	// This method sends a launch command to the FuelSim with the appropriate parameters.
+	public void launchSimFuel(FuelSim fuelSim) {
+		if (Robot.isSimulation() && fuelSim != null) {
+			// 1. Start the stopwatch
+			lastLaunchTime = Timer.getFPGATimestamp();
 
-        ShooterState state = getSimShotTarget();
-        
-        // 2. Launch using your preferred 180-degree heading
-        fuelSim.launchFuel(
-            MetersPerSecond.of(state.velocityMps()),
-            Degrees.of(state.angleDeg()),
-            Degrees.of(180), 
-            Meters.of(0.3)   
-        );
+			ShooterState state = getSimShotTarget();
+			
+			// 2. Launch using your preferred 180-degree heading
+			fuelSim.launchFuel(
+				MetersPerSecond.of(state.velocityMps()),
+				Degrees.of(state.angleDeg()),
+				Degrees.of(180), 
+				Meters.of(0.3)   
+			);
 
-        System.out.println("Shot Fired! Time logged.");
-    }
-}
+			System.out.println("Shot Fired! Time logged.");
+		}
+	}
 
+	// This method updates the Dashboard with the current scores from the FuelSim.
 	public void updateScoreTelemetry() {
 		// Access the static Hub instances inside FuelSim
 		int blueScore = FuelSim.Hub.BLUE_HUB.getScore();
@@ -470,6 +477,7 @@ public void launchSimFuel(FuelSim fuelSim) {
 		}
 	}
 
+	// This command runs the entire characterization sequence for the shooter in sim, allowing you to collect data at various distances.
 	public Command shooterCharacterizer(CommandXboxController driver, FuelSim fuelSim) {
 		double[] testDistances = {1.34, 2.17, 3.15, 4.09, 5.57};
 		StringBuilder finalTable = new StringBuilder(); // Storage for results
