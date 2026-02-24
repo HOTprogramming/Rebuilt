@@ -16,7 +16,7 @@ public class ShooterConstants {
 	public static int kMotorIDLeftTop = 9;
 	public static int kMotorIDLeftBottom = 10;
 	public static int kMotorIDRightTop = 11;
-	public static int kMotorIDRightBottom = 0;
+	public static int kMotorIDRightBottom = 12;
 	public static double kShootReduction = (1.0 / 1.0);
 	public static double kIdleSpeed = (70.0);
 	public static double kShooterSpeed = (32.0);
