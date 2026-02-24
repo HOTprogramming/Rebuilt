@@ -14,8 +14,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class ClimberConstants {
-	public static int kClimbermotorID = 16;
-	public static int kClimberspinnerID = 17;
+	public static int kClimbermotorID = 20;
+	public static int kClimberspinnerID = 21;
 	public static String kBusName = Constants.canName;
 	public static double deployPosition = 200.0;
 	public static double retractPosition = 0.0;
