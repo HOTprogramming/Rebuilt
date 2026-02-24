@@ -11,12 +11,13 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.Constants;
+import frc.robot.Constants.RobotType;
 
 public class ShooterConstants {
-	public static int kMotorIDLeftTop = 9;
-	public static int kMotorIDLeftBottom = 10;
-	public static int kMotorIDRightTop = 11;
-	public static int kMotorIDRightBottom = 12;
+	public static int kMotorIDLeftTop = Constants.getRobot() == RobotType.COMPBOT ? 9 : 0;
+	public static int kMotorIDLeftBottom = Constants.getRobot() == RobotType.COMPBOT ? 10 : 0;
+	public static int kMotorIDRightTop = Constants.getRobot() == RobotType.COMPBOT ? 11 : 0;
+	public static int kMotorIDRightBottom = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
 	public static double kShootReduction = (1.0 / 1.0);
 	public static double kIdleSpeed = (70.0);
 	public static double kShooterSpeed = (32.0);
@@ -24,7 +25,7 @@ public class ShooterConstants {
 	public static double kShooterError = (0.500);
 
 	public static double kTargetHoodAngle = 0;
-	public static int kHoodMotorID = 15;
+	public static int kHoodMotorID = Constants.getRobot() == RobotType.COMPBOT ? 15 : 0;
 	public static double kHoodReduction = (1.0 / 1.0);
 
 	public static CANBus canbus = new CANBus(Constants.canName);
