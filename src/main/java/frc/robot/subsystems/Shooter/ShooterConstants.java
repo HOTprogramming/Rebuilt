@@ -24,7 +24,7 @@ public class ShooterConstants {
 	public static double kShooterError = (0.500);
 
 	public static double kTargetHoodAngle = 0;
-	public static int kHoodMotorID = 0;
+	public static int kHoodMotorID = 15;
 	public static double kHoodReduction = (1.0 / 1.0);
 
 	public static CANBus canbus = new CANBus(Constants.canName);
