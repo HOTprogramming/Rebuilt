@@ -12,12 +12,13 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.Constants;
+import frc.robot.Constants.RobotType;
 
 public class IndexConstants {
-	public static int kLeftKickID = 18;
-	public static int kRightKickID = 19;
-	public static int kFloorID = 13;
-	public static int kLoaderID = 14;
+	public static int kLeftKickID = Constants.getRobot() == RobotType.COMPBOT ? 18 : 14;
+	public static int kRightKickID = Constants.getRobot() == RobotType.COMPBOT ? 19 : 15;
+	public static int kFloorID = Constants.getRobot() == RobotType.COMPBOT ? 13 : 9;
+	public static int kLoaderID = Constants.getRobot() == RobotType.COMPBOT ? 14 : 13;
 	public static String kBusName = Constants.canName;
 	public static double kickerSpeed = 1000;
 	public static double floorSpeed = 300;
