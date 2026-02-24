@@ -11,7 +11,8 @@ import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import frc.robot.Constants.*;
+import frc.robot.Constants;
+import frc.robot.Constants.RobotType;
 
 public class ClimberConstants {
 	public static int kClimbermotorID = Constants.getRobot() == RobotType.COMPBOT ? 20 : 16;
