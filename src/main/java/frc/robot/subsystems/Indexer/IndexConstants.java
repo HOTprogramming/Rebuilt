@@ -14,10 +14,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class IndexConstants {
-	public static int kLeftKickID = 14;
-	public static int kRightKickID = 15;
-	public static int kFloorID = 9;
-	public static int kLoaderID = 13;
+	public static int kLeftKickID = 18;
+	public static int kRightKickID = 19;
+	public static int kFloorID = 13;
+	public static int kLoaderID = 14;
 	public static String kBusName = Constants.canName;
 	public static double kickerSpeed = 1000;
 	public static double floorSpeed = 300;
