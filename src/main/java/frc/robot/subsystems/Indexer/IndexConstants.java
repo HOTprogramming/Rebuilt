@@ -37,7 +37,7 @@ public class IndexConstants {
 			.withPeakReverseTorqueCurrent(-40))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
-			.withNeutralMode(NeutralModeValue.Coast))
+			.withNeutralMode(NeutralModeValue.Brake))
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(10.0)
 			.withMotionMagicAcceleration(10.0))
