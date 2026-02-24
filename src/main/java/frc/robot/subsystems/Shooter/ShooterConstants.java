@@ -13,9 +13,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants;
 
 public class ShooterConstants {
-	public static int kMotorIDLeftTop = 0;
-	public static int kMotorIDLeftBottom = 0;
-	public static int kMotorIDRightTop = 0;
+	public static int kMotorIDLeftTop = 9;
+	public static int kMotorIDLeftBottom = 10;
+	public static int kMotorIDRightTop = 11;
 	public static int kMotorIDRightBottom = 0;
 	public static double kShootReduction = (1.0 / 1.0);
 	public static double kIdleSpeed = (70.0);
