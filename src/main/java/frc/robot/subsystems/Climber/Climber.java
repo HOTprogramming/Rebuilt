@@ -127,6 +127,24 @@ public class Climber extends SubsystemBase {
 		);
 	}
 
+	public Command fullDeploy() {
+		return Commands.sequence(
+			runOnce(() -> runPosition(ClimberConstants.deployedPos)),
+			zeroSpinner(), 
+			deploy());
+	}
+
+	public Command spinOutSlow() {
+		return Commands.sequence(
+			run(() -> spinRunVelocity(-20)).withDeadline(Commands.waitSeconds(0.5)), 
+			run(() -> spinRunVelocity(-20)).onlyWhile(isBeamBreakTripped()));
+	}
+	
+	public Command spinBackSlow() {
+		return Commands.sequence(
+			run(() -> spinRunVelocity(20)).withDeadline(Commands.waitSeconds(0.5)), 
+			run(() -> spinRunVelocity(20)).onlyWhile(isBeamBreakTripped()));
+	}
 	public Command spinToZero() {
 		return run(() -> {
 				setWristPosition(zeropossup.getAsDouble());
