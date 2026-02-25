@@ -264,60 +264,7 @@
     {
       "name": "Drivers",
       "grid_layout": {
-        "layouts": [
-          {
-            "title": "Alerts",
-            "x": 384.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "List Layout",
-            "properties": {
-              "label_position": "TOP"
-            },
-            "children": [
-              {
-                "title": "errors",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Large Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/PathPlanner/errors",
-                  "period": 0.06,
-                  "data_type": "string[]"
-                }
-              },
-              {
-                "title": "warnings",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Large Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/PathPlanner/warnings",
-                  "period": 0.06,
-                  "data_type": "string[]"
-                }
-              },
-              {
-                "title": "infos",
-                "x": 0.0,
-                "y": 0.0,
-                "width": 128.0,
-                "height": 128.0,
-                "type": "Large Text Display",
-                "properties": {
-                  "topic": "/SmartDashboard/PathPlanner/infos",
-                  "period": 0.06,
-                  "data_type": "string[]"
-                }
-              }
-            ]
-          }
-        ],
+        "layouts": [],
         "containers": [
           {
             "title": "Speed (m/s)",
@@ -355,9 +302,9 @@
           },
           {
             "title": "Match time",
-            "x": 640.0,
+            "x": 384.0,
             "y": 0.0,
-            "width": 384.0,
+            "width": 640.0,
             "height": 384.0,
             "type": "Match Time",
             "properties": {
