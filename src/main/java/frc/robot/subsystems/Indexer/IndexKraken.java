@@ -2,8 +2,11 @@ package frc.robot.subsystems.Indexer;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Intake.IntakeConstants;
+import frc.robot.subsystems.Intake.IntakeConstants.IntakeConfigs;
 import frc.util.Kraken;
 
 public class IndexKraken {
@@ -23,6 +26,8 @@ public class IndexKraken {
 		m_loaderKraken.setup();
 		m_leftKickKraken.setup();
 		m_rightKickKraken.setup();
+
+		m_rightKickKraken.setFollower(IndexConstants.kLeftKickID, MotorAlignmentValue.Aligned);
 	}
 
 	public static IndexKraken getInstance() {
@@ -37,29 +42,20 @@ public class IndexKraken {
 	}
 
 	public void startIndex(double speed) {
-		// m_floorKraken.setVelocity(speed, Kraken.VelocityControlType.VelocityVoltage);
-		// m_loaderKraken.setVelocity(speed, Kraken.VelocityControlType.VelocityVoltage);
-		// m_leftKickKraken.setVelocity(speed, Kraken.VelocityControlType.VelocityVoltage);
-		// m_rightKickKraken.setVelocity(speed, Kraken.VelocityControlType.VelocityVoltage);
 		if(speed > 0){
-			SmartDashboard.putBoolean("Pulseing?", true);
-			m_floorKraken.motor.setControl(new DutyCycleOut(.8));
-			m_loaderKraken.motor.setControl(new DutyCycleOut(.8));
-			m_leftKickKraken.motor.setControl(new DutyCycleOut(.93));
-			m_rightKickKraken.motor.setControl(new DutyCycleOut(.93));
+			m_floorKraken.setVelocity(IndexConstants.floorSpeed-(IndexConstants.floorSpeed*.2), Kraken.VelocityControlType.VelocityVoltage, 1);
+			m_loaderKraken.setVelocity(IndexConstants.floorSpeed-(IndexConstants.floorSpeed*.2), Kraken.VelocityControlType.VelocityVoltage, 1);
+			m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);
 		} else {
-			SmartDashboard.putBoolean("Pulseing?", false);
-			m_floorKraken.motor.setControl(new DutyCycleOut(1));
-			m_loaderKraken.motor.setControl(new DutyCycleOut(1));
-			m_leftKickKraken.motor.setControl(new DutyCycleOut(.93));
-			m_rightKickKraken.motor.setControl(new DutyCycleOut(.93));
+			m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
+			m_loaderKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
+			m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);
 		}
 		
 	}
 
 	public void stop() {
 		m_leftKickKraken.stop();
-		m_rightKickKraken.stop();
 		m_floorKraken.stop();
 		m_loaderKraken.stop();
 	}

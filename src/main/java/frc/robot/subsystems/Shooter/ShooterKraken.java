@@ -43,8 +43,7 @@ public class ShooterKraken {
 	public void runVelocity(double desiredRotationsPerSecond) {
 		switch (controlModeShoot) {
 			case 0:
-				//m_krakenFXLeftTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityVoltage, 0);
-				m_krakenFXLeftTop.motor.setVoltage(10);
+				m_krakenFXLeftTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityVoltage, 0);
 				break;
 			case 1:
 				m_krakenFXLeftTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
