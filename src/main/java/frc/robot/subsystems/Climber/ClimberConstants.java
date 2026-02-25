@@ -28,6 +28,7 @@ public class ClimberConstants {
 	public static double storedPos = -0.2517;
 	public static double deployedPos = 0.2761;
 	public static double climbedPos = 0.152;
+	public static double wristZeroOffset = 0;
 
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs()
@@ -101,16 +102,17 @@ public class ClimberConstants {
 			.withMotionMagicCruiseVelocity(10.0)
 			.withMotionMagicAcceleration(10.0))
 		.withSlot0(new Slot0Configs()
-			.withKP(120)
+			.withKP(5)
 			.withKI(0.0)
 			.withKD(0.0)
 			.withKS(0.27)
-			.withKV(30))
+			.withKV(3))
 		.withSlot1(new Slot1Configs()
-			.withKP(5.0)
+			.withKP(0.7)
 			.withKI(0.0)
 			.withKD(0.0)
-			.withKS(2.5))
+			.withKS(0.35)
+			.withKV(0.08))
 		.withSlot2(new Slot2Configs()
 			.withKS(1)
 			.withKV(0)

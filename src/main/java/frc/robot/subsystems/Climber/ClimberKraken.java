@@ -37,6 +37,9 @@ public class ClimberKraken {
 	public double getSpinPosition() {
 		return m_spinnerKraken.position.getValueAsDouble();
 	}
+	public double getClimbPosition() {
+		return m_climberKraken.position.getValueAsDouble();
+	}
 
 	public void runManual(double percentOutputElbow, double percentOutputWrist) {
 		m_climberKraken.motor.setControl(new DutyCycleOut(percentOutputElbow));
@@ -48,10 +51,10 @@ public class ClimberKraken {
 	}
 
 	public void spinrunPosition(double desiredRotations) {
-		m_spinnerKraken.setPosition(desiredRotations, Kraken.PositionControlType.PositionVoltage, 1);
+		m_spinnerKraken.setPosition(desiredRotations, Kraken.PositionControlType.PositionVoltage, 0);
 	}
 
 	public void spinRunVelocity(double desiredVelocity) {
-		m_spinnerKraken.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage, 2);
+		m_spinnerKraken.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage, 1);
 	}
 }
