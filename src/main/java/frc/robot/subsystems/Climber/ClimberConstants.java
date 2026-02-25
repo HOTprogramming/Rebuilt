@@ -12,10 +12,11 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.Constants;
+import frc.robot.Constants.RobotType;
 
 public class ClimberConstants {
-	public static int kClimbermotorID = 16;
-	public static int kClimberspinnerID = 17;
+	public static int kClimbermotorID = Constants.getRobot() == RobotType.COMPBOT ? 20 : 16;
+	public static int kClimberspinnerID = Constants.getRobot() == RobotType.COMPBOT ? 21 : 17;
 	public static String kBusName = Constants.canName;
 	public static double deployPosition = 200.0;
 	public static double retractPosition = 0.0;
