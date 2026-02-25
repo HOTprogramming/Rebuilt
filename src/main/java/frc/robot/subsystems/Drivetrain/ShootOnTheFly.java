@@ -36,24 +36,24 @@ public class ShootOnTheFly {
 
         // Hood Angles (Note: Conversion to Rotation2d from Degrees)
         shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(79.00));
-        shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(63.00));
-        shotHoodAngleMap.put(3.15, Rotation2d.fromDegrees(63.00));
-        shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(60.00));
-        shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(53.00));
+        shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(70.00));
+        shotHoodAngleMap.put(3.15, Rotation2d.fromDegrees(64.00));
+        shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(57.00));
+        shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(50.00));
 
         // Flywheel Speeds (MPS)
-        shotFlywheelSpeedMap.put(1.34, 6.25);
-        shotFlywheelSpeedMap.put(2.17, 6.50);
-        shotFlywheelSpeedMap.put(3.15, 7.00);
+        shotFlywheelSpeedMap.put(1.34, 6.5);
+        shotFlywheelSpeedMap.put(2.17, 6.70);
+        shotFlywheelSpeedMap.put(3.15, 7.20);
         shotFlywheelSpeedMap.put(4.09, 7.60);
         shotFlywheelSpeedMap.put(5.57, 8.50);
 
         // Time of Flight (Seconds - Measured)
-        timeOfFlightMap.put(1.34, 0.92);
-        timeOfFlightMap.put(2.17, 0.92);
-        timeOfFlightMap.put(3.15, 0.96);
-        timeOfFlightMap.put(4.09, 1.06);
-        timeOfFlightMap.put(5.57, 1.12);
+        timeOfFlightMap.put(1.34, 0.98);
+        timeOfFlightMap.put(2.17, 0.96);
+        timeOfFlightMap.put(3.15, 1.01);
+        timeOfFlightMap.put(4.09, 0.98);
+        timeOfFlightMap.put(5.57, 1.02);
     }
 
     public static double getFlywheelSpeed(double distance) {
