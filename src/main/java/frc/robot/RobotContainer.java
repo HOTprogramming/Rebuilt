@@ -120,6 +120,10 @@ public class RobotContainer {
         new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
 
+	// Assuming target is 0.5 meters (20 inches) with a 5-degree jiggle
+	driver.rightTrigger()
+    .onTrue(drivetrain.dockToLadder(0.5, 5.0));
+
     // Shooter Controls
     operator.povUp().onTrue(shooter.shootSpeedUp());
     operator.povDown().onTrue(shooter.shootSpeedDown());
