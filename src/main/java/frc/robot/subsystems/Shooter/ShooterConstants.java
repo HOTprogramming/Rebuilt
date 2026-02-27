@@ -28,7 +28,7 @@ public class ShooterConstants {
 	public static int kHoodMotorID = Constants.getRobot() == RobotType.COMPBOT ? 15 : 0;
 	public static double kHoodReduction = (1.0 / 1.0);
 
-	public static CANBus canbus = new CANBus(Constants.canName2);
+	public static CANBus canbus = new CANBus(Constants.canName);
 
 	public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
