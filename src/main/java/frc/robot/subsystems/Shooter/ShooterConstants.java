@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotType;
 
@@ -23,6 +24,16 @@ public class ShooterConstants {
 	public static double kShooterSpeed = (32.0);
 	public static double kTargetShootSpeed = kShooterSpeed;
 	public static double kShooterError = (0.500);
+
+	public static Translation2d blueHub = new Translation2d();
+	public static Translation2d redHub = new Translation2d();
+
+	private static Translation2d topBlueTrench = new Translation2d();
+	private static Translation2d topRedTrench = new Translation2d();
+	private static Translation2d bottomBlueTrench = new Translation2d();
+	private static Translation2d bottomRedTrench = new Translation2d();
+
+	public static Translation2d[] trenches = new Translation2d[] {topBlueTrench, topRedTrench, bottomBlueTrench, bottomRedTrench};
 
 	public static double kTargetHoodAngle = 0;
 	public static int kHoodMotorID = Constants.getRobot() == RobotType.COMPBOT ? 15 : 0;

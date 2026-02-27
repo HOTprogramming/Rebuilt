@@ -1,13 +1,23 @@
 package frc.robot.subsystems.Shooter;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
 
 public class Shooter extends SubsystemBase {
 	private final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
 
-	public Shooter() {
+	private InterpolatingDoubleTreeMap hoodAngleMap;
 
+	public Shooter() {
+		hoodAngleMap = new InterpolatingDoubleTreeMap();
+		hoodAngleMap.put(5.0, 10.0);
+		hoodAngleMap.put(10.0, 20.0);
 	}
 
 	public double getTargetShootSpeed() {
@@ -26,6 +36,14 @@ public class Shooter extends SubsystemBase {
 	public void periodic() {
 		mShooterKraken.updateStats();
 	}
+
+	public Command autoAim() {
+		double distance = RobotState.pose.getTranslation().getDistance(DriverStation.getAlliance().get() == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
+		return runOnce(() -> {
+			mShooterKraken.runPosition(hoodAngleMap.get(distance));
+		});
+	}
+
 
 	public Command shooterOff() {
 		return runOnce(() -> {
