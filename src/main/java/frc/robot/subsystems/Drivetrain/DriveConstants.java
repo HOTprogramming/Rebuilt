@@ -15,8 +15,8 @@ public class DriveConstants {
 
     // ==================== Shared / Global Constants ====================
     public static final double slowModeMultiplier = 0.5;
-    public static final double kTranslationRateLimiter = 4;
-    public static final double kRotationRateLimiter = 4;
+    public static final double kTranslationRateLimiter = 5;
+    public static final double kRotationRateLimiter = 5;
     public static final double OTF_end_tolerance = 0.5;
 
     public static final double auto_align_tolerance = 0.01;
@@ -43,16 +43,16 @@ public class DriveConstants {
     public static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(70)
+                .withStatorCurrentLimit(60)
                 .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(70)
+                .withSupplyCurrentLimit(60)
                 .withSupplyCurrentLimitEnable(true)
-                .withSupplyCurrentLowerLimit(50)
+                .withSupplyCurrentLowerLimit(40)
                 .withSupplyCurrentLowerTime(1)
         ).withTorqueCurrent(
             new TorqueCurrentConfigs()
-                .withPeakForwardTorqueCurrent(120)
-                .withPeakReverseTorqueCurrent(-120)
+                .withPeakForwardTorqueCurrent(60)
+                .withPeakReverseTorqueCurrent(-60)
         );
 
     public static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();

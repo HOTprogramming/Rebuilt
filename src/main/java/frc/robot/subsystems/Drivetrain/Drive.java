@@ -20,6 +20,7 @@ import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -118,8 +119,10 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
  
     private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
-        .withDeadband(0.2).withRotationalDeadband(0.0)
-        .withDriveRequestType(DriveRequestType.Velocity).withDesaturateWheelSpeeds(false);
+        .withDriveRequestType(DriveRequestType.Velocity);
+	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
+		.withDriveRequestType(DriveRequestType.Velocity)
+		.withHeadingPID(10, 0, 0);
     private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds().withDriveRequestType(DriveRequestType.Velocity);
 
@@ -275,17 +278,35 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
         return runOnce(() -> driveKraken.setNeutralMode(NeutralModeValue.Brake));
     }
 
+	LinearFilter xFilter = LinearFilter.singlePoleIIR(0.04, 0.02);
+	LinearFilter yFilter = LinearFilter.singlePoleIIR(0.04, 0.02);
+	LinearFilter rotFilter = LinearFilter.singlePoleIIR(0.04, 0.02);
+
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-        rampedX = xLimiter.calculate(driveX); 
-        rampedY = yLimiter.calculate(driveY);    
-        rampedTheta = rotLimiter.calculate(driveTheta); 
+		double filteredX = xFilter.calculate(driveX);
+		double filteredY = yFilter.calculate(driveY);
+		double filteredTheta = rotFilter.calculate(driveTheta);
+
+        rampedX = xLimiter.calculate((filteredX * Math.abs(filteredX))); 
+        rampedY = yLimiter.calculate((filteredY * Math.abs(filteredY)));    
+        rampedTheta = rotLimiter.calculate((filteredTheta * Math.abs(filteredTheta))); 
 
         driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((rampedX <= 0 ? -(rampedX * rampedX) : (rampedX * rampedX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((rampedY <= 0 ? -(rampedY * rampedY) : (rampedY * rampedY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate((rampedTheta <= 0 ? -(rampedTheta * rampedTheta) : (rampedTheta * rampedTheta)) * DriveConfig.MAX_ANGULAR_VELOCITY())
+            .withVelocityX(rampedX * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(rampedY * DriveConfig.MAX_VELOCITY())
+            .withRotationalRate(rampedTheta * DriveConfig.MAX_ANGULAR_VELOCITY())
         );
     }
+
+	public void holdHeading(double driveX, double driveY) {
+		rampedX = xLimiter.calculate((driveX * Math.abs(driveX))); 
+        rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));    
+		
+		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+			.withVelocityX(rampedX * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(rampedY * DriveConfig.MAX_VELOCITY())
+			.withTargetDirection(driveKraken.getPigeon2().getRotation2d()));
+	}
 
     public void teleopDriveSlow(double driveX, double driveY, double driveTheta)  {
         //no rate limiter applied for slow mode
@@ -313,11 +334,10 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     }
 
     public void facePoint(double driveX, double driveY, Pose2d point) {
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
+        driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
-            Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI)));
+			.withTargetDirection(Rotation2d.fromRadians(Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI)));
     }
 
     // Needs to be done better at some point
@@ -326,11 +346,11 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     public void aim(double driveX, double driveY){
         double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
 
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), angle)
-        ));
+        driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .5)
+            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .5)
+            .withTargetDirection(Rotation2d.fromRadians(angle))
+        );
 
         
     }

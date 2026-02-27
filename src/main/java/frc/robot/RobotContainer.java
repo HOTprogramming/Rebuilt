@@ -77,15 +77,22 @@ public class RobotContainer {
     // Drivetrain Controls
     drivetrain.setDefaultCommand(drivetrain.run(() -> 
       drivetrain.teleopDrive(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
+        -driver.getLeftY(),
+        -driver.getLeftX(),
+        -driver.getRightX()
     )));
+
+	// driver.axisMagnitudeGreaterThan(4, .1).whileTrue(drivetrain.run(()->
+	//   drivetrain.teleopDrive(
+    //     -driver.getLeftY(),
+    //     -driver.getLeftX(),
+    //     -driver.getRightX()
+	// )));
 
     driver.a().whileTrue(drivetrain.run(()->
       drivetrain.aim(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
+        -driver.getLeftY(),
+        -driver.getLeftX()
     )));
 
     driver.b().whileTrue(drivetrain.run(()-> {
