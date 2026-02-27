@@ -368,6 +368,21 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
         SmartDashboard.putNumber("PID Y Output", yOutput);
     }
 
+	//align to fixed Y coordinate on field using Y translation controller
+    public void fixedX(double driveY, Rotation2d rtarget) {
+         double dynamicX = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
+        double xOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), dynamicX);
+        driveKraken.setSwerveRequest(FIELD_CENTRIC
+            .withVelocityX((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(!translationControllerY.atGoal() ? -xOutput : 0.0)
+            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
+        );
+        SmartDashboard.putNumber("Target X", dynamicX);
+        SmartDashboard.putNumber("Current X", iOdata.state.Pose.getY());
+        SmartDashboard.putNumber("PID X Output", xOutput);
+    }
+
+
     public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
         this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);
     }
