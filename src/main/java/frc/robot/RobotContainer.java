@@ -120,6 +120,12 @@ public class RobotContainer {
         new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
 
+	//translate to X target on button press
+     driver.a().whileTrue(drivetrain.run(()->
+      drivetrain.fixedX(Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        new Rotation2d(1.061)
+    )).beforeStarting(drivetrain.resetControllers()));
+
     // Shooter Controls
     operator.povUp().onTrue(shooter.shootSpeedUp());
     operator.povDown().onTrue(shooter.shootSpeedDown());
