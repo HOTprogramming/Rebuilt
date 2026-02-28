@@ -120,7 +120,7 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
  
     private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
-        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+        .withDriveRequestType(DriveRequestType.Velocity);
 	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
 		.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 		.withHeadingPID(10, 0, 0);
@@ -280,17 +280,15 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     }
 
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-		double deadband = .025;
+		double deadband = .1;
 
-		driveX = Math.abs(driveX) > deadband ? driveX : (1-(1/(1-deadband)))*driveX;
-		driveY = Math.abs(driveY) > deadband ? driveY : (1-(1/(1-deadband)))*driveY;
-		driveTheta = Math.abs(driveTheta) > deadband ? driveTheta : (1-(1/(1-deadband)))*driveTheta;
+		driveX = Math.abs(Math.hypot(driveX, driveY)) > deadband ? driveX : 0;
+		driveY = Math.abs(Math.hypot(driveX, driveY)) > deadband ? driveY : 0;
+		driveTheta = Math.abs(driveTheta) > deadband ? driveTheta : 0;
 
         rampedX = xLimiter.calculate((driveX * Math.abs(driveX))); 
         rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));    
-        rampedTheta = rotLimiter.calculate(driveTheta); 
-
-		System.out.println("Ramped X: " + rampedX + " Ramped Y: " + rampedY + " Ramped Theta: " + rampedTheta);
+        rampedTheta = rotLimiter.calculate(driveTheta * Math.abs(driveTheta));
 
         driveKraken.setSwerveRequest(FIELD_CENTRIC
             .withVelocityX(rampedX * DriveConfig.MAX_VELOCITY())
