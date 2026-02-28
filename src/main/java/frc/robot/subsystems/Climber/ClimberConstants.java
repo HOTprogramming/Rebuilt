@@ -30,6 +30,9 @@ public class ClimberConstants {
 	public static double deployedPos = 0.2761;
 	public static double climbedPos = 0.152;
 	public static double wristZeroOffset = 0;
+	public static double wristGearRatio = 634.8;
+	public static double wristClimbedPos = 0.5;
+	public static double liftClimbPos = 0.0;
 
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs()
