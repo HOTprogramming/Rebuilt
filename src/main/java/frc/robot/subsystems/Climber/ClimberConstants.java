@@ -29,10 +29,12 @@ public class ClimberConstants {
 	public static double storedPos = -0.2517;
 	public static double deployedPos = 0.2761;
 	public static double climbedPos = 0.152;
-	public static double wristZeroOffset = 0;
+	public static double wristZeroOffset = (6.0/360.0) * 634.8;
 	public static double wristGearRatio = 634.8;
-	public static double wristClimbedPos = 0.5;
-	public static double liftClimbPos = 0.0;
+	public static double wristPastClimbPos = 0.51;
+	public static double wristBeforeClimbPos = 0.49;
+	public static double liftClimbPos = 0.0555;
+	public static double l3ElbowPos = 0.25;
 
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs()
@@ -65,11 +67,11 @@ public class ClimberConstants {
 				.withSensorToMechanismRatio(1.0)
 				.withRotorToSensorRatio(1.0))
 		.withSlot0(new Slot0Configs()
-			.withKP(120)
+			.withKP(500)
 			.withKI(0.0)
 			.withKD(0.0)
 			.withKS(0.27)
-			.withKV(30))
+			.withKV(1))
 		.withSlot1(new Slot1Configs()
 			.withKP(5.0)
 			.withKI(0.0)
