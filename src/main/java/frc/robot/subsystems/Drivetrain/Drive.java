@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -20,6 +21,7 @@ import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -120,8 +122,10 @@ public class Drive extends SubsystemBase {
     private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
  
     private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
-        .withDeadband(0.2).withRotationalDeadband(0.0)
-        .withDriveRequestType(DriveRequestType.Velocity).withDesaturateWheelSpeeds(false);
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
+		.withDriveRequestType(DriveRequestType.Velocity)
+		.withHeadingPID(10, 0, 0);
     private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds().withDriveRequestType(DriveRequestType.Velocity);
 
@@ -357,16 +361,26 @@ public class Drive extends SubsystemBase {
 	}
 
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-        rampedX = xLimiter.calculate(driveX); 
-        rampedY = yLimiter.calculate(driveY);    
-        rampedTheta = rotLimiter.calculate(driveTheta); 
+        rampedX = xLimiter.calculate((driveX * Math.abs(driveX))); 
+        rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));    
+        rampedTheta = rotLimiter.calculate((driveTheta * Math.abs(driveTheta))); 
 
         driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((rampedX <= 0 ? -(rampedX * rampedX) : (rampedX * rampedX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((rampedY <= 0 ? -(rampedY * rampedY) : (rampedY * rampedY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate((rampedTheta <= 0 ? -(rampedTheta * rampedTheta) : (rampedTheta * rampedTheta)) * DriveConfig.MAX_ANGULAR_VELOCITY())
+            .withVelocityX(rampedX * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(rampedY * DriveConfig.MAX_VELOCITY())
+            .withRotationalRate(rampedTheta * DriveConfig.MAX_ANGULAR_VELOCITY())
         );
     }
+
+	public void holdHeading(double driveX, double driveY) {
+		rampedX = xLimiter.calculate((driveX * Math.abs(driveX))); 
+        rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));    
+		
+		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+			.withVelocityX(rampedX * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(rampedY * DriveConfig.MAX_VELOCITY())
+			.withTargetDirection(driveKraken.getPigeon2().getRotation2d()));
+	}
 
     public void teleopDriveSlow(double driveX, double driveY, double driveTheta)  {
         //no rate limiter applied for slow mode
@@ -394,11 +408,10 @@ public class Drive extends SubsystemBase {
     }
 
     public void facePoint(double driveX, double driveY, Pose2d point) {
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
+        driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
             .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
             .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
-            Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI)));
+			.withTargetDirection(Rotation2d.fromRadians(Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI)));
     }
 
     // Needs to be done better at some point
@@ -407,11 +420,11 @@ public class Drive extends SubsystemBase {
     public void aim(double driveX, double driveY){
         double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
 
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), angle)
-        ));
+        driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .5)
+            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .5)
+            .withTargetDirection(Rotation2d.fromRadians(angle))
+        );
 
         
     }
@@ -428,6 +441,21 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("Current Y", iOdata.state.Pose.getY());
         SmartDashboard.putNumber("PID Y Output", yOutput);
     }
+
+	//align to fixed Y coordinate on field using Y translation controller
+    public void fixedX(double driveY, Rotation2d rtarget) {
+         double dynamicX = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
+        double xOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), dynamicX);
+        driveKraken.setSwerveRequest(FIELD_CENTRIC
+            .withVelocityX((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(!translationControllerY.atGoal() ? -xOutput : 0.0)
+            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
+        );
+        SmartDashboard.putNumber("Target X", dynamicX);
+        SmartDashboard.putNumber("Current X", iOdata.state.Pose.getY());
+        SmartDashboard.putNumber("PID X Output", xOutput);
+    }
+
 
     public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
         this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);

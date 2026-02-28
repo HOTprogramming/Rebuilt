@@ -77,15 +77,22 @@ public class RobotContainer {
     // Drivetrain Controls
     drivetrain.setDefaultCommand(drivetrain.run(() -> 
       drivetrain.teleopDrive(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
+        -driver.getLeftY(),
+        -driver.getLeftX(),
+        -driver.getRightX()
     )));
+
+	// driver.axisMagnitudeGreaterThan(4, .1).whileTrue(drivetrain.run(()->
+	//   drivetrain.teleopDrive(
+    //     -driver.getLeftY(),
+    //     -driver.getLeftX(),
+    //     -driver.getRightX()
+	// )));
 
     driver.a().whileTrue(drivetrain.run(()->
       drivetrain.aim(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
+        -driver.getLeftY(),
+        -driver.getLeftX()
     )));
 
     driver.b().whileTrue(drivetrain.run(()-> {
@@ -118,6 +125,12 @@ public class RobotContainer {
      driver.y().whileTrue(drivetrain.run(()->
       drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
         new Rotation2d(3.142)
+    )).beforeStarting(drivetrain.resetControllers()));
+
+	//translate to X target on button press
+     driver.a().whileTrue(drivetrain.run(()->
+      drivetrain.fixedX(Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        new Rotation2d(1.061)
     )).beforeStarting(drivetrain.resetControllers()));
 
 	// Assuming target is 0.5 meters (20 inches) with a 5-degree jiggle
