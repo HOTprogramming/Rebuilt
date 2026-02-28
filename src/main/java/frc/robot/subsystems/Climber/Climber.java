@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -65,6 +66,26 @@ public class Climber extends SubsystemBase {
 	private BooleanSupplier isClimbed() {
 		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.climbedPos) < 0.01;
 	}
+	private BooleanSupplier isWristClimbed() {
+		return () -> Math.abs(((m_ClimbKraken.getSpinPosition() - zeroPos) / ClimberConstants.wristGearRatio) - ClimberConstants.wristClimbedPos) < 0.01;
+	}
+	private BooleanSupplier isLifted() {
+		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.liftClimbPos) < 0.01;
+	}
+
+
+	private void spinWristPosition(double wristPosRevs) {
+		spinrunPosition(zeroPos + (wristPosRevs * ClimberConstants.wristGearRatio));
+
+	}
+
+	public Command stageThreeClimb() {
+		return Commands.sequence(
+		lift(),
+		wristClimb(),
+		deploy()
+		);
+	}
 
 	public Command zeroSpinner() {
 		return Commands.sequence(spintoBeambreak(), spinOutBeambreak(), 
@@ -83,43 +104,60 @@ public class Climber extends SubsystemBase {
 			deploy());
 	}
 
-	public Command spinOutSlow() {
+	private Command spinOutSlow() {
 		return Commands.sequence(
 			run(() -> spinRunVelocity(-20)).withDeadline(Commands.waitSeconds(0.5)), 
 			run(() -> spinRunVelocity(-20)).onlyWhile(isBeamBreakTripped()));
 	}
 	
-	public Command spinBackSlow() {
+	private Command spinBackSlow() {
 		return Commands.sequence(
 			run(() -> spinRunVelocity(20)).withDeadline(Commands.waitSeconds(0.5)), 
 			run(() -> spinRunVelocity(20)).onlyWhile(isBeamBreakTripped()));
 	}
+
+	public Command wristClimb() {
+		return run(() -> {
+				spinWristPosition(ClimberConstants.wristClimbedPos);
+			}).until(isWristClimbed()); 
+	}
+
 	public Command spinToZero() {
 		return run(() -> {
 				spinrunPosition(zeropossup.getAsDouble());
 			}).until(isZeroed()); 
 	}
+
 	public Command teleopDeploy() {
 		return run(() -> {
 			runPosition(ClimberConstants.deployedPos);
 			spinrunPosition(zeropossup.getAsDouble());
 		});
 	}
-	public Command spintoBeambreak() {
+
+	private Command spintoBeambreak() {
 		return run(() -> {
 			spinRunVelocity(80);
 		}).until(isBeamBreakTripped()); 
 	}
-	public Command spinOutBeambreak() {
+
+	private Command spinOutBeambreak() {
 		return run(() -> spinRunVelocity(80)).onlyWhile(isBeamBreakTripped());
 	}
+
 	public Command stow() {
 		return run(() -> runPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
+
 	public Command deploy() {
 		return run(() -> runPosition(ClimberConstants.deployedPos)).until(isDeployed());
 	}
+
 	public Command climb() {
 		return run(() -> runPosition(ClimberConstants.climbedPos)).until(isClimbed());
+	}
+
+	public Command lift() {
+		return run(() -> runPosition(ClimberConstants.liftClimbPos)).until(isLifted());
 	}
 }
