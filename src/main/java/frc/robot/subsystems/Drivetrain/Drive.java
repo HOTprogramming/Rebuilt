@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -119,7 +120,7 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
  
     private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
-        .withDriveRequestType(DriveRequestType.Velocity);
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
 		.withDriveRequestType(DriveRequestType.Velocity)
 		.withHeadingPID(10, 0, 0);
@@ -278,18 +279,10 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
         return runOnce(() -> driveKraken.setNeutralMode(NeutralModeValue.Brake));
     }
 
-	LinearFilter xFilter = LinearFilter.singlePoleIIR(0.04, 0.02);
-	LinearFilter yFilter = LinearFilter.singlePoleIIR(0.04, 0.02);
-	LinearFilter rotFilter = LinearFilter.singlePoleIIR(0.04, 0.02);
-
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-		double filteredX = xFilter.calculate(driveX);
-		double filteredY = yFilter.calculate(driveY);
-		double filteredTheta = rotFilter.calculate(driveTheta);
-
-        rampedX = xLimiter.calculate((filteredX * Math.abs(filteredX))); 
-        rampedY = yLimiter.calculate((filteredY * Math.abs(filteredY)));    
-        rampedTheta = rotLimiter.calculate((filteredTheta * Math.abs(filteredTheta))); 
+        rampedX = xLimiter.calculate((driveX * Math.abs(driveX))); 
+        rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));    
+        rampedTheta = rotLimiter.calculate((driveTheta * Math.abs(driveTheta))); 
 
         driveKraken.setSwerveRequest(FIELD_CENTRIC
             .withVelocityX(rampedX * DriveConfig.MAX_VELOCITY())

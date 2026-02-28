@@ -34,7 +34,7 @@ public final class AlphaBotConstants {
     private static final double kDriveFrictionVoltage = 0.2;
 
     // Slip current
-    private static final double kSlipCurrent = 110.0;
+    private static final double kSlipCurrent = 50.0;
 
     // Wheel, inversion, and inertia
     private static final Distance kWheelRadius = Inches.of(2);
@@ -52,18 +52,18 @@ public final class AlphaBotConstants {
 
     // Steer gains
     private static final Slot0Configs steerGains = new Slot0Configs()
-        .withKP(75).withKI(0).withKD(.25)
-        .withKS(0.1).withKV(2).withKA(0)
+        .withKP(100).withKI(0).withKD(0)
+        .withKS(0).withKV(0).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
     // Drive gains
     private static final Slot0Configs driveGains = new Slot0Configs()
-        .withKP(7.5).withKI(0).withKD(0.2)
-        .withKS(.75).withKV(0).withKA(0);
+        .withKP(0).withKI(0).withKD(0)
+        .withKS(0).withKV(0.128).withKA(0);
 
     // Closed-loop output types
     private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
-    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
+    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
     // Module factory
     private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> ConstantCreator =
