@@ -123,13 +123,13 @@ public class Climber extends SubsystemBase {
 
 	public Command wristPastClimb() {
 		return run(() -> {
-				spinWristPosition(ClimberConstants.wristBeforeClimbPos);
-			}).until(isWristClimbed()); 
+				spinWristPosition(ClimberConstants.wristPastClimbPos);
+			}).until(isWristPast()); 
 	}
 	public Command wristClimb() {
 		return run(() -> {
-			spinWristPosition(ClimberConstants.wristPastClimbPos);
-	}).until(isWristPast());
+			spinWristPosition(ClimberConstants.wristBeforeClimbPos);
+	}).until(isWristClimbed());
 }
 
 	public Command finalElbowExtend() {
