@@ -114,7 +114,7 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
     }
 
     public void updateVision(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
-        addVisionMeasurement(calculatedPose, Utils.fpgaToCurrentTime(timestamp), stDevs);
+        addVisionMeasurement(calculatedPose, timestamp, stDevs);
     }
 
     public void setOperatorPerspective(Rotation2d rotation2d) {
