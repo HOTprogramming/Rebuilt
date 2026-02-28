@@ -167,18 +167,23 @@ public class Climber extends SubsystemBase {
 	}
 
 	public Command stow() {
-		return run(() -> runPosition(ClimberConstants.storedPos)).until(isStowed());
+		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
 
 	public Command deploy() {
-		return run(() -> runPosition(ClimberConstants.deployedPos)).until(isDeployed());
+		return run(() -> setElbowPosition(ClimberConstants.deployedPos)).until(isDeployed());
 	}
 
 	public Command climb() {
-		return run(() -> runPosition(ClimberConstants.climbedPos)).until(isClimbed());
+		return run(() -> setElbowPosition(ClimberConstants.climbedPos)).until(isClimbed());
 	}
 
 	public Command lift() {
-		return run(() -> runPosition(ClimberConstants.liftClimbPos)).until(isLifted());
+		return run(() -> setElbowPosition(ClimberConstants.liftClimbPos)).until(isLifted());
 	}
+
+	public Command stop() {
+		return runOnce(() -> {});
+	}
+
 }

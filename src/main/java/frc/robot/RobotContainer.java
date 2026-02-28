@@ -110,24 +110,27 @@ public class RobotContainer {
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
 
-		driver.x()
-			.whileTrue(AutoBuilder.pathfindToPose(new Pose2d(8.296, 4.061, Rotation2d
-				.fromDegrees(0)), new PathConstraints(5.0, 3.0, 3.14, 6.28), 0.0 // Goal end velocity
-			));
+    driver.x() .whileTrue(
+        AutoBuilder.pathfindToPose(
+            new Pose2d(8.296, 4.061, Rotation2d.fromDegrees(0)), 
+            new PathConstraints(5.0, 3.0, 3.14, 6.28), 
+            0.0 // Goal end velocity
+        )
+    );
 
-		// translate to Y target on button press
-		driver.y()
-			.whileTrue(drivetrain
-				.run(() -> drivetrain
-					.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0, new Rotation2d(3.142)))
-				.beforeStarting(drivetrain.resetControllers()));
+    //translate to Y target on button press
+     driver.y().whileTrue(drivetrain.run(()->
+      drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        new Rotation2d(3.142)
+    )).beforeStarting(drivetrain.resetControllers()));
 
-		// translate to X target on button press
-		// driver.a().whileTrue(drivetrain.run(()->
-		// drivetrain.fixedX(Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() :
-		// 0,
-		// new Rotation2d(1.061)
-		// )).beforeStarting(drivetrain.resetControllers()));
+	 driver.leftTrigger().whileTrue(drivetrain.run(() -> 
+      drivetrain.robotCentricTeleopDrive(
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
+    )));
+
 
 		// Shooter Controls
 		operator.povUp().onTrue(shooter.shootSpeedUp());
