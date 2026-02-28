@@ -12,101 +12,77 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.Constants;
+import frc.robot.Constants.RobotType;
 
 public class ClimberConstants {
-    public static int kClimbermotorID = 16; //IMPORTANT
-    public static int kClimberspinnerID = 17; //IMPORTANT
-    public static String kBusName = Constants.canName; //IMPORTANT
-    public static double deployPosition = 200.0; //IMPORTANT
-    public static double retractPosition = 0.0; //IMPORTANT
-    public static double spinPosition = 410; //IMPORTANT
-    public static double spinhomePosition = 0; //IMPORTANT
-    public static double lockPosition = 10; //IMPORTANT
-    public static double lvlonePosition = 80; //IMPORTANT
+	public static int kClimbermotorID = Constants.getRobot() == RobotType.COMPBOT ? 20 : 16;
+	public static int kClimberspinnerID = Constants.getRobot() == RobotType.COMPBOT ? 21 : 17;
+	public static String kBusName = Constants.canName;
+	public static double deployPosition = 200.0;
+	public static double retractPosition = 0.0;
+	public static double spinPosition = 410;
+	public static double spinhomePosition = 0;
+	public static double lockPosition = 10;
+	public static double lvlonePosition = 80;
 
-        public static final TalonFXConfiguration climberWheelConfigs = new TalonFXConfiguration()
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(80)
-                .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(60)
-                .withSupplyCurrentLimitEnable(true)
-                .withSupplyCurrentLowerLimit(30)
-                .withSupplyCurrentLowerTime(1)
-        ).withTorqueCurrent(
-            new TorqueCurrentConfigs()
-                .withPeakForwardTorqueCurrent(40)
-                .withPeakReverseTorqueCurrent(-40)
-        ).withMotorOutput(
-            new MotorOutputConfigs()
-                .withInverted(InvertedValue.CounterClockwise_Positive)    
-                .withNeutralMode(NeutralModeValue.Brake)   
-        ).withMotionMagic(
-            new MotionMagicConfigs() 
-                .withMotionMagicCruiseVelocity(10.0)
-                .withMotionMagicAcceleration(10.0)
-        ).withSlot0(
-            new Slot0Configs()            /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
-                .withKP(0.11)       // An error of 1 rotation per second results in 0.11 V output
-                .withKI(0.0)        // No output for integrated error
-                .withKD(0.0)        // No output for error derivative
-                .withKS(0.1)        // To account for friction, add 0.1 V of static feedforward
-                .withKV(0.12)       // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
-        ).withSlot1(
-            new Slot1Configs()            /* Torque-based velocity does not require a velocity feed forward, as torque will accelerate the rotor up to the desired velocity by itself */
-                .withKP(5.0)        // An error of 1 rotation per second results in 5 A output
-                .withKI(0.0)        // No output for integrated error
-                .withKD(0.0)        // No output for error derivative
-                .withKS(2.5)        // To account for friction, add 2.5 A of static feedforward        
-        ).withSlot2(                  
-            new Slot2Configs()            /* Motion Magic Velocity  */  
-                .withKS(0.25)       // Add 0.25 V output to overcome static friction
-                .withKV(.12)        // A velocity target of 1 rps results in 0.12 V output
-                .withKA(0.01)       // An acceleration of 1 rps/s requires 0.01 V output
-                .withKP(4.8)        // A position error of 2.5 rotations results in 12 V output
-                .withKI(0)          // no output for integrated error
-                .withKD(0.1)        // A velocity error of 1 rps results in 0.1 V output
-        ).withMotionMagic(
-            new MotionMagicConfigs()
-                .withMotionMagicCruiseVelocity(80.0)   // Target cruise velocity of 80 rps
-                .withMotionMagicAcceleration(160)      // Target acceleration of 160 rps/s (0.5 seconds)
-                .withMotionMagicJerk(1600)               // Target jerk of 1600 rps/s/s (0.1 seconds))    
+	public static final TalonFXConfiguration climberWheelConfigs = new TalonFXConfiguration()
+		.withCurrentLimits(new CurrentLimitsConfigs()
+			.withStatorCurrentLimit(80)
+			.withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(60)
+			.withSupplyCurrentLimitEnable(true)
+			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerTime(1))
+		.withTorqueCurrent(new TorqueCurrentConfigs()
+			.withPeakForwardTorqueCurrent(40)
+			.withPeakReverseTorqueCurrent(-40))
+		.withMotorOutput(new MotorOutputConfigs()
+			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withNeutralMode(NeutralModeValue.Brake))
+		.withMotionMagic(new MotionMagicConfigs()
+			.withMotionMagicCruiseVelocity(10.0)
+			.withMotionMagicAcceleration(10.0))
+		.withSlot0(new Slot0Configs()
+			.withKP(0.11)
+			.withKI(0.0)
+			.withKD(0.0)
+			.withKS(0.1)
+			.withKV(0.12))
+		.withSlot1(new Slot1Configs()
+			.withKP(5.0)
+			.withKI(0.0)
+			.withKD(0.0)
+			.withKS(2.5))
+		.withSlot2(new Slot2Configs()
+			.withKS(0.25)
+			.withKV(.12)
+			.withKA(0.01)
+			.withKP(4.8)
+			.withKI(0)
+			.withKD(0.1))
+		.withMotionMagic(new MotionMagicConfigs()
+			.withMotionMagicCruiseVelocity(80.0)
+			.withMotionMagicAcceleration(160)
+			.withMotionMagicJerk(1600)
+		);
 
-            );
+	/********************************************************
+	 * Based on the robot selected, load Intake configs with the selected robot
+	 * configuration
+	 ********************************************************/
+	public static final ClimberConfigs ClimberConfigs = switch (Constants.getRobot()) {
+		case COMPBOT -> new ClimberConfigs(climberWheelConfigs);
+		case CAMERABOT -> new ClimberConfigs(climberWheelConfigs);
+		case COMP24 -> new ClimberConfigs(climberWheelConfigs);
+		case COMP25 -> new ClimberConfigs(climberWheelConfigs);
+		case MINIBOT -> new ClimberConfigs(climberWheelConfigs);
+		case ALPHABOT -> new ClimberConfigs(climberWheelConfigs);
+	};
 
-
-    /********************************************************
-    * Based on the robot selected, load Intake configs with
-    *   the selected robot configuration  
-    ********************************************************/
-    public static final ClimberConfigs ClimberConfigs =
-        switch (Constants.getRobot()) {
-            case COMPBOT -> new ClimberConfigs(
-                climberWheelConfigs 
-            );
-            case CAMERABOT -> new ClimberConfigs( 
-                climberWheelConfigs 
-            );
-            case COMP24 -> new ClimberConfigs( 
-                climberWheelConfigs 
-            );
-            case COMP25 -> new ClimberConfigs( 
-                climberWheelConfigs 
-            );
-            case MINIBOT -> new ClimberConfigs( 
-                climberWheelConfigs 
-            );
-            case ALPHABOT -> new ClimberConfigs( 
-                climberWheelConfigs 
-            );
-        };
-
-
-    /*****************
-     * Define the Climber Config Class 
-     *****************/
-    public record ClimberConfigs(
-        TalonFXConfiguration climberWheelConfigs 
-    ) {}
+	/*****************
+	 * Define the Climber Config Class
+	 *****************/
+	public record ClimberConfigs(
+		TalonFXConfiguration climberWheelConfigs) {}
 
 }

@@ -17,6 +17,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
+import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
@@ -26,10 +27,10 @@ public class IntakeConstants {
 	public static double kExpelSpeed = -2000.0;
 	public static double kIntakeSpeed = 2000.0;
 
-	public static int kIntakeEncoderID = 60;
-	public static int kIntakeMotorIDExtend = 61;
-	public static int kIntakeMotorIDRoller = 62;
-	public static double kEncoderOffset = 63;
+	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 0 : 0;
+	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
+	public static int kIntakeMotorIDRoller = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? 0 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()

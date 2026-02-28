@@ -5,8 +5,6 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.DoubleSupplier;
-
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -22,6 +20,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
@@ -77,15 +77,22 @@ public class RobotContainer {
     // Drivetrain Controls
     drivetrain.setDefaultCommand(drivetrain.run(() -> 
       drivetrain.teleopDrive(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
-        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
+        -driver.getLeftY(),
+        -driver.getLeftX(),
+        -driver.getRightX()
     )));
+
+	// driver.axisMagnitudeGreaterThan(4, .1).whileTrue(drivetrain.run(()->
+	//   drivetrain.teleopDrive(
+    //     -driver.getLeftY(),
+    //     -driver.getLeftX(),
+    //     -driver.getRightX()
+	// )));
 
     driver.a().whileTrue(drivetrain.run(()->
       drivetrain.aim(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
+        -driver.getLeftY(),
+        -driver.getLeftX()
     )));
 
     driver.b().whileTrue(drivetrain.run(()-> {
@@ -120,6 +127,12 @@ public class RobotContainer {
         new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
 
+	//translate to X target on button press
+     driver.a().whileTrue(drivetrain.run(()->
+      drivetrain.fixedX(Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        new Rotation2d(1.061)
+    )).beforeStarting(drivetrain.resetControllers()));
+
     // Shooter Controls
     operator.povUp().onTrue(shooter.shootSpeedUp());
     operator.povDown().onTrue(shooter.shootSpeedDown());
@@ -128,7 +141,10 @@ public class RobotContainer {
     operator.b().onTrue(shooter.shooterOff());
 
     // Indexer Controls
-    operator.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+    operator.rightTrigger().whileTrue(Commands.repeatingSequence(
+		indexer.indexOnCommand().andThen(new WaitCommand(.5))
+		.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))
+		.whileFalse(indexer.indexOffCommand());
 
     // Climber Controls
     climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
