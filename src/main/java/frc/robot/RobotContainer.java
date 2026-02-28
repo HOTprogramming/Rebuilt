@@ -118,6 +118,14 @@ public class RobotContainer {
         new Rotation2d(3.142)
     )).beforeStarting(drivetrain.resetControllers()));
 
+	 driver.leftTrigger().whileTrue(drivetrain.run(() -> 
+      drivetrain.robotCentricTeleopDrive(
+        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0,
+        Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
+    )));
+
+
     // Shooter Controls
     // operator.povUp().onTrue(shooter.shootSpeedUp());
     // operator.povDown().onTrue(shooter.shootSpeedDown());
@@ -132,12 +140,14 @@ public class RobotContainer {
     climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual( 
 		Math.abs(operator.getRightX()) >= 0.15 ? operator.getRightX() * 0.3 : 0,
         Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.3 : 0)));
-	operator.y().onTrue(climber.teleopDeploy());
-	operator.x().onTrue(climber.spinToZero());
-	operator.a().onTrue(climber.deploy());
-	operator.b().onTrue(climber.stow());
-	operator.rightBumper().onTrue(climber.climb());
+	operator.a().onTrue(climber.stow());
+	operator.y().onTrue(climber.wristClimb());
+	operator.b().onTrue(climber.lift());
+	operator.x().onTrue(climber.deploy());
+	operator.rightBumper().onTrue(climber.stageThreeClimb());
 	operator.leftBumper().onTrue(climber.fullDeploy());
+	operator.start().onTrue(climber.stop());
+	operator.leftTrigger().onTrue(climber.spinToZero());
 
 	// Intake Controls
 	operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
