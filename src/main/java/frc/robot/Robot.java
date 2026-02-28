@@ -15,11 +15,15 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-//import frc.util.HubTracker;
+import frc.util.HubTracker;
+import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.RobotController;
+import static edu.wpi.first.units.Units.Seconds;
+
 
 public class Robot extends TimedRobot {
 
@@ -30,10 +34,10 @@ public class Robot extends TimedRobot {
   private ShuffleboardTab tab;
 
   private GenericEntry matchTimeEntry;
-  private GenericEntry voltsEntry;
-  private GenericEntry ampsEntry;
 
   private DoublePublisher timeRemainingInCurrentShift;
+  private BooleanPublisher hubActive;
+  private BooleanPublisher hubActiveNext;
 
   private boolean ppConfigured = false;
 
@@ -53,6 +57,8 @@ public class Robot extends TimedRobot {
   }
 
   public Robot() {
+
+
     /*Start Logging */
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
@@ -64,21 +70,23 @@ public class Robot extends TimedRobot {
     /*Initialize base Shuffleboard tab */
     tab = Shuffleboard.getTab("tab");
     matchTimeEntry = tab.add("Match time",0.0).getEntry();
-    voltsEntry = tab.add("Volts",0.0).getEntry();
-    ampsEntry = tab.add("Amps",0.0).getEntry();
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table = inst.getTable("HOT/Drive");
 
     timeRemainingInCurrentShift = table.getDoubleTopic("Hub Time Remaining").publish();
+	hubActive = table.getBooleanTopic("Hub Active").publish();
+	hubActiveNext = table.getBooleanTopic("Hub Active Next").publish();
   }
 
-  /*private void UpdateTelemetry() {
+    private void UpdateTelemetry() {
     try{
       timeRemainingInCurrentShift.set(HubTracker.timeRemainingInCurrentShift().get().abs(Seconds));
+	  hubActive.set(HubTracker.isActive());
+      hubActiveNext.set(HubTracker.isActiveNext());
     } catch(Exception e) {
     }
-  }*/
+  }
     
 
   @Override
@@ -88,10 +96,11 @@ public class Robot extends TimedRobot {
 
     /* Update base Shuffleboard tab with Roborio data  */
     matchTimeEntry.setDouble(DriverStation.getMatchTime());
-    voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
-    ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
+	double batteryVoltage = RobotController.getBatteryVoltage();
+	SmartDashboard.putNumber("Battery Voltage", batteryVoltage);
 
-    //UpdateTelemetry(); 
+
+    UpdateTelemetry(); 
   }
 
   @Override
