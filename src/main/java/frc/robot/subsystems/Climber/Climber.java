@@ -134,17 +134,24 @@ public class Climber extends SubsystemBase {
 			deploy());
 	}
 
-	public Command spinOutSlow() {
+	private Command spinOutSlow() {
 		return Commands.sequence(
 			run(() -> spinRunVelocity(-20)).withDeadline(Commands.waitSeconds(0.5)), 
 			run(() -> spinRunVelocity(-20)).onlyWhile(isBeamBreakTripped()));
 	}
 	
-	public Command spinBackSlow() {
+	private Command spinBackSlow() {
 		return Commands.sequence(
 			run(() -> spinRunVelocity(20)).withDeadline(Commands.waitSeconds(0.5)), 
 			run(() -> spinRunVelocity(20)).onlyWhile(isBeamBreakTripped()));
 	}
+
+	public Command wristClimb() {
+		return run(() -> {
+				spinWristPosition(ClimberConstants.wristClimbedPos);
+			}).until(isWristClimbed()); 
+	}
+
 	public Command spinToZero() {
 		return run(() -> {
 				setWristPosition(zeropossup.getAsDouble());
