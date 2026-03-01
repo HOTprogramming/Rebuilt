@@ -31,19 +31,19 @@ public final class CompBotConstants {
 
     // Steer gains
     private static final Slot0Configs steerGains = new Slot0Configs()
-      	.withKP(100).withKI(0).withKD(0.5)
-        .withKS(0.1).withKV(1.16).withKA(0)
+      	.withKP(100).withKI(0).withKD(0)
+        .withKS(0).withKV(0).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
     // Drive gains
     private static final Slot0Configs driveGains = new Slot0Configs()
-        .withKP(0.1).withKI(0).withKD(0)
-        .withKS(0).withKV(0.124);
+        .withKP(0).withKI(0).withKD(0)
+        .withKS(0).withKV(0.128);
 
     // Speed and motor types
     public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.53);
     public static final AngularVelocity kMaxAngularVelocity = RotationsPerSecond.of(2);
-    private static final Current kSlipCurrent = Amps.of(120.0);
+    private static final Current kSlipCurrent = Amps.of(100.0);
     private static final DriveMotorArrangement kDriveMotorType = DriveMotorArrangement.TalonFX_Integrated;
     private static final SteerMotorArrangement kSteerMotorType = SteerMotorArrangement.TalonFX_Integrated;
     private static final SteerFeedbackType kSteerFeedbackType = SteerFeedbackType.FusedCANcoder;

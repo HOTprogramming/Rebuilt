@@ -53,7 +53,7 @@ public final class AlphaBotConstants {
     // Steer gains
     private static final Slot0Configs steerGains = new Slot0Configs()
         .withKP(100).withKI(0).withKD(0)
-        .withKS(0).withKV(0).withKA(0)
+        .withKS(0.05).withKV(0).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
     // Drive gains

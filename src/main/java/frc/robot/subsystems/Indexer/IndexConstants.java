@@ -17,11 +17,10 @@ import frc.robot.Constants.RobotType;
 public class IndexConstants {
 	public static int kLeftKickID = Constants.getRobot() == RobotType.COMPBOT ? 18 : 14;
 	public static int kRightKickID = Constants.getRobot() == RobotType.COMPBOT ? 19 : 15;
-	public static int kFloorID = Constants.getRobot() == RobotType.COMPBOT ? 0 : 9; //13, set to 0 for broken floor
-	public static int kLoaderID = Constants.getRobot() == RobotType.COMPBOT ? 0 : 13;//14, set to 0 for broken floor
+	public static int kFloorID = Constants.getRobot() == RobotType.COMPBOT ? 13 : 13; // 13, set to 0 for broken floor
 	public static String kBusName = Constants.canName;
-	public static double kickerSpeed = 100;
-	public static double floorSpeed = 100;
+	public static double kickerSpeed = 120;
+	public static double floorSpeed = 120;
 
 	public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -40,18 +39,18 @@ public class IndexConstants {
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(10.0)
 			.withMotionMagicAcceleration(10.0))
-		.withSlot0(new Slot0Configs()
-			.withKP(0.3)
+		.withSlot0(new Slot0Configs() //Wheels
+			.withKP(0.325)
 			.withKI(0.0)
-			.withKD(0.0)
-			.withKS(0)
-			.withKV(0.095))
-		.withSlot1(new Slot1Configs()
-			.withKP(0.25)
+			.withKD(0.005)
+			.withKS(0.5)
+			.withKV(0.1))
+		.withSlot1(new Slot1Configs() //Roller Floor
+			.withKP(0.75)
 			.withKI(0.0)
-			.withKD(0.0)
-			.withKS(0)
-			.withKV(0.12))
+			.withKD(0.005)
+			.withKS(0.25)
+			.withKV(0.1))
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(80.0)
 			.withMotionMagicAcceleration(160)

@@ -23,184 +23,180 @@ import edu.wpi.first.wpilibj.DataLogManager;
 
 public class Robot extends TimedRobot {
 
-  private Command m_autonomousCommand;
+	private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+	private final RobotContainer m_robotContainer;
 
-  private ShuffleboardTab tab;
+	private ShuffleboardTab tab;
 
-  private GenericEntry matchTimeEntry;
-  private GenericEntry voltsEntry;
-  private GenericEntry ampsEntry;
+	private GenericEntry matchTimeEntry;
+	private GenericEntry voltsEntry;
+	private GenericEntry ampsEntry;
 
-  private DoublePublisher timeRemainingInCurrentShift;
+	private DoublePublisher timeRemainingInCurrentShift;
 
-  private boolean ppConfigured = false;
+	private boolean ppConfigured = false;
 
-  private static final double SIM_DISABLED_SECONDS = 10;
-  private static final double SIM_AUTO_SECONDS = 10;
-  private static final double SIM_TELEOP_SECONDS = 10;
+	private static final double SIM_DISABLED_SECONDS = 10;
+	private static final double SIM_AUTO_SECONDS = 10;
+	private static final double SIM_TELEOP_SECONDS = 10;
 
-  private final boolean ciForceModes = "true".equalsIgnoreCase(System.getenv("CI_FORCE_MODES"))
-      && "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
-  private double simStartTime = -1.0;
-  private SimMode currentSimMode = null;
-    
-  private enum SimMode {
-    DISABLED,
-    AUTO,
-    TELEOP
-  }
+	private final boolean ciForceModes = "true".equalsIgnoreCase(System.getenv("CI_FORCE_MODES"))
+		&& "true".equalsIgnoreCase(System.getenv("GITHUB_ACTIONS"));
+	private double simStartTime = -1.0;
+	private SimMode currentSimMode = null;
 
-  public Robot() {
-    /*Start Logging */
-    DataLogManager.start();
-    DriverStation.startDataLog(DataLogManager.getLog(), true);
-	DriverStation.silenceJoystickConnectionWarning(true);
-  
-    /*Create Robot Contrainer */
-    m_robotContainer = new RobotContainer();
-    
-    /*Initialize base Shuffleboard tab */
-    tab = Shuffleboard.getTab("tab");
-    matchTimeEntry = tab.add("Match time",0.0).getEntry();
-    voltsEntry = tab.add("Volts",0.0).getEntry();
-    ampsEntry = tab.add("Amps",0.0).getEntry();
+	private enum SimMode {
+		DISABLED,
+		AUTO,
+		TELEOP
+	}
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("HOT/Drive");
+	public Robot() {
+		/* Start Logging */
+		DataLogManager.start();
+		DriverStation.startDataLog(DataLogManager.getLog(), true);
+		DriverStation.silenceJoystickConnectionWarning(true);
 
-    timeRemainingInCurrentShift = table.getDoubleTopic("Hub Time Remaining").publish();
-  }
+		/* Create Robot Contrainer */
+		m_robotContainer = new RobotContainer();
 
-  /*private void UpdateTelemetry() {
-    try{
-      timeRemainingInCurrentShift.set(HubTracker.timeRemainingInCurrentShift().get().abs(Seconds));
-    } catch(Exception e) {
-    }
-  }*/
-    
+		/* Initialize base Shuffleboard tab */
+		tab = Shuffleboard.getTab("tab");
+		matchTimeEntry = tab.add("Match time", 0.0).getEntry();
+		voltsEntry = tab.add("Volts", 0.0).getEntry();
+		ampsEntry = tab.add("Amps", 0.0).getEntry();
 
-  @Override
-  public void robotPeriodic() {
-    /* Run the command scheduler */
-    CommandScheduler.getInstance().run();
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
+		NetworkTable table = inst.getTable("HOT/Drive");
 
-    /* Update base Shuffleboard tab with Roborio data  */
-    matchTimeEntry.setDouble(DriverStation.getMatchTime());
-    voltsEntry.setDouble(RoboRioDataJNI.getVInVoltage());
-    ampsEntry.setDouble(RoboRioDataJNI.getVInCurrent());
+		timeRemainingInCurrentShift = table.getDoubleTopic("Hub Time Remaining").publish();
+	}
 
-    //UpdateTelemetry(); 
-  }
+	/*
+	 * private void UpdateTelemetry() { try{
+	 * timeRemainingInCurrentShift.set(HubTracker.timeRemainingInCurrentShift().get(
+	 * ).abs(Seconds)); } catch(Exception e) { } }
+	 */
 
-  @Override
-  public void disabledInit() {
-    /* Fire off the Pathplanner Auto to initialize Path Planner (Work around a bug) */
-    if (!ppConfigured) {
-      ppConfigured = true;
-    }
-    
-    SmartDashboard.putBoolean("Teleop", false);
-    SmartDashboard.putBoolean("Auto", false);
-  }
+	@Override
+	public void robotPeriodic() {
+		/* Run the command scheduler */
+		CommandScheduler.getInstance().run();
 
-  @Override
-  public void disabledPeriodic() {
-    m_robotContainer.updateAutonCommand();
-  }
+		/* Update base Shuffleboard tab with Roborio data */
+		matchTimeEntry.setDouble(DriverStation.getMatchTime());
+	}
 
-  @Override
-  public void disabledExit() {
-    /*Clear our the fake Path Planner Auto Initialize  */
-  }
+	@Override
+	public void disabledInit() {
+		/*
+		 * Fire off the Pathplanner Auto to initialize Path Planner (Work around a bug)
+		 */
+		if (!ppConfigured) {
+			ppConfigured = true;
+		}
 
-  @Override
-  public void autonomousInit() {
-    SmartDashboard.putBoolean("Auto", true);
+		SmartDashboard.putBoolean("Teleop", false);
+		SmartDashboard.putBoolean("Auto", false);
+	}
 
-    m_autonomousCommand = Commands.waitSeconds(0.01).andThen(m_robotContainer.getAutonomousCommand());
+	@Override
+	public void disabledPeriodic() {
+		m_robotContainer.updateAutonCommand();
+	}
 
-    if (m_autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
-    }
-  }
+	@Override
+	public void disabledExit() {
+		/* Clear our the fake Path Planner Auto Initialize */
+	}
 
-  @Override
-  public void autonomousPeriodic() {}
+	@Override
+	public void autonomousInit() {
+		SmartDashboard.putBoolean("Auto", true);
 
-  @Override
-  public void autonomousExit() {}
+		m_autonomousCommand = Commands.waitSeconds(0.01).andThen(m_robotContainer.getAutonomousCommand());
 
-  @Override
-  public void teleopInit() {
-    SmartDashboard.putBoolean("Teleop", true);
+		if (m_autonomousCommand != null) {
+			CommandScheduler.getInstance().schedule(m_autonomousCommand);
+		}
+	}
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-  }
+	@Override
+	public void autonomousPeriodic() {}
 
-  @Override
-  public void teleopPeriodic() {}
+	@Override
+	public void autonomousExit() {}
 
-  @Override
-  public void teleopExit() {}
+	@Override
+	public void teleopInit() {
+		SmartDashboard.putBoolean("Teleop", true);
 
-  @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.cancel();
+		}
+	}
 
-  @Override
-  public void testPeriodic() {}
+	@Override
+	public void teleopPeriodic() {}
 
-  @Override
-  public void testExit() {}
+	@Override
+	public void teleopExit() {}
 
-  @Override
-  public void simulationPeriodic() {
-    if (!ciForceModes) {
-      return;
-    }
+	@Override
+	public void testInit() {
+		CommandScheduler.getInstance().cancelAll();
+	}
 
-    if (simStartTime < 0) {
-      simStartTime = Timer.getFPGATimestamp();
-    }
+	@Override
+	public void testPeriodic() {}
 
-    double elapsed = Timer.getFPGATimestamp() - simStartTime;
+	@Override
+	public void testExit() {}
 
-    if (elapsed < SIM_DISABLED_SECONDS) {
-      setDriverStationState(SimMode.DISABLED);
-    } else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS) {
-      setDriverStationState(SimMode.AUTO);
-    } else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS + SIM_TELEOP_SECONDS) {
-      setDriverStationState(SimMode.TELEOP);
-    } else {
-      setDriverStationState(SimMode.TELEOP);
-    }
-  }
+	@Override
+	public void simulationPeriodic() {
+		if (!ciForceModes) {
+			return;
+		}
 
-  @Override
-  public void simulationInit() {
-    if (ciForceModes) {
-      simStartTime = Timer.getFPGATimestamp();
-      setDriverStationState(SimMode.DISABLED);
-    }
-  }
+		if (simStartTime < 0) {
+			simStartTime = Timer.getFPGATimestamp();
+		}
 
-  private void setDriverStationState(SimMode mode) {
-    if (mode != currentSimMode) {
-      System.out.println("CI sim mode -> " + mode);
-      currentSimMode = mode;
-    }
+		double elapsed = Timer.getFPGATimestamp() - simStartTime;
 
-    boolean enabled = mode != SimMode.DISABLED;
-    boolean autonomous = mode == SimMode.AUTO;
+		if (elapsed < SIM_DISABLED_SECONDS) {
+			setDriverStationState(SimMode.DISABLED);
+		} else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS) {
+			setDriverStationState(SimMode.AUTO);
+		} else if (elapsed < SIM_DISABLED_SECONDS + SIM_AUTO_SECONDS + SIM_TELEOP_SECONDS) {
+			setDriverStationState(SimMode.TELEOP);
+		} else {
+			setDriverStationState(SimMode.TELEOP);
+		}
+	}
 
-    DriverStationSim.setEnabled(enabled);
-    DriverStationSim.setAutonomous(autonomous);
-    DriverStationSim.setTest(false);
-    DriverStationSim.notifyNewData();
-  }
+	@Override
+	public void simulationInit() {
+		if (ciForceModes) {
+			simStartTime = Timer.getFPGATimestamp();
+			setDriverStationState(SimMode.DISABLED);
+		}
+	}
+
+	private void setDriverStationState(SimMode mode) {
+		if (mode != currentSimMode) {
+			System.out.println("CI sim mode -> " + mode);
+			currentSimMode = mode;
+		}
+
+		boolean enabled = mode != SimMode.DISABLED;
+		boolean autonomous = mode == SimMode.AUTO;
+
+		DriverStationSim.setEnabled(enabled);
+		DriverStationSim.setAutonomous(autonomous);
+		DriverStationSim.setTest(false);
+		DriverStationSim.notifyNewData();
+	}
 }
