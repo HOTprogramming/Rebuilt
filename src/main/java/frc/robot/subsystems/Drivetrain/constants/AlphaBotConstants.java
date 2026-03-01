@@ -15,9 +15,9 @@ import frc.robot.subsystems.Drivetrain.DriveConstants;
 public final class AlphaBotConstants {
 
     // Gear ratios
-    private static final double kCoupleRatio = 3.8;
-    private static final double kDriveGearRatio = 6.545454545454545;
-    private static final double kSteerGearRatio = 10.285714285714286;
+    private static final double kCoupleRatio = 5.4;
+    private static final double kDriveGearRatio = 6.821052631578947;
+    private static final double kSteerGearRatio = 12.1;
 
     // CAN bus
     public static final CANBus kCANBus = new CANBus("PBot_DT", "./logs/example.hoot");

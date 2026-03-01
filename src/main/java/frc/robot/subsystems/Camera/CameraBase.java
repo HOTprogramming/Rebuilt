@@ -37,9 +37,9 @@ public class CameraBase {
 			edu.wpi.first.math.Vector<N3> stdDevs;
 			
 			if(subTable.getEntry("num_tags").getInteger(0) > 1){
-				stdDevs = VecBuilder.fill(.5,.5, .5);
+				stdDevs = VecBuilder.fill(1,1, 5.5);
 			} else {
-				stdDevs = VecBuilder.fill(1,1, 1);
+				stdDevs = VecBuilder.fill(2,2, 10);
 			}
 
 			drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds(), stdDevs);
