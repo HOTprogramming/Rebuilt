@@ -57,7 +57,8 @@ public class RobotContainer {
     Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
     Autos.addOption("Grid Test", "Grid Test");
     Autos.addOption("SNOWBLOW", "SNOWBLOW");
-    
+    Autos.addOption("HalfCourtSteal", "HalfCourtSteal");
+	Autos.addOption("NEUTRAL", "NEUTRAL");
     SmartDashboard.putData("Autos",Autos);
 
     drivetrain = new Drive(new DriveKraken());

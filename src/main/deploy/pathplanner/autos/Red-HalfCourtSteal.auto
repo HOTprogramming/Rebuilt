@@ -11,12 +11,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Steal1"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 2.0
