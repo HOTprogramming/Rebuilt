@@ -41,9 +41,9 @@ public final class CompBotConstants {
         .withKS(0).withKV(0.128);
 
     // Speed and motor types
-    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.53);
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.5);
     public static final AngularVelocity kMaxAngularVelocity = RotationsPerSecond.of(2);
-    private static final Current kSlipCurrent = Amps.of(100.0);
+    private static final Current kSlipCurrent = Amps.of(80.0);
     private static final DriveMotorArrangement kDriveMotorType = DriveMotorArrangement.TalonFX_Integrated;
     private static final SteerMotorArrangement kSteerMotorType = SteerMotorArrangement.TalonFX_Integrated;
     private static final SteerFeedbackType kSteerFeedbackType = SteerFeedbackType.FusedCANcoder;

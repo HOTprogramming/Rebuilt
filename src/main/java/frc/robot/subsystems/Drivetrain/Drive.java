@@ -120,7 +120,7 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
  
     private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
-        .withDriveRequestType(DriveRequestType.Velocity);
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
 		.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 		.withHeadingPID(10, 0, 0);
@@ -280,7 +280,7 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
     }
 
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-		double deadband = .1;
+		double deadband = .15;
 
 		driveX = Math.abs(Math.hypot(driveX, driveY)) > deadband ? driveX : 0;
 		driveY = Math.abs(Math.hypot(driveX, driveY)) > deadband ? driveY : 0;
