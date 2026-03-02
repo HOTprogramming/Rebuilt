@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
 
     /* Update base Shuffleboard tab with Roborio data  */
     matchTimeEntry.setDouble(DriverStation.getMatchTime());
-  	SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage(););
+  	SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
 
 
     UpdateTelemetry(); 
