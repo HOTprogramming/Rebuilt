@@ -13,7 +13,7 @@ public class Camera extends SubsystemBase {
 	public Camera(Drive drive) {
 		camera0 = new CameraBase(drive, "camera_0");
 		camera1 = new CameraBase(drive, "camera_1");
-		camera2 = new CameraBase(drive, "camera_1");
+		camera2 = new CameraBase(drive, "camera_2");
 	}
 
 	@Override

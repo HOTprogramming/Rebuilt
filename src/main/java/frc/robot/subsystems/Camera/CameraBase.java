@@ -20,20 +20,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain.Drive;
 
 public class CameraBase {
+
 	private Drive drivetrain;
 
 	NetworkTable subTable;
 	StructTopic<Pose2d> pose2dTopic;
 	StructSubscriber<Pose2d> subscriber;
-	edu.wpi.first.math.Vector<N3> stdDevs;
-	AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
-	double avgDist;
-	Pose3d tagPose3d;
-	Pose2d tagPose;
-	Pose2d poseArray;
 	Pose2d prevCameraPose = new Pose2d();
-	Number[] tagIds;
-	long numTags;
 
 	public CameraBase(Drive drive, String name) {
 		drivetrain = drive;
@@ -46,37 +39,43 @@ public class CameraBase {
 	}
 
 	public void periodic() {
-		if(subTable.getEntry("has_pose").getBoolean(false)){
-			poseArray = subscriber.get();
-			
-			avgDist = 0;
 
-			tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
-			numTags = subTable.getEntry("num_tags").getInteger(0);
+		if(subTable.getEntry("has_pose").getBoolean(false)){
+			Pose2d poseArray = subscriber.get();
+
+			edu.wpi.first.math.Vector<N3> stdDevs;
+			
+			AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+
+			double avgDist = 0;
+
+			Number[] tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
 
 			for(Number id : tagIds){
-				tagPose3d = layout.getTagPose(id.intValue()).get();
+				Pose3d tagPose3d = layout.getTagPose(id.intValue()).get();
 
-				tagPose = new Pose2d(tagPose3d.getX(), tagPose3d.getY(), new Rotation2d());
+				Pose2d tagPose = new Pose2d(tagPose3d.getX(), tagPose3d.getY(), new Rotation2d());
 
 				avgDist += Math.abs(Math.hypot(tagPose.minus(drivetrain.getPose()).getMeasureX().baseUnitMagnitude(), 
 				tagPose.minus(drivetrain.getPose()).getMeasureY().baseUnitMagnitude()));
 			}
 
-			avgDist = avgDist / (double) numTags;
+			avgDist = avgDist / (double) subTable.getEntry("num_tags").getInteger(0);
 
-			if (Math.abs(Math.hypot(poseArray.minus(prevCameraPose).getMeasureX().baseUnitMagnitude(), 
-				poseArray.minus(prevCameraPose).getMeasureY().baseUnitMagnitude())) > .3){
-				stdDevs = VecBuilder.fill(25, 25, 25);
-			} else if (numTags == 1 && avgDist > 3){
+			SmartDashboard.putNumber("Avg dist", avgDist);
+
+			if (Math.abs(Math.hypot(poseArray.minus(drivetrain.getPose()).getMeasureX().baseUnitMagnitude(), 
+				poseArray.minus(drivetrain.getPose()).getMeasureY().baseUnitMagnitude())) > .25){
+				stdDevs = VecBuilder.fill(10, 10, 25);
+			} else if (subTable.getEntry("num_tags").getInteger(0) == 1 && avgDist > 3){
 				stdDevs = VecBuilder.fill(Double.MAX_VALUE,Double.MAX_VALUE, Double.MAX_VALUE);
-			} else if (numTags > 1 && avgDist > 6.5) {
+			} else if (subTable.getEntry("num_tags").getInteger(0) > 1 && avgDist > 6){
 				stdDevs = VecBuilder.fill(Double.MAX_VALUE,Double.MAX_VALUE, Double.MAX_VALUE);
 			} else {
-				if(numTags > 1){
-					stdDevs = VecBuilder.fill(.75 * avgDist, .75 * avgDist, 5);
+				if(subTable.getEntry("num_tags").getInteger(0) > 1){
+					stdDevs = VecBuilder.fill(1 * avgDist, 1 * avgDist, 10);
 				} else {
-					stdDevs = VecBuilder.fill(4 * avgDist, 4 * avgDist, 10);
+					stdDevs = VecBuilder.fill(5 * avgDist, 5 * avgDist, 10);
 				}
 			}
 
