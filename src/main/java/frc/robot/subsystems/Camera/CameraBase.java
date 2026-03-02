@@ -33,7 +33,7 @@ public class CameraBase {
 	Pose2d poseArray;
 	Pose2d prevCameraPose = new Pose2d();
 	Number[] tagIds;
-	int numTags;
+	long numTags;
 
 	public CameraBase(Drive drive, String name) {
 		drivetrain = drive;
