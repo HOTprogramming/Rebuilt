@@ -5,14 +5,11 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+
 import org.json.simple.parser.ParseException;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -20,16 +17,14 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Shooter.Shooter;
 
 public class RobotContainer {
   SendableChooser<String> Autos = new SendableChooser<>();
@@ -82,11 +77,11 @@ public class RobotContainer {
         Math.abs(driver.getRightX()) >= 0.015 ? -driver.getRightX() : 0
     )));
 
-    driver.a().whileTrue(drivetrain.run(()->
-      drivetrain.aim(
-        Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
-    )));
+    //driver.a().whileTrue(drivetrain.run(()->
+      //drivetrain.aim(
+        //Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        //Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0
+    //)));
 
     driver.b().whileTrue(drivetrain.run(()-> {
       double rot = drivetrain.getPose().getRotation().getDegrees(); //robot angle, from -180 to 180
@@ -106,40 +101,44 @@ public class RobotContainer {
       new Rotation2d(Math.PI/4 * fact));
     }));
 
-    driver.x() .whileTrue(
-        AutoBuilder.pathfindToPose(
-            new Pose2d(8.296, 4.061, Rotation2d.fromDegrees(0)), 
-            new PathConstraints(5.0, 3.0, 3.14, 6.28), 
-            0.0 // Goal end velocity
-        )
-    );
+	operator.a().whileTrue(intake.extend());
+	operator.b().whileFalse(intake.retract());
+	operator.x().whileTrue(intake.agitate());
+
+    //driver.x() .whileTrue(
+        //AutoBuilder.pathfindToPose(
+            //new Pose2d(8.296, 4.061, Rotation2d.fromDegrees(0)), 
+            //new PathConstraints(5.0, 3.0, 3.14, 6.28), 
+            //0.0 // Goal end velocity
+        //)
+   // );
 
     //translate to Y target on button press
-     driver.y().whileTrue(drivetrain.run(()->
-      drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
-        new Rotation2d(3.142)
-    )).beforeStarting(drivetrain.resetControllers()));
+     //driver.y().whileTrue(drivetrain.run(()->
+      //drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        //new Rotation2d(3.142)
+    //)).beforeStarting(drivetrain.resetControllers()));
 
     // Shooter Controls
-    operator.povUp().onTrue(shooter.shootSpeedUp());
-    operator.povDown().onTrue(shooter.shootSpeedDown());
-    operator.a().onTrue(shooter.goToIdle());
-    operator.x().onTrue(shooter.goToShoot());
-    operator.b().onTrue(shooter.shooterOff());
+    //operator.povUp().onTrue(shooter.shootSpeedUp());
+    //operator.povDown().onTrue(shooter.shootSpeedDown());
+    //operator.a().onTrue(shooter.goToIdle());
+    //operator.x().onTrue(shooter.goToShoot());
+    //operator.b().onTrue(shooter.shooterOff());
 
     // Indexer Controls
-    operator.rightTrigger().whileTrue(Commands.repeatingSequence(
-		indexer.indexOnCommand().andThen(new WaitCommand(.5))
-		.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))
-		.whileFalse(indexer.indexOffCommand());
+    //operator.rightTrigger().whileTrue(Commands.repeatingSequence(
+		//indexer.indexOnCommand().andThen(new WaitCommand(.5))
+		//.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))
+		//.whileFalse(indexer.indexOffCommand());
 
     // Climber Controls
-    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
+    //climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 	// Intake Controls
-	operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
+	//operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
 
-    NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
+    //NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
   }
 
   public void updateAutonCommand() {
