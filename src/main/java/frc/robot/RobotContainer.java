@@ -46,11 +46,6 @@ public class RobotContainer {
 	private final CommandXboxController driver = new CommandXboxController(0);
 	private final CommandXboxController operator = new CommandXboxController(1);
 
-	String AutoSelect;
-	String ColorSelect;
-	Optional<Alliance> Ally;
-	String prevAutoSelect = "";
-
 	public RobotContainer() {
 		RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the
 																		// battery is good.
@@ -165,10 +160,10 @@ public class RobotContainer {
 		NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
 	}
 
-	public void updateAutonCommand() {
-    Ally = DriverStation.getAlliance();
-	
-
+  public void updateAutonCommand() {
+    Optional<Alliance> Ally = DriverStation.getAlliance();
+    String AutoSelect;
+    String ColorSelect;
     if (!Ally.isPresent()) {
       ColorSelect = "Red-";
     } else {
@@ -179,8 +174,7 @@ public class RobotContainer {
       }
     }
     AutoSelect = ColorSelect + Autos.getSelected();
-
-    if (autoString != null && !prevAutoSelect.equals(AutoSelect)) {
+    if (autoString != null) {
       if (AutoSelect != autoString) {
         autoString = AutoSelect;
         autoCommand = new PathPlannerAuto(autoString);
@@ -197,9 +191,8 @@ public class RobotContainer {
     } else {
       autoString = AutoSelect;
     }
-
-	prevAutoSelect = AutoSelect;
   }
+
 
 	public Command getAutonomousCommand() {
 		return autoCommand;
