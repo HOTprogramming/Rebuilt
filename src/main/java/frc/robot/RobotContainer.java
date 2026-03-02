@@ -165,6 +165,17 @@ public class RobotContainer {
 	operator.leftBumper().onTrue(climber.fullDeploy());
 	operator.start().onTrue(climber.stop());
 	operator.leftTrigger().onTrue(climber.spinToZero());
+    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual( 
+		Math.abs(operator.getRightX()) >= 0.15 ? operator.getRightX() * 0.3 : 0,
+        Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.3 : 0)));
+	operator.a().onTrue(climber.stow());
+	operator.y().onTrue(climber.wristClimb());
+	operator.b().onTrue(climber.lift());
+	operator.x().onTrue(climber.deploy());
+	operator.rightBumper().onTrue(climber.stageThreeClimb());
+	operator.leftBumper().onTrue(climber.fullDeploy());
+	operator.start().onTrue(climber.stop());
+	operator.leftTrigger().onTrue(climber.spinToZero());
 
 		// Intake Controls
 		// operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
