@@ -2,12 +2,13 @@ package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.util.Kraken;
 
 public class Shooter extends SubsystemBase {
 	private final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
 
 	public Shooter() {
-
+		mShooterKraken.m_krakenFXHood.motor.setPosition(0.0);
 	}
 
 	public double getTargetShootSpeed() {
@@ -35,14 +36,14 @@ public class Shooter extends SubsystemBase {
 
 	public Command shootSpeedUp() {
 		return runOnce(() -> {
-			ShooterConstants.kTargetShootSpeed += 2;
+			ShooterConstants.kTargetShootSpeed += 0.5;
 			mShooterKraken.runVelocity(ShooterConstants.kTargetShootSpeed);
 		});
 	}
 
 	public Command shootSpeedDown() {
 		return runOnce(() -> {
-			ShooterConstants.kTargetShootSpeed -= 2;
+			ShooterConstants.kTargetShootSpeed -= 0.5;
 			mShooterKraken.runVelocity(ShooterConstants.kTargetShootSpeed);
 		});
 	}
@@ -71,14 +72,14 @@ public class Shooter extends SubsystemBase {
 
 	public Command hoodAngleUp() {
 		return runOnce(() -> {
-			ShooterConstants.kTargetHoodAngle += 0.1;
+			ShooterConstants.kTargetHoodAngle += 0.5;
 			mShooterKraken.runPosition(ShooterConstants.kTargetHoodAngle);
 		});
 	}
 
 	public Command hoodAngleDown() {
 		return runOnce(() -> {
-			ShooterConstants.kTargetHoodAngle -= 0.1;
+			ShooterConstants.kTargetHoodAngle -= 0.5;
 			mShooterKraken.runPosition(ShooterConstants.kTargetHoodAngle);
 		});
 	}
