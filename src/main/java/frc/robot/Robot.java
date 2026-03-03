@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotController;
 import static edu.wpi.first.units.Units.Seconds;
 
+import com.pathplanner.lib.commands.PathfindingCommand;
+
 
 public class Robot extends TimedRobot {
 
@@ -67,6 +69,8 @@ public class Robot extends TimedRobot {
     /*Create Robot Contrainer */
     m_robotContainer = new RobotContainer();
     
+	PathfindingCommand.warmupCommand().schedule();
+
     /*Initialize base Shuffleboard tab */
     tab = Shuffleboard.getTab("tab");
     matchTimeEntry = tab.add("Match time",0.0).getEntry();
