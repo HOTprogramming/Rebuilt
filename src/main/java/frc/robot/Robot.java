@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
 	SmartDashboard.putNumber("Battery Voltage", batteryVoltage);
 
 
-    UpdateTelemetry(); 
+    // UpdateTelemetry(); 
   }
 
   @Override
