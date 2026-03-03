@@ -34,7 +34,7 @@ import frc.robot.subsystems.Intake.Intake;
 public class RobotContainer {
 	SendableChooser<String> Autos = new SendableChooser<>();
 	private Command autoCommand;
-	private String autoString;
+	private String autoString = "";
 
 	private final Drive drivetrain;
 	private final Camera camera;
@@ -45,6 +45,11 @@ public class RobotContainer {
 
 	private final CommandXboxController driver = new CommandXboxController(0);
 	private final CommandXboxController operator = new CommandXboxController(1);
+
+	Optional<Alliance> Ally = DriverStation.getAlliance();
+    String autoSelect;
+    String colorSelect;
+
 
 	public RobotContainer() {
 		RobotController.setBrownoutVoltage(Constants.brownoutVoltage); // stops stuttering under high load when the
@@ -161,22 +166,21 @@ public class RobotContainer {
 	}
 
   public void updateAutonCommand() {
-    Optional<Alliance> Ally = DriverStation.getAlliance();
-    String AutoSelect;
-    String ColorSelect;
+	Ally = DriverStation.getAlliance();
+
     if (!Ally.isPresent()) {
-      ColorSelect = "Red-";
+      colorSelect = "Red-";
     } else {
       if (Ally.get() == Alliance.Red) {
-        ColorSelect = "Red-";
+        colorSelect = "Red-";
       } else {
-        ColorSelect = "Blue-";
+        colorSelect = "Blue-";
       }
     }
-    AutoSelect = ColorSelect + Autos.getSelected();
+    autoSelect = colorSelect + Autos.getSelected();
     if (autoString != null) {
-      if (AutoSelect != autoString) {
-        autoString = AutoSelect;
+      if (autoSelect != autoString) {
+        autoString = autoSelect;
         autoCommand = new PathPlannerAuto(autoString);
         try {
           PathPlannerAuto.getPathGroupFromAutoFile(autoString);
@@ -189,7 +193,7 @@ public class RobotContainer {
         }
       }
     } else {
-      autoString = AutoSelect;
+      autoString = autoSelect;
     }
   }
 
