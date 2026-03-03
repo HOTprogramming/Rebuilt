@@ -56,7 +56,7 @@ public class CameraBase {
 
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
-					getDistance(poseArray.getTranslation(););
+					getDistance(poseArray.getTranslation());
 			}
 
 			avgDist = avgDist / numTags;
