@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
@@ -240,26 +241,37 @@ private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
             
     public boolean drivetrainAtTarget() {
         if (path != null) {
-            return Math.abs(
-                this.iOdata.state.Pose.getTranslation().getDistance(
-                    path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation())) 
+            return this.iOdata.state.Pose.getTranslation().getDistance(
+                    path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation())
                     < OTF_end_tolerance;
         }
+		
+		
         return false;
     }
 
-    public Command runOnTheFly() {
+	public Command alignToPole(){
+		return runOnTheFly(new Pose2d(1.05, 2.65, Rotation2d.fromDegrees(90)));
+	}
+
+	Translation2d diff;
+	Rotation2d angleToTarget;
+
+    public Command runOnTheFly(Pose2d target) {
         return Commands.sequence(
             Commands.runOnce(() -> {
-                Pose2d target = new Pose2d(2.4, 7.2, Rotation2d.fromDegrees(0));
+				diff = target.getTranslation().minus(iOdata.state.Pose.getTranslation());
+				angleToTarget = new Rotation2d(diff.getX(), diff.getY());
+
                 waypoints = PathPlannerPath.waypointsFromPoses(
-                    iOdata.state.Pose,
-                    target
+                    new Pose2d(iOdata.state.Pose.getTranslation(), angleToTarget),
+                    new Pose2d(target.getTranslation(), angleToTarget)
                 );
                 path = new PathPlannerPath(
                     waypoints,
                     constraints,
-                    null,
+                    new IdealStartingState(Math.abs(Math.hypot(iOdata.state.Speeds.vxMetersPerSecond, iOdata.state.Speeds.vyMetersPerSecond)), 
+					iOdata.state.Pose.getRotation()),
                     new GoalEndState(0, target.getRotation())
                 );
                 path.preventFlipping = true;

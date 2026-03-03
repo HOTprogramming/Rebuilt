@@ -162,7 +162,9 @@ public class RobotContainer {
 		// Intake Controls
 		// operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
 
-		NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly());
+		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
+
+		NamedCommands.registerCommand("OTF", drivetrain.runOnTheFly(new Pose2d(8,4, Rotation2d.fromDegrees(0))));
 	}
 
   public void updateAutonCommand() {
