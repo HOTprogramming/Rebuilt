@@ -56,7 +56,7 @@ public class CameraBase {
 
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().
-					getDistance(poseArray.getTranslation());
+					getDistance(poseArray.getTranslation().toTranslation2d());
 			}
 
 			avgDist = avgDist / numTags;
@@ -76,7 +76,7 @@ public class CameraBase {
 			}
 
 			drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, stdDevs);
-			prevTranslation = poseArray.getTranslation();
+			prevTranslation = poseArray.getTranslation().toTranslation2d();
 		}
     }
 }
