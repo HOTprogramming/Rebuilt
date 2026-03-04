@@ -104,7 +104,7 @@ public class RobotContainer {
 			fact = Math.abs(rot) > 90 ? 3 : 1;
 			if (rot < 0)
 				fact *= -1;
-				
+
 			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
@@ -137,7 +137,7 @@ public class RobotContainer {
 
 		// Intake Controls
 		operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
-		operator.rightTrigger().whileTrue(intake.agitate())
+		// operator.rightTrigger().whileTrue(intake.agitate());
 	}
 
 	public void updateAutonCommand() {

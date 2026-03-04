@@ -33,6 +33,7 @@ public class Kraken {
 	public static enum PositionControlType{
 		PositionVoltage,
 		PositionTorqueCurrentFOC,
+		MotionMagicVoltage,
 		MotionMagicExpoVoltage,
 		MotionMagicExpoTorqueCurrentFOC
 	}
@@ -44,6 +45,7 @@ public class Kraken {
 
 	private final PositionVoltage positionVoltage = new PositionVoltage(0);
 	private final PositionTorqueCurrentFOC positionTorque = new PositionTorqueCurrentFOC(0);
+	private final MotionMagicVoltage mmVoltage = new MotionMagicVoltage(0);
 	private final MotionMagicExpoVoltage mmExpoVoltage = new MotionMagicExpoVoltage(0);
 	private final MotionMagicExpoTorqueCurrentFOC mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0);
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
@@ -144,6 +146,9 @@ public class Kraken {
 				break;
 			case PositionTorqueCurrentFOC:
 				motor.setControl(positionTorque.withPosition(desiredRotations).withSlot(slot));
+				break;
+			case MotionMagicVoltage:
+				motor.setControl(mmVoltage.withPosition(desiredRotations).withSlot(slot));
 				break;
 			case MotionMagicExpoVoltage:
 				motor.setControl(mmExpoVoltage.withPosition(desiredRotations).withSlot(slot));

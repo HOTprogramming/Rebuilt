@@ -26,8 +26,8 @@ public class IntakeConstants {
 	public static double kExtendTolerance = 0.05;
 	public static double kRetractTolerance = 0.05;
 
-	public static double kExpelSpeed = -2000.0;
-	public static double kIntakeSpeed = 2000.0;
+	public static double kExpelSpeed = -80.0;
+	public static double kIntakeSpeed = 80.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 0 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
@@ -49,31 +49,12 @@ public class IntakeConstants {
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(10.0)
-			.withMotionMagicAcceleration(10.0))
 		.withSlot0(new Slot0Configs()
-			.withKP(0.1)
-			.withKI(0.1)
-			.withKD(0.0)
-			.withKS(0.4)
-			.withKV(0.95))
-		.withSlot1(new Slot1Configs()
-			.withKP(5.0)
-			.withKI(0.0)
-			.withKD(0.0)
-			.withKS(2.5))
-		.withSlot2(new Slot2Configs()
-			.withKS(0.25)
-			.withKV(.12)
-			.withKA(0.01)
-			.withKP(4.8)
+			.withKP(0)
 			.withKI(0)
-			.withKD(0.1))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(80.0)
-			.withMotionMagicAcceleration(160)
-			.withMotionMagicJerk(1600));
+			.withKD(0)
+			.withKS(0)
+			.withKV(0));
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -90,24 +71,12 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withSlot0(new Slot0Configs()
-			.withKP(0.19)
-			.withKI(0.0)
-			.withKD(0.0))
-		.withSlot1(new Slot1Configs()
-			.withKP(60.0)
-			.withKI(0.0)
-			.withKD(6.0))
-		.withSlot2(new Slot2Configs()
-			.withKS(0.25)
-			.withKV(.12)
-			.withKA(0.01)
-			.withKP(4.8)
+			.withKP(0)
 			.withKI(0)
-			.withKD(0.1))
+			.withKD(0))
 		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(0.0)
-			.withMotionMagicExpo_kV(0.12)
-			.withMotionMagicExpo_kA(0.1))
+			.withMotionMagicCruiseVelocity(10.0)
+			.withMotionMagicAcceleration(10.0))
 		.withFeedback(new FeedbackConfigs()
 			.withFeedbackRemoteSensorID(kIntakeEncoderID)
 			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
