@@ -110,7 +110,7 @@ public class RobotContainer {
 		driver.x().whileTrue(drivetrain.alignToPole());
 
 		// Shooter Controls
-		manager.shooter.setDefaultCommand(manager.shooter.run(() -> manager.shooter.shooterOff()));
+		manager.shooter.setDefaultCommand(manager.shooter.shooterOff());
 			
 		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
 		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
@@ -131,7 +131,7 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		intake.setDefaultCommand(intake.run(() -> intake.retract()));
+		intake.setDefaultCommand(intake.retract());
 		operator.leftTrigger().whileTrue(intake.extend());
 		operator.rightTrigger().whileTrue(intake.agitate());
 	}

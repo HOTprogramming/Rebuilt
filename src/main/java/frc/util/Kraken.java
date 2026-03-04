@@ -113,6 +113,8 @@ public class Kraken {
 			refreshSim();
 		}
 
+		BaseStatusSignal.refreshAll(position, velocity);
+
 		updateTelemetry();
 
 		return true;

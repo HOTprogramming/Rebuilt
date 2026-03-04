@@ -19,21 +19,21 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Command extend() {
-		return runOnce(() -> {
+		return run(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
 		});
 	}
 
 	public Command retract() {
-		return runOnce(() -> {
+		return run(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
 			mIntakeKraken.stop();
 		});
 	}
 
 	public Command expel() {
-		return runOnce(() -> {
+		return run(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kExpelSpeed);
 		});
