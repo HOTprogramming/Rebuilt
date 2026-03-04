@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Shooter.ShooterConstants;
 
 public class RobotState {
 
@@ -38,9 +39,6 @@ public class RobotState {
 	private static Translation2d bottomBlueTrench = new Translation2d(4.614, 0.637);
 	private static Translation2d bottomRedTrench = new Translation2d(11.926, 0.637);
 
-	private static Translation2d redHubPos = new Translation2d(11.91, 4.03);
-	private static Translation2d blueHubPos = new Translation2d(4.63, 4.03);
-
 	private static Translation2d[] trenches = new Translation2d[] {topBlueTrench, topRedTrench, bottomBlueTrench, bottomRedTrench};
 	private static double trenchdodgeradius = 1;
 
@@ -49,6 +47,7 @@ public class RobotState {
 	public static Zone shooterZone = Zone.ALLIANCE;
 	private static Map<Zone, Command> autoAimCommands;
 	private static Supplier<Zone> shooterZoneSup = () -> shooterZone;
+	public static Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
 	public RobotState() {
 		shooter = new Shooter();
@@ -67,18 +66,16 @@ public class RobotState {
 		return pose.getTranslation().getDistance(new Translation2d(x, y)) < radius;
 	}
 
-	static double goalX;
-
 	public static void findZone() {
-		Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
+		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
 		if (color == Alliance.Blue) {
-			SmartDashboard.putNumber("Distance to Goal", blueHubPos.getDistance(pose.getTranslation()));
+			SmartDashboard.putNumber("Distance to Goal", ShooterConstants.blueHub.getDistance(pose.getTranslation()));
 			if (isInZoneBox(0, bluezonex, 0, fieldy)) shooterZone = Zone.ALLIANCE;
 			else if (isInZoneBox(bluezonex, fieldx, 0, midfieldy)) shooterZone = Zone.RIGHT;
 			else if (isInZoneBox(bluezonex, fieldx, midfieldy, fieldy)) shooterZone = Zone.LEFT;
 		} else {
-			SmartDashboard.putNumber("Distance to Goal", redHubPos.getDistance(pose.getTranslation()));
+			SmartDashboard.putNumber("Distance to Goal", ShooterConstants.redHub.getDistance(pose.getTranslation()));
 			if (isInZoneBox(redzonex, fieldx, 0, fieldy)) shooterZone = Zone.ALLIANCE;
 			else if (isInZoneBox(0, redzonex, 0, midfieldy)) shooterZone = Zone.RIGHT;
 			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.LEFT;
