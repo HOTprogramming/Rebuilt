@@ -28,6 +28,14 @@ public class IntakeKraken {
 		m_RollerKraken.refresh();
 	}
 
+	public double getExtendPosition() {
+		return m_ExtendKraken.position.getValueAsDouble();
+	}
+
+	public double getRetractPosition() {
+		return m_ExtendKraken.position.getValueAsDouble();
+	}
+
 	public void runPosition(double desiredRotations) {
 		switch (controlPos) {
 			case 0:
@@ -56,8 +64,8 @@ public class IntakeKraken {
 				break;
 		}
 	}
-
 	public void stop() {
 		m_RollerKraken.stop();
 	}
+
 }

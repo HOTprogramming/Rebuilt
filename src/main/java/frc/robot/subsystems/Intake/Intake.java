@@ -1,6 +1,9 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
@@ -40,5 +43,17 @@ public class Intake extends SubsystemBase {
 		return runOnce(() -> {
 			mIntakeKraken.stop();
 		});
+	}
+
+	public BooleanSupplier isExtended() {
+		return () -> Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance;
+	}
+
+	public BooleanSupplier isRetracted() {
+		return () -> Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kRetractPosition) < IntakeConstants.kRetractTolerance;
+	}
+
+	public Command agitate() {
+		return Commands.repeatingSequence(extend().until(isExtended()),retract().until(isRetracted()));
 	}
 }
