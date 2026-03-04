@@ -33,7 +33,6 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
 
     private DriveIOdata iOdata = new DriveIOdata();
 
-
     public DriveKraken() {
         super(TalonFX::new, TalonFX::new, CANcoder::new,
         DriveConfig.DRIVETRAIN(), 
@@ -51,18 +50,6 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
         }
     }
 
-    public void setCurrentLimits() {
-        SwerveModule<TalonFX, TalonFX, CANcoder>[] m_modules = getModules();
-        
-        for (int i = 0; i < m_modules.length; i++) {
-            m_modules[i].getDriveMotor().setNeutralMode(NeutralModeValue.Coast, 1.0);
-            m_modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.driveInitialConfigs.CurrentLimits, 1.0);
-            m_modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.steerInitialConfigs.CurrentLimits, 1.0);
-            m_modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.driveInitialConfigs.TorqueCurrent, 1.0);
-            m_modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.steerInitialConfigs.TorqueCurrent, 1.0);
-        }
-    }
-
     public void setSwerveRequest(SwerveRequest requestToApply) {
         setControl(requestToApply);
     }
@@ -76,16 +63,6 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
 
         if (currentState != null) {
             this.iOdata.state = this.currentState;
-
-            for (int i = 0; i < 4; i++) {
-                SmartDashboard.putNumberArray("Module " + i, new double[] {
-                    getModule(i).getSteerMotor().getPosition().getValueAsDouble() % 1, 
-                    getModule(i).getSteerMotor().getClosedLoopReference().getValueAsDouble() % 1,
-                    getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble(),
-                    getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble()
-
-                });
-            }
         }
 
         this.iOdata.pigeon = m_Pigeon2.getRotation3d();
@@ -114,19 +91,11 @@ public class DriveKraken extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> {
     }
 
     public void updateVision(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
-        addVisionMeasurement(calculatedPose, Utils.fpgaToCurrentTime(timestamp), stDevs);
+        addVisionMeasurement(calculatedPose, timestamp, stDevs);
     }
 
     public void setOperatorPerspective(Rotation2d rotation2d) {
         setOperatorPerspectiveForward(rotation2d);
-    }
-
-    public void setNeutralMode(NeutralModeValue neutralModeValue) {
-        SwerveModule<TalonFX, TalonFX, CANcoder>[] m_modules = getModules();
-
-        for (int i = 0; i < m_modules.length; i++) {
-            m_modules[i].getDriveMotor().setNeutralMode(neutralModeValue, 1.0);
-        }
     }
 
     private void startSimThread() {

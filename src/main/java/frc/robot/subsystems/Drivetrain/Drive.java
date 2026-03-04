@@ -3,9 +3,6 @@ package frc.robot.subsystems.Drivetrain;
 import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 import frc.robot.Constants;
 import frc.robot.RobotState;
-
-import java.util.List;
-import java.util.Set;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
@@ -13,13 +10,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,369 +26,237 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;    
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+class DriveIOdata {
+	public SwerveDriveState state = new SwerveDriveState();
 
+	public Rotation3d pigeon;
 
-class DriveIOdata { 
-    public SwerveDriveState state = new SwerveDriveState();
+	public double frontLeftDrivePositionRads = 0.0;
+	public double frontLeftDriveVelocityRpm = 0.0;
+	public double frontLeftDriveAppliedVolts = 0.0;
+	public double frontLeftDriveSupplyCurrentAmps = 0.0;
+	public double frontLeftDriveTorqueCurrentAmps = 0.0;
+	public double frontLeftDriveTempCelsius = 0.0;
 
-    public Rotation3d pigeon;
+	public double frontRightDrivePositionRads = 0.0;
+	public double frontRightDriveVelocityRpm = 0.0;
+	public double frontRightDriveAppliedVolts = 0.0;
+	public double frontRightDriveSupplyCurrentAmps = 0.0;
+	public double frontRightDriveTorqueCurrentAmps = 0.0;
+	public double frontRightDriveTempCelsius = 0.0;
 
-    public double frontLeftDrivePositionRads = 0.0;
-    public double frontLeftDriveVelocityRpm = 0.0;
-    public double frontLeftDriveAppliedVolts = 0.0;
-    public double frontLeftDriveSupplyCurrentAmps = 0.0;
-    public double frontLeftDriveTorqueCurrentAmps = 0.0;
-    public double frontLeftDriveTempCelsius = 0.0;
+	public double backLeftDrivePositionRads = 0.0;
+	public double backLeftDriveVelocityRpm = 0.0;
+	public double backLeftDriveAppliedVolts = 0.0;
+	public double backLeftDriveSupplyCurrentAmps = 0.0;
+	public double backLeftDriveTorqueCurrentAmps = 0.0;
+	public double backLeftDriveTempCelsius = 0.0;
 
-    public double frontRightDrivePositionRads = 0.0;
-    public double frontRightDriveVelocityRpm = 0.0;
-    public double frontRightDriveAppliedVolts = 0.0;
-    public double frontRightDriveSupplyCurrentAmps = 0.0;
-    public double frontRightDriveTorqueCurrentAmps = 0.0;
-    public double frontRightDriveTempCelsius = 0.0;
+	public double backRightDrivePositionRads = 0.0;
+	public double backRightDriveVelocityRpm = 0.0;
+	public double backRightDriveAppliedVolts = 0.0;
+	public double backRightDriveSupplyCurrentAmps = 0.0;
+	public double backRightDriveTorqueCurrentAmps = 0.0;
+	public double backRightDriveTempCelsius = 0.0;
 
-    public double backLeftDrivePositionRads = 0.0;
-    public double backLeftDriveVelocityRpm = 0.0;
-    public double backLeftDriveAppliedVolts = 0.0;
-    public double backLeftDriveSupplyCurrentAmps = 0.0;
-    public double backLeftDriveTorqueCurrentAmps = 0.0;
-    public double backLeftDriveTempCelsius = 0.0;
-
-    public double backRightDrivePositionRads = 0.0;
-    public double backRightDriveVelocityRpm = 0.0;
-    public double backRightDriveAppliedVolts = 0.0;
-    public double backRightDriveSupplyCurrentAmps = 0.0;
-    public double backRightDriveTorqueCurrentAmps = 0.0;
-    public double backRightDriveTempCelsius = 0.0;
-
-    public Translation2d[] m_moduleLocations;
+	public Translation2d[] m_moduleLocations;
 }
 
 public class Drive extends SubsystemBase {
-private double thetaP = 10.0;
-private double thetaI = 0.0;
-private double thetaD = 0.2;
+	private double thetaP = 10.0;
+	private double thetaI = 0.0;
+	private double thetaD = 0.2;
 
-private final PIDController thetaController =
-    new PIDController(thetaP, thetaI, thetaD);
+	private final PIDController thetaController = new PIDController(thetaP, thetaI, thetaD);
 
-// NetworkTables
-private NetworkTable tuningTable;
+	private final SlewRateLimiter xLimiter = new SlewRateLimiter(kTranslationRateLimiter);
+	private final SlewRateLimiter yLimiter = new SlewRateLimiter(kTranslationRateLimiter);
+	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(kRotationRateLimiter);
 
-private DoublePublisher thetaP_pub;
-private DoublePublisher thetaI_pub;
-private DoublePublisher thetaD_pub;
+	private DriveKraken driveKraken;
+	private DriveIOdata iOdata;
 
-private edu.wpi.first.networktables.DoubleSubscriber thetaP_sub;
-private edu.wpi.first.networktables.DoubleSubscriber thetaI_sub;
-private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
+	private PathConstraints constraints;
 
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(kTranslationRateLimiter);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(kTranslationRateLimiter);
-    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(kRotationRateLimiter);
-       
-    private DriveKraken driveKraken;
-    private DriveIOdata iOdata;
+	private double rampedX;
+	private double rampedY;
+	private double rampedTheta;
 
-    private PathConstraints constraints;
-    private List<Waypoint> waypoints;
+	private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
+		.withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
+		.withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+		.withHeadingPID(10, 0, 0);
+	private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
+	private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds()
+		.withDriveRequestType(DriveRequestType.Velocity);
 
-    private PathPlannerPath path;
+	private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
+	private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 
-    private double rampedX;
-    private double rampedY;
-    private double rampedTheta;
+	private DoublePublisher robotReqSpeed;
+	private DoublePublisher robotRealSpeed;
+	private DoubleArrayPublisher robotPose;
+	private DoubleArrayPublisher robotStatePose;
 
+	public Drive(DriveKraken driveKraken) {
+		this.driveKraken = driveKraken;
 
-    private PIDController translationControllerIn = new PIDController(5, 0, 0);
-    private PIDController translationControllerAcross = new PIDController(5, 0, 0);
-    private ProfiledPIDController translationControllerY = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
-    private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
- 
-    private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
-        .withDeadband(0.2).withRotationalDeadband(0.0)
-        .withDriveRequestType(DriveRequestType.Velocity).withDesaturateWheelSpeeds(false);
-    private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
-    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds().withDriveRequestType(DriveRequestType.Velocity);
+		this.iOdata = driveKraken.update();
 
-    private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
-    private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
-    private DoublePublisher robotReqSpeed;
-    private DoublePublisher robotRealSpeed;
-    private DoubleArrayPublisher robotPose;
+		NetworkTable table = inst.getTable("HOT/Drive");
 
-    public Drive(DriveKraken driveKraken) { 
+		robotReqSpeed = table.getDoubleTopic("Robot Requested Speed").publish();
+		robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
+		robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
+		robotStatePose = table.getDoubleArrayTopic("Robot State Pose").publish();
 
-    if (!Constants.compMode) {
-       
-        tuningTable =
-        NetworkTableInstance.getDefault().getTable("Tuning/Drive");
+		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    thetaP_pub = tuningTable.getDoubleTopic("Theta kP").publish();
-    thetaI_pub = tuningTable.getDoubleTopic("Theta kI").publish();
-    thetaD_pub = tuningTable.getDoubleTopic("Theta kD").publish();
+		configurePathPlanner();
 
-    thetaP_pub.set(thetaP);
-    thetaI_pub.set(thetaI);
-    thetaD_pub.set(thetaD);
+		constraints = new PathConstraints(5.0, 3.0, 2 * Math.PI, 4 * Math.PI);
+	}
 
-    thetaP_sub = tuningTable.getDoubleTopic("Theta kP").subscribe(thetaP);
-    thetaI_sub = tuningTable.getDoubleTopic("Theta kI").subscribe(thetaI);
-    thetaD_sub = tuningTable.getDoubleTopic("Theta kD").subscribe(thetaD);
+	private void UpdateTelemetry() {
+		robotReqSpeed.set(Math.hypot(FIELD_CENTRIC.VelocityX, FIELD_CENTRIC.VelocityY));
+		robotRealSpeed
+			.set((Math.hypot(this.iOdata.state.Speeds.vxMetersPerSecond, this.iOdata.state.Speeds.vyMetersPerSecond)));
+		robotPose.set(new double[] {
+			this.iOdata.state.Pose.getX(),
+			this.iOdata.state.Pose.getY(),
+			this.iOdata.state.Pose.getRotation().getRadians()});
 
-    }
+		robotStatePose.set(new double[] {
+			RobotState.pose.getX(),
+			RobotState.pose.getY(),
+			RobotState.pose.getRotation().getRadians()});
+	}
 
-        this.driveKraken = driveKraken;
-
-        this.iOdata = driveKraken.update();
-
-        translationControllerX.setTolerance(auto_align_tolerance);
-        translationControllerY.setTolerance(auto_align_tolerance);
-
-        translationControllerIn.setTolerance(auto_align_tolerance);
-        translationControllerAcross.setTolerance(auto_align_tolerance);
-
-        Rotation2d.fromDegrees(0);
- 
-         NetworkTableInstance inst = NetworkTableInstance.getDefault();
-
-        NetworkTable table = inst.getTable("HOT/Drive");
-
-        robotReqSpeed = table.getDoubleTopic("Robot Requested Speed").publish();
-        robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
-        robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
-
-    
-        double driveBaseRadius = 0;
-        for (var moduleLocation : this.iOdata.m_moduleLocations) {
-            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-        }
-
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        configurePathPlanner();
-
-        constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
-    }
-
-    private void UpdateTelemetry() {
-        robotReqSpeed.set(Math.hypot(
-                FIELD_CENTRIC.VelocityX,
-                FIELD_CENTRIC.VelocityY) );
-        robotRealSpeed.set((Math.hypot(
-                this.iOdata.state.Speeds.vxMetersPerSecond,
-                this.iOdata.state.Speeds.vyMetersPerSecond) ));
-        robotPose.set(new double[]{
-                this.iOdata.state.Pose.getX(), 
-                this.iOdata.state.Pose.getY(), 
-                this.iOdata.state.Pose.getRotation().getRadians()});        
-    }
-
-    @Override
-    public void periodic() {
-		
+	@Override
+	public void periodic() {
 		RobotState.pose = iOdata.state.Pose;
-
-		if (!Constants.compMode) {
-			thetaP = thetaP_sub.get();
-			thetaI = thetaI_sub.get();
-			thetaD = thetaD_sub.get();
-
-			thetaP_pub.set(thetaP);
-			thetaI_pub.set(thetaI);
-			thetaD_pub.set(thetaD);
-		}
+		RobotState.findZone();
 
 		thetaController.setPID(thetaP, thetaI, thetaD);
 
+		if (DriverStation.isDisabled()) {
+			DriverStation.getAlliance().ifPresent(allianceColor -> {
+				this.driveKraken.setOperatorPerspective(allianceColor == Alliance.Red ? kRedAlliancePerspectiveRotation
+					: kBlueAlliancePerspectiveRotation);
+			});
+		}
 
+		this.iOdata = driveKraken.update();
 
-        if (!(DriverStation.isTeleopEnabled()) || Math.abs(iOdata.pigeon.getX()) > 0.2 || Math.abs(iOdata.pigeon.getY()) > 0.2) {
-            iOdata.state.Pose.getRotation();
-        }
+		UpdateTelemetry();
+	}
 
-        if (DriverStation.isDisabled()) {
-            DriverStation.getAlliance().ifPresent(allianceColor -> {
-            
-                this.driveKraken.setOperatorPerspective(
-                    allianceColor == Alliance.Red ? kRedAlliancePerspectiveRotation : kBlueAlliancePerspectiveRotation
-                ); 
-            });
-        }
-		
-        this.iOdata = driveKraken.update();
+	public Command alignToPole() {
+		return runPathFinding(new Pose2d(1.05, 2.65, Rotation2d.fromDegrees(90)));
+	}
 
-        UpdateTelemetry();
-    }
-            
-    public boolean drivetrainAtTarget() {
-        if (path != null) {
-            return Math.abs(
-                this.iOdata.state.Pose.getTranslation().getDistance(
-                    path.getPathPoses().get(path.getPathPoses().size() - 1).getTranslation())) 
-                    < OTF_end_tolerance;
-        }
-        return false;
-    }
+	public Command runPathFinding(Pose2d target) {
+		return AutoBuilder.pathfindToPose(target, constraints);
+	}
 
-    public Command runOnTheFly() {
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                Pose2d target = new Pose2d(2.4, 7.2, Rotation2d.fromDegrees(0));
-                waypoints = PathPlannerPath.waypointsFromPoses(
-                    iOdata.state.Pose,
-                    target
-                );
-                path = new PathPlannerPath(
-                    waypoints,
-                    constraints,
-                    null,
-                    new GoalEndState(0, target.getRotation())
-                );
-                path.preventFlipping = true;
-            }),
-            Commands.defer(
-                () -> AutoBuilder.followPath(path).until(this::drivetrainAtTarget),
-                Set.of(this) 
-            )
-        );
-    }
+	public void teleopDrive(double driveX, double driveY, double driveTheta) {
+		double deadband = .15;
 
-    public Command setCoast() {
-        return runOnce(() -> driveKraken.setNeutralMode(NeutralModeValue.Coast));
-    }
+		driveX = Math.abs(Math.hypot(driveX, driveY)) > deadband ? driveX : 0;
+		driveY = Math.abs(Math.hypot(driveX, driveY)) > deadband ? driveY : 0;
+		driveTheta = Math.abs(driveTheta) > deadband ? driveTheta : 0;
 
-    public Command setBrake() {
-        return runOnce(() -> driveKraken.setNeutralMode(NeutralModeValue.Brake));
-    }
+		rampedX = xLimiter.calculate((driveX * Math.abs(driveX)));
+		rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));
+		rampedTheta = rotLimiter.calculate(driveTheta * Math.abs(driveTheta));
 
-    public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-        rampedX = xLimiter.calculate(driveX); 
-        rampedY = yLimiter.calculate(driveY);    
-        rampedTheta = rotLimiter.calculate(driveTheta); 
+		driveKraken.setSwerveRequest(FIELD_CENTRIC
+			.withVelocityX(rampedX * DriveConfig.MAX_VELOCITY())
+			.withVelocityY(rampedY * DriveConfig.MAX_VELOCITY())
+			.withRotationalRate(rampedTheta * DriveConfig.MAX_ANGULAR_VELOCITY()));
+	}
 
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((rampedX <= 0 ? -(rampedX * rampedX) : (rampedX * rampedX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((rampedY <= 0 ? -(rampedY * rampedY) : (rampedY * rampedY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate((rampedTheta <= 0 ? -(rampedTheta * rampedTheta) : (rampedTheta * rampedTheta)) * DriveConfig.MAX_ANGULAR_VELOCITY())
-        );
-    }
+	public void teleopDriveSlow(double driveX, double driveY, double driveTheta) {
+		// no rate limiter applied for slow mode
+		driveKraken.setSwerveRequest(FIELD_CENTRIC
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY()
+				* slowModeMultiplier)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY()
+				* slowModeMultiplier)
+			.withRotationalRate((driveTheta <= 0 ? -(driveTheta * driveTheta) : (driveTheta * driveTheta))
+				* DriveConfig.MAX_ANGULAR_VELOCITY() * slowModeMultiplier));
+	}
 
-    public void teleopDriveSlow(double driveX, double driveY, double driveTheta)  {
-        //no rate limiter applied for slow mode
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * slowModeMultiplier)
-            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * slowModeMultiplier)
-            .withRotationalRate((driveTheta <= 0 ? -(driveTheta * driveTheta) : (driveTheta * driveTheta)) * DriveConfig.MAX_ANGULAR_VELOCITY() * slowModeMultiplier)
-        );
-      }
+	public void robotCentricTeleopDrive(double driveX, double driveY, double driveTheta) {
+		driveKraken.setSwerveRequest(ROBOT_CENTRIC
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
+			.withRotationalRate((driveTheta <= 0 ? -(driveTheta * driveTheta) : (driveTheta * driveTheta))
+				* DriveConfig.MAX_ANGULAR_VELOCITY()));
+	}
 
-    public void robotCentricTeleopDrive(double driveX, double driveY, double driveTheta)  {
-        driveKraken.setSwerveRequest(ROBOT_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate((driveTheta <= 0 ? -(driveTheta * driveTheta) : (driveTheta * driveTheta)) * DriveConfig.MAX_ANGULAR_VELOCITY())
-        );
-    }
- 
-    public void lockRotation(double driveX, double driveY, Rotation2d rtarget) {
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
-        );
-    }
+	public void lockRotation(double driveX, double driveY, Rotation2d rtarget) {
+		driveKraken.setSwerveRequest(FIELD_CENTRIC
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
+			.withRotationalRate(thetaController
+				.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians())));
+	}
 
-    public void facePoint(double driveX, double driveY, Pose2d point) {
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(),
-            Math.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI)));
-    }
+	public void facePoint(double driveX, double driveY, Pose2d point) {
+		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
+			.withTargetDirection(Rotation2d.fromRadians(Math
+				.atan2(point.getY() - iOdata.state.Pose.getY(), point.getX() - iOdata.state.Pose.getX()) + Math.PI)));
+	}
 
-    // Needs to be done better at some point
-    public ShootOnTheFly shootOnTheFly = new ShootOnTheFly(); 
+	// Needs to be done better at some point
+	public ShootOnTheFly shootOnTheFly = new ShootOnTheFly();
 
-    public void aim(double driveX, double driveY){
-        double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
+	public void aim(double driveX, double driveY) {
+		double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
 
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), angle)
-        ));
+		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .5)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .5)
+			.withTargetDirection(Rotation2d.fromRadians(angle)));
+	}
 
-        
-    }
-    //align to fixed Y coordinate on field using Y translation controller
-    public void fixedY(double driveX, Rotation2d rtarget) {
-         double dynamicY = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
-        double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), dynamicY);
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY(!translationControllerY.atGoal() ? -yOutput : 0.0)
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
-        );
-        SmartDashboard.putNumber("Target Y", dynamicY);
-        SmartDashboard.putNumber("Current Y", iOdata.state.Pose.getY());
-        SmartDashboard.putNumber("PID Y Output", yOutput);
-    }
+	public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
+		this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);
+	}
 
-    public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
-        this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);
-    }
+	public Command resetPidgeon() {
+		return runOnce(() -> driveKraken.resetPidgeon());
+	}
 
-    public Command resetPidgeon() {
-        return runOnce(() -> driveKraken.resetPidgeon());
-    }
+	private void configurePathPlanner() {
+		try {
+			var config = RobotConfig.fromGUISettings();
+			AutoBuilder.configure(() -> this.iOdata.state.Pose, this::setPose, () -> this.iOdata.state.Speeds, (speeds,
+				feedforwards) -> driveKraken.setSwerveRequest(m_pathApplyRobotSpeeds.withSpeeds(speeds)
+					.withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+					.withWheelForceFeedforwardsY(feedforwards
+						.robotRelativeForcesYNewtons())), new PPHolonomicDriveController(DriveConfig
+							.AUTON_TRANSLATION_PID(), DriveConfig.AUTON_ROTATION_PID()), config, () -> false, this);
+		} catch (Exception ex) {
+			DriverStation
+				.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+		}
+	}
 
-public Command resetControllers() {
-        return runOnce(() -> {
-            translationControllerX.reset(iOdata.state.Pose.getX(), iOdata.state.Speeds.vxMetersPerSecond);
-            translationControllerY.reset(iOdata.state.Pose.getY(), iOdata.state.Speeds.vyMetersPerSecond);
-            translationControllerIn.reset();
-            translationControllerAcross.reset();
-        });
-    }
+	private void setPose(Pose2d pose) {
+		this.driveKraken.seedFieldRelative(pose);
+	}
 
-    private void configurePathPlanner() {
-        try {
-            var config = RobotConfig.fromGUISettings();
-            AutoBuilder.configure(
-                () -> this.iOdata.state.Pose,
-                this::setPose,
-                () -> this.iOdata.state.Speeds,
-                (speeds, feedforwards) -> driveKraken.setSwerveRequest(
-                    m_pathApplyRobotSpeeds.withSpeeds(speeds)
-                        .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                        .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                ),
-                new PPHolonomicDriveController(
-                    DriveConfig.AUTON_TRANSLATION_PID(),
-                    DriveConfig.AUTON_ROTATION_PID()
-                ),
-                config,
-                () -> false,
-                this
-            );
-        } catch (Exception ex) {
-            DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
-        }
-    }
-
-    private void setPose(Pose2d pose) {
-        this.driveKraken.seedFieldRelative(pose);
-    }
-
-    public Pose2d getPose() {
-        return this.iOdata.state.Pose;
-    }
+	public Pose2d getPose() {
+		return this.iOdata.state.Pose;
+	}
 }
-
