@@ -113,25 +113,6 @@ public class Drive extends SubsystemBase {
 	private DoubleArrayPublisher robotPose;
 
 	public Drive(DriveKraken driveKraken) {
-
-		if (!Constants.compMode) {
-
-			tuningTable = NetworkTableInstance.getDefault().getTable("Tuning/Drive");
-
-			thetaP_pub = tuningTable.getDoubleTopic("Theta kP").publish();
-			thetaI_pub = tuningTable.getDoubleTopic("Theta kI").publish();
-			thetaD_pub = tuningTable.getDoubleTopic("Theta kD").publish();
-
-			thetaP_pub.set(thetaP);
-			thetaI_pub.set(thetaI);
-			thetaD_pub.set(thetaD);
-
-			thetaP_sub = tuningTable.getDoubleTopic("Theta kP").subscribe(thetaP);
-			thetaI_sub = tuningTable.getDoubleTopic("Theta kI").subscribe(thetaI);
-			thetaD_sub = tuningTable.getDoubleTopic("Theta kD").subscribe(thetaD);
-
-		}
-
 		this.driveKraken = driveKraken;
 
 		this.iOdata = driveKraken.update();
@@ -143,11 +124,6 @@ public class Drive extends SubsystemBase {
 		robotReqSpeed = table.getDoubleTopic("Robot Requested Speed").publish();
 		robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
 		robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
-
-		double driveBaseRadius = 0;
-		for (var moduleLocation : this.iOdata.m_moduleLocations) {
-			driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-		}
 
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -170,16 +146,6 @@ public class Drive extends SubsystemBase {
 	public void periodic() {
 		RobotState.pose = iOdata.state.Pose;
 
-		if (!Constants.compMode) {
-			thetaP = thetaP_sub.get();
-			thetaI = thetaI_sub.get();
-			thetaD = thetaD_sub.get();
-
-			thetaP_pub.set(thetaP);
-			thetaI_pub.set(thetaI);
-			thetaD_pub.set(thetaD);
-		}
-
 		thetaController.setPID(thetaP, thetaI, thetaD);
 
 		if (DriverStation.isDisabled()) {
@@ -201,14 +167,6 @@ public class Drive extends SubsystemBase {
 
 	public Command runPathFinding(Pose2d target) {
 		return AutoBuilder.pathfindToPose(target, constraints);
-	}
-
-	public Command setCoast() {
-		return runOnce(() -> driveKraken.setNeutralMode(NeutralModeValue.Coast));
-	}
-
-	public Command setBrake() {
-		return runOnce(() -> driveKraken.setNeutralMode(NeutralModeValue.Brake));
 	}
 
 	public void teleopDrive(double driveX, double driveY, double driveTheta) {

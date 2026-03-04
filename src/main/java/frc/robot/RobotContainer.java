@@ -10,6 +10,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
@@ -45,6 +47,7 @@ public class RobotContainer {
 	Optional<Alliance> Ally = DriverStation.getAlliance();
 	String autoSelect;
 	String colorSelect;
+	String prevAuto = "";
 
 	public RobotContainer() {
 		RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
@@ -123,7 +126,6 @@ public class RobotContainer {
 
 		// Intake Controls
 		// operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
-
 	}
 
 	public void updateAutonCommand() {
@@ -138,24 +140,27 @@ public class RobotContainer {
 				colorSelect = "Blue-";
 			}
 		}
+
 		autoSelect = colorSelect + Autos.getSelected();
-		if (autoString != null) {
-			if (autoSelect != autoString) {
-				autoString = autoSelect;
-				autoCommand = new PathPlannerAuto(autoString);
-				try {
-					PathPlannerAuto.getPathGroupFromAutoFile(autoString);
-				} catch (IOException e) {
-					System.err.println("No Auto File: " + e.toString());
-				} catch (ParseException e) {
-					System.err.println("idk good luck: " + e.toString());
-				} catch (IndexOutOfBoundsException e) {
-					System.err.println("no auto Paths: " + e.toString());
-				}
+
+		if (!autoSelect.equals(prevAuto)) {
+			autoCommand = new PathPlannerAuto(autoSelect);
+
+			System.out.println("Selected Auto: " + autoSelect);
+			System.out.println("Previous Auto: " + prevAuto);
+
+			try {
+				PathPlannerAuto.getPathGroupFromAutoFile(autoSelect);
+			} catch (IOException e) {
+				System.err.println("No Auto File: " + e.toString());
+			} catch (ParseException e) {
+				System.err.println("idk good luck: " + e.toString());
+			} catch (IndexOutOfBoundsException e) {
+				System.err.println("no auto Paths: " + e.toString());
 			}
-		} else {
-			autoString = autoSelect;
 		}
+
+		prevAuto = autoSelect;
 	}
 
 	public Command getAutonomousCommand() {
