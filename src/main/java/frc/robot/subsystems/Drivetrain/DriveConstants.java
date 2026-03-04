@@ -17,7 +17,7 @@ public class DriveConstants {
     public static final double slowModeMultiplier = 0.5;
     public static final double kTranslationRateLimiter = 3.5;
     public static final double kRotationRateLimiter = 5.0;
-    public static final double OTF_end_tolerance = 0.5;
+    public static final double OTF_end_tolerance = 0.01;
 
     public static final double auto_align_tolerance = 0.01;
 

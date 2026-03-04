@@ -4,7 +4,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
@@ -98,7 +97,7 @@ public class Kraken {
 		tempCelsius = motor.getDeviceTemp();
 
 		BaseStatusSignal
-			.setUpdateFrequencyForAll(100.0, position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius);
+			.setUpdateFrequencyForAll(200.0, position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius);
 
 		motor.optimizeBusUtilization();
 
@@ -123,11 +122,9 @@ public class Kraken {
 			refreshSim();
 		}
 
-		boolean isOk = BaseStatusSignal.refreshAll(position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius).isOK();
-
 		updateTelemetry();
 
-		return isOk;
+		return true;
 	}
 
 	public void createTelemetry(String subsystem, String deviceName){

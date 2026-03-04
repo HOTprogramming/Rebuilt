@@ -43,11 +43,11 @@ public class ShooterConstants {
 
 	public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(60)
+			.withStatorCurrentLimit(80)
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(40)
+			.withSupplyCurrentLimit(60)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerLimit(40)
 			.withSupplyCurrentLowerTime(1))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
 			.withPeakForwardTorqueCurrent(80)
@@ -64,11 +64,11 @@ public class ShooterConstants {
 			.withKS(0.175)
 			.withKV(0.115))
 		.withSlot1(new Slot1Configs()
-			.withKP(3.5)
+			.withKP(8)
 			.withKI(0.0)
-			.withKD(0.001)
-			.withKS(0.4)
-			.withKV(0.115));
+			.withKD(0)
+			.withKS(5.5)
+			.withKV(0.05));
 
 	public static final TalonFXConfiguration hoodMotorConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
