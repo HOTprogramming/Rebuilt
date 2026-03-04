@@ -112,8 +112,7 @@ public class Climber extends SubsystemBase {
 		partWristClimb(),
 		runOnce(() -> setElbowPosition(ClimberConstants.partL3ElbowClimb)),
 		wristPastClimb(),
-		wristClimb(),
-		finalElbowExtend()
+		wristClimb()
 		);
 	}
 
@@ -132,6 +131,12 @@ public class Climber extends SubsystemBase {
 			runOnce(() -> setElbowPosition(ClimberConstants.deployedPos)),
 			zeroSpinner(), 
 			deploy());
+	}
+	public Command teleopDeploy() {
+		return run(() -> {
+			setElbowPosition(ClimberConstants.deployedPos);
+			setWristPosition(zeropossup.getAsDouble());
+		});
 	}
 
 	private Command spinOutSlow() {
@@ -155,18 +160,19 @@ public class Climber extends SubsystemBase {
 		return run(() -> {
 			spinWristPosition(ClimberConstants.wristBeforeClimbPos);
 	}).until(isWristClimbed());
+	}
+	public Command partWristClimb() {
+		return run(() -> {
+			spinWristPosition(ClimberConstants.wristPartClimbPos);
+	}).until(isWristPartClimbed());
 }
 
 	public Command finalElbowExtend() {
 		return run(() -> {
 				setElbowPosition(ClimberConstants.l3ElbowPos);
+				System.out.println("running");
 			}).until(isElbowl3Climbed()); 
 	}
-
-	public BooleanSupplier isElbowl3Climbed() {
-		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.l3ElbowPos) < 0.002;
-	}
-
 
 	public Command spinToZero() {
 		return run(() -> {
