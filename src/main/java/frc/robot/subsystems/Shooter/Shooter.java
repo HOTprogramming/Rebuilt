@@ -59,6 +59,8 @@ public class Shooter extends SubsystemBase {
 		double distance = RobotState.pose.getTranslation().getDistance(DriverStation.getAlliance().get() == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
 		return runOnce(() -> {
 			mShooterKraken.runPosition(hoodAngleMap.get(distance));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
+
 		});
 	}
 
@@ -67,6 +69,8 @@ public class Shooter extends SubsystemBase {
 		double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 8.07));
 		return runOnce(() -> {
 			mShooterKraken.runPosition(hoodAngleMap.get(distance));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
+
 		});
 	}
 
@@ -74,6 +78,7 @@ public class Shooter extends SubsystemBase {
 		double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 0));
 		return runOnce(() -> {
 			mShooterKraken.runPosition(hoodAngleMap.get(distance));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
 		});
 	}
 
