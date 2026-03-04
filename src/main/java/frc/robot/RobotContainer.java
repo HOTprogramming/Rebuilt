@@ -125,11 +125,7 @@ public class RobotContainer {
 		operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// Indexer Controls
-		driver.rightTrigger()
-			.whileTrue(Commands.repeatingSequence(indexer.indexOnCommand()
-				.andThen(new WaitCommand(.5))
-				.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))
-			.whileFalse(indexer.indexOffCommand());
+		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
 		// Climber Controls
 		climber.setDefaultCommand(climber
