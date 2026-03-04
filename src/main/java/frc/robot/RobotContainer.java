@@ -135,7 +135,8 @@ public class RobotContainer {
 
 	// Assuming target is 0.5 meters (20 inches) with a 5-degree jiggle
 	driver.rightTrigger()
-    .onTrue(drivetrain.dockToLadder(0.5, 5.0));
+    .onTrue(drivetrain.dockToLadder(0.5));
+	
 
     // Shooter Controls
     operator.povUp().onTrue(shooter.shootSpeedUp());

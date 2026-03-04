@@ -289,10 +289,9 @@ public class Drive extends SubsystemBase {
 	 * * @param targetDistanceMeters How far to move (e.g., 0.45 for 18 inches)
 	 * @param jiggleDegrees The intensity of the rotation oscillation (try 3.0 to 5.0)
 	 */
-	public Command dockToLadder(double targetDistanceMeters, double jiggleDegrees) {
+	public Command dockToLadder(double targetDistanceMeters) {
 		// Tracks state only while this specific command is running
 		final Pose2d[] startPose = {new Pose2d()};
-		final Timer stallTimer = new Timer();
 				
 		// Smooth motion: Max speed 0.4m/s, Accel 0.6m/s^2
 		var constraints = new TrapezoidProfile.Constraints(0.5, 1);
@@ -303,8 +302,6 @@ public class Drive extends SubsystemBase {
 			isDocked = false;
 			startPose[0] = iOdata.state.Pose;
 			profiledPID.reset(0);
-			stallTimer.reset();
-			stallTimer.start();
 			SmartDashboard.putBoolean("Climb/isDocked", false);
 			SmartDashboard.putBoolean("Climb/CurrentlyStalled", false);
 		})
@@ -314,45 +311,22 @@ public class Drive extends SubsystemBase {
 					.getDistance(startPose[0].getTranslation());
 
 				double xVelocity = profiledPID.calculate(currentDistance, targetDistanceMeters);
-				
-				double realVelocity = Math.hypot(
-					iOdata.state.Speeds.vxMetersPerSecond, 
-					iOdata.state.Speeds.vyMetersPerSecond
-				);
-				boolean isStalled = (Math.abs(xVelocity) > 0.4 && realVelocity < 0.05);
-				SmartDashboard.putBoolean("Climb/CurrentlyStalled", isStalled);
-    			SmartDashboard.putNumber("Climb/StallTimer", stallTimer.get());
-
-				//only allow the stall timer to reset once
-				if (!isStalled && stallTimer.get() < 0.1) {
-    				stallTimer.reset();
-				}
-				//tries to induce some rotation if the robot has stalled to jiggle it free, not tested with climber
-				double rotationOutput = 0;
-				if (stallTimer.get() > 0.5) {
-					rotationOutput = Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI * 3.0) //3 hz sine wave
-									* Math.toRadians(jiggleDegrees);
-				}
-				else {
-					rotationOutput = 0;
-				}
 
 				driveKraken.setSwerveRequest(ROBOT_CENTRIC
 					.withVelocityX(xVelocity)
 					.withVelocityY(0)
-					.withRotationalRate(rotationOutput)
 				);
 			}, this) 
 		)
-		.until(() -> profiledPID.atGoal() || (stallTimer.get() > 2.0))
+		.until(() -> profiledPID.atGoal())
 		.finallyDo(interrupted -> {
 			driveKraken.setSwerveRequest(ROBOT_CENTRIC.withVelocityX(0).withRotationalRate(0));
-			
 			double finalDist = iOdata.state.Pose.getTranslation().getDistance(startPose[0].getTranslation());
 			isDocked = !interrupted && (finalDist >= targetDistanceMeters - 0.05);
 			
 			SmartDashboard.putBoolean("Climb/isDocked", isDocked);
-		});
+		}) .withTimeout(3.0);
+
 	}
 
 	/** Getter for the Climber sequence to check if we actually made it to the ladder */
