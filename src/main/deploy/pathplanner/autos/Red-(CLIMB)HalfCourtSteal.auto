@@ -7,25 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GridTest"
+            "pathName": "Steal1"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": null
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "GridTest2"
+            "pathName": "Steal2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Steal3"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Red Autos",
   "choreoAuto": false
 }

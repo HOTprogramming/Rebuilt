@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Steal1"
+            "pathName": "Intake1"
           }
         },
         {
@@ -19,19 +19,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Steal2"
+            "pathName": "Intake2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Steal3"
+            "pathName": "Intake3"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Red Autos",
   "choreoAuto": false
 }
