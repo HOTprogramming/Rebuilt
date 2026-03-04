@@ -1,19 +1,27 @@
 package frc.robot.subsystems.Intake;
 
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+
+import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.util.Kraken;
 import frc.util.KrakenWithCancoder;
 
 public class IntakeKraken {
 	private KrakenWithCancoder m_ExtendKraken = new KrakenWithCancoder(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.kIntakeEncoderID, IntakeConstants.IntakeConfigs
 		.IntakeExtendConfigs(), IntakeConstants.IntakeConfigs.IntakeEncoderConfigs(), "Intake", "Extend");
-	private Kraken m_RollerKraken = new Kraken(IntakeConstants.kIntakeMotorIDRoller, IntakeConstants.IntakeConfigs
+	private Kraken m_RollerKrakenLeader = new Kraken(IntakeConstants.kIntakeMotorIDRollerLeader, "rio", IntakeConstants.IntakeConfigs
+		.RollerConfigs(), "Intake", "Roller");
+	private Kraken m_RollerKrakenFollower = new Kraken(IntakeConstants.kIntakeMotorIDRollerFollower, "rio", IntakeConstants.IntakeConfigs
 		.RollerConfigs(), "Intake", "Roller");
 
 	private static IntakeKraken instance = null;
 
 	public IntakeKraken() {
 		m_ExtendKraken.setup();
-		m_RollerKraken.setup();
+		m_RollerKrakenLeader.setup();
+		m_RollerKrakenFollower.setup();
+
+		// m_RollerKrakenFollower.setFollower(IntakeConstants.kIntakeMotorIDRollerLeader, MotorAlignmentValue.Aligned);
 	}
 
 	public static IntakeKraken getInstance() {
@@ -22,7 +30,8 @@ public class IntakeKraken {
 
 	public void updateStats() {
 		m_ExtendKraken.refresh();
-		m_RollerKraken.refresh();
+		m_RollerKrakenLeader.refresh();
+		m_RollerKrakenFollower.refresh();
 	}
 
 	public double getExtendPosition() {
@@ -38,9 +47,16 @@ public class IntakeKraken {
 	}
 
 	public void runVelocity(double desiredVelocity) {
-		m_RollerKraken.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
+		m_RollerKrakenLeader.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
+		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
+
+		// m_RollerKrakenLeader.motor.setVoltage(1);
+		// m_RollerKrakenFollower.motor.setVoltage(1);
+
 	}
 	public void stop() {
-		m_RollerKraken.stop();
+		m_RollerKrakenLeader.stop();
+		m_RollerKrakenFollower.stop();
+
 	}
 }

@@ -131,9 +131,10 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		intake.setDefaultCommand(intake.retract());
-		operator.leftTrigger().whileTrue(intake.extend());
-		operator.rightTrigger().whileTrue(intake.agitate());
+		// intake.setDefaultCommand(intake.retract());
+		operator.leftTrigger().onTrue(intake.extend());
+
+		operator.rightTrigger().onTrue(intake.retract());
 	}
 
 	public void updateAutonCommand() {
