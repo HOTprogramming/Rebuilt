@@ -38,6 +38,9 @@ public class RobotState {
 	private static Translation2d bottomBlueTrench = new Translation2d(4.614, 0.637);
 	private static Translation2d bottomRedTrench = new Translation2d(11.926, 0.637);
 
+	private static Translation2d redHubPos = new Translation2d(11.91, 4.03);
+	private static Translation2d blueHubPos = new Translation2d(4.63, 4.03);
+
 	private static Translation2d[] trenches = new Translation2d[] {topBlueTrench, topRedTrench, bottomBlueTrench, bottomRedTrench};
 	private static double trenchdodgeradius = 1;
 
@@ -70,10 +73,12 @@ public class RobotState {
 		Alliance color = DriverStation.getAlliance().get();
 
 		if (color == Alliance.Blue) {
+			SmartDashboard.putNumber("Distance to Goal", blueHubPos.getDistance(pose.getTranslation()));
 			if (isInZoneBox(0, bluezonex, 0, fieldy)) shooterZone = Zone.ALLIANCE;
 			else if (isInZoneBox(bluezonex, fieldx, 0, midfieldy)) shooterZone = Zone.RIGHT;
 			else if (isInZoneBox(bluezonex, fieldx, midfieldy, fieldy)) shooterZone = Zone.LEFT;
 		} else {
+			SmartDashboard.putNumber("Distance to Goal", redHubPos.getDistance(pose.getTranslation()));
 			if (isInZoneBox(redzonex, fieldx, 0, fieldy)) shooterZone = Zone.ALLIANCE;
 			else if (isInZoneBox(0, redzonex, 0, midfieldy)) shooterZone = Zone.RIGHT;
 			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.LEFT;
@@ -84,19 +89,7 @@ public class RobotState {
 		else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
 		else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
 
-
-		SmartDashboard.putString("zone", shooterZone.name());
-
-        if (color == Alliance.Red) {
-            goalX = 11.91; //Red hub x
-        } else {
-            goalX = 4.63; //Blue hub x
-        }
-
-        Translation2d goalLocation = new Translation2d(goalX, 4.03); //4.03 is both hubs' y pos
-
-		SmartDashboard.putNumber("Distance to Goal", goalLocation.getDistance(pose.getTranslation()));
-
+		SmartDashboard.putString("zone", shooterZone.name());		
 	}
 
 	public Command autoAim() {

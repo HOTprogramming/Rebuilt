@@ -156,9 +156,6 @@ public class RobotContainer {
 		if (!autoSelect.equals(prevAuto)) {
 			autoCommand = new PathPlannerAuto(autoSelect);
 
-			System.out.println("Selected Auto: " + autoSelect);
-			System.out.println("Previous Auto: " + prevAuto);
-
 			try {
 				PathPlannerAuto.getPathGroupFromAutoFile(autoSelect);
 			} catch (IOException e) {

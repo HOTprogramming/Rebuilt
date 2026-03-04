@@ -72,17 +72,6 @@ public class Drive extends SubsystemBase {
 
 	private final PIDController thetaController = new PIDController(thetaP, thetaI, thetaD);
 
-	// NetworkTables
-	private NetworkTable tuningTable;
-
-	private DoublePublisher thetaP_pub;
-	private DoublePublisher thetaI_pub;
-	private DoublePublisher thetaD_pub;
-
-	private edu.wpi.first.networktables.DoubleSubscriber thetaP_sub;
-	private edu.wpi.first.networktables.DoubleSubscriber thetaI_sub;
-	private edu.wpi.first.networktables.DoubleSubscriber thetaD_sub;
-
 	private final SlewRateLimiter xLimiter = new SlewRateLimiter(kTranslationRateLimiter);
 	private final SlewRateLimiter yLimiter = new SlewRateLimiter(kTranslationRateLimiter);
 	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(kRotationRateLimiter);
@@ -111,6 +100,7 @@ public class Drive extends SubsystemBase {
 	private DoublePublisher robotReqSpeed;
 	private DoublePublisher robotRealSpeed;
 	private DoubleArrayPublisher robotPose;
+	private DoubleArrayPublisher robotStatePose;
 
 	public Drive(DriveKraken driveKraken) {
 		this.driveKraken = driveKraken;
@@ -124,6 +114,7 @@ public class Drive extends SubsystemBase {
 		robotReqSpeed = table.getDoubleTopic("Robot Requested Speed").publish();
 		robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
 		robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
+		robotPose = table.getDoubleArrayTopic("Robot State Pose").publish();
 
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -136,12 +127,12 @@ public class Drive extends SubsystemBase {
 		robotReqSpeed.set(Math.hypot(FIELD_CENTRIC.VelocityX, FIELD_CENTRIC.VelocityY));
 		robotRealSpeed
 			.set((Math.hypot(this.iOdata.state.Speeds.vxMetersPerSecond, this.iOdata.state.Speeds.vyMetersPerSecond)));
-		// robotPose.set(new double[] {
-		// 	this.iOdata.state.Pose.getX(),
-		// 	this.iOdata.state.Pose.getY(),
-		// 	this.iOdata.state.Pose.getRotation().getRadians()});
-
 		robotPose.set(new double[] {
+			this.iOdata.state.Pose.getX(),
+			this.iOdata.state.Pose.getY(),
+			this.iOdata.state.Pose.getRotation().getRadians()});
+
+		robotStatePose.set(new double[] {
 			RobotState.pose.getX(),
 			RobotState.pose.getY(),
 			RobotState.pose.getRotation().getRadians()});
@@ -156,7 +147,6 @@ public class Drive extends SubsystemBase {
 
 		if (DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
-
 				this.driveKraken.setOperatorPerspective(allianceColor == Alliance.Red ? kRedAlliancePerspectiveRotation
 					: kBlueAlliancePerspectiveRotation);
 			});

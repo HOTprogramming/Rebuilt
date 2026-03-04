@@ -52,17 +52,9 @@ public class Kraken {
 
 	public final StatusSignal<Angle> position;
 	public final StatusSignal<AngularVelocity> velocity;
-	public final StatusSignal<Voltage> appliedVolts;
-	public final StatusSignal<Current> supplyCurrent;
-	public final StatusSignal<Current> torqueCurrent;
-	public final StatusSignal<Temperature> tempCelsius;
 
 	public DoublePublisher positionPublisher;
 	public DoublePublisher velocityPublisher;
-	public DoublePublisher appliedVoltsPublisher;
-	public DoublePublisher supplyCurrentPublisher;
-	public DoublePublisher torqueCurrentPublisher;
-	public DoublePublisher tempCelsiusPublisher;
 
 	public final TalonFX motor;
 
@@ -91,13 +83,9 @@ public class Kraken {
 
 		position = motor.getPosition();
 		velocity = motor.getVelocity();
-		appliedVolts = motor.getMotorVoltage();
-		supplyCurrent = motor.getSupplyCurrent();
-		torqueCurrent = motor.getTorqueCurrent();
-		tempCelsius = motor.getDeviceTemp();
 
 		BaseStatusSignal
-			.setUpdateFrequencyForAll(200.0, position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius);
+			.setUpdateFrequencyForAll(100.0, position, velocity);
 
 		motor.optimizeBusUtilization();
 
@@ -134,19 +122,11 @@ public class Kraken {
 
         positionPublisher = table.getDoubleTopic(subsystem + deviceName + "Position").publish();
 		velocityPublisher = table.getDoubleTopic(subsystem + deviceName + "Velocity").publish();
-		appliedVoltsPublisher = table.getDoubleTopic(subsystem + deviceName + "Applied Volts").publish();
-		supplyCurrentPublisher = table.getDoubleTopic(subsystem + deviceName + "Supply Current").publish();
-		torqueCurrentPublisher = table.getDoubleTopic(subsystem + deviceName + "Torque Current").publish();
-		tempCelsiusPublisher = table.getDoubleTopic(subsystem + deviceName + "Temperature").publish();
 	}
 
 	public void updateTelemetry(){
 		positionPublisher.set(position.getValueAsDouble());
 		velocityPublisher.set(velocity.getValueAsDouble());
-		appliedVoltsPublisher.set(appliedVolts.getValueAsDouble());
-		supplyCurrentPublisher.set(supplyCurrent.getValueAsDouble());
-		torqueCurrentPublisher.set(torqueCurrent.getValueAsDouble());
-		tempCelsiusPublisher.set(tempCelsius.getValueAsDouble());
 	}
 
 	public void stop() {
