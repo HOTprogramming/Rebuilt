@@ -81,8 +81,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-
-		manager.shooter.setDefaultCommand(manager.autoAim());
+		manager.shooter.setDefaultCommand(manager.shooter.run(() -> manager.shooter.shooterOff()));
 
 		// Drivetrain Controls
 		drivetrain.setDefaultCommand(drivetrain
@@ -116,7 +115,7 @@ public class RobotContainer {
 		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
 		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
 		operator.a().onTrue(manager.shooter.goToIdle());
-		operator.x().onTrue(manager.shooter.goToShoot());
+		operator.x().toggleOnTrue(manager.autoAim());
 		operator.b().onTrue(manager.shooter.shooterOff());
 
 		operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
