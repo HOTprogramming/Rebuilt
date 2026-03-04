@@ -114,7 +114,7 @@ public class Drive extends SubsystemBase {
 		robotReqSpeed = table.getDoubleTopic("Robot Requested Speed").publish();
 		robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
 		robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
-		robotPose = table.getDoubleArrayTopic("Robot State Pose").publish();
+		robotStatePose = table.getDoubleArrayTopic("Robot State Pose").publish();
 
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
