@@ -31,10 +31,12 @@ public class ClimberConstants {
 	public static double climbedPos = 0.152;
 	public static double wristZeroOffset = (6.0/360.0) * 634.8;
 	public static double wristGearRatio = 634.8;
+	public static double wristPartClimbPos = 0.25;
 	public static double wristPastClimbPos = 0.508;
 	public static double wristBeforeClimbPos = 0.492;
 	public static double wristClimbPos = 0.50;
 
+	public static double partLiftPos = 0.175;
 	public static double liftClimbPos = 0.0555;
 	public static double l3ElbowPos = 0.272;
 
@@ -43,7 +45,6 @@ public class ClimberConstants {
 			.withAbsoluteSensorDiscontinuityPoint(0.5)
 			.withMagnetOffset(.117676)
 			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
-
 
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -135,6 +136,49 @@ public class ClimberConstants {
 		);
 
 
+	public static final TalonFXConfiguration wristConfigs = new TalonFXConfiguration()
+		.withCurrentLimits(new CurrentLimitsConfigs()
+			.withStatorCurrentLimit(80)
+			.withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(60)
+			.withSupplyCurrentLimitEnable(true)
+			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerTime(1))
+		.withTorqueCurrent(new TorqueCurrentConfigs()
+			.withPeakForwardTorqueCurrent(40)
+			.withPeakReverseTorqueCurrent(-40))
+		.withMotorOutput(new MotorOutputConfigs()
+			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withNeutralMode(NeutralModeValue.Brake))
+		.withMotionMagic(new MotionMagicConfigs()
+			.withMotionMagicCruiseVelocity(10.0)
+			.withMotionMagicAcceleration(10.0))
+		.withSlot0(new Slot0Configs()
+			.withKP(5)
+			.withKI(0.0)
+			.withKD(0.0)
+			.withKS(0.27)
+			.withKV(3))
+		.withSlot1(new Slot1Configs()
+			.withKP(0.7)
+			.withKI(0.0)
+			.withKD(0.0)
+			.withKS(0.35)
+			.withKV(0.08))
+		.withSlot2(new Slot2Configs()
+			.withKS(1)
+			.withKV(0)
+			.withKA(0)
+			.withKP(5)
+			.withKI(0)
+			.withKD(0))
+		.withMotionMagic(new MotionMagicConfigs()
+			.withMotionMagicCruiseVelocity(80.0)
+			.withMotionMagicAcceleration(160)
+			.withMotionMagicJerk(1600)
+		);
+
+
 	/********************************************************
 	 * Based on the robot selected, load Intake configs with the selected robot
 	 * configuration
@@ -153,5 +197,4 @@ public class ClimberConstants {
 	 *****************/
 	public record ClimberConfigs(
 		TalonFXConfiguration elbowConfigs, TalonFXConfiguration wristConfigs) {}
-
 }

@@ -133,16 +133,16 @@ public class RobotContainer {
 
 
 		// Shooter Controls
-		operator.povUp().onTrue(shooter.shootSpeedUp());
-		operator.povDown().onTrue(shooter.shootSpeedDown());
-		operator.a().onTrue(shooter.goToIdle());
-		operator.x().onTrue(shooter.goToShoot());
-		operator.b().onTrue(shooter.shooterOff());
+		// operator.povUp().onTrue(shooter.shootSpeedUp());
+		// operator.povDown().onTrue(shooter.shootSpeedDown());
+		// operator.a().onTrue(shooter.goToIdle());
+		// operator.x().onTrue(shooter.goToShoot());
+		// operator.b().onTrue(shooter.shooterOff());
 
-		operator.leftBumper().onTrue(shooter.hoodAngleDown());
-		operator.rightBumper().onTrue(shooter.hoodAngleUp());
-		operator.y().onTrue(shooter.setHoodAngle(0));
-		operator.start().onTrue(shooter.setHoodAngle(5.4));
+		// operator.leftBumper().onTrue(shooter.hoodAngleDown());
+		// operator.rightBumper().onTrue(shooter.hoodAngleUp());
+		// operator.y().onTrue(shooter.setHoodAngle(0));
+		// operator.start().onTrue(shooter.setHoodAngle(5.4));
 
 		// operator.start().onTrue(shooter.hood)
 
@@ -167,6 +167,7 @@ public class RobotContainer {
 	operator.rightBumper().onTrue(climber.stageThreeClimb());
 	operator.leftBumper().onTrue(climber.fullDeploy());
 	operator.start().onTrue(climber.stop());
+	
 	operator.leftTrigger().onTrue(climber.spinToZero());
 
 		// Intake Controls
