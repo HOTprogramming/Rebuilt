@@ -81,8 +81,6 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		manager.shooter.setDefaultCommand(manager.shooter.run(() -> manager.shooter.shooterOff()));
-
 		// Drivetrain Controls
 		drivetrain.setDefaultCommand(drivetrain
 			.run(() -> drivetrain.teleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
@@ -112,6 +110,8 @@ public class RobotContainer {
 		driver.x().whileTrue(drivetrain.alignToPole());
 
 		// Shooter Controls
+		manager.shooter.setDefaultCommand(manager.shooter.run(() -> manager.shooter.shooterOff()));
+			
 		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
 		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
 		operator.a().onTrue(manager.shooter.goToIdle());
@@ -131,8 +131,9 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
-		// operator.rightTrigger().whileTrue(intake.agitate());
+		intake.setDefaultCommand(intake.run(() -> intake.retract()));
+		operator.leftTrigger().whileTrue(intake.extend());
+		operator.rightTrigger().whileTrue(intake.agitate());
 	}
 
 	public void updateAutonCommand() {
