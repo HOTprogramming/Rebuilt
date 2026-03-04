@@ -70,7 +70,7 @@ public class RobotState {
 	static double goalX;
 
 	public static void findZone() {
-		Alliance color = DriverStation.Alliance().isPresent() ? DriverStation.Alliance().get() : Alliance.Red;
+		Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
 		if (color == Alliance.Blue) {
 			SmartDashboard.putNumber("Distance to Goal", blueHubPos.getDistance(pose.getTranslation()));
