@@ -128,9 +128,6 @@ public class Shooter extends SubsystemBase {
 		});
 	}
 
-	public Boolean readyToShoot() {
-		return (getShooterSpeed() >= ShooterConstants.kShooterSpeed - ShooterConstants.kShooterError);
-	}
 
 	public Command goToIdle() {
 		return runOnce(() -> {
@@ -163,4 +160,9 @@ public class Shooter extends SubsystemBase {
 			mShooterKraken.runPosition(ShooterConstants.kTargetHoodAngle);
 		});
 	}
+
+	public BooleanSupplier readyToShoot() {
+		return () -> (getShooterSpeed() >= ShooterConstants.kShooterSpeed - ShooterConstants.kShooterError && (getTargetHoodAngle() >= ShooterConstants.kTargetHoodAngle));
+	}
+
 }
