@@ -60,6 +60,5 @@ public class ShooterKraken {
 		m_krakenFXLeftTop.stop();
 		m_krakenFXLeftBottom.stop();
 		m_krakenFXRightTop.stop();
-		m_krakenFXRightBottom.stop();
 	}
 }

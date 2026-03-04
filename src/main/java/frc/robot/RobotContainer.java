@@ -38,9 +38,9 @@ public class RobotContainer {
 
 	private final Drive drivetrain;
 	private final Camera camera;
-	private final Shooter shooter;
 	private final Index indexer;
 	private final Climber climber;
+	private final RobotState manager;
 	// private final Intake intake;
 
 	private final CommandXboxController driver = new CommandXboxController(0);
@@ -67,9 +67,9 @@ public class RobotContainer {
 
 		drivetrain = new Drive(new DriveKraken());
 		camera = new Camera(drivetrain);
-		shooter = new Shooter();
 		indexer = new Index();
 		climber = new Climber();
+		manager = new RobotState();
 		// intake = new Intake();
 
 		configureBindings();
@@ -78,6 +78,8 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
+
+		manager.shooter.setDefaultCommand(manager.autoAim());
 
 		// Drivetrain Controls
 		drivetrain.setDefaultCommand(drivetrain
@@ -130,16 +132,16 @@ public class RobotContainer {
 		// )).beforeStarting(drivetrain.resetControllers()));
 
 		// Shooter Controls
-		operator.povUp().onTrue(shooter.shootSpeedUp());
-		operator.povDown().onTrue(shooter.shootSpeedDown());
-		operator.a().onTrue(shooter.goToIdle());
-		operator.x().onTrue(shooter.goToShoot());
-		operator.b().onTrue(shooter.shooterOff());
+		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
+		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
+		operator.a().onTrue(manager.shooter.goToIdle());
+		operator.x().onTrue(manager.shooter.goToShoot());
+		operator.b().onTrue(manager.shooter.shooterOff());
 
-		operator.leftBumper().onTrue(shooter.hoodAngleDown());
-		operator.rightBumper().onTrue(shooter.hoodAngleUp());
-		operator.y().onTrue(shooter.setHoodAngle(0));
-		operator.start().onTrue(shooter.setHoodAngle(5.4));
+		operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
+		operator.rightBumper().onTrue(manager.shooter.hoodAngleUp());
+		operator.y().onTrue(manager.shooter.setHoodAngle(0));
+		operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// operator.start().onTrue(shooter.hood)
 

@@ -2,6 +2,7 @@ package frc.robot.subsystems.Shooter;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -14,11 +15,25 @@ public class Shooter extends SubsystemBase {
 	private final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
 
 	private InterpolatingDoubleTreeMap hoodAngleMap;
+	private InterpolatingDoubleTreeMap shooterSpeedMap;
+
 
 	public Shooter() {
 		hoodAngleMap = new InterpolatingDoubleTreeMap();
-		hoodAngleMap.put(5.0, 10.0);
-		hoodAngleMap.put(10.0, 20.0);
+		hoodAngleMap.put(1.0, 1.7);
+		hoodAngleMap.put(2.0, 4.2);
+		hoodAngleMap.put(3.0, 5.4);
+		hoodAngleMap.put(4.0, 6.0);
+		hoodAngleMap.put(5.0, 6.7);
+		hoodAngleMap.put(6.0, 7.3);
+
+		shooterSpeedMap = new InterpolatingDoubleTreeMap();
+		shooterSpeedMap.put(1.0, 40.9);
+		shooterSpeedMap.put(2.0, 41.9);
+		shooterSpeedMap.put(3.0, 45.0);
+		shooterSpeedMap.put(4.0, 47.9);
+		shooterSpeedMap.put(5.0, 50.8);
+		shooterSpeedMap.put(6.0, 53.7);
 
 		mShooterKraken.m_krakenFXHood.motor.setPosition(0.0);
 	}
@@ -40,8 +55,23 @@ public class Shooter extends SubsystemBase {
 		mShooterKraken.updateStats();
 	}
 
-	public Command autoAim() {
+	public Command autoAimHub() {
 		double distance = RobotState.pose.getTranslation().getDistance(DriverStation.getAlliance().get() == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
+		return runOnce(() -> {
+			mShooterKraken.runPosition(hoodAngleMap.get(distance));
+		});
+	}
+
+	
+	public Command autoAimLeftCorner() {
+		double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 8.07));
+		return runOnce(() -> {
+			mShooterKraken.runPosition(hoodAngleMap.get(distance));
+		});
+	}
+
+	public Command autoAimRightCorner() {
+		double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 0));
 		return runOnce(() -> {
 			mShooterKraken.runPosition(hoodAngleMap.get(distance));
 		});
