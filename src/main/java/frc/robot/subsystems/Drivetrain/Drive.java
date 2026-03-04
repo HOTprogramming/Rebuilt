@@ -136,15 +136,21 @@ public class Drive extends SubsystemBase {
 		robotReqSpeed.set(Math.hypot(FIELD_CENTRIC.VelocityX, FIELD_CENTRIC.VelocityY));
 		robotRealSpeed
 			.set((Math.hypot(this.iOdata.state.Speeds.vxMetersPerSecond, this.iOdata.state.Speeds.vyMetersPerSecond)));
+		// robotPose.set(new double[] {
+		// 	this.iOdata.state.Pose.getX(),
+		// 	this.iOdata.state.Pose.getY(),
+		// 	this.iOdata.state.Pose.getRotation().getRadians()});
+
 		robotPose.set(new double[] {
-			this.iOdata.state.Pose.getX(),
-			this.iOdata.state.Pose.getY(),
-			this.iOdata.state.Pose.getRotation().getRadians()});
+			RobotState.pose.getX(),
+			RobotState.pose.getY(),
+			RobotState.pose.getRotation().getRadians()});
 	}
 
 	@Override
 	public void periodic() {
 		RobotState.pose = iOdata.state.Pose;
+		RobotState.findZone();
 
 		thetaController.setPID(thetaP, thetaI, thetaD);
 

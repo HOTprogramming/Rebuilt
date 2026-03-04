@@ -89,6 +89,12 @@ public class RobotContainer {
 		drivetrain.setDefaultCommand(drivetrain
 			.run(() -> drivetrain.teleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
+		//Robot Centric Drive
+		driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.robotCentricTeleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+	
+		//Slow Mode
+		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
 		driver.b().whileTrue(drivetrain.run(() -> {
@@ -97,6 +103,7 @@ public class RobotContainer {
 			fact = Math.abs(rot) > 90 ? 3 : 1;
 			if (rot < 0)
 				fact *= -1;
+
 
 			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
@@ -117,7 +124,7 @@ public class RobotContainer {
 		operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// Indexer Controls
-		operator.rightTrigger()
+		driver.rightTrigger()
 			.whileTrue(Commands.repeatingSequence(indexer.indexOnCommand()
 				.andThen(new WaitCommand(.5))
 				.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))

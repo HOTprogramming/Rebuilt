@@ -25,8 +25,8 @@ public class ShooterConstants {
 	public static double kTargetShootSpeed = kShooterSpeed;
 	public static double kShooterError = (0.500);
 
-	public static Translation2d blueHub = new Translation2d();
-	public static Translation2d redHub = new Translation2d();
+	public static Translation2d redHub = new Translation2d(11.926, 4.048);
+	public static Translation2d blueHub = new Translation2d(4.614, 4.048);
 
 	private static Translation2d topBlueTrench = new Translation2d();
 	private static Translation2d topRedTrench = new Translation2d();

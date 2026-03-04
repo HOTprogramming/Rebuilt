@@ -26,6 +26,15 @@ public class Shooter extends SubsystemBase {
 		hoodAngleMap.put(4.0, 6.0);
 		hoodAngleMap.put(5.0, 6.7);
 		hoodAngleMap.put(6.0, 7.3);
+		hoodAngleMap.put(7.0, 7.9);
+				hoodAngleMap.put(8.0, 8.5);
+		hoodAngleMap.put(9.0, 9.2);
+		hoodAngleMap.put(10.0, 9.8);
+		hoodAngleMap.put(11.0, 10.4);
+		hoodAngleMap.put(12.0, 11.0);
+		hoodAngleMap.put(13.0, 11.6);
+
+
 
 		shooterSpeedMap = new InterpolatingDoubleTreeMap();
 		shooterSpeedMap.put(1.0, 40.9);
@@ -34,6 +43,16 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(4.0, 47.9);
 		shooterSpeedMap.put(5.0, 50.8);
 		shooterSpeedMap.put(6.0, 53.7);
+		shooterSpeedMap.put(7.0, 56.7);
+				shooterSpeedMap.put(8.0, 59.6);
+		shooterSpeedMap.put(9.0, 61.5);
+		shooterSpeedMap.put(10.0, 65.4);
+		shooterSpeedMap.put(11.0, 68.3);
+		shooterSpeedMap.put(12.0, 71.2);
+		shooterSpeedMap.put(13.0, 74.1);
+
+
+
 
 		mShooterKraken.m_krakenFXHood.motor.setPosition(0.0);
 	}
@@ -56,8 +75,8 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command autoAimHub() {
-		double distance = RobotState.pose.getTranslation().getDistance(DriverStation.getAlliance().get() == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
 		return runOnce(() -> {
+			double distance = RobotState.pose.getTranslation().getDistance(DriverStation.getAlliance().get() == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
 			mShooterKraken.runPosition(hoodAngleMap.get(distance));
 			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
 
@@ -66,8 +85,8 @@ public class Shooter extends SubsystemBase {
 
 	
 	public Command autoAimLeftCorner() {
-		double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 8.07));
 		return runOnce(() -> {
+			double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 8.07));
 			mShooterKraken.runPosition(hoodAngleMap.get(distance));
 			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
 
@@ -75,10 +94,16 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command autoAimRightCorner() {
-		double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 0));
 		return runOnce(() -> {
+			double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(DriverStation.getAlliance().get() == Alliance.Blue ? 0 : 16.54, 0));
 			mShooterKraken.runPosition(hoodAngleMap.get(distance));
 			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
+		});
+	}
+
+	public Command dodgeTrench() {
+		return runOnce(() -> {
+			mShooterKraken.runPosition(0);
 		});
 	}
 

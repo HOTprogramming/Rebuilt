@@ -33,10 +33,12 @@ public class CameraBase {
 	double avgDist;
 	Number[] tagIds;
 	double numTags;
-	Translation2d prevTranslation;
+	Translation2d prevTranslation = new Translation2d(0, 0);
+	String name;
 
 	public CameraBase(Drive drive, String name) {
 		drivetrain = drive;
+		this.name = name;
 
 		NetworkTable hotVisionTable = NetworkTableInstance.getDefault().getTable("HOTVision");
 
@@ -52,31 +54,33 @@ public class CameraBase {
 			avgDist = 0;
 
 			tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
-			numTags = (double) subTable.getEntry("num_tags").getInteger(0);
+			// numTags = (double) subTable.getEntry("num_tags").getInteger(0);
 
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
 					getDistance(poseArray.getTranslation());
 			}
 
-			avgDist = avgDist / numTags;
+			avgDist = avgDist / (double) subTable.getEntry("num_tags").getInteger(0);
 
-			if (poseArray.getTranslation().getDistance(prevTranslation) > .25) {
+			SmartDashboard.putNumber(name + " Avg dist", avgDist);
+
+			if (poseArray.getTranslation().getDistance(drivetrain.getPose().getTranslation()) > .25) {
 				stdDevs = VecBuilder.fill(20,20, 20);
-			} else if (numTags == 1 && avgDist > 3){
+			} else if (subTable.getEntry("num_tags").getInteger(0) == 1 && avgDist > 3){
 				stdDevs = VecBuilder.fill(Double.MAX_VALUE,Double.MAX_VALUE, Double.MAX_VALUE);
-			} else if (numTags > 1 && avgDist > 5.5){
+			} else if (subTable.getEntry("num_tags").getInteger(0) > 1 && avgDist > 5.5){
 				stdDevs = VecBuilder.fill(Double.MAX_VALUE,Double.MAX_VALUE, Double.MAX_VALUE);
 			} else {
-				if(numTags > 1){
-					stdDevs = VecBuilder.fill(1 * avgDist, 1 * avgDist, 10);
+				if(subTable.getEntry("num_tags").getInteger(0) > 1){
+					stdDevs = VecBuilder.fill(.9 * avgDist, .9 * avgDist, 5);
 				} else {
 					stdDevs = VecBuilder.fill(5 * avgDist, 5 * avgDist, 10);
 				}
 			}
 
 			drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, stdDevs);
-			prevTranslation = poseArray.getTranslation();
+			// prevTranslation = poseArray.getTranslation();
 		}
     }
 }
