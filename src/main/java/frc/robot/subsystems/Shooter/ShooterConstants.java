@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotType;
 
@@ -24,6 +25,16 @@ public class ShooterConstants {
 	public static double kTargetShootSpeed = kShooterSpeed;
 	public static double kShooterError = (0.500);
 
+	public static Translation2d redHub = new Translation2d(11.926, 4.048);
+	public static Translation2d blueHub = new Translation2d(4.614, 4.048);
+
+	private static Translation2d topBlueTrench = new Translation2d();
+	private static Translation2d topRedTrench = new Translation2d();
+	private static Translation2d bottomBlueTrench = new Translation2d();
+	private static Translation2d bottomRedTrench = new Translation2d();
+
+	public static Translation2d[] trenches = new Translation2d[] {topBlueTrench, topRedTrench, bottomBlueTrench, bottomRedTrench};
+
 	public static double kTargetHoodAngle = 0;
 	public static int kHoodMotorID = Constants.getRobot() == RobotType.COMPBOT ? 15 : 0;
 	public static double kHoodReduction = (1.0 / 1.0);
@@ -32,11 +43,11 @@ public class ShooterConstants {
 
 	public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(60)
+			.withStatorCurrentLimit(80)
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(40)
+			.withSupplyCurrentLimit(60)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerLimit(40)
 			.withSupplyCurrentLowerTime(1))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
 			.withPeakForwardTorqueCurrent(80)
@@ -53,11 +64,11 @@ public class ShooterConstants {
 			.withKS(0.175)
 			.withKV(0.115))
 		.withSlot1(new Slot1Configs()
-			.withKP(3.5)
+			.withKP(8)
 			.withKI(0.0)
-			.withKD(0.001)
-			.withKS(0.4)
-			.withKV(0.115));
+			.withKD(0)
+			.withKS(5.5)
+			.withKV(0.05));
 
 	public static final TalonFXConfiguration hoodMotorConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()

@@ -155,19 +155,19 @@ public class ShootOnTheFly {
         Rotation2d turretRotation = goalLocation.minus(lookaheadPos).getAngle();
         double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
         
-        SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
-        SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
-        SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
-        SmartDashboard.putNumber("SolverErr", Math.abs(timeOfFlight - lastTimeOfFlight));
-        SmartDashboard.putNumber("SolverLoops", i);
-        SmartDashboard.putNumber("Distance", dist);
-        SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
-        SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
-        SmartDashboard.putNumber("vx", fieldSpeeds.vxMetersPerSecond);
-        SmartDashboard.putNumber("vy", fieldSpeeds.vyMetersPerSecond);
-        SmartDashboard.putNumber("vx_filtered", vx_filt);
-        SmartDashboard.putNumber("vy_filtered", vy_filt);
-        SmartDashboard.putNumber("Horiz Speed", newHorizontalSpeed);
+        // SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
+        // SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
+        // SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
+        // SmartDashboard.putNumber("SolverErr", Math.abs(timeOfFlight - lastTimeOfFlight));
+        // SmartDashboard.putNumber("SolverLoops", i);
+        // SmartDashboard.putNumber("Distance", dist);
+        // SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
+        // SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
+        // SmartDashboard.putNumber("vx", fieldSpeeds.vxMetersPerSecond);
+        // SmartDashboard.putNumber("vy", fieldSpeeds.vyMetersPerSecond);
+        // SmartDashboard.putNumber("vx_filtered", vx_filt);
+        // SmartDashboard.putNumber("vy_filtered", vy_filt);
+        // SmartDashboard.putNumber("Horiz Speed", newHorizontalSpeed);
 
         return(turretAngle);
 

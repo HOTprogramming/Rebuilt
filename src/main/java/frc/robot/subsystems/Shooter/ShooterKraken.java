@@ -58,5 +58,7 @@ public class ShooterKraken {
 
 	public void stop() {
 		m_krakenFXLeftTop.stop();
+		m_krakenFXLeftBottom.stop();
+		m_krakenFXRightTop.stop();
 	}
 }
