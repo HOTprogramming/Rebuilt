@@ -26,18 +26,20 @@ public class ClimberConstants {
 	public static int kClimbEncoder = 44;
 
 	public static String kBusName = Constants.canName;
-	public static double storedPos = -0.2517;
-	public static double deployedPos = 0.2761;
-	public static double climbedPos = 0.152;
-	public static double wristZeroOffset = (6.0/360.0) * 634.8;
+
+	public static double wristZeroOffset = (7.0/360.0) * 634.8;
 	public static double wristGearRatio = 634.8;
-	public static double wristPartClimbPos = 0.25;
+	public static double wristPartClimbPos = 0.3;
 	public static double wristPastClimbPos = 0.508;
 	public static double wristBeforeClimbPos = 0.492;
 	public static double wristClimbPos = 0.50;
 
-	public static double partLiftPos = 0.175;
-	public static double liftClimbPos = 0.0555;
+	public static double storedPos = -0.2517;
+	public static double deployedPos = 0.2761;
+	public static double climbedPos = 0.152;
+	public static double partElbowLiftPos = 0.175;
+	public static double liftElbowClimbPos = 0.0555;
+	public static double partL3ElbowClimb = 0.2245;
 	public static double l3ElbowPos = 0.272;
 
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
