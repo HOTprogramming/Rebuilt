@@ -13,6 +13,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,13 +21,16 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 class DriveIOdata {
@@ -102,6 +106,8 @@ public class Drive extends SubsystemBase {
 	private DoubleArrayPublisher robotPose;
 	private DoubleArrayPublisher robotStatePose;
 
+	private boolean isDocked = false;
+
 	public Drive(DriveKraken driveKraken) {
 		this.driveKraken = driveKraken;
 
@@ -155,6 +161,55 @@ public class Drive extends SubsystemBase {
 		this.iOdata = driveKraken.update();
 
 		UpdateTelemetry();
+	}
+
+/**
+	 * Robot-centric forward drive for docking. 
+	 * Detects if the robot hits the ladder and "jiggles" to engage hooks.
+	 * * @param targetDistanceMeters How far to move (e.g., 0.45 for 18 inches)
+	 */
+	public Command dockToLadder(double targetDistanceMeters) {
+		// Tracks state only while this specific command is running
+		final Pose2d[] startPose = {new Pose2d()};
+				
+		// Smooth motion: Max speed 0.5m/s, Accel 1.m/s^2
+		var constraints = new TrapezoidProfile.Constraints(0.5, 1.0);
+		var profiledPID = new ProfiledPIDController(10.0, 0, 0, constraints);
+		profiledPID.setTolerance(0.015); // 1cm tolerance
+
+		return this.runOnce(() -> {
+			isDocked = false;
+			startPose[0] = iOdata.state.Pose;
+			profiledPID.reset(0);
+			SmartDashboard.putBoolean("Climb/isDocked", false);
+		})
+		.andThen(
+			Commands.run(() -> { 
+				double currentDistance = iOdata.state.Pose.getTranslation()
+					.getDistance(startPose[0].getTranslation());
+
+				double xVelocity = profiledPID.calculate(currentDistance, targetDistanceMeters);
+
+				driveKraken.setSwerveRequest(ROBOT_CENTRIC
+					.withVelocityX(xVelocity)
+					.withVelocityY(0)
+				);
+			}, this) 
+		)
+		.until(() -> profiledPID.atGoal())
+		.finallyDo(interrupted -> {
+			driveKraken.setSwerveRequest(ROBOT_CENTRIC.withVelocityX(0).withRotationalRate(0));
+			double finalDist = iOdata.state.Pose.getTranslation().getDistance(startPose[0].getTranslation());
+			isDocked = !interrupted && (finalDist >= targetDistanceMeters - 0.05);
+			
+			SmartDashboard.putBoolean("Climb/isDocked", isDocked);
+		}) .withTimeout(3.0);
+
+	}
+
+	/** Getter for the Climber sequence to check if we actually made it to the ladder */
+	public boolean isDocked() {
+		return isDocked;
 	}
 
 	public Command alignToPole() {
