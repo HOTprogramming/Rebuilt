@@ -112,7 +112,7 @@ public class RobotContainer {
 		}));
 
 		//Shoot
-		driver.rightTrigger().onTrue(manager.shooter.goToShoot());
+		operator.rightTrigger().onTrue(manager.shooter.goToShoot());
 		
 		// Shooter Controls (Operator)
 		//operator.povUp().onTrue(manager.shooter.shootSpeedUp());
