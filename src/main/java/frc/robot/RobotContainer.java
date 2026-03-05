@@ -95,8 +95,10 @@ public class RobotContainer {
 		//Slow Mode
 		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
+		//Aim
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
+		//Snap to 45
 		driver.b().whileTrue(drivetrain.run(() -> {
 			double rot = drivetrain.getPose().getRotation().getDegrees();
 			double fact;
@@ -109,13 +111,18 @@ public class RobotContainer {
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
 
+		//Align to Pole
 		driver.x().whileTrue(drivetrain.alignToPole());
 
-		// Shooter Controls
+		//Shoot
+		driver.rightTrigger().onTrue(manager.shooter.goToShoot());
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+
+		// Shooter Controls (Operator)
 		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
 		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
 		operator.a().onTrue(manager.shooter.goToIdle());
-		operator.x().onTrue(manager.shooter.goToShoot());
+		//operator.x().onTrue(manager.shooter.goToShoot());
 		operator.b().onTrue(manager.shooter.shooterOff());
 
 		operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
@@ -124,7 +131,7 @@ public class RobotContainer {
 		operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// Indexer Controls
-		driver.rightTrigger()
+		driver.leftTrigger()
 			.whileTrue(Commands.repeatingSequence(indexer.indexOnCommand()
 				.andThen(new WaitCommand(.5))
 				.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))
