@@ -64,6 +64,11 @@ public class RobotContainer {
     Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
     Autos.addOption("Grid Test", "Grid Test");
     Autos.addOption("SNOWBLOW", "SNOWBLOW");
+	Autos.addOption("NOCLIMB_HalfCourtSteal", "NOCLIMB_HalfCourtSteal");
+	Autos.addOption("CLIMB_HalfCourtSteal", "CLIMB_HalfCourtSteal");
+	Autos.addOption("NOCLIMB_HalfCourtSteal3", "NOCLIMB_HalfCourtSteal3");
+	
+    
     
     SmartDashboard.putData("Autos",Autos);
 
