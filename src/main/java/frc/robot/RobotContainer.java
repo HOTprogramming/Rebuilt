@@ -106,7 +106,7 @@ public class RobotContainer {
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
 
-		// Pathfind to Pole
+		//Align to Pole
 		driver.x().whileTrue(drivetrain.alignToPole());
 
 		// Shooter Controls
