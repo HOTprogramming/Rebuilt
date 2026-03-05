@@ -111,9 +111,6 @@ public class RobotContainer {
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
 
-		//Align to Pole
-		driver.x().whileTrue(drivetrain.alignToPole());
-
 		//Shoot
 		driver.rightTrigger().onTrue(manager.shooter.goToShoot());
 		
@@ -132,12 +129,15 @@ public class RobotContainer {
 		// Indexer Controls
 		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
+		//Align to Pole
+		operator.x().whileTrue(drivetrain.alignToPole());
+
 		// Climber Controls
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		operator.rightTrigger().toggleOnTrue(intake.extend()).toggleOnFalse(intake.retract());
+		operator.rightBumper().toggleOnTrue(intake.extend()).toggleOnFalse(intake.retract());
 	}
 
 	public void updateAutonCommand() {
