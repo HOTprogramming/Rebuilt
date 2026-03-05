@@ -76,7 +76,9 @@ public class CameraBase {
 				else estStdDevs = multiTagStdDevs;
 			}
 
-			estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
+			double distFromRobot = poseArray.getTranslation().getDistance(drivetrain.getPose().getTranslation());
+
+			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/3.0)));
 
 			drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
 		}
