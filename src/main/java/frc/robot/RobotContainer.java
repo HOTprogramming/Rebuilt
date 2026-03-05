@@ -5,26 +5,24 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+
 import org.json.simple.parser.ParseException;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
@@ -93,6 +91,13 @@ public class RobotContainer {
 
 		// Aim
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
+		driver.a().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+
+		//Align to Drive Through Trench
+     	driver.y().whileTrue(drivetrain.run(()->
+      	drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
+        new Rotation2d(3.142)
+    )).beforeStarting(drivetrain.resetControllers()));
 
 		// Rotate for Bump
 		driver.b().whileTrue(drivetrain.run(() -> {
@@ -111,19 +116,18 @@ public class RobotContainer {
 
 		//Shoot
 		driver.rightTrigger().onTrue(manager.shooter.goToShoot());
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
-
+		
 		// Shooter Controls (Operator)
-		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
-		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
+		//operator.povUp().onTrue(manager.shooter.shootSpeedUp());
+		//operator.povDown().onTrue(manager.shooter.shootSpeedDown());
 		operator.a().onTrue(manager.shooter.goToIdle());
 		//operator.x().onTrue(manager.shooter.goToShoot());
 		operator.b().onTrue(manager.shooter.shooterOff());
 
-		operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
-		operator.rightBumper().onTrue(manager.shooter.hoodAngleUp());
+		//operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
+		//operator.rightBumper().onTrue(manager.shooter.hoodAngleUp());
 		operator.y().onTrue(manager.shooter.setHoodAngle(0));
-		operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
+		//operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// Indexer Controls
 		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
@@ -133,10 +137,7 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		// intake.setDefaultCommand(intake.retract());
-		operator.leftTrigger().onTrue(intake.extend());
-
-		operator.rightTrigger().onTrue(intake.retract());
+		operator.rightTrigger().toggleOnTrue(intake.extend()).toggleOnFalse(intake.retract());
 	}
 
 	public void updateAutonCommand() {
