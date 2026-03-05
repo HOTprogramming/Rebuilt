@@ -45,12 +45,12 @@ public class IndexConstants {
 			.withKD(0.005)
 			.withKS(0.5)
 			.withKV(0.1))
-		.withSlot1(new Slot1Configs() //Roller Floor
-			.withKP(0.75)
+		.withSlot1(new Slot1Configs() //Roller Floor torque
+			.withKP(10)
 			.withKI(0.0)
-			.withKD(0.005)
-			.withKS(0.25)
-			.withKV(0.1))
+			.withKD(0)
+			.withKS(12)
+			.withKV(0.2))
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(80.0)
 			.withMotionMagicAcceleration(160)

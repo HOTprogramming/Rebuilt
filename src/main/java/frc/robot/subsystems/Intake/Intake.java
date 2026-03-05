@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
 
 	public Command extend() {
 		return run(() -> {
-			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
+			//mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
 		});
 	}

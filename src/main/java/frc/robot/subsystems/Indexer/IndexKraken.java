@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Indexer;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
@@ -38,8 +39,10 @@ public class IndexKraken {
 	}
 
 	public void startIndex() {
-		m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
-		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);		
+		// m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
+		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);
+		m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+	
 	}
 
 	public void stop() {
