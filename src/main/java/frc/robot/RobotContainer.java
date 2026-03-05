@@ -106,16 +106,18 @@ public class RobotContainer {
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
 
-		// Pathfind to Pole
+		//Align to Pole
 		driver.x().whileTrue(drivetrain.alignToPole());
 
-		// Shooter Controls
-		manager.shooter.setDefaultCommand(manager.shooter.shooterOff());
-			
+		//Shoot
+		driver.rightTrigger().onTrue(manager.shooter.goToShoot());
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+
+		// Shooter Controls (Operator)
 		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
 		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
 		operator.a().onTrue(manager.shooter.goToIdle());
-		operator.x().toggleOnTrue(manager.autoAim());
+		//operator.x().onTrue(manager.shooter.goToShoot());
 		operator.b().onTrue(manager.shooter.shooterOff());
 
 		operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
