@@ -13,6 +13,7 @@ import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -33,6 +34,7 @@ public class Kraken {
 	public static enum PositionControlType{
 		PositionVoltage,
 		PositionTorqueCurrentFOC,
+		MotionMagicVoltage,
 		MotionMagicExpoVoltage,
 		MotionMagicExpoTorqueCurrentFOC
 	}
@@ -44,6 +46,7 @@ public class Kraken {
 
 	private final PositionVoltage positionVoltage = new PositionVoltage(0);
 	private final PositionTorqueCurrentFOC positionTorque = new PositionTorqueCurrentFOC(0);
+	private final MotionMagicVoltage mmVoltage = new MotionMagicVoltage(0);
 	private final MotionMagicExpoVoltage mmExpoVoltage = new MotionMagicExpoVoltage(0);
 	private final MotionMagicExpoTorqueCurrentFOC mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0);
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
@@ -110,6 +113,8 @@ public class Kraken {
 			refreshSim();
 		}
 
+		BaseStatusSignal.refreshAll(position, velocity);
+
 		updateTelemetry();
 
 		return true;
@@ -144,6 +149,9 @@ public class Kraken {
 				break;
 			case PositionTorqueCurrentFOC:
 				motor.setControl(positionTorque.withPosition(desiredRotations).withSlot(slot));
+				break;
+			case MotionMagicVoltage:
+				motor.setControl(mmVoltage.withPosition(desiredRotations).withSlot(slot));
 				break;
 			case MotionMagicExpoVoltage:
 				motor.setControl(mmExpoVoltage.withPosition(desiredRotations).withSlot(slot));

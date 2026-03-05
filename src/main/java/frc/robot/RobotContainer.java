@@ -39,7 +39,7 @@ public class RobotContainer {
 	private final Index indexer;
 	private final Climber climber;
 	private final RobotState manager;
-	// private final Intake intake;
+	private final Intake intake;
 
 	private final CommandXboxController driver = new CommandXboxController(0);
 	private final CommandXboxController operator = new CommandXboxController(1);
@@ -72,19 +72,15 @@ public class RobotContainer {
 		indexer = new Index();
 		climber = new Climber();
 		manager = new RobotState();
-		// intake = new Intake();
+		intake = new Intake();
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
-		// NamedCommands.registerCommand("Test Override", drivetrain.testOverride());
 
 		configureBindings();
 	}
 
 	private void configureBindings() {
-
-		manager.shooter.setDefaultCommand(manager.autoAim());
-
 		// Drivetrain Controls
 		drivetrain.setDefaultCommand(drivetrain
 			.run(() -> drivetrain.teleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
@@ -95,17 +91,16 @@ public class RobotContainer {
 		//Slow Mode
 		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
-		//Aim
+		// Aim
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
-		//Snap to 45
+		// Rotate for Bump
 		driver.b().whileTrue(drivetrain.run(() -> {
 			double rot = drivetrain.getPose().getRotation().getDegrees();
 			double fact;
 			fact = Math.abs(rot) > 90 ? 3 : 1;
 			if (rot < 0)
 				fact *= -1;
-
 
 			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
@@ -131,18 +126,17 @@ public class RobotContainer {
 		operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// Indexer Controls
-		driver.leftTrigger()
-			.whileTrue(Commands.repeatingSequence(indexer.indexOnCommand()
-				.andThen(new WaitCommand(.5))
-				.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))
-			.whileFalse(indexer.indexOffCommand());
+		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
 		// Climber Controls
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		// operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
+		// intake.setDefaultCommand(intake.retract());
+		operator.leftTrigger().onTrue(intake.extend());
+
+		operator.rightTrigger().onTrue(intake.retract());
 	}
 
 	public void updateAutonCommand() {

@@ -37,15 +37,9 @@ public class IndexKraken {
 		m_rightKickKraken.refresh();
 	}
 
-	public void startIndex(double speed) {
-		if(speed > 0){
-			m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
-			m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);
-		} else {
-			m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
-			m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);
-		}
-		
+	public void startIndex() {
+		m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
+		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);		
 	}
 
 	public void stop() {
