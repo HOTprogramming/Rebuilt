@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.707821428571428,
-        "y": 7.501035714285713
+        "x": 13.735220146105576,
+        "y": 7.51054131054131
       },
       "isLocked": false,
       "linkedName": "Rrotate"
@@ -84,12 +84,12 @@
         "y": 7.51054131054131
       },
       "prevControl": {
-        "x": 12.91297619047619,
-        "y": 7.501035714285713
+        "x": 12.971476813972256,
+        "y": 7.51054131054131
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Rrotate2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
