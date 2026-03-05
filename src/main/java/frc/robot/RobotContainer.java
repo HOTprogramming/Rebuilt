@@ -110,11 +110,11 @@ public class RobotContainer {
 		driver.x().whileTrue(drivetrain.alignToPole());
 
 		// Shooter Controls
-		manager.shooter.setDefaultCommand(manager.shooter.shooterOff());
+		// manager.shooter.setDefaultCommand(manager.shooter.shooterOff());
 			
 		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
 		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
-		operator.a().onTrue(manager.shooter.goToIdle());
+		operator.a().onTrue(manager.shooter.goToShoot());
 		operator.x().toggleOnTrue(manager.autoAim());
 		operator.b().onTrue(manager.shooter.shooterOff());
 
