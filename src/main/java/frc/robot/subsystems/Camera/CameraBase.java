@@ -19,7 +19,7 @@ import edu.wpi.first.networktables.StructTopic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.Drivetrain.Drive;
-import edu.wpi.first.math.Vector<N3>;
+import edu.wpi.first.math.Vector;
 
 public class CameraBase {
 
