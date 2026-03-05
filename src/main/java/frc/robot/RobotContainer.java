@@ -79,7 +79,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("intake", intake.extend());
 		NamedCommands.registerCommand("intake off", intake.retract());
 		//Start autoaim at start of auton
-		NamedCommands.registerCommand("auto aim", manager.autoAim());
+		// NamedCommands.registerCommand("auto aim", manager.autoAim());
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 
@@ -100,6 +100,8 @@ public class RobotContainer {
 
 		// Aim
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
+		driver.a().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+
 
 		// Rotate for Bump
 		driver.b().whileTrue(drivetrain.run(() -> {
