@@ -1,7 +1,11 @@
 package frc.robot.subsystems.Climber;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.CustomParamsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.CustomParamsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
@@ -13,8 +17,10 @@ import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import frc.robot.Constants;
@@ -71,6 +77,12 @@ public class ClimberConstants {
 				.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
 				.withSensorToMechanismRatio(1.0)
 				.withRotorToSensorRatio(1.0))
+		.withFeedback(
+			new FeedbackConfigs()
+				.withFeedbackRemoteSensorID(kClimbEncoder)
+				.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+				.withSensorToMechanismRatio(1.0)
+				.withRotorToSensorRatio(1.0))
 		.withSlot0(new Slot0Configs()
 			.withKP(500)
 			.withKI(0.0)
@@ -84,8 +96,10 @@ public class ClimberConstants {
 			.withKS(2.5))
 		.withSlot2(new Slot2Configs()
 			.withKS(1)
+			.withKS(1)
 			.withKV(.12)
 			.withKA(0.01)
+			.withKP(5)
 			.withKP(5)
 			.withKI(0)
 			.withKD(0.1))
@@ -138,47 +152,6 @@ public class ClimberConstants {
 		);
 
 
-	public static final TalonFXConfiguration wristConfigs = new TalonFXConfiguration()
-		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)
-			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(60)
-			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30)
-			.withSupplyCurrentLowerTime(1))
-		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(40)
-			.withPeakReverseTorqueCurrent(-40))
-		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.CounterClockwise_Positive)
-			.withNeutralMode(NeutralModeValue.Brake))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(10.0)
-			.withMotionMagicAcceleration(10.0))
-		.withSlot0(new Slot0Configs()
-			.withKP(5)
-			.withKI(0.0)
-			.withKD(0.0)
-			.withKS(0.27)
-			.withKV(3))
-		.withSlot1(new Slot1Configs()
-			.withKP(0.7)
-			.withKI(0.0)
-			.withKD(0.0)
-			.withKS(0.35)
-			.withKV(0.08))
-		.withSlot2(new Slot2Configs()
-			.withKS(1)
-			.withKV(0)
-			.withKA(0)
-			.withKP(5)
-			.withKI(0)
-			.withKD(0))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(80.0)
-			.withMotionMagicAcceleration(160)
-			.withMotionMagicJerk(1600)
-		);
 
 
 	/********************************************************
