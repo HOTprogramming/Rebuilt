@@ -112,7 +112,8 @@ public class Climber extends SubsystemBase {
 		partWristClimb(),
 		runOnce(() -> setElbowPosition(ClimberConstants.partL3ElbowClimb)),
 		wristPastClimb(),
-		wristClimb()
+		wristClimb(),
+		finalElbowExtend()
 		);
 	}
 
@@ -126,18 +127,35 @@ public class Climber extends SubsystemBase {
 		);
 	}
 
+	public Command spinToZero() {
+		return run(() -> {
+				setWristPosition(zeropossup.getAsDouble());
+			}).until(isZeroed()); 
+	}
+
 	public Command fullDeploy() {
 		return Commands.sequence(
 			runOnce(() -> setElbowPosition(ClimberConstants.deployedPos)),
 			zeroSpinner(), 
 			deploy());
 	}
+	
 	public Command teleopDeploy() {
 		return run(() -> {
 			setElbowPosition(ClimberConstants.deployedPos);
 			setWristPosition(zeropossup.getAsDouble());
 		});
 	}
+
+	public Command stop() {
+		return runOnce(() -> {});
+	}
+	
+	public Command stow() {
+		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
+	}
+
+	//sub commands
 
 	private Command spinOutSlow() {
 		return Commands.sequence(
@@ -151,34 +169,31 @@ public class Climber extends SubsystemBase {
 			run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped()));
 	}
 
-	public Command wristPastClimb() {
+	private Command wristPastClimb() {
 		return run(() -> {
 				spinWristPosition(ClimberConstants.wristPastClimbPos);
 			}).until(isWristPast()); 
 	}
-	public Command wristClimb() {
+
+	private Command wristClimb() {
 		return run(() -> {
 			spinWristPosition(ClimberConstants.wristBeforeClimbPos);
 	}).until(isWristClimbed());
 	}
-	public Command partWristClimb() {
+
+	private Command partWristClimb() {
 		return run(() -> {
 			spinWristPosition(ClimberConstants.wristPartClimbPos);
 	}).until(isWristPartClimbed());
-}
+	}
 
-	public Command finalElbowExtend() {
+	private Command finalElbowExtend() {
 		return run(() -> {
 				setElbowPosition(ClimberConstants.l3ElbowPos);
 				System.out.println("running");
 			}).until(isElbowl3Climbed()); 
 	}
 
-	public Command spinToZero() {
-		return run(() -> {
-				setWristPosition(zeropossup.getAsDouble());
-			}).until(isZeroed()); 
-	}
 
 	public Command fullDeploy() {
 		return Commands.sequence(
