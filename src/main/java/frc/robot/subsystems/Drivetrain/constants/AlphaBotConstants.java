@@ -15,9 +15,9 @@ import frc.robot.subsystems.Drivetrain.DriveConstants;
 public final class AlphaBotConstants {
 
     // Gear ratios
-    private static final double kCoupleRatio = 3.8;
-    private static final double kDriveGearRatio = 6.545454545454545;
-    private static final double kSteerGearRatio = 10.285714285714286;
+    private static final double kCoupleRatio = 5.4;
+    private static final double kDriveGearRatio = 6.821052631578947;
+    private static final double kSteerGearRatio = 12.1;
 
     // CAN bus
     public static final CANBus kCANBus = new CANBus("PBot_DT", "./logs/example.hoot");
@@ -53,7 +53,7 @@ public final class AlphaBotConstants {
     // Steer gains
     private static final Slot0Configs steerGains = new Slot0Configs()
         .withKP(100).withKI(0).withKD(0)
-        .withKS(0).withKV(0).withKA(0)
+        .withKS(0.05).withKV(0).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
     // Drive gains
