@@ -112,19 +112,12 @@ public class RobotContainer {
 		}));
 
 		//Shoot
-		driver.rightTrigger().onTrue(manager.shooter.goToShoot());
+		operator.rightTrigger().onTrue(manager.shooter.goToShoot());
 		
 		// Shooter Controls (Operator)
-		//operator.povUp().onTrue(manager.shooter.shootSpeedUp());
-		//operator.povDown().onTrue(manager.shooter.shootSpeedDown());
 		operator.a().onTrue(manager.shooter.goToIdle());
-		//operator.x().onTrue(manager.shooter.goToShoot());
 		operator.b().onTrue(manager.shooter.shooterOff());
-
-		//operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
-		//operator.rightBumper().onTrue(manager.shooter.hoodAngleUp());
 		operator.y().onTrue(manager.shooter.setHoodAngle(0));
-		//operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// Indexer Controls
 		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());

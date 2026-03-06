@@ -119,7 +119,7 @@ public final class CompBotConstants {
     private static final int kBackRightDriveMotorId = 2;
     private static final int kBackRightSteerMotorId = 1;
     private static final int kBackRightEncoderId = 42;
-    private static final Angle kBackRightEncoderOffset = Rotations.of(-0.296142578125);
+    private static final Angle kBackRightEncoderOffset = Rotations.of(-0.213375);
     private static final boolean kBackRightSteerMotorInverted = true;
     private static final boolean kBackRightEncoderInverted = false;
     private static final Distance kBackRightXPos = Inches.of(-12.5);

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Indexer;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
@@ -24,7 +25,7 @@ public class IndexKraken {
 		m_leftKickKraken.setup();
 		m_rightKickKraken.setup();
 
-		m_rightKickKraken.setFollower(IndexConstants.kLeftKickID, MotorAlignmentValue.Aligned);
+		// m_rightKickKraken.setFollower(IndexConstants.kLeftKickID, MotorAlignmentValue.Aligned);
 	}
 
 	public static IndexKraken getInstance() {
@@ -38,12 +39,16 @@ public class IndexKraken {
 	}
 
 	public void startIndex() {
-		m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityVoltage, 1);
-		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityVoltage);		
+		m_rightKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+	
 	}
 
 	public void stop() {
 		m_floorKraken.stop();
-		m_leftKickKraken.stop(); 
+		m_leftKickKraken.stop();
+		m_rightKickKraken.stop(); 
+ 
 	}
 }
