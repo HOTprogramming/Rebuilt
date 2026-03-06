@@ -107,8 +107,8 @@ public class RobotContainer {
 		}));
 
 		//Align to Pole
-		driver.x().whileTrue(drivetrain.alignToPole());
-
+		//driver.x().whileTrue(drivetrain.alignToPole());
+		driver.x().whileTrue(drivetrain.xLockCommand());
 		// Shooter Controls
 		// manager.shooter.setDefaultCommand(manager.shooter.shooterOff());
 			

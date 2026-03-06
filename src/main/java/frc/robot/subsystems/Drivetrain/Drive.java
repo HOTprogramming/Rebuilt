@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import frc.robot.RobotState;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.SwerveDriveBrake;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 class DriveIOdata {
@@ -88,7 +90,7 @@ public class Drive extends SubsystemBase {
 	private double rampedX;
 	private double rampedY;
 	private double rampedTheta;
-
+	private final SwerveDriveBrake brakeRequest = new SwerveDriveBrake();
 	private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
 		.withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
@@ -254,6 +256,10 @@ public class Drive extends SubsystemBase {
 			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY())
 			.withRotationalRate((driveTheta <= 0 ? -(driveTheta * driveTheta) : (driveTheta * driveTheta))
 				* DriveConfig.MAX_ANGULAR_VELOCITY()));
+	}
+ 
+	public Command xLockCommand() {
+		return this.run(() -> driveKraken.setSwerveRequest(brakeRequest));
 	}
 
 	public void lockRotation(double driveX, double driveY, Rotation2d rtarget) {
