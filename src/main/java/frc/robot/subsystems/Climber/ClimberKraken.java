@@ -59,4 +59,7 @@ public class ClimberKraken {
 	public void spinRunVelocity(double desiredVelocity) {
 		m_spinnerKraken.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage, 1);
 	}
+	public void resetSpinnerEncoder() {
+		m_spinnerKraken.motor.setPosition(0);
+	}
 }

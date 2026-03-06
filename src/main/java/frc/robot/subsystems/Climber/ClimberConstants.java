@@ -77,12 +77,6 @@ public class ClimberConstants {
 				.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
 				.withSensorToMechanismRatio(1.0)
 				.withRotorToSensorRatio(1.0))
-		.withFeedback(
-			new FeedbackConfigs()
-				.withFeedbackRemoteSensorID(kClimbEncoder)
-				.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-				.withSensorToMechanismRatio(1.0)
-				.withRotorToSensorRatio(1.0))
 		.withSlot0(new Slot0Configs()
 			.withKP(500)
 			.withKI(0.0)

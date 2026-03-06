@@ -59,6 +59,8 @@ public class Climber extends SubsystemBase {
 		setWristPosition(zeroPos + (wristPosRevs * ClimberConstants.wristGearRatio));
 	}
 
+
+
 	//booleans
 	private BooleanSupplier isBeamBreakTripped() {
 		return () -> m_ClimbKraken.getBeambreakStatus();
@@ -110,7 +112,6 @@ public class Climber extends SubsystemBase {
 		startClimb(),	
 		runOnce(() -> setElbowPosition(ClimberConstants.liftElbowClimbPos)),
 		partWristClimb(),
-		runOnce(() -> setElbowPosition(ClimberConstants.partL3ElbowClimb)),
 		wristPastClimb(),
 		wristClimb(),
 		finalElbowExtend()
@@ -122,7 +123,9 @@ public class Climber extends SubsystemBase {
 		spinOutSlow(), 
 		runOnce(() -> zeroPosA = m_ClimbKraken.getSpinPosition()),
 		spinBackSlow(),
-		runOnce(() -> zeroPos = (((zeroPosA + m_ClimbKraken.getSpinPosition()) / 2) + ClimberConstants.wristZeroOffset)),
+		runOnce(() -> {m_ClimbKraken.resetSpinnerEncoder();
+		zeroPos = 0;
+		}),
 		spinToZero()
 		);
 	}
