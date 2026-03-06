@@ -22,9 +22,10 @@ import frc.robot.Robot;
 
 public class IntakeConstants {
 	public static double kDeployedPosition = 0.9;
-	public static double kRetractPosition = 0.05;
+	public static double kRetractPosition = 0.02;
+	public static double kRetractPositionAgitate = 0.28;
 	public static double kExtendTolerance = 0.01;
-	public static double kRetractTolerance = 0.01;
+	public static double kRetractTolerance = 0.02;
 
 	public static double kExpelSpeed = -100.0;
 	public static double kIntakeSpeed = 100.0;

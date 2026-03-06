@@ -4,10 +4,12 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Intake extends SubsystemBase {
-	private final IntakeKraken mIntakeKraken;
+	public final IntakeKraken mIntakeKraken;
 
 	public Intake() {
 		mIntakeKraken = IntakeKraken.getInstance();
@@ -25,6 +27,19 @@ public class Intake extends SubsystemBase {
 		});
 	}
 
+	public Command agitateExtend(){
+		return run(() -> {
+			mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition);
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+		});
+	}
+
+	public Command agitateRetract(){
+		return run(() -> {
+			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
+		});
+	}
+
 	public Command retract() {
 		return run(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
@@ -37,6 +52,19 @@ public class Intake extends SubsystemBase {
 			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kExpelSpeed);
 		});
+	}
+
+	public Command rollerStop() {
+	return run(() -> {
+		mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
+		mIntakeKraken.stop();
+		});
+	}
+
+	public Command rollerSpin() {
+		return runOnce(() -> {
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+			});
 	}
 
 	public Command stop() {
@@ -53,7 +81,12 @@ public class Intake extends SubsystemBase {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kRetractPosition) < IntakeConstants.kRetractTolerance;
 	}
 
+	public BooleanSupplier isAgitateRetracted() {
+		return () -> Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kRetractPositionAgitate) < IntakeConstants.kRetractTolerance;
+	}
+
 	public Command agitate() {
-		return Commands.repeatingSequence(extend().until(isExtended()),retract().until(isRetracted()));
+		// return Commands.repeatingSequence(agitateExtend().until(isExtended()),agitateRetract().until(isRetracted()));
+		return agitateRetract();
 	}
 }

@@ -19,13 +19,16 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.IntakeConstants;
 
 public class RobotContainer {
 	SendableChooser<String> Autos = new SendableChooser<>();
@@ -104,8 +107,8 @@ public class RobotContainer {
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
     
-    // X Swerve Drive
-    driver.x().whileTrue(drivetrain.xLockCommand());
+		// X Swerve Drive
+		driver.x().whileTrue(drivetrain.xLockCommand());
 
 		//Shoot
 		operator.rightTrigger().onTrue(manager.autoAim());
@@ -126,9 +129,11 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		operator.rightBumper().onTrue(intake.extend());
-		operator.leftBumper().onTrue(intake.retract());
-		//operator.leftBumper().toggleOnTrue(intake.agitate());
+		intake.setDefaultCommand(intake.agitateRetract());
+		new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
+		operator.rightBumper().toggleOnTrue(intake.extend());
+		operator.leftBumper().onTrue(intake.agitate());
+		operator.leftTrigger().toggleOnTrue(intake.rollerStop());
 	}
 
 	public void updateAutonCommand() {
