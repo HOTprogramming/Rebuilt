@@ -222,7 +222,7 @@ public class Drive extends SubsystemBase {
 	}
 
 	public Command alignToPole() {
-		return runPathFinding(new Pose2d(1.05, 2.65, Rotation2d.fromDegrees(90)));
+		return runPathFinding(new Pose2d(15.5, 5.5, Rotation2d.fromDegrees(-90)));
 	}
 
 	public Command runPathFinding(Pose2d target) {
@@ -288,8 +288,8 @@ public class Drive extends SubsystemBase {
 		double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
 
 		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
-			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .5)
-			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .5)
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .25)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .25)
 			.withTargetDirection(Rotation2d.fromRadians(angle)));
 	}
 

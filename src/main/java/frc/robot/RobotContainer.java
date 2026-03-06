@@ -91,13 +91,13 @@ public class RobotContainer {
 
 		// Aim
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
-		driver.a().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+		//driver.a().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
 		//Align to Drive Through Trench
-     	driver.y().whileTrue(drivetrain.run(()->
+     /* driver.y().whileTrue(drivetrain.run(()->
       	drivetrain.fixedY(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY() : 0,
         new Rotation2d(3.142)
-    )).beforeStarting(drivetrain.resetControllers()));
+    )).beforeStarting(drivetrain.resetControllers())); */
 
 		// Rotate for Bump
 		driver.b().whileTrue(drivetrain.run(() -> {
@@ -112,7 +112,7 @@ public class RobotContainer {
 		}));
 
 		//Shoot
-		operator.rightTrigger().onTrue(manager.shooter.goToShoot());
+		operator.rightTrigger().onTrue(manager.autoAim());
 		
 		// Shooter Controls (Operator)
 		operator.a().onTrue(manager.shooter.goToIdle());

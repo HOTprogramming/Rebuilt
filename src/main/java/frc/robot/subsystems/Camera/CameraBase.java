@@ -31,7 +31,7 @@ public class CameraBase {
 	AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(5, 5, 5);
-	Vector<N3> multiTagStdDevs = VecBuilder.fill(.75, .75, 1);
+	Vector<N3> multiTagStdDevs = VecBuilder.fill(.85, .85, 1);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -78,9 +78,11 @@ public class CameraBase {
 
 			double distFromRobot = poseArray.getTranslation().getDistance(drivetrain.getPose().getTranslation());
 
-			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/3.0)));
+			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/2.0)));
 
-			drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
+			if(avgDist < 6){
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
+			}
 		}
     }
 }
