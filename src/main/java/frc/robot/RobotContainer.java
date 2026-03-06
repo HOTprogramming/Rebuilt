@@ -131,6 +131,7 @@ public class RobotContainer {
 
 		// Intake Controls
 		operator.rightBumper().toggleOnTrue(intake.extend()).toggleOnFalse(intake.retract());
+		operator.leftBumper().onTrue(intake.agitate());
 	}
 
 	public void updateAutonCommand() {
