@@ -8,10 +8,12 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.SwerveDriveBrake;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -34,6 +36,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotState;
+import static frc.robot.subsystems.Drivetrain.DriveConstants.DEFAULT_XY_CONSTRAINTS;
+import static frc.robot.subsystems.Drivetrain.DriveConstants.DriveConfig;
+import static frc.robot.subsystems.Drivetrain.DriveConstants.kRotationRateLimiter;
+import static frc.robot.subsystems.Drivetrain.DriveConstants.kTranslationRateLimiter;
+import static frc.robot.subsystems.Drivetrain.DriveConstants.slowModeMultiplier;
 
 class DriveIOdata {
 	public SwerveDriveState state = new SwerveDriveState();
@@ -90,6 +98,13 @@ public class Drive extends SubsystemBase {
 	private double rampedX;
 	private double rampedY;
 	private double rampedTheta;
+
+	private PIDController translationControllerIn = new PIDController(5, 0, 0);
+    private PIDController translationControllerAcross = new PIDController(5, 0, 0);
+	private ProfiledPIDController translationControllerY = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
+    private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
+
+
 	private final SwerveDriveBrake brakeRequest = new SwerveDriveBrake();
 	private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
 		.withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -149,7 +164,7 @@ public class Drive extends SubsystemBase {
 	@Override
 	public void periodic() {
 		RobotState.pose = iOdata.state.Pose;
-		RobotState.findZone();
+		RobotState.speeds = iOdata.state.Speeds;
 
 		thetaController.setPID(thetaP, thetaI, thetaD);
 
@@ -215,7 +230,7 @@ public class Drive extends SubsystemBase {
 	}
 
 	public Command alignToPole() {
-		return runPathFinding(new Pose2d(1.05, 2.65, Rotation2d.fromDegrees(90)));
+		return runPathFinding(new Pose2d(15.5, 5.5, Rotation2d.fromDegrees(-90)));
 	}
 
 	public Command runPathFinding(Pose2d target) {
@@ -279,16 +294,29 @@ public class Drive extends SubsystemBase {
 	}
 
 	// Needs to be done better at some point
-	public ShootOnTheFly shootOnTheFly = new ShootOnTheFly();
 
 	public void aim(double driveX, double driveY) {
-		double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
-
 		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
-			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .5)
-			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .5)
-			.withTargetDirection(Rotation2d.fromRadians(angle)));
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .25)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .25)
+			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 	}
+
+	//align to fixed Y coordinate on field using Y translation controller
+    public void fixedY(double driveX, Rotation2d rtarget) {
+         double dynamicY = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
+        double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), dynamicY);
+        driveKraken.setSwerveRequest(FIELD_CENTRIC
+            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
+            .withVelocityY(!translationControllerY.atGoal() ? -yOutput : 0.0)
+            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
+        );
+        SmartDashboard.putNumber("Target Y", dynamicY);
+        SmartDashboard.putNumber("Current Y", iOdata.state.Pose.getY());
+        SmartDashboard.putNumber("PID Y Output", yOutput);
+    }
+
+
 
 	public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
 		this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);
@@ -297,6 +325,15 @@ public class Drive extends SubsystemBase {
 	public Command resetPidgeon() {
 		return runOnce(() -> driveKraken.resetPidgeon());
 	}
+
+	public Command resetControllers() {
+        return runOnce(() -> {
+            translationControllerX.reset(iOdata.state.Pose.getX(), iOdata.state.Speeds.vxMetersPerSecond);
+            translationControllerY.reset(iOdata.state.Pose.getY(), iOdata.state.Speeds.vyMetersPerSecond);
+            translationControllerIn.reset();
+            translationControllerAcross.reset();
+        });
+    }
 
 	private void configurePathPlanner() {
 		try {

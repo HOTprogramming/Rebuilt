@@ -31,8 +31,8 @@ public class IndexConstants {
 			.withSupplyCurrentLowerLimit(30)
 			.withSupplyCurrentLowerTime(1))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(40)
-			.withPeakReverseTorqueCurrent(-40))
+			.withPeakForwardTorqueCurrent(80)
+			.withPeakReverseTorqueCurrent(-80))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -40,17 +40,29 @@ public class IndexConstants {
 			.withMotionMagicCruiseVelocity(10.0)
 			.withMotionMagicAcceleration(10.0))
 		.withSlot0(new Slot0Configs() //Wheels torque
+			.withKP(120)
+			.withKI(0.0)
+			.withKD(0)
+			.withKS(120)
+			.withKV(2))
+		/* .withSlot0(new Slot0Configs() //Wheels torque
 			.withKP(3)
 			.withKI(0.0)
 			.withKD(0)
 			.withKS(3)
-			.withKV(0.055))
+			.withKV(0.055))*/
 		.withSlot1(new Slot1Configs() //Roller Floor torque
+			.withKP(240)
+			.withKI(0.0)
+			.withKD(0)
+			.withKS(80)
+			.withKV(1.6))
+		/*.withSlot1(new Slot1Configs() // Old Roller Floor torque
 			.withKP(10)
 			.withKI(0.0)
 			.withKD(0)
 			.withKS(12)
-			.withKV(0.2))
+			.withKV(0.2))*/
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(80.0)
 			.withMotionMagicAcceleration(160)

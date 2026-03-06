@@ -6,17 +6,21 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Drivetrain.ShootOnTheFly;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.ShooterConstants;
 
 public class RobotState {
 
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+	public static ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
+
 
 	private enum Zone {
 		ALLIANCE, 
@@ -26,6 +30,10 @@ public class RobotState {
 		RIGHT,
 		TRENCH
 	}
+
+	private static ShootOnTheFly shootOnTheFly = new ShootOnTheFly();
+	public static double lookAheadDistance = 0;
+	public static double turretAngle = 0;
 
 	private static double fieldx = 16.54;
 	private static double fieldy = 8.07;
@@ -66,9 +74,17 @@ public class RobotState {
 		return pose.getTranslation().getDistance(new Translation2d(x, y)) < radius;
 	}
 
-	public static void findZone() {
-		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
+
+	public static void update() {
+		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
+		shootOnTheFly.update(pose, speeds, color == Alliance.Red);
+		turretAngle = shootOnTheFly.getTurretAngle();
+		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
+		findZone();
+	}
+
+	private static void findZone() {
 		if (color == Alliance.Blue) {
 			SmartDashboard.putNumber("Distance to Goal", ShooterConstants.blueHub.getDistance(pose.getTranslation()));
 			if (isInZoneBox(0, bluezonex, 0, fieldy)) shooterZone = Zone.ALLIANCE;
