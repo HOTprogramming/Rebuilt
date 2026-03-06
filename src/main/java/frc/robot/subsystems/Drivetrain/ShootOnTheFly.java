@@ -69,7 +69,7 @@ public class ShootOnTheFly {
         Translation2d lookaheadPos = RobotPos.getTranslation().plus(
             new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency)
         );
-        lookaheadToTargetDistance = goalLocation.minus(releasePos).getNorm();
+        lookaheadToTargetDistance = goalLocation.minus(lookaheadPos).getNorm();
         
         for (i = 0; i < 10; i++) {
             timeOfFlight = timeOfFlightMap.get(lookaheadToTargetDistance);
@@ -81,7 +81,7 @@ public class ShootOnTheFly {
             // Predict future robot position at time of impact
             double offsetX =  vx_filt * timeOfFlight;
             double offsetY = vy_filt * timeOfFlight;
-            lookaheadPos = releasePos.plus(new Translation2d(offsetX, offsetY));
+            lookaheadPos = lookaheadPos.plus(new Translation2d(offsetX, offsetY));
 
             // Update distance for next ToF lookup
             lookaheadToTargetDistance = goalLocation.getDistance(lookaheadPos);
@@ -89,7 +89,7 @@ public class ShootOnTheFly {
 
         // Calculate "Virtual Target" (Iterative Aim Point) for visualization
         // It's the Goal minus the Robot's displacement during flight
-        Translation2d robotDisplacement = lookaheadPos.minus(releasePos);
+        Translation2d robotDisplacement = lookaheadPos.minus(lookaheadPos);
         Translation2d aimPointIterative = goalLocation.minus(robotDisplacement);
         
         //Aim from the CURRENT position to the VIRTUAL target
