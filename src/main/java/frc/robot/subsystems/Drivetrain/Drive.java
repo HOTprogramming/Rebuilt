@@ -285,8 +285,8 @@ public class Drive extends SubsystemBase {
 
 	public void aim(double driveX, double driveY) {
 		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
-			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .5)
-			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .5)
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .25)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .25)
 			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 	}
 
