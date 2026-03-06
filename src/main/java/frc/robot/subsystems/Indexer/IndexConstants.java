@@ -43,7 +43,7 @@ public class IndexConstants {
 			.withKP(120)
 			.withKI(0.0)
 			.withKD(0)
-			.withKS(120)
+			.withKS(3)
 			.withKV(2))
 		/* .withSlot0(new Slot0Configs() //Wheels torque
 			.withKP(3)
@@ -55,7 +55,7 @@ public class IndexConstants {
 			.withKP(240)
 			.withKI(0.0)
 			.withKD(0)
-			.withKS(80)
+			.withKS(12)
 			.withKV(1.6))
 		/*.withSlot1(new Slot1Configs() // Old Roller Floor torque
 			.withKP(10)
