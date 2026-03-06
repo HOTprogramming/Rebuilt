@@ -156,7 +156,7 @@ public class Drive extends SubsystemBase {
 	@Override
 	public void periodic() {
 		RobotState.pose = iOdata.state.Pose;
-		RobotState.findZone();
+		RobotState.speeds = iOdata.state.Speeds;
 
 		thetaController.setPID(thetaP, thetaI, thetaD);
 
@@ -282,15 +282,12 @@ public class Drive extends SubsystemBase {
 	}
 
 	// Needs to be done better at some point
-	public ShootOnTheFly shootOnTheFly = new ShootOnTheFly();
 
 	public void aim(double driveX, double driveY) {
-		double angle = shootOnTheFly.update(this.iOdata.state.Pose, this.iOdata.state.Speeds, true);
-
 		driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
-			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .25)
-			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .25)
-			.withTargetDirection(Rotation2d.fromRadians(angle)));
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY() * .5)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * DriveConfig.MAX_VELOCITY() * .5)
+			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 	}
 
 	//align to fixed Y coordinate on field using Y translation controller

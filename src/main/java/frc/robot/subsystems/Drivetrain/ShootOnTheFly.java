@@ -24,6 +24,9 @@ public class ShootOnTheFly {
     LinearFilter vxfilt = LinearFilter.movingAverage(8);
     LinearFilter vyfilt = LinearFilter.movingAverage(8);
 
+	private double turretAngle = 0;
+	private double lookaheadToTargetDistance = 0;
+
     static {
 
     minDistance = 1.34;
@@ -42,7 +45,7 @@ public class ShootOnTheFly {
 
     
     
-    public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
+    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
         double latency = 0.1; //needs to be tuned, in seconds
         ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
@@ -103,7 +106,7 @@ public class ShootOnTheFly {
         double timeOfFlight = 0;
         double lastTimeOfFlight = 0;
         Translation2d lookaheadPos = releasePos;
-        double lookaheadToTargetDistance = dist;
+        lookaheadToTargetDistance = dist;
         
         for (i = 0; i < 10; i++) {
             timeOfFlight = timeOfFlightMap.get(lookaheadToTargetDistance);
@@ -128,7 +131,7 @@ public class ShootOnTheFly {
         
         //Aim from the CURRENT position to the VIRTUAL target
         Rotation2d turretRotation = goalLocation.minus(lookaheadPos).getAngle();
-        double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+        turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
         
         // SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
         // SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
@@ -143,8 +146,13 @@ public class ShootOnTheFly {
         // SmartDashboard.putNumber("vx_filtered", vx_filt);
         // SmartDashboard.putNumber("vy_filtered", vy_filt);
         // SmartDashboard.putNumber("Horiz Speed", newHorizontalSpeed);
-
-        return(turretAngle);
-
     }
+
+	public double getTurretAngle() {
+		return turretAngle;
+	}
+
+	public double getLookAheadDistance() {
+		return lookaheadToTargetDistance;
+	}
 }
