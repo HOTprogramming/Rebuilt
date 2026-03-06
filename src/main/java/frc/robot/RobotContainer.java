@@ -126,8 +126,9 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		operator.rightBumper().toggleOnTrue(intake.extend()).toggleOnFalse(intake.retract());
-		operator.leftBumper().onTrue(intake.agitate());
+		operator.rightBumper().onTrue(intake.extend());
+		operator.leftBumper().onTrue(intake.retract());
+		//operator.leftBumper().toggleOnTrue(intake.agitate());
 	}
 
 	public void updateAutonCommand() {
