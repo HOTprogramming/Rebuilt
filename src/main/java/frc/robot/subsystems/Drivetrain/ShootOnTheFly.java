@@ -51,11 +51,6 @@ public class ShootOnTheFly {
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
         double vy_filt = vyfilt.calculate(fieldSpeeds.vyMetersPerSecond) ;
 
-        Translation2d releasePos = RobotPos.getTranslation().plus(
-            new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency)
-        );
-
-
         double goalX;
         if (allyRed) {
             goalX = 11.91; //Red hub x
@@ -64,40 +59,6 @@ public class ShootOnTheFly {
         }
 
         Translation2d goalLocation = new Translation2d(goalX, 4.03); //4.03 is both hubs' y pos
-        Translation2d targetVec = goalLocation.minus(releasePos);
-        double dist = targetVec.getNorm();
-        Translation2d targetDirection = targetVec.div(dist); 
-        
-        //double idealHorizontalSpeed = 5; old code
-        double initialToF = timeOfFlightMap.get(dist);
-        double idealHorizontalSpeed = dist / initialToF;
-
-        Translation2d targetVelocity = targetDirection.times(idealHorizontalSpeed);
-        
-        Translation2d robotVelVec = new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
-        Translation2d shotVec = targetVec.div(dist).times(idealHorizontalSpeed).minus(robotVelVec);
-        Translation2d shotVelocity = targetVelocity.minus(robotVelVec);
-
-        //Rotation2d turretRotation = shotVelocity.getAngle();
-        double requiredVelocity = shotVelocity.getNorm();
-        //double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
-
-        Translation2d aimPoint = releasePos.plus(
-            shotVelocity.div(shotVelocity.getNorm()).times(dist)
-        );
-
-        /* Old code for non-iterative solution, aiming at the current position of the goal
-        Translation2d aimPoint = releasePos.plus(
-            shotVec.div(shotVec.getNorm()).times(dist)
-        );
-        */
-
-        double newHorizontalSpeed = shotVelocity.getNorm();
-
-        double totalExitVelocity = 15; //In m/s, needs to be measured when we get robot
-        double ratio = Math.min(newHorizontalSpeed / totalExitVelocity, 1.0);
-        double newPitch = Math.acos(ratio);
-        
 
         //position-based shooting solution with iterative TOF solver
         //Use chassis speeds, distance and future pos estimate from above solution
@@ -105,8 +66,10 @@ public class ShootOnTheFly {
         int i;
         double timeOfFlight = 0;
         double lastTimeOfFlight = 0;
-        Translation2d lookaheadPos = releasePos;
-        lookaheadToTargetDistance = dist;
+        Translation2d lookaheadPos = RobotPos.getTranslation().plus(
+            new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency)
+        );
+        lookaheadToTargetDistance = goalLocation.minus(releasePos).getNorm();
         
         for (i = 0; i < 10; i++) {
             timeOfFlight = timeOfFlightMap.get(lookaheadToTargetDistance);
@@ -132,20 +95,6 @@ public class ShootOnTheFly {
         //Aim from the CURRENT position to the VIRTUAL target
         Rotation2d turretRotation = goalLocation.minus(lookaheadPos).getAngle();
         turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
-        
-        // SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
-        // SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
-        // SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
-        // SmartDashboard.putNumber("SolverErr", Math.abs(timeOfFlight - lastTimeOfFlight));
-        // SmartDashboard.putNumber("SolverLoops", i);
-        // SmartDashboard.putNumber("Distance", dist);
-        // SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
-        // SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
-        // SmartDashboard.putNumber("vx", fieldSpeeds.vxMetersPerSecond);
-        // SmartDashboard.putNumber("vy", fieldSpeeds.vyMetersPerSecond);
-        // SmartDashboard.putNumber("vx_filtered", vx_filt);
-        // SmartDashboard.putNumber("vy_filtered", vy_filt);
-        // SmartDashboard.putNumber("Horiz Speed", newHorizontalSpeed);
     }
 
 	public double getTurretAngle() {
