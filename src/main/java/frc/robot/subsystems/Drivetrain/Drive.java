@@ -43,6 +43,8 @@ import static frc.robot.subsystems.Drivetrain.DriveConstants.kRotationRateLimite
 import static frc.robot.subsystems.Drivetrain.DriveConstants.kTranslationRateLimiter;
 import static frc.robot.subsystems.Drivetrain.DriveConstants.slowModeMultiplier;
 
+import java.util.function.DoubleSupplier;
+
 class DriveIOdata {
 	public SwerveDriveState state = new SwerveDriveState();
 
@@ -104,7 +106,6 @@ public class Drive extends SubsystemBase {
 	private ProfiledPIDController translationControllerY = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
     private ProfiledPIDController translationControllerX = new ProfiledPIDController(5, 0, 0, DEFAULT_XY_CONSTRAINTS);
 
-
 	private final SwerveDriveBrake brakeRequest = new SwerveDriveBrake();
 	private final SwerveRequest.FieldCentric FIELD_CENTRIC = new SwerveRequest.FieldCentric()
 		.withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -140,7 +141,8 @@ public class Drive extends SubsystemBase {
 		robotStatePose = table.getDoubleArrayTopic("Robot State Pose").publish();
 
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
+		translationControllerY.setTolerance(0.2, 0.1); 
+    	translationControllerX.setTolerance(0.2, 0.1);
 		configurePathPlanner();
 
 		constraints = new PathConstraints(5.0, 3.0, 2 * Math.PI, 4 * Math.PI);
@@ -303,18 +305,32 @@ public class Drive extends SubsystemBase {
 	}
 
 	//align to fixed Y coordinate on field using Y translation controller
-    public void fixedY(double driveX, Rotation2d rtarget) {
-         double dynamicY = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
-        double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY(), dynamicY);
-        driveKraken.setSwerveRequest(FIELD_CENTRIC
-            .withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * DriveConfig.MAX_VELOCITY())
-            .withVelocityY(!translationControllerY.atGoal() ? -yOutput : 0.0)
-            .withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), rtarget.getRadians()))
-        );
-        SmartDashboard.putNumber("Target Y", dynamicY);
-        SmartDashboard.putNumber("Current Y", iOdata.state.Pose.getY());
-        SmartDashboard.putNumber("PID Y Output", yOutput);
-    }
+	public Command driveToTrenchY(DoubleSupplier driveX) {
+		final Rotation2d[] targetRotation = new Rotation2d[1];
+
+		return this.runOnce(() -> {
+			double targetY = (iOdata.state.Pose.getY() < 4.035) ? 0.637 : 7.42;
+			double currentDegrees = iOdata.state.Pose.getRotation().getDegrees();
+			translationControllerY.reset(iOdata.state.Pose.getY(), iOdata.state.Speeds.vyMetersPerSecond);
+			translationControllerY.setGoal(targetY); 
+			targetRotation[0] = (Math.abs(currentDegrees - 90) < Math.abs(currentDegrees + 90))
+			 ? Rotation2d.fromDegrees(90)
+			 : Rotation2d.fromDegrees(-90);
+		})
+		.andThen(this.run(() -> {
+			double yOutput = translationControllerY.calculate(iOdata.state.Pose.getY());
+			
+			if (translationControllerY.atGoal()) {
+				yOutput = 0;
+			}
+
+			driveKraken.setSwerveRequest(FIELD_CENTRIC
+				.withVelocityX(driveX.getAsDouble() * DriveConfig.MAX_VELOCITY())
+				.withVelocityY(yOutput)
+				.withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), targetRotation[0].getRadians()))
+			);
+		}));
+	}
 
 
 
