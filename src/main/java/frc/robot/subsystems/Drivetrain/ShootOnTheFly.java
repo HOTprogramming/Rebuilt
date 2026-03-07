@@ -34,13 +34,19 @@ public class ShootOnTheFly {
     TOF_CONVERGENCE_THRESHOLD = 0.025;
     MAX_ITERATIONS = 10;
 
-    timeOfFlightMap.put(7.0, 1.5);
-    timeOfFlightMap.put(5.68, 1.16);
-    timeOfFlightMap.put(4.55, 1.12);
-    timeOfFlightMap.put(3.15, 1.11);
-    timeOfFlightMap.put(1.88, 1.09);
-    timeOfFlightMap.put(1.38, 0.90);
-    timeOfFlightMap.put(1.0, 0.70);    
+    timeOfFlightMap.put(1.0, 1.0);
+	timeOfFlightMap.put(2.0, 1.1);
+	timeOfFlightMap.put(3.0, 1.1);
+	timeOfFlightMap.put(4.0, 1.15);
+	timeOfFlightMap.put(5.0, 1.15);
+
+
+    // timeOfFlightMap.put(5.68, 1.16);
+    // timeOfFlightMap.put(4.55, 1.12);
+    // timeOfFlightMap.put(3.15, 1.11);
+    // timeOfFlightMap.put(1.88, 1.09);
+    // timeOfFlightMap.put(1.38, 0.90);
+    // timeOfFlightMap.put(1.0, 0.70);    
     }
 
     
