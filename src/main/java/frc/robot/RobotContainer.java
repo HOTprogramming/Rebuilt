@@ -149,11 +149,6 @@ public class RobotContainer {
 		operator.rightBumper().whileTrue(intake.extend());
 		operator.leftBumper().whileTrue(intake.agitate());
 		operator.leftTrigger().whileTrue(intake.rollerStop());
-		//intake.setDefaultCommand(intake.agitateRetract());
-		new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
-		operator.rightBumper().toggleOnTrue(intake.extend());
-		operator.leftBumper().onTrue(intake.agitate());
-		operator.leftTrigger().toggleOnTrue(intake.rollerStop());
 	}
 
 	public void updateAutonCommand() {
