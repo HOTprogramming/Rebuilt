@@ -53,7 +53,9 @@ public class RobotState {
 	public Shooter shooter;
 
 	public static Zone shooterZone = Zone.ALLIANCE;
-	private static Map<Zone, Command> autoAimCommands;
+	private static Map<Zone, Command> autoAimCommands;	
+	private static Map<Zone, Command> autoAimwithhoodCommands;
+
 	private static Supplier<Zone> shooterZoneSup = () -> shooterZone;
 	public static Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
@@ -63,6 +65,11 @@ public class RobotState {
 			Zone.ALLIANCE, shooter.autoAimHub(), 
 			Zone.LEFT, shooter.autoAimLeftCorner(),
 			Zone.RIGHT, shooter.autoAimRightCorner(),
+			Zone.TRENCH, shooter.dodgeTrench());
+		autoAimwithhoodCommands = Map.of(
+			Zone.ALLIANCE, shooter.autoAimHubwithhood(), 
+			Zone.LEFT, shooter.autoAimLeftCornerwithhood(),
+			Zone.RIGHT, shooter.autoAimRightCornerwithhood(),
 			Zone.TRENCH, shooter.dodgeTrench());
 	}
 
@@ -107,6 +114,10 @@ public class RobotState {
 
 	public Command autoAim() {
 		return Commands.select(autoAimCommands, shooterZoneSup);
+	}
+
+	public Command autoAimwithhood() {
+		return Commands.select(autoAimwithhoodCommands, shooterZoneSup);
 	}
 }
 
