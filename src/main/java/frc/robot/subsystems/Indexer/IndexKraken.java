@@ -16,7 +16,7 @@ public class IndexKraken {
 	public Kraken m_rightKickKraken = new Kraken(IndexConstants.kRightKickID, IndexConstants.IndexConfigs
 		.indexWheelConfigs(), InvertedValue.Clockwise_Positive, "Indexer", "RightKick");
 	public Kraken m_floorKraken = new Kraken(IndexConstants.kFloorID, IndexConstants.IndexConfigs
-		.indexWheelConfigs(), InvertedValue.Clockwise_Positive, "Indexer", "Floor");
+		.indexWheelConfigs(), InvertedValue.CounterClockwise_Positive, "Indexer", "Floor");
 
 	private static IndexKraken instance = null;
 
