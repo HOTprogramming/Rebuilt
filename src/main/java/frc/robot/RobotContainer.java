@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
@@ -133,7 +132,7 @@ public class RobotContainer {
 
 
 		// Indexer Controls
-		driver.rightTrigger().whileTrue(Commands.parallel(indexer.indexOnCommand(), manager.autoAimwithhood())).whileFalse(Commands.parallel(indexer.indexOffCommand(), manager.autoAim()));
+		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
 		//Align to Pole
 		operator.x().whileTrue(drivetrain.alignToPole());
