@@ -1,0 +1,77 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 13.023554216867469,
+        "y": 3.9703614457831335
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 12.771462755801721,
+        "y": 3.96577676550013
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 14.467617689015691,
+        "y": 3.022253922967189
+      },
+      "prevControl": {
+        "x": 13.844142313844173,
+        "y": 3.109759238780735
+      },
+      "nextControl": {
+        "x": 15.2051212553495,
+        "y": 2.9187446504992867
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 16.148879518072288,
+        "y": 3.022253922967189
+      },
+      "prevControl": {
+        "x": 16.162582025677604,
+        "y": 3.423352353780313
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Deploy Intake ",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.0,
+    "rotation": 90.04647704831235
+  },
+  "reversed": false,
+  "folder": "RedDepotScoreClimb",
+  "idealStartingState": {
+    "velocity": 1.0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": false
+}

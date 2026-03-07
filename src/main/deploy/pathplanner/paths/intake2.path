@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.77267469879518,
+        "y": 2.352132530120481
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.761769362070101,
+        "y": 3.279185600786228
+      },
+      "isLocked": false,
+      "linkedName": "turn"
+    },
+    {
+      "anchor": {
+        "x": 8.77267469879518,
+        "y": 6.581156626506024
+      },
+      "prevControl": {
+        "x": 8.767236222863936,
+        "y": 6.327231458824406
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "return"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "stealshootballs",
+  "idealStartingState": {
+    "velocity": 3.0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}

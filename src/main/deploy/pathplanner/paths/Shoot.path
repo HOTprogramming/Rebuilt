@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.39112048192771065,
+        "y": 6.843421686751762
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.6281776414076763,
+        "y": 6.5794341502574385
+      },
+      "isLocked": false,
+      "linkedName": "shoot"
+    },
+    {
+      "anchor": {
+        "x": 2.4734807417974314,
+        "y": 4.028530670470756
+      },
+      "prevControl": {
+        "x": 3.055720399429386,
+        "y": 4.546077032810271
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "climb"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Deploy Shooter",
+      "waypointRelativePos": 0.5,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0.75,
+    "rotation": -178.89984914456275
+  },
+  "useDefaultConstraints": false
+}
