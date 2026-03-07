@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
@@ -63,6 +62,7 @@ public class RobotContainer {
 		Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
 		Autos.addOption("Grid Test", "Grid Test");
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
+		Autos.addOption("funkycheck", "funkycheck");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -76,6 +76,19 @@ public class RobotContainer {
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
+		NamedCommands.registerCommand("intake", intake.extend());
+		NamedCommands.registerCommand("intake off", intake.retract());
+		//Start autoaim at start of auton
+		// NamedCommands.registerCommand("auto aim", manager.autoAim());
+		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
+		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
+		NamedCommands.registerCommand("hood up", manager.shooter.setHoodAngle(5) );
+		NamedCommands.registerCommand("hood down", manager.shooter.setHoodAngle(0));
+		NamedCommands.registerCommand("deploy climber", climber.deployCommand());
+		NamedCommands.registerCommand("retract climber", climber.retractCommand());
+		NamedCommands.registerCommand("shooter on", manager.shooter.autoAimHub());
+
+
 
 		configureBindings();
 	}
@@ -133,7 +146,7 @@ public class RobotContainer {
 
 
 		// Indexer Controls
-		driver.rightTrigger().whileTrue(Commands.parallel(indexer.indexOnCommand(), manager.autoAimwithhood())).whileFalse(Commands.parallel(indexer.indexOffCommand(), manager.autoAim()));
+		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
 		//Align to Pole
 		operator.x().whileTrue(drivetrain.alignToPole());
