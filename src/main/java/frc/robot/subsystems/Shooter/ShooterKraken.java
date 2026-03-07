@@ -21,8 +21,8 @@ public class ShooterKraken {
 		m_krakenFXRightTop.setup();
 		m_krakenFXHood.setup();
 
-		m_krakenFXLeftBottom.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
-		m_krakenFXRightTop.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
+		// m_krakenFXLeftBottom.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
+		// m_krakenFXRightTop.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
 	}
 
 	public static ShooterKraken getInstance() {
@@ -40,9 +40,13 @@ public class ShooterKraken {
 		switch (controlModeShoot) {
 			case 0:
 				m_krakenFXLeftTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityVoltage, 0);
+				m_krakenFXLeftBottom.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityVoltage, 0);
+				m_krakenFXRightTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityVoltage, 0);
 				break;
 			case 1:
 				m_krakenFXLeftTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+				m_krakenFXLeftBottom.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+				m_krakenFXRightTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
 		}
 	}
 
@@ -58,5 +62,7 @@ public class ShooterKraken {
 
 	public void stop() {
 		m_krakenFXLeftTop.stop();
+		m_krakenFXLeftBottom.stop();
+		m_krakenFXRightTop.stop();
 	}
 }

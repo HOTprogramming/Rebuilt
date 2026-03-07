@@ -109,11 +109,14 @@ public class Climber extends SubsystemBase {
 	//main commands
 	public Command stageThreeClimb() {
 		return Commands.sequence(
-		startClimb(),	
+		startClimb(),
+
 		runOnce(() -> setElbowPosition(ClimberConstants.liftElbowClimbPos)),
-		partWristClimb(),
+
 		wristPastClimb(),
+
 		wristClimb(),
+
 		finalElbowExtend()
 		);
 	}
@@ -121,11 +124,14 @@ public class Climber extends SubsystemBase {
 	public Command zeroSpinner() {
 		return Commands.sequence(spintoBeambreak(), spinOutBeambreak(), 
 		spinOutSlow(), 
+
 		runOnce(() -> zeroPosA = m_ClimbKraken.getSpinPosition()),
+
 		spinBackSlow(),
+
 		runOnce(() -> {m_ClimbKraken.resetSpinnerEncoder();
-		zeroPos = 0;
-		}),
+		zeroPos = 0;}),
+
 		spinToZero()
 		);
 	}
@@ -197,69 +203,6 @@ public class Climber extends SubsystemBase {
 			}).until(isElbowl3Climbed()); 
 	}
 
-
-	public Command fullDeploy() {
-		return Commands.sequence(
-			runOnce(() -> setElbowPosition(ClimberConstants.deployedPos)),
-			zeroSpinner(), 
-			deploy());
-	}
-	
-	public Command teleopDeploy() {
-		return run(() -> {
-			setElbowPosition(ClimberConstants.deployedPos);
-			setWristPosition(zeropossup.getAsDouble());
-		});
-	}
-
-	public Command stop() {
-		return runOnce(() -> {});
-	}
-	
-	public Command stow() {
-		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
-	}
-
-	//sub commands
-
-	private Command spinOutSlow() {
-		return Commands.sequence(
-			run(() -> setWristVelocity(-20)).withDeadline(Commands.waitSeconds(0.5)), 
-			run(() -> setWristVelocity(-20)).onlyWhile(isBeamBreakTripped()));
-	}
-	
-	private Command spinBackSlow() {
-		return Commands.sequence(
-			run(() -> setWristVelocity(20)).withDeadline(Commands.waitSeconds(0.5)), 
-			run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped()));
-	}
-
-	private Command wristPastClimb() {
-		return run(() -> {
-				spinWristPosition(ClimberConstants.wristPastClimbPos);
-			}).until(isWristPast()); 
-	}
-
-	private Command wristClimb() {
-		return run(() -> {
-			spinWristPosition(ClimberConstants.wristBeforeClimbPos);
-	}).until(isWristClimbed());
-	}
-
-	private Command partWristClimb() {
-		return run(() -> {
-			spinWristPosition(ClimberConstants.wristPartClimbPos);
-	}).until(isWristPartClimbed());
-	}
-
-	private Command finalElbowExtend() {
-		return run(() -> {
-				setElbowPosition(ClimberConstants.l3ElbowPos);
-				System.out.println("running");
-			}).until(isElbowl3Climbed()); 
-	}
-
-
 	private Command spintoBeambreak() {
 		return run(() -> {
 			setWristVelocity(100);
@@ -288,5 +231,4 @@ public class Climber extends SubsystemBase {
 	public Command reset() {
 		return run(() -> setWristPosition(0));
 	}
-
 }

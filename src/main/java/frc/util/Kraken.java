@@ -4,7 +4,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
@@ -14,6 +13,7 @@ import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -34,6 +34,7 @@ public class Kraken {
 	public static enum PositionControlType{
 		PositionVoltage,
 		PositionTorqueCurrentFOC,
+		MotionMagicVoltage,
 		MotionMagicExpoVoltage,
 		MotionMagicExpoTorqueCurrentFOC
 	}
@@ -45,6 +46,7 @@ public class Kraken {
 
 	private final PositionVoltage positionVoltage = new PositionVoltage(0);
 	private final PositionTorqueCurrentFOC positionTorque = new PositionTorqueCurrentFOC(0);
+	private final MotionMagicVoltage mmVoltage = new MotionMagicVoltage(0);
 	private final MotionMagicExpoVoltage mmExpoVoltage = new MotionMagicExpoVoltage(0);
 	private final MotionMagicExpoTorqueCurrentFOC mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0);
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
@@ -60,10 +62,6 @@ public class Kraken {
 
 	public DoublePublisher positionPublisher;
 	public DoublePublisher velocityPublisher;
-	public DoublePublisher appliedVoltsPublisher;
-	public DoublePublisher supplyCurrentPublisher;
-	public DoublePublisher torqueCurrentPublisher;
-	public DoublePublisher tempCelsiusPublisher;
 
 	public final TalonFX motor;
 
@@ -97,11 +95,7 @@ public class Kraken {
 		torqueCurrent = motor.getTorqueCurrent();
 		tempCelsius = motor.getDeviceTemp();
 
-		BaseStatusSignal
-			.setUpdateFrequencyForAll(100.0, position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius);
-
-		motor.optimizeBusUtilization();
-
+		BaseStatusSignal.setUpdateFrequencyForAll(100.0, position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius);
 	}
 
 	public void setup(){
@@ -127,7 +121,7 @@ public class Kraken {
 
 		updateTelemetry();
 
-		return isOk;
+		return true;
 	}
 
 	public void createTelemetry(String subsystem, String deviceName){
@@ -137,19 +131,11 @@ public class Kraken {
 
         positionPublisher = table.getDoubleTopic(subsystem + deviceName + "Position").publish();
 		velocityPublisher = table.getDoubleTopic(subsystem + deviceName + "Velocity").publish();
-		appliedVoltsPublisher = table.getDoubleTopic(subsystem + deviceName + "Applied Volts").publish();
-		supplyCurrentPublisher = table.getDoubleTopic(subsystem + deviceName + "Supply Current").publish();
-		torqueCurrentPublisher = table.getDoubleTopic(subsystem + deviceName + "Torque Current").publish();
-		tempCelsiusPublisher = table.getDoubleTopic(subsystem + deviceName + "Temperature").publish();
 	}
 
 	public void updateTelemetry(){
 		positionPublisher.set(position.getValueAsDouble());
 		velocityPublisher.set(velocity.getValueAsDouble());
-		appliedVoltsPublisher.set(appliedVolts.getValueAsDouble());
-		supplyCurrentPublisher.set(supplyCurrent.getValueAsDouble());
-		torqueCurrentPublisher.set(torqueCurrent.getValueAsDouble());
-		tempCelsiusPublisher.set(tempCelsius.getValueAsDouble());
 	}
 
 	public void stop() {
@@ -167,6 +153,9 @@ public class Kraken {
 				break;
 			case PositionTorqueCurrentFOC:
 				motor.setControl(positionTorque.withPosition(desiredRotations).withSlot(slot));
+				break;
+			case MotionMagicVoltage:
+				motor.setControl(mmVoltage.withPosition(desiredRotations).withSlot(slot));
 				break;
 			case MotionMagicExpoVoltage:
 				motor.setControl(mmExpoVoltage.withPosition(desiredRotations).withSlot(slot));

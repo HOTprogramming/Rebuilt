@@ -17,7 +17,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.networktables.StructTopic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.Drivetrain.Drive;
+import edu.wpi.first.math.Vector;
 
 public class CameraBase {
 
@@ -26,9 +28,21 @@ public class CameraBase {
 	NetworkTable subTable;
 	StructTopic<Pose2d> pose2dTopic;
 	StructSubscriber<Pose2d> subscriber;
+	AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+	Vector<N3> singleTagStdDevs = VecBuilder.fill(5, 5, 5);
+	Vector<N3> multiTagStdDevs = VecBuilder.fill(.85, .85, 1);
+	Pose2d poseArray;
+	double avgDist;
+	Number[] tagIds;
+	double numTags;
+	Translation2d prevTranslation = new Translation2d(0, 0);
+	String name;
+
 
 	public CameraBase(Drive drive, String name) {
 		drivetrain = drive;
+		this.name = name;
 
 		NetworkTable hotVisionTable = NetworkTableInstance.getDefault().getTable("HOTVision");
 
@@ -38,43 +52,37 @@ public class CameraBase {
 	}
 
 	public void periodic() {
-
 		if(subTable.getEntry("has_pose").getBoolean(false)){
-			Pose2d poseArray = subscriber.get();
-
-			edu.wpi.first.math.Vector<N3> stdDevs;
+			poseArray = subscriber.get();
 			
-			AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+			avgDist = 0;
 
-			double avgDist = 0;
-
-			Number[] tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
+			tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
 
 			for(Number id : tagIds){
-				Pose3d tagPose3d = layout.getTagPose(id.intValue()).get();
-
-				Pose2d tagPose = new Pose2d(tagPose3d.getX(), tagPose3d.getY(), new Rotation2d());
-
-				avgDist += Math.abs(Math.hypot(tagPose.minus(drivetrain.getPose()).getMeasureX().baseUnitMagnitude(), 
-				tagPose.minus(drivetrain.getPose()).getMeasureY().baseUnitMagnitude()));
+				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
+					getDistance(poseArray.getTranslation());
 			}
 
 			avgDist = avgDist / (double) subTable.getEntry("num_tags").getInteger(0);
 
-			if (Math.abs(Math.hypot(poseArray.minus(drivetrain.getPose()).getMeasureX().baseUnitMagnitude(), 
-				poseArray.minus(drivetrain.getPose()).getMeasureY().baseUnitMagnitude())) > .2){
-				stdDevs = VecBuilder.fill(10,10, 10);
-			} else if (avgDist > 4){
-				stdDevs = VecBuilder.fill(Double.MAX_VALUE,Double.MAX_VALUE, Double.MAX_VALUE);
-			} else {
-				if(subTable.getEntry("num_tags").getInteger(0) > 1){
-					stdDevs = VecBuilder.fill(.75 * avgDist,.75 * avgDist, 5);
-				} else {
-					stdDevs = VecBuilder.fill(4 * avgDist, 4 * avgDist, 10);
-				}
+			SmartDashboard.putNumber(name + " Avg dist", avgDist);
+
+			if(subTable.getEntry("num_tags").getInteger(0) == 1){
+				if (avgDist > 3) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else estStdDevs = singleTagStdDevs;
+			} else if (subTable.getEntry("num_tags").getInteger(0) > 1){
+				if (avgDist > 6) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else estStdDevs = multiTagStdDevs;
 			}
 
-			drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, stdDevs);
+			double distFromRobot = poseArray.getTranslation().getDistance(drivetrain.getPose().getTranslation());
+
+			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/2.0)));
+
+			if(avgDist < 6){
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
+			}
 		}
     }
 }
