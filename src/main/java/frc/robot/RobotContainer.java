@@ -110,6 +110,9 @@ public class RobotContainer {
 		// X Swerve Drive
 		driver.x().whileTrue(drivetrain.xLockCommand());
 
+		// Align to trench
+		driver.y().whileTrue(drivetrain.driveToTrenchY(() -> -driver.getLeftY()));	
+			
 		//Shoot
 		operator.rightTrigger().onTrue(manager.autoAim());
 		
