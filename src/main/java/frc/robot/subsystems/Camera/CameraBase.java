@@ -70,14 +70,14 @@ public class CameraBase {
 			SmartDashboard.putNumber(name + " Avg dist", avgDist);
 
 			if(subTable.getEntry("num_tags").getInteger(0) == 1){
-				if (avgDist > 2) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				if (avgDist > 2.25) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (subTable.getEntry("num_tags").getInteger(0) > 1){
 				if (subTable.getEntry("num_tags").getInteger(0) > 2){
-					if (avgDist > 5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 					else estStdDevs = multiTagStdDevs;
 				} else {
-					if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					if (avgDist > 5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 					else estStdDevs = multiTagStdDevs;
 				}
 			}
@@ -87,20 +87,16 @@ public class CameraBase {
 
 			SmartDashboard.putNumber("Dist From Robot", distFromRobot);
 
-			if(distFromPrev > .5){
+			if(distFromPrev > .4){
 				estStdDevs = VecBuilder.fill(25, 25, 25);
 			} else {
-				if(subTable.getEntry("num_tags").getInteger(0) > 3){
-					estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 50.0) * (1 + distFromRobot/3.0)));
-				} else {
-					estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/2.0)));
-				}
+				estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/2.0)));
 			}
 
 
 			SmartDashboard.putNumber("DIst from prev", distFromPrev);
 
-			if(avgDist < 10 && distFromPrev < .5 && estStdDevs.get(0) < 20){
+			if(avgDist < 8 && distFromPrev < .4 && estStdDevs.get(0) <= 25){
 				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
 			}
 
