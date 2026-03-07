@@ -20,12 +20,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.IntakeConstants;
 
 public class RobotContainer {
 	SendableChooser<String> Autos = new SendableChooser<>();
@@ -86,6 +88,7 @@ public class RobotContainer {
 		// NamedCommands.registerCommand("auto aim", manager.autoAim());
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
+		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 
 		configureBindings();
 	}
@@ -126,9 +129,21 @@ public class RobotContainer {
 		operator.rightTrigger().onTrue(manager.autoAim());
 		
 		// Shooter Controls (Operator)
-		operator.a().onTrue(manager.shooter.goToIdle());
-		operator.b().onTrue(manager.shooter.shooterOff());
+		// operator.a().onTrue(manager.shooter.goToIdle());
+		// operator.b().onTrue(manager.shooter.shooterOff());
+		// operator.y().onTrue(manager.shooter.setHoodAngle(0));
+
+		operator.y().onTrue(manager.shooter.shootSpeedUp());
+		operator.a().onTrue(manager.shooter.shootSpeedDown());
+
+		operator.povUp().onTrue(manager.shooter.hoodAngleUp());
+		operator.povDown().onTrue(manager.shooter.hoodAngleDown());
+
 		operator.y().onTrue(manager.shooter.setHoodAngle(0));
+		operator.x().onTrue(manager.shooter.goToShoot());
+		operator.b().onTrue(manager.shooter.shooterOff());
+
+
 
 		// Indexer Controls
 		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
