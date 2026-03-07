@@ -54,8 +54,8 @@ public class IntakeKraken {
 	}
 
 	public void runVelocity(double desiredVelocity) {
-		m_RollerKrakenLeader.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
-		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
+		m_RollerKrakenLeader.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 	}
 	public void stop() {
 		m_RollerKrakenLeader.stop();
