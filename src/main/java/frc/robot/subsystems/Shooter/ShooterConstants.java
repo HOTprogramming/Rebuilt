@@ -92,7 +92,7 @@ public class ShooterConstants {
 
 			//HOOD PID
 		.withSlot0(new Slot0Configs()
-			.withKP(3.5)
+			.withKP(150)
 			.withKI(0.0)
 			.withKD(0.0)
 			.withKS(0.5)

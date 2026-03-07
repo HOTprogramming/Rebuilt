@@ -135,6 +135,7 @@ public class RobotContainer {
 		
 		//Intake
 		driver.leftTrigger().whileTrue(intake.extend());
+		driver.leftTrigger().whileFalse(intake.agitate()); 
 
 		//OPERATOR CONTROLS
 
