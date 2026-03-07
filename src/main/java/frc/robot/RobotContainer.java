@@ -136,7 +136,7 @@ public class RobotContainer {
 	operator.b().onTrue(climber.fullDeploy());
 	operator.rightBumper().onTrue(climber.stageThreeClimb());
 	operator.leftBumper().onTrue(climber.reset());
-	operator.rightTrigger().onTrue(climber.Zero());
+	operator.rightTrigger().onTrue(climber.zeroSpinner());
 	operator.start().onTrue(climber.stop());
 
 	operator.x().onTrue(climber.spinToZero());

@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
 
 	double zeroPosA = 0;
 	double zeroPos = 0;
-	DoubleSupplier zeropossup = () -> zeroPos;
+	DoubleSupplier zeroPossUp = () -> zeroPos + ClimberConstants.wristZeroOffset;
 	
 	public Climber() {
 
@@ -83,9 +83,16 @@ public class Climber extends SubsystemBase {
 	}
 	
 	private BooleanSupplier isWristClimbed() {
-		return () -> Math.abs(m_ClimbKraken.getSpinPosition() - ClimberConstants.wristClimbPos) < 0.5;
+		return () -> Math.abs(((m_ClimbKraken.getSpinPosition() - zeroPos) / ClimberConstants.wristGearRatio) - ClimberConstants.wristBeforeClimbPos) < 0.01;
 	}
-
+	
+	private BooleanSupplier isWristPartClimbed() {
+		return () -> Math.abs(((m_ClimbKraken.getSpinPosition() - zeroPos) / ClimberConstants.wristGearRatio) - ClimberConstants.wristPartClimbPos) < 0.05;
+	}
+	
+	private BooleanSupplier isWristPast() {
+		return () -> Math.abs(((m_ClimbKraken.getSpinPosition() - zeroPos) / ClimberConstants.wristGearRatio) - ClimberConstants.wristPastClimbPos) < 0.01;
+	}
 	private BooleanSupplier isLifted() {
 		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.liftElbowClimbPos) < 0.01;
 	}
@@ -106,28 +113,38 @@ public class Climber extends SubsystemBase {
 		finalElbowExtend()
 		);
 	}
+	public Command zeroSpinner() {
+		return Commands.sequence(spintoBeambreak(), spinOutBeambreak(), 
+		spinOutSlow(), 
 
-	public Command Zero() {
-		return runOnce(() -> {m_ClimbKraken.resetSpinnerEncoder();
-		zeroPos = 0;});
-		}
+		runOnce(() -> zeroPosA = m_ClimbKraken.getSpinPosition()),
+
+		spinBackSlow(),
+
+		runOnce(() -> {m_ClimbKraken.resetSpinnerEncoder();
+		zeroPos = 0;}),
+
+		spinToZero()
+		);
+	}
+
 	public Command spinToZero() {
 		return run(() -> {
-				setWristPosition(zeropossup.getAsDouble());
+				setWristPosition(zeroPossUp.getAsDouble());
 			}).until(isZeroed()); 
 	}
 
 	public Command fullDeploy() {
 		return Commands.sequence(
 			runOnce(() -> setElbowPosition(ClimberConstants.deployedPos)),
-			spinToZero(), 
+			zeroSpinner(), 
 			deploy());
 	}
 	
 	public Command teleopDeploy() {
 		return run(() -> {
 			setElbowPosition(ClimberConstants.deployedPos);
-			setWristPosition(zeropossup.getAsDouble());
+			setWristPosition(zeroPossUp.getAsDouble());
 		});
 	}
 
