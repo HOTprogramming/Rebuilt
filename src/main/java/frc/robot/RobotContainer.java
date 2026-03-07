@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Camera.Camera;
@@ -89,6 +88,7 @@ public class RobotContainer {
 		// NamedCommands.registerCommand("auto aim", manager.autoAim());
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
+		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 
 		configureBindings();
 	}
@@ -122,6 +122,9 @@ public class RobotContainer {
 		// X Swerve Drive
 		driver.x().whileTrue(drivetrain.xLockCommand());
 
+		// Align to trench
+		driver.y().whileTrue(drivetrain.driveToTrenchY(() -> -driver.getLeftY()));	
+			
 		//Shoot
 		operator.rightTrigger().onTrue(manager.autoAim());
 		
@@ -141,6 +144,11 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
+		//intake.setDefaultCommand(intake.agitateRetract());
+		//new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
+		operator.rightBumper().whileTrue(intake.extend());
+		operator.leftBumper().whileTrue(intake.agitate());
+		operator.leftTrigger().whileTrue(intake.rollerStop());
 		//intake.setDefaultCommand(intake.agitateRetract());
 		new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
 		operator.rightBumper().toggleOnTrue(intake.extend());
