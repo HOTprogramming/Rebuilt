@@ -9,11 +9,17 @@
           "data": {
             "pathName": "triple t"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Thunder T"
+          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Red Autos",
   "choreoAuto": false
 }

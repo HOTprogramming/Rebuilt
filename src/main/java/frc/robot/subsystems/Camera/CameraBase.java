@@ -66,14 +66,21 @@ public class CameraBase {
 
 			avgDist = avgDist / (double) subTable.getEntry("num_tags").getInteger(0);
 
+
 			SmartDashboard.putNumber(name + " Avg dist", avgDist);
 
 			if(subTable.getEntry("num_tags").getInteger(0) == 1){
 				if (avgDist > 3) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (subTable.getEntry("num_tags").getInteger(0) > 1){
-				if (avgDist > 6) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else estStdDevs = multiTagStdDevs;
+				if (subTable.getEntry("num_tags").getInteger(0) > 2){
+					if (avgDist > 5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					else estStdDevs = multiTagStdDevs;
+				} else {
+					if (avgDist > 7) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					else estStdDevs = multiTagStdDevs;
+				}
+
 			}
 
 			double distFromRobot = poseArray.getTranslation().getDistance(drivetrain.getPose().getTranslation());
