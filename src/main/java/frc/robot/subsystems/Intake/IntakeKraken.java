@@ -1,10 +1,7 @@
 package frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
-import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.util.Kraken;
 import frc.util.KrakenWithCancoder;
 
@@ -22,8 +19,12 @@ public class IntakeKraken {
 		m_ExtendKraken.setup();
 		m_RollerKrakenLeader.setup();
 		m_RollerKrakenFollower.setup();
+		m_ExtendKraken.motor.getConfigurator().apply(IntakeConstants.IntakeExtendConfigs.MotionMagic);
+		m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
+			.withMotionMagicAcceleration(32)
+			.withMotionMagicCruiseVelocity(32));
 
-		// m_RollerKrakenFollower.setFollower(IntakeConstants.kIntakeMotorIDRollerLeader, MotorAlignmentValue.Aligned);
+		//m_RollerKrakenFollower.setFollower(IntakeConstants.kIntakeMotorIDRollerLeader, MotorAlignmentValue.Aligned);
 	}
 
 	public static IntakeKraken getInstance() {
@@ -45,16 +46,10 @@ public class IntakeKraken {
 	}
 
 	public void runPosition(double desiredRotations) {
-		m_ExtendKraken.motor.getConfigurator().apply(IntakeConstants.IntakeExtendConfigs.MotionMagic);
-
 		m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage);
 	}
 
 	public void runAgitatePosition(double desiredRotations) {
-		m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
-			.withMotionMagicAcceleration(1)
-			.withMotionMagicCruiseVelocity(1));
-
 		m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage);
 	}
 

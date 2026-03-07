@@ -3,10 +3,7 @@ package frc.robot.subsystems.Intake;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Intake extends SubsystemBase {
 	public final IntakeKraken mIntakeKraken;
@@ -21,34 +18,34 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Command extend() {
-		return run(() -> {
+		return runOnce(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
 		});
 	}
 
 	public Command agitateExtend(){
-		return run(() -> {
+		return runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
 		});
 	}
 
 	public Command agitateRetract(){
-		return run(() -> {
+		return runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
-		});
-	}
-
-	public Command retract() {
-		return run(() -> {
-			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
 			mIntakeKraken.stop();
 		});
 	}
 
+	public Command retract() {
+		return runOnce(() -> {
+			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
+		});
+	}
+
 	public Command expel() {
-		return run(() -> {
+		return runOnce(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kExpelSpeed);
 		});
@@ -57,6 +54,12 @@ public class Intake extends SubsystemBase {
 	public Command rollerStop() {
 	return run(() -> {
 		mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
+		mIntakeKraken.stop();
+		});
+	}
+
+	public Command rollerStop1() {
+	return run(() -> {
 		mIntakeKraken.stop();
 		});
 	}
