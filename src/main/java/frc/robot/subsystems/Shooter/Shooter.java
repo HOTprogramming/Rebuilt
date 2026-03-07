@@ -75,34 +75,34 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command autoAimHub() {
-		return runOnce(() -> {
+		return run(() -> {
 			double distance = RobotState.pose.getTranslation().getDistance(RobotState.color == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
-			mShooterKraken.runPosition(hoodAngleMap.get(distance));
-			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
+			mShooterKraken.runPosition(hoodAngleMap.get(RobotState.lookAheadDistance));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(RobotState.lookAheadDistance));
 
 		});
 	}
 
 	
 	public Command autoAimLeftCorner() {
-		return runOnce(() -> {
+		return run(() -> {
 			double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(RobotState.color == Alliance.Blue ? 0 : 16.54, 8.07));
-			mShooterKraken.runPosition(hoodAngleMap.get(distance));
-			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
+			mShooterKraken.runPosition(hoodAngleMap.get(RobotState.lookAheadDistance));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(RobotState.lookAheadDistance));
 
 		});
 	}
 
 	public Command autoAimRightCorner() {
-		return runOnce(() -> {
+		return run(() -> {
 			double distance = RobotState.pose.getTranslation().getDistance(new Translation2d(RobotState.color == Alliance.Blue ? 0 : 16.54, 0));
-			mShooterKraken.runPosition(hoodAngleMap.get(distance));
-			mShooterKraken.runVelocity(shooterSpeedMap.get(distance));
+			mShooterKraken.runPosition(hoodAngleMap.get(RobotState.lookAheadDistance));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(RobotState.lookAheadDistance));
 		});
 	}
 
 	public Command dodgeTrench() {
-		return runOnce(() -> {
+		return run(() -> {
 			mShooterKraken.runPosition(0);
 		});
 	}

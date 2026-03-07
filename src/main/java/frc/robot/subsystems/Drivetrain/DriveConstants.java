@@ -14,7 +14,7 @@ import frc.robot.subsystems.Drivetrain.constants.*;
 public class DriveConstants {
 
     // ==================== Shared / Global Constants ====================
-    public static final double slowModeMultiplier = 0.1; //0.5
+    public static final double slowModeMultiplier = 0.25; //0.5
     public static final double kTranslationRateLimiter = 3.5;
     public static final double kRotationRateLimiter = 5.0;
     public static final double OTF_end_tolerance = 0.01;

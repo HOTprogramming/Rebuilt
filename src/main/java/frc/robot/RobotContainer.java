@@ -5,26 +5,24 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+
 import org.json.simple.parser.ParseException;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drive;
-import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Drivetrain.DriveKraken;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
@@ -39,7 +37,7 @@ public class RobotContainer {
 	private final Index indexer;
 	private final Climber climber;
 	private final RobotState manager;
-	// private final Intake intake;
+	private final Intake intake;
 
 	private final CommandXboxController driver = new CommandXboxController(0);
 	private final CommandXboxController operator = new CommandXboxController(1);
@@ -77,19 +75,15 @@ public class RobotContainer {
 		indexer = new Index();
 		climber = new Climber();
 		manager = new RobotState();
-		// intake = new Intake();
+		intake = new Intake();
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
-		// NamedCommands.registerCommand("Test Override", drivetrain.testOverride());
 
 		configureBindings();
 	}
 
 	private void configureBindings() {
-
-		manager.shooter.setDefaultCommand(manager.autoAim());
-
 		// Drivetrain Controls
 		drivetrain.setDefaultCommand(drivetrain
 			.run(() -> drivetrain.teleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
@@ -100,10 +94,10 @@ public class RobotContainer {
 		//Slow Mode
 		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
-		//Aim
+		// Aim
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
-		//Snap to 45
+		// Rotate for Bump
 		driver.b().whileTrue(drivetrain.run(() -> {
 			double rot = drivetrain.getPose().getRotation().getDegrees();
 			double fact;
@@ -111,43 +105,34 @@ public class RobotContainer {
 			if (rot < 0)
 				fact *= -1;
 
-
 			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
-
-		//Align to Pole
-		driver.x().whileTrue(drivetrain.alignToPole());
+    
+    // X Swerve Drive
+    driver.x().whileTrue(drivetrain.xLockCommand());
 
 		//Shoot
-		driver.rightTrigger().onTrue(manager.shooter.goToShoot());
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
-
+		operator.rightTrigger().onTrue(manager.autoAim());
+		
 		// Shooter Controls (Operator)
-		operator.povUp().onTrue(manager.shooter.shootSpeedUp());
-		operator.povDown().onTrue(manager.shooter.shootSpeedDown());
 		operator.a().onTrue(manager.shooter.goToIdle());
-		//operator.x().onTrue(manager.shooter.goToShoot());
 		operator.b().onTrue(manager.shooter.shooterOff());
-
-		operator.leftBumper().onTrue(manager.shooter.hoodAngleDown());
-		operator.rightBumper().onTrue(manager.shooter.hoodAngleUp());
 		operator.y().onTrue(manager.shooter.setHoodAngle(0));
-		operator.start().onTrue(manager.shooter.setHoodAngle(5.4));
 
 		// Indexer Controls
-		driver.leftTrigger()
-			.whileTrue(Commands.repeatingSequence(indexer.indexOnCommand()
-				.andThen(new WaitCommand(.5))
-				.andThen(indexer.indexPulseCommand().andThen(new WaitCommand(.5)))))
-			.whileFalse(indexer.indexOffCommand());
+		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+
+		//Align to Pole
+		operator.x().whileTrue(drivetrain.alignToPole());
 
 		// Climber Controls
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		// operator.leftTrigger().whileTrue(intake.extend()).whileFalse(intake.retract());
+		operator.rightBumper().toggleOnTrue(intake.extend()).toggleOnFalse(intake.retract());
+		operator.leftBumper().onTrue(intake.agitate());
 	}
 
 	public void updateAutonCommand() {

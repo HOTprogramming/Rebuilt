@@ -20,12 +20,12 @@ public class ShootOnTheFly {
     private static int MAX_ITERATIONS;
         
     private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
-    private static final InterpolatingTreeMap<Double, Rotation2d> shotHoodAngleMap =
-        new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Rotation2d::interpolate);
-    private static final InterpolatingDoubleTreeMap shotFlywheelSpeedMap =
-        new InterpolatingDoubleTreeMap();
+
     LinearFilter vxfilt = LinearFilter.movingAverage(8);
     LinearFilter vyfilt = LinearFilter.movingAverage(8);
+
+	private double turretAngle = 0;
+	private double lookaheadToTargetDistance = 0;
 
     static {
 
@@ -33,28 +33,6 @@ public class ShootOnTheFly {
     maxDistance = 5.60;
     TOF_CONVERGENCE_THRESHOLD = 0.025;
     MAX_ITERATIONS = 10;
-
-    shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0));
-    shotHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
-    shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
-    shotHoodAngleMap.put(2.81, Rotation2d.fromDegrees(27.0));
-    shotHoodAngleMap.put(3.82, Rotation2d.fromDegrees(29.0));
-    shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(30.0));
-    shotHoodAngleMap.put(4.40, Rotation2d.fromDegrees(31.0));
-    shotHoodAngleMap.put(4.77, Rotation2d.fromDegrees(32.0));
-    shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(32.0));
-    shotHoodAngleMap.put(5.60, Rotation2d.fromDegrees(35.0));
-
-    shotFlywheelSpeedMap.put(1.34, 210.0);
-    shotFlywheelSpeedMap.put(1.78, 220.0);
-    shotFlywheelSpeedMap.put(2.17, 220.0);
-    shotFlywheelSpeedMap.put(2.81, 230.0);
-    shotFlywheelSpeedMap.put(3.82, 250.0);
-    shotFlywheelSpeedMap.put(4.09, 255.0);
-    shotFlywheelSpeedMap.put(4.40, 260.0);
-    shotFlywheelSpeedMap.put(4.77, 265.0);
-    shotFlywheelSpeedMap.put(5.57, 275.0);
-    shotFlywheelSpeedMap.put(5.60, 290.0);
 
     timeOfFlightMap.put(7.0, 1.5);
     timeOfFlightMap.put(5.68, 1.16);
@@ -67,7 +45,7 @@ public class ShootOnTheFly {
 
     
     
-    public double update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
+    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
         double latency = 0.1; //needs to be tuned, in seconds
         ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
@@ -128,7 +106,7 @@ public class ShootOnTheFly {
         double timeOfFlight = 0;
         double lastTimeOfFlight = 0;
         Translation2d lookaheadPos = releasePos;
-        double lookaheadToTargetDistance = dist;
+        lookaheadToTargetDistance = dist;
         
         for (i = 0; i < 10; i++) {
             timeOfFlight = timeOfFlightMap.get(lookaheadToTargetDistance);
@@ -153,7 +131,7 @@ public class ShootOnTheFly {
         
         //Aim from the CURRENT position to the VIRTUAL target
         Rotation2d turretRotation = goalLocation.minus(lookaheadPos).getAngle();
-        double turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+        turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
         
         // SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
         // SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
@@ -168,8 +146,13 @@ public class ShootOnTheFly {
         // SmartDashboard.putNumber("vx_filtered", vx_filt);
         // SmartDashboard.putNumber("vy_filtered", vy_filt);
         // SmartDashboard.putNumber("Horiz Speed", newHorizontalSpeed);
-
-        return(turretAngle);
-
     }
+
+	public double getTurretAngle() {
+		return turretAngle;
+	}
+
+	public double getLookAheadDistance() {
+		return lookaheadToTargetDistance;
+	}
 }

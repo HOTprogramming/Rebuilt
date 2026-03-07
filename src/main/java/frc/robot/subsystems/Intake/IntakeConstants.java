@@ -21,57 +21,41 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 90;
+	public static double kDeployedPosition = 0.83;
 	public static double kRetractPosition = 0.0;
+	public static double kExtendTolerance = 0.01;
+	public static double kRetractTolerance = 0.01;
 
-	public static double kExpelSpeed = -2000.0;
-	public static double kIntakeSpeed = 2000.0;
+	public static double kExpelSpeed = -100.0;
+	public static double kIntakeSpeed = 100.0;
 
-	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 0 : 0;
+	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 44 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
-	public static int kIntakeMotorIDRoller = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? 0 : 0.0;
+	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
+	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.1684 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(40)
+			.withStatorCurrentLimit(60)
 			.withStatorCurrentLimitEnable(true)
 			.withSupplyCurrentLimit(40)
 			.withSupplyCurrentLimitEnable(true)
 			.withSupplyCurrentLowerLimit(30)
 			.withSupplyCurrentLowerTime(1))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(40)
-			.withPeakReverseTorqueCurrent(-40))
+			.withPeakForwardTorqueCurrent(60)
+			.withPeakReverseTorqueCurrent(-60))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(10.0)
-			.withMotionMagicAcceleration(10.0))
 		.withSlot0(new Slot0Configs()
-			.withKP(0.1)
-			.withKI(0.1)
-			.withKD(0.0)
-			.withKS(0.4)
-			.withKV(0.95))
-		.withSlot1(new Slot1Configs()
-			.withKP(5.0)
-			.withKI(0.0)
-			.withKD(0.0)
-			.withKS(2.5))
-		.withSlot2(new Slot2Configs()
-			.withKS(0.25)
-			.withKV(.12)
-			.withKA(0.01)
-			.withKP(4.8)
+			.withKP(1)
 			.withKI(0)
-			.withKD(0.1))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(80.0)
-			.withMotionMagicAcceleration(160)
-			.withMotionMagicJerk(1600));
+			.withKD(0)
+			.withKS(0)
+			.withKV(0.12));
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -85,36 +69,24 @@ public class IntakeConstants {
 			.withPeakForwardTorqueCurrent(120)
 			.withPeakReverseTorqueCurrent(-120))
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.Clockwise_Positive)
+			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withSlot0(new Slot0Configs()
-			.withKP(0.19)
-			.withKI(0.0)
-			.withKD(0.0))
-		.withSlot1(new Slot1Configs()
-			.withKP(60.0)
-			.withKI(0.0)
-			.withKD(6.0))
-		.withSlot2(new Slot2Configs()
-			.withKS(0.25)
-			.withKV(.12)
-			.withKA(0.01)
-			.withKP(4.8)
+			.withKP(128)
 			.withKI(0)
-			.withKD(0.1))
+			.withKD(0))
 		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(0.0)
-			.withMotionMagicExpo_kV(0.12)
-			.withMotionMagicExpo_kA(0.1))
+			.withMotionMagicCruiseVelocity(150.0)
+			.withMotionMagicAcceleration(125.0))
 		.withFeedback(new FeedbackConfigs()
 			.withFeedbackRemoteSensorID(kIntakeEncoderID)
 			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-			.withSensorToMechanismRatio(1.0 / 360.0)
+			.withSensorToMechanismRatio(1.0)
 			.withRotorToSensorRatio(1.0));
 
 	public static final CANcoderConfiguration IntakeEncoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(!Robot.isSimulation() ? kEncoderOffset : 0.0)
-			.withSensorDirection(SensorDirectionValue.Clockwise_Positive));
+			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
 	public static final IntakeConfigs IntakeConfigs = switch (Constants.getRobot()) {
 		case COMPBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs);

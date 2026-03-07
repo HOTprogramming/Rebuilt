@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		/* Run the command scheduler */
 		CommandScheduler.getInstance().run();
+		RobotState.update();
 
 		// UpdateTelemetry();
 	}

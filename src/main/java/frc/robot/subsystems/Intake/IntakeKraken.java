@@ -1,22 +1,27 @@
 package frc.robot.subsystems.Intake;
 
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+
+import frc.robot.subsystems.Shooter.ShooterConstants;
 import frc.util.Kraken;
 import frc.util.KrakenWithCancoder;
 
 public class IntakeKraken {
 	private KrakenWithCancoder m_ExtendKraken = new KrakenWithCancoder(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.kIntakeEncoderID, IntakeConstants.IntakeConfigs
 		.IntakeExtendConfigs(), IntakeConstants.IntakeConfigs.IntakeEncoderConfigs(), "Intake", "Extend");
-	private Kraken m_RollerKraken = new Kraken(IntakeConstants.kIntakeMotorIDRoller, IntakeConstants.IntakeConfigs
+	private Kraken m_RollerKrakenLeader = new Kraken(IntakeConstants.kIntakeMotorIDRollerLeader, "rio", IntakeConstants.IntakeConfigs
+		.RollerConfigs(), "Intake", "Roller");
+	private Kraken m_RollerKrakenFollower = new Kraken(IntakeConstants.kIntakeMotorIDRollerFollower, "rio", IntakeConstants.IntakeConfigs
 		.RollerConfigs(), "Intake", "Roller");
 
 	private static IntakeKraken instance = null;
 
-	private int controlVel = 0;
-	private int controlPos = 0;
-
 	public IntakeKraken() {
 		m_ExtendKraken.setup();
-		m_RollerKraken.setup();
+		m_RollerKrakenLeader.setup();
+		m_RollerKrakenFollower.setup();
+
+		// m_RollerKrakenFollower.setFollower(IntakeConstants.kIntakeMotorIDRollerLeader, MotorAlignmentValue.Aligned);
 	}
 
 	public static IntakeKraken getInstance() {
@@ -25,39 +30,28 @@ public class IntakeKraken {
 
 	public void updateStats() {
 		m_ExtendKraken.refresh();
-		m_RollerKraken.refresh();
+		m_RollerKrakenLeader.refresh();
+		m_RollerKrakenFollower.refresh();
+	}
+
+	public double getExtendPosition() {
+		return m_ExtendKraken.position.getValueAsDouble();
+	}
+
+	public double getRetractPosition() {
+		return m_ExtendKraken.position.getValueAsDouble();
 	}
 
 	public void runPosition(double desiredRotations) {
-		switch (controlPos) {
-			case 0:
-				m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.PositionVoltage, 0);
-				break;
-			case 1:
-				m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.PositionTorqueCurrentFOC, 1);
-				break;
-			case 2:
-				m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicExpoVoltage, 2);
-				break;
-			case 3:
-				m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicExpoTorqueCurrentFOC, 1);
-				break;
-		}
+		m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage);
 	}
 
-	public void runVelocity(double RPM) {
-		double desiredRotationsPerSecond = (RPM / 60.0);
-		switch (controlVel) {
-			case 0:
-				m_RollerKraken.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityVoltage, 0);
-				break;
-			case 1:
-				m_RollerKraken.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
-				break;
-		}
+	public void runVelocity(double desiredVelocity) {
+		m_RollerKrakenLeader.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
+		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
 	}
-
 	public void stop() {
-		m_RollerKraken.stop();
+		m_RollerKrakenLeader.stop();
+		m_RollerKrakenFollower.stop();
 	}
 }

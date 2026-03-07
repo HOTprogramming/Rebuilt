@@ -16,11 +16,7 @@ public class Index extends SubsystemBase {
 	}
 
 	public Command indexOnCommand() {
-		return runOnce(() -> m_IndexKraken.startIndex(0));
-	}
-
-	public Command indexPulseCommand(){
-		return runOnce(() -> m_IndexKraken.startIndex(1));
+		return runOnce(() -> m_IndexKraken.startIndex());
 	}
 
 	public Command indexOffCommand() {
