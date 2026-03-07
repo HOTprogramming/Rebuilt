@@ -72,13 +72,22 @@ public class CameraBase {
 				if (avgDist > 3) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (subTable.getEntry("num_tags").getInteger(0) > 1){
-				if (avgDist > 6) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else estStdDevs = multiTagStdDevs;
+				if (subTable.getEntry("num_tags").getInteger(0) > 2){
+					if (avgDist > 5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					else estStdDevs = multiTagStdDevs;
+				} else {
+					if (avgDist > 7.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					else estStdDevs = multiTagStdDevs;
+				}
 			}
 
 			double distFromRobot = poseArray.getTranslation().getDistance(drivetrain.getPose().getTranslation());
 
-			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/2.0)));
+			if(distFromRobot > 1){
+				estStdDevs = estStdDevs.times(5);
+			} else {
+				estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/2.0)));
+			}
 
 			if(avgDist < 6){
 				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
