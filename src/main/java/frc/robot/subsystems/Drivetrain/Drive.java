@@ -141,8 +141,8 @@ public class Drive extends SubsystemBase {
 		robotStatePose = table.getDoubleArrayTopic("Robot State Pose").publish();
 
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
-		translationControllerY.setTolerance(0.2, 0.1); 
-    	translationControllerX.setTolerance(0.2, 0.1);
+		translationControllerY.setTolerance(0.05, 0.1); 
+    	translationControllerX.setTolerance(0.05, 0.1);
 		configurePathPlanner();
 
 		constraints = new PathConstraints(5.0, 3.0, 2 * Math.PI, 4 * Math.PI);
@@ -326,7 +326,7 @@ public class Drive extends SubsystemBase {
 
 			driveKraken.setSwerveRequest(FIELD_CENTRIC
 				.withVelocityX(driveX.getAsDouble() * DriveConfig.MAX_VELOCITY())
-				.withVelocityY(yOutput)
+				.withVelocityY(-yOutput)
 				.withRotationalRate(thetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), targetRotation[0].getRadians()))
 			);
 		}));
