@@ -74,6 +74,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
+		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 
 		configureBindings();
 	}
@@ -114,9 +115,21 @@ public class RobotContainer {
 		operator.rightTrigger().onTrue(manager.autoAim());
 		
 		// Shooter Controls (Operator)
-		operator.a().onTrue(manager.shooter.goToIdle());
-		operator.b().onTrue(manager.shooter.shooterOff());
+		// operator.a().onTrue(manager.shooter.goToIdle());
+		// operator.b().onTrue(manager.shooter.shooterOff());
+		// operator.y().onTrue(manager.shooter.setHoodAngle(0));
+
+		operator.y().onTrue(manager.shooter.shootSpeedUp());
+		operator.a().onTrue(manager.shooter.shootSpeedDown());
+
+		operator.povUp().onTrue(manager.shooter.hoodAngleUp());
+		operator.povDown().onTrue(manager.shooter.hoodAngleDown());
+
 		operator.y().onTrue(manager.shooter.setHoodAngle(0));
+		operator.x().onTrue(manager.shooter.goToShoot());
+		operator.b().onTrue(manager.shooter.shooterOff());
+
+
 
 		// Indexer Controls
 		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
