@@ -77,6 +77,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
+		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 
 		configureBindings();
 	}
