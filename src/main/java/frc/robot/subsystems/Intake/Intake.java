@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Command extend() {
-		return run(() -> {
+		return runOnce(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
 		});

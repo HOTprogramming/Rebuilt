@@ -83,9 +83,6 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
-
-		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
-		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
 		NamedCommands.registerCommand("intake", intake.extend());
 		NamedCommands.registerCommand("intake off", intake.retract());
 		//Start autoaim at start of auton
@@ -144,7 +141,7 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
 
 		// Intake Controls
-		intake.setDefaultCommand(intake.agitateRetract());
+		//intake.setDefaultCommand(intake.agitateRetract());
 		new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
 		operator.rightBumper().toggleOnTrue(intake.extend());
 		operator.leftBumper().onTrue(intake.agitate());
