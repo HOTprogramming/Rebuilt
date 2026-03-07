@@ -62,6 +62,7 @@ public class RobotContainer {
 		Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
 		Autos.addOption("Grid Test", "Grid Test");
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
+		Autos.addOption("Triple T", "Triple T");
 
 		SmartDashboard.putData("Autos", Autos);
 
