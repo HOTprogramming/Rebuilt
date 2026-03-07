@@ -21,8 +21,8 @@ public class IntakeKraken {
 		m_RollerKrakenFollower.setup();
 		m_ExtendKraken.motor.getConfigurator().apply(IntakeConstants.IntakeExtendConfigs.MotionMagic);
 		m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
-			.withMotionMagicAcceleration(32)
-			.withMotionMagicCruiseVelocity(32));
+			.withMotionMagicAcceleration(64)
+			.withMotionMagicCruiseVelocity(64));
 
 		//m_RollerKrakenFollower.setFollower(IntakeConstants.kIntakeMotorIDRollerLeader, MotorAlignmentValue.Aligned);
 	}
@@ -54,8 +54,8 @@ public class IntakeKraken {
 	}
 
 	public void runVelocity(double desiredVelocity) {
-		m_RollerKrakenLeader.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
-		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage);
+		m_RollerKrakenLeader.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 	}
 	public void stop() {
 		m_RollerKrakenLeader.stop();
