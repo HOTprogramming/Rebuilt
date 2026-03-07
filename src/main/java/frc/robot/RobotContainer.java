@@ -74,6 +74,12 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
+		NamedCommands.registerCommand("intake", intake.extend());
+		NamedCommands.registerCommand("intake off", intake.retract());
+		//Start autoaim at start of auton
+		// NamedCommands.registerCommand("auto aim", manager.autoAim());
+		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
+		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 
 		configureBindings();
