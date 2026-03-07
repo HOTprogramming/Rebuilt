@@ -22,20 +22,17 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		hoodAngleMap = new InterpolatingDoubleTreeMap();
 
-		hoodAngleMap.put(1.0, 2.0); // 0.027
-		hoodAngleMap.put(2.0, 3.8); // 0.047
-		hoodAngleMap.put(3.0, 5.4); // 0.065
-		hoodAngleMap.put(4.0, 6.0); // 0.073
-		hoodAngleMap.put(5.0, 6.7); // 0.088
+		// hoodAngleMap.put(1.0, 2.0); // 0.027
+		// hoodAngleMap.put(2.0, 3.8); // 0.047
+		// hoodAngleMap.put(3.0, 5.4); // 0.065
+		// hoodAngleMap.put(4.0, 6.0); // 0.073
+		// hoodAngleMap.put(5.0, 6.7); // 0.088
 
-		// hoodAngleMap.put(7.0, 7.9);
-		// hoodAngleMap.put(8.0, 8.5);
-		// hoodAngleMap.put(9.0, 9.2);
-		// hoodAngleMap.put(10.0, 9.8);
-		// hoodAngleMap.put(11.0, 10.4);
-		// hoodAngleMap.put(12.0, 11.0);
-		// hoodAngleMap.put(13.0, 11.6);
-
+		hoodAngleMap.put(1.0, 0.027);
+		hoodAngleMap.put(2.0, 0.047);
+		hoodAngleMap.put(3.0, 0.065);
+		hoodAngleMap.put(4.0, 0.073);
+		hoodAngleMap.put(5.0, 0.088);
 
 
 		shooterSpeedMap = new InterpolatingDoubleTreeMap();
