@@ -26,8 +26,7 @@ public class Shooter extends SubsystemBase {
 		hoodAngleMap.put(2.0, 3.8); // 0.047
 		hoodAngleMap.put(3.0, 5.4); // 0.065
 		hoodAngleMap.put(4.0, 6.0); // 0.073
-		hoodAngleMap.put(5.0, 6.7);
-		hoodAngleMap.put(6.0, 7.3);
+		hoodAngleMap.put(5.0, 6.7); // 0.088
 
 		// hoodAngleMap.put(7.0, 7.9);
 		// hoodAngleMap.put(8.0, 8.5);
@@ -45,8 +44,7 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(2.0, 41.9);
 		shooterSpeedMap.put(3.0, 43.0);
 		shooterSpeedMap.put(4.0, 46.5);
-		shooterSpeedMap.put(5.0, 50.8);
-		shooterSpeedMap.put(6.0, 53.7);
+		shooterSpeedMap.put(5.0, 50.0);
 
 		// shooterSpeedMap.put(7.0, 56.7);
 		// shooterSpeedMap.put(8.0, 59.6);
