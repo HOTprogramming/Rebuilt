@@ -1,19 +1,25 @@
 package frc.robot.subsystems.Shooter;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotType;
+import frc.robot.Robot;
 
 public class ShooterConstants {
 	public static int kMotorIDLeftTop = Constants.getRobot() == RobotType.COMPBOT ? 9 : 0;
@@ -37,6 +43,8 @@ public class ShooterConstants {
 
 	public static double kTargetHoodAngle = 0;
 	public static int kHoodMotorID = Constants.getRobot() == RobotType.COMPBOT ? 15 : 0;
+	public static int kHoodEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 0 : 0;
+	public static double kHoodEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.408 : 0.0;
 	public static double kHoodReduction = (1.0 / 1.0);
 
 	public static CANBus canbus = new CANBus(Constants.canName);
@@ -85,11 +93,10 @@ public class ShooterConstants {
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
-			.withForwardSoftLimitThreshold(17)
+			.withForwardSoftLimitThreshold(0.16)
 			.withReverseSoftLimitThreshold(0)
 			.withForwardSoftLimitEnable(true)
-			.withReverseSoftLimitEnable(true))	
-
+			.withReverseSoftLimitEnable(true))
 			//HOOD PID
 		.withSlot0(new Slot0Configs()
 			.withKP(3.5)
@@ -100,18 +107,27 @@ public class ShooterConstants {
 		.withSlot1(new Slot1Configs()
 			.withKP(60.0)
 			.withKI(0.0)
-			.withKD(6.0));
+			.withKD(6.0))
+		.withFeedback(new FeedbackConfigs()
+			.withFeedbackRemoteSensorID(kHoodEncoderID)
+			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+			.withSensorToMechanismRatio(1.0)
+			.withRotorToSensorRatio(1.0));
+
+	public static final CANcoderConfiguration hoodEncoderConfigs = new CANcoderConfiguration()
+		.withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(!Robot.isSimulation() ? kHoodEncoderOffset : 0.0)
+			.withSensorDirection(SensorDirectionValue.Clockwise_Positive).withAbsoluteSensorDiscontinuityPoint(0.5));
 
 	public static final ShooterConfigs ShooterConfigs = switch (Constants.getRobot()) {
-		case COMPBOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs);
-		case CAMERABOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs);
-		case COMP24 -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs);
-		case COMP25 -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs);
-		case MINIBOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs);
-		case ALPHABOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs);
+		case COMPBOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs, hoodEncoderConfigs);
+		case CAMERABOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs, hoodEncoderConfigs);
+		case COMP24 -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs, hoodEncoderConfigs);
+		case COMP25 -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs, hoodEncoderConfigs);
+		case MINIBOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs, hoodEncoderConfigs);
+		case ALPHABOT -> new ShooterConfigs(shooterMotorConfigs, hoodMotorConfigs, hoodEncoderConfigs);
 	};
 
 	public record ShooterConfigs(
-		TalonFXConfiguration shooterMotorConfigs, TalonFXConfiguration hoodMotorConfigs) {}
+		TalonFXConfiguration shooterMotorConfigs, TalonFXConfiguration hoodMotorConfigs, CANcoderConfiguration hoodEncoderConfigs) {}
 
 }
