@@ -65,6 +65,7 @@ public class RobotContainer {
 	Autos.addOption("NOCLIMB_HalfCourtSteal", "NOCLIMB_HalfCourtSteal");
 	Autos.addOption("CLIMB_HalfCourtSteal", "CLIMB_HalfCourtSteal");
 	Autos.addOption("NOCLIMB_HalfCourtSteal3", "NOCLIMB_HalfCourtSteal3");
+	Autos.addOption("Triple T", "Triple T");
 	
     
     
@@ -79,6 +80,15 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
+
+		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
+		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
+		NamedCommands.registerCommand("intake", intake.extend());
+		NamedCommands.registerCommand("intake off", intake.retract());
+		//Start autoaim at start of auton
+		// NamedCommands.registerCommand("auto aim", manager.autoAim());
+		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
+		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 
 		configureBindings();
 	}
