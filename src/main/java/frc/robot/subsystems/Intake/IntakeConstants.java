@@ -28,7 +28,7 @@ public class IntakeConstants {
 	public static double kRetractTolerance = 0.02;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 100.0;
+	public static double kIntakeSpeed = 80.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 44 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
