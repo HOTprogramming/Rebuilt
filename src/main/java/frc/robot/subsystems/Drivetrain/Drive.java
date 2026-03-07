@@ -27,6 +27,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -124,6 +125,8 @@ public class Drive extends SubsystemBase {
 	private DoubleArrayPublisher robotPose;
 	private DoubleArrayPublisher robotStatePose;
 
+	private DoubleSubscriber poleAlignmentSub;
+
 	private boolean isDocked = false;
 
 	public Drive(DriveKraken driveKraken) {
@@ -134,6 +137,10 @@ public class Drive extends SubsystemBase {
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
 		NetworkTable table = inst.getTable("HOT/Drive");
+		NetworkTable objectDetection = inst.getTable("HOTVision/LEFT/object_detection");
+
+		poleAlignmentSub = objectDetection.getDoubleTopic("pole_alignment").subscribe(0.0);
+
 
 		robotReqSpeed = table.getDoubleTopic("Robot Requested Speed").publish();
 		robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
@@ -191,31 +198,45 @@ public class Drive extends SubsystemBase {
 		// Tracks state only while this specific command is running
 		final Pose2d[] startPose = {new Pose2d()};
 				
-		// Smooth motion: Max speed 0.5m/s, Accel 1.m/s^2
-		var constraints = new TrapezoidProfile.Constraints(0.5, 1.0);
-		var profiledPID = new ProfiledPIDController(10.0, 0, 0, constraints);
-		profiledPID.setTolerance(0.015); // 1cm tolerance
-
-		return this.runOnce(() -> {
-			isDocked = false;
-			startPose[0] = iOdata.state.Pose;
-			profiledPID.reset(0);
-			SmartDashboard.putBoolean("Climb/isDocked", false);
+		double[] offsettoladder = {0};
+				// Smooth motion: Max speed 0.5m/s, Accel 1.m/s^2
+				var xconstraints = new TrapezoidProfile.Constraints(0.5, 1.0);
+				var yconstraints = new TrapezoidProfile.Constraints(0.25, 0.5);
+				var xprofiledPID = new ProfiledPIDController(10.0, 0, 0, xconstraints);
+				var yprofiledPID = new ProfiledPIDController(10.0, 0, 0, yconstraints);
+		
+				xprofiledPID.setTolerance(0.015); // 1cm tolerance
+				yprofiledPID.setTolerance(0.015); // 1cm tolerance
+		
+				return this.runOnce(() -> {
+					isDocked = false;
+					startPose[0] = iOdata.state.Pose;
+					xprofiledPID.reset(0);
+					yprofiledPID.reset(0);
+		
+					SmartDashboard.putBoolean("Climb/isDocked", false);
+		
+					offsettoladder[0] = poleAlignmentSub.get();
 		})
 		.andThen(
 			Commands.run(() -> { 
-				double currentDistance = iOdata.state.Pose.getTranslation()
-					.getDistance(startPose[0].getTranslation());
+				// double xDistance = iOdata.state.Pose.getTranslation()
+				// 	.getDistance(startPose[0].getTranslation());
+				double xDistance = startPose[0].getX() - iOdata.state.Pose.getX();
+				double yDistance = startPose[0].getY() - iOdata.state.Pose.getY();
 
-				double xVelocity = profiledPID.calculate(currentDistance, targetDistanceMeters);
+
+				double xVelocity = xprofiledPID.calculate(xDistance, targetDistanceMeters);
+
+				double yVelocity = yprofiledPID.calculate(yDistance, offsettoladder[0]);
 
 				driveKraken.setSwerveRequest(ROBOT_CENTRIC
 					.withVelocityX(xVelocity)
-					.withVelocityY(0)
+					.withVelocityY(yVelocity)
 				);
 			}, this) 
 		)
-		.until(() -> profiledPID.atGoal())
+		.until(() -> xprofiledPID.atGoal())
 		.finallyDo(interrupted -> {
 			driveKraken.setSwerveRequest(ROBOT_CENTRIC.withVelocityX(0).withRotationalRate(0));
 			double finalDist = iOdata.state.Pose.getTranslation().getDistance(startPose[0].getTranslation());
