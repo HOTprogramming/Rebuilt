@@ -109,14 +109,8 @@ public class Climber extends SubsystemBase {
 	//main commands
 	public Command stageThreeClimb() {
 		return Commands.sequence(
-		startClimb(),
-
-		runOnce(() -> setElbowPosition(ClimberConstants.liftElbowClimbPos)),
-
-		wristPastClimb(),
-
+		lift(),
 		wristClimb(),
-
 		finalElbowExtend()
 		);
 	}
@@ -186,7 +180,7 @@ public class Climber extends SubsystemBase {
 
 	private Command wristClimb() {
 		return run(() -> {
-			spinWristPosition(ClimberConstants.wristBeforeClimbPos);
+			spinWristPosition(ClimberConstants.wristClimbPos);
 	}).until(isWristClimbed());
 	}
 

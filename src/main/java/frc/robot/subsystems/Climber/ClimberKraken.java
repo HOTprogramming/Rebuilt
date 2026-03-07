@@ -49,11 +49,11 @@ public class ClimberKraken {
 	}
 
 	public void runPosition(double desiredRotations) {
-		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.PositionVoltage, 0);
+		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 0);
 	}
 
 	public void spinrunPosition(double desiredRotations) {
-		m_spinnerKraken.setPosition(desiredRotations, Kraken.PositionControlType.PositionVoltage, 0);
+		m_spinnerKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 0);
 	}
 
 	public void spinRunVelocity(double desiredVelocity) {

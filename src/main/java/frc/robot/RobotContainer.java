@@ -111,18 +111,18 @@ public class RobotContainer {
 		driver.x().whileTrue(drivetrain.xLockCommand());
 
 		//Shoot
-		operator.rightTrigger().onTrue(manager.autoAim());
+		// operator.rightTrigger().onTrue(manager.autoAim());
 		
 		// Shooter Controls (Operator)
-		operator.a().onTrue(manager.shooter.goToIdle());
-		operator.b().onTrue(manager.shooter.shooterOff());
-		operator.y().onTrue(manager.shooter.setHoodAngle(0));
+		// operator.a().onTrue(manager.shooter.goToIdle());
+		// operator.b().onTrue(manager.shooter.shooterOff());
+		// operator.y().onTrue(manager.shooter.setHoodAngle(0));
 
 		// Indexer Controls
 		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 
 		//Align to Pole
-		operator.x().whileTrue(drivetrain.alignToPole());
+		// operator.x().whileTrue(drivetrain.alignToPole());
 
 		// Climber Controls
 		climber.setDefaultCommand(climber
@@ -143,11 +143,11 @@ public class RobotContainer {
 		
 
 		// Intake Controls
-		intake.setDefaultCommand(intake.agitateRetract());
-		new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
-		operator.rightBumper().toggleOnTrue(intake.extend());
-		operator.leftBumper().onTrue(intake.agitate());
-		operator.leftTrigger().toggleOnTrue(intake.rollerStop());
+		// intake.setDefaultCommand(intake.agitateRetract());
+		// new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
+		// operator.rightBumper().toggleOnTrue(intake.extend());
+		// operator.leftBumper().onTrue(intake.agitate());
+		// operator.leftTrigger().toggleOnTrue(intake.rollerStop());
 	}
 
 	public void updateAutonCommand() {
