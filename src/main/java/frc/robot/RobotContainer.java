@@ -130,11 +130,31 @@ public class RobotContainer {
 		driver.y().whileTrue(drivetrain.driveToTrenchY(() -> -driver.getLeftY()));	
 
 		// Indexer Controls (aka shoot)
-		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+		// driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 		
+
+		driver.rightTrigger().whileTrue(
+			Commands.parallel(
+				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
+					manager.shooter.autoAimHub(),
+					Commands.sequence(
+						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
+						indexer.indexOnCommand(),
+						intake.agitateRetract()
+					)
+			)
+		).onFalse(
+			Commands.parallel(
+				manager.shooter.dodgeTrench(),
+				indexer.indexOffCommand(),
+				intake.stop()
+			)
+		);
+
+
 		//Intake
-		driver.leftTrigger().whileTrue(intake.extend());
-		driver.leftTrigger().whileFalse(intake.agitate()); 
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+		operator.leftBumper().onTrue(intake.retract());
 
 		//OPERATOR CONTROLS
 
@@ -182,15 +202,6 @@ public class RobotContainer {
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
 			.onlyIf(manager::isClimbMode));
-
-		//Snow Blow to Left
-		operator.leftBumper().whileTrue(
-   	 	manager.shooter.autoAimLeftCorner().onlyIf(() -> manager.isNormalMode()));
-
-		//Snow Blow to Right
-		operator.rightBumper().whileTrue(
-   	 	manager.shooter.autoAimRightCorner().onlyIf(() -> manager.isNormalMode()));
-
 	}
 
 

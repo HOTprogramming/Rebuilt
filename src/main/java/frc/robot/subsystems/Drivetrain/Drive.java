@@ -180,6 +180,8 @@ public class Drive extends SubsystemBase {
 		this.iOdata = driveKraken.update();
 
 		UpdateTelemetry();
+
+		SmartDashboard.putBoolean("Drivertrain good", isAtTargetAngle());
 	}
 
 /**
@@ -372,5 +374,9 @@ public class Drive extends SubsystemBase {
 
 	public Pose2d getPose() {
 		return this.iOdata.state.Pose;
+	}
+
+	public boolean isAtTargetAngle(){
+		return Math.abs(iOdata.state.Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
 	}
 }
