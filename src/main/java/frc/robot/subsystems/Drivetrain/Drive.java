@@ -191,17 +191,10 @@ public class Drive extends SubsystemBase {
 		SmartDashboard.putBoolean("Drivertrain good", isAtTargetAngle());
 	}
 
-/**
-	 * Robot-centric forward drive for docking. 
-	 * Detects if the robot hits the ladder and "jiggles" to engage hooks.
-	 * * @param targetDistanceMeters How far to move (e.g., 0.45 for 18 inches)
-	 */
 	public Command dockToLadder() {
-		// Tracks state only while this specific command is running
-		final Pose2d[] startPose = {new Pose2d()};
-		double targetDistanceMeters = 0.5; // 18 inches to ensure we hit the ladder		
-		double[] offsettoladder = {0};
-				// Smooth motion: Max speed 0.5m/s, Accel 1.m/s^2
+				Pose2d[] startPose = {new Pose2d()};
+				double targetDistanceMeters = 0.5; // 18 inches to ensure we hit the ladder		
+				double[] offsettoladder = {0};
 				var xconstraints = new TrapezoidProfile.Constraints(0.15, 0.5);
 				var yconstraints = new TrapezoidProfile.Constraints(0.25, 0.5);
 				var xprofiledPID = new ProfiledPIDController(8.0, 0, 0, xconstraints);
@@ -221,8 +214,6 @@ public class Drive extends SubsystemBase {
 		})
 		.andThen(
 			Commands.run(() -> { 
-				// double xDistance = iOdata.state.Pose.getTranslation()
-				// 	.getDistance(startPose[0].getTranslation());
 				double xDistance = startPose[0].getX() - iOdata.state.Pose.getX();
 				double yDistance = startPose[0].getY() - iOdata.state.Pose.getY();
 				SmartDashboard.putNumber("Climb/xDistance", xDistance);
@@ -247,6 +238,65 @@ public class Drive extends SubsystemBase {
 			
 			SmartDashboard.putBoolean("Climb/isDocked", isDocked);
 		}) .withTimeout(2.0);
+
+	}
+
+		public Command dockToLadder_Y_then_X() {
+		
+				final Pose2d[] startPose = {new Pose2d()};
+				double targetDistanceMeters = 0.5; // 18 inches to ensure we hit the ladder		
+				double[] offsettoladder = {0};
+				var xconstraints = new TrapezoidProfile.Constraints(0.15, 0.5);
+				var yconstraints = new TrapezoidProfile.Constraints(0.25, 0.5);
+				var xprofiledPID = new ProfiledPIDController(8.0, 0, 0, xconstraints);
+				var yprofiledPID = new ProfiledPIDController(8.0, 0, 0, yconstraints);
+		
+				xprofiledPID.setTolerance(0.01); // 1cm tolerance
+				yprofiledPID.setTolerance(0.01); // 1cm tolerance
+		
+				return this.runOnce(() -> {
+					isDocked = false;
+					startPose[0] = iOdata.state.Pose;
+					xprofiledPID.reset(0);
+					yprofiledPID.reset(0);
+					SmartDashboard.putBoolean("Climb/isDocked", false);
+					offsettoladder[0] = poleAlignmentSub.get() + 0.13;// adjust for camera offset (m) from robot center
+					SmartDashboard.putNumber("Climb/camera offset", offsettoladder[0]);
+				})
+		.andThen(
+			// First drive in x to align with ladder, then drive in y to dock
+			Commands.run(() -> { 
+				double xDistance = startPose[0].getX() - iOdata.state.Pose.getX();
+				SmartDashboard.putNumber("Climb/xDistance", xDistance);
+				double xVelocity = xprofiledPID.calculate(xDistance, offsettoladder[0]);
+								
+				driveKraken.setSwerveRequest(ROBOT_CENTRIC
+					.withVelocityX(xVelocity)
+					.withVelocityY(0)
+				);
+			}, this) 
+		).until(() -> xprofiledPID.atGoal())
+
+			.andThen(
+			Commands.run(() -> { 
+				double yDistance = startPose[0].getY() - iOdata.state.Pose.getY();
+				SmartDashboard.putNumber("Climb/yDistance", yDistance);
+				double yVelocity = yprofiledPID.calculate(yDistance, targetDistanceMeters);
+
+				driveKraken.setSwerveRequest(ROBOT_CENTRIC
+					.withVelocityX(0)
+					.withVelocityY(yVelocity)
+				);
+			}, this) 
+		).until(() -> yprofiledPID.atGoal())
+
+		.finallyDo(interrupted -> {
+			driveKraken.setSwerveRequest(ROBOT_CENTRIC.withVelocityX(0).withRotationalRate(0));
+			double finalDist = iOdata.state.Pose.getTranslation().getDistance(startPose[0].getTranslation());
+			isDocked = !interrupted && (finalDist >= targetDistanceMeters - 0.05);
+			
+			SmartDashboard.putBoolean("Climb/isDocked", isDocked);
+		}) .withTimeout(3.0);
 
 	}
 
