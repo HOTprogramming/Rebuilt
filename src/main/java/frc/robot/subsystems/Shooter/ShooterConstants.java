@@ -43,7 +43,7 @@ public class ShooterConstants {
 
 	public static double kTargetHoodAngle = 0;
 	public static int kHoodMotorID = Constants.getRobot() == RobotType.COMPBOT ? 15 : 0;
-	public static int kHoodEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 0 : 0;
+	public static int kHoodEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 45 : 0;
 	public static double kHoodEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.408 : 0.0;
 	public static double kHoodReduction = (1.0 / 1.0);
 
