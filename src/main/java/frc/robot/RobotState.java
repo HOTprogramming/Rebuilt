@@ -31,8 +31,7 @@ public class RobotState {
 
 	private enum Zone {
 		ALLIANCE, 
-		NEUTRAL, 
-		OPPONENT,
+		NEUTRAL,
 		LEFT,
 		RIGHT,
 		TRENCH
@@ -88,23 +87,48 @@ public class RobotState {
 
 	public static void update() {
 		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
-		shootOnTheFly.update(pose, speeds, color == Alliance.Red);
+		findZone();
+		Translation2d target = new Translation2d(0.0, 0.0);
+		if (shooterZone == Zone.ALLIANCE) {
+			if (color == Alliance.Red) {
+				target = ShooterConstants.redHub;
+			} else {
+				target = ShooterConstants.blueHub;
+			}
+		} else {
+			if (color == Alliance.Red) {
+				if (shooterZone == Zone.RIGHT) {
+					target = new Translation2d(15.5, 7.0);// right
+				} else {
+					target = new Translation2d(15.5, 1.0);// left
+				}
+			} else {
+				if (shooterZone == Zone.RIGHT) {
+					target = new Translation2d(1.0, 1.0);// right
+				} else {
+					target = new Translation2d(1.0, 7.0);// left
+				}
+			}
+		}
+
+		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
+		SmartDashboard.putNumberArray("TargetLocation", new Double[] {target.getX(), target.getY()});
+		shootOnTheFly.update(pose, speeds, target);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
-		findZone();
 	}
 
 	private static void findZone() {
+		shooterZone = Zone.NEUTRAL;
+
 		if (color == Alliance.Blue) {
-			SmartDashboard.putNumber("Distance to Goal", ShooterConstants.blueHub.getDistance(pose.getTranslation()));
 			if (isInZoneBox(0, bluezonex, 0, fieldy)) shooterZone = Zone.ALLIANCE;
 			else if (isInZoneBox(bluezonex, fieldx, 0, midfieldy)) shooterZone = Zone.RIGHT;
 			else if (isInZoneBox(bluezonex, fieldx, midfieldy, fieldy)) shooterZone = Zone.LEFT;
 		} else {
-			SmartDashboard.putNumber("Distance to Goal", ShooterConstants.redHub.getDistance(pose.getTranslation()));
 			if (isInZoneBox(redzonex, fieldx, 0, fieldy)) shooterZone = Zone.ALLIANCE;
-			else if (isInZoneBox(0, redzonex, 0, midfieldy)) shooterZone = Zone.RIGHT;
-			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.LEFT;
+			else if (isInZoneBox(0, redzonex, 0, midfieldy)) shooterZone = Zone.LEFT;
+			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.RIGHT;
 		}
 
 		double totalSpeed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)/5.0;

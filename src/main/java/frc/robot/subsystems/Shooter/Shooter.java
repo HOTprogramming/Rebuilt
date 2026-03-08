@@ -36,6 +36,8 @@ public class Shooter extends SubsystemBase {
 		hoodAngleMap.put(3.0, 0.065);
 		hoodAngleMap.put(4.0, 0.073);
 		hoodAngleMap.put(5.0, 0.088);
+		hoodAngleMap.put(5.1, 0.105);
+		hoodAngleMap.put(17.0, 0.145);
 
 
 		shooterSpeedMap = new InterpolatingDoubleTreeMap();
@@ -45,6 +47,9 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(3.0, 44.0);
 		shooterSpeedMap.put(4.0, 46.5);
 		shooterSpeedMap.put(5.0, 50.0);
+		shooterSpeedMap.put(5.1, 46.0);
+		shooterSpeedMap.put(17.0, 90.0);
+
 
 		// shooterSpeedMap.put(7.0, 56.7);
 		// shooterSpeedMap.put(8.0, 59.6);
@@ -81,13 +86,13 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command autoAimHub() {
-		return runOnce(() -> {
+		return run(() -> {
 			double distance = RobotState.pose.getTranslation().getDistance(RobotState.color == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
 			targetHood = hoodAngleMap.get(RobotState.lookAheadDistance);
 			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance);
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
-
+			
 		});
 	}
 
