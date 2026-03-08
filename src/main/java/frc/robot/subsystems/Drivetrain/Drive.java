@@ -196,10 +196,10 @@ public class Drive extends SubsystemBase {
 	 * Detects if the robot hits the ladder and "jiggles" to engage hooks.
 	 * * @param targetDistanceMeters How far to move (e.g., 0.45 for 18 inches)
 	 */
-	public Command dockToLadder(double targetDistanceMeters) {
+	public Command dockToLadder() {
 		// Tracks state only while this specific command is running
 		final Pose2d[] startPose = {new Pose2d()};
-				
+		double targetDistanceMeters = 0.45; // 18 inches to ensure we hit the ladder		
 		double[] offsettoladder = {0};
 				// Smooth motion: Max speed 0.5m/s, Accel 1.m/s^2
 				var xconstraints = new TrapezoidProfile.Constraints(0.5, 1.0);
@@ -207,18 +207,17 @@ public class Drive extends SubsystemBase {
 				var xprofiledPID = new ProfiledPIDController(10.0, 0, 0, xconstraints);
 				var yprofiledPID = new ProfiledPIDController(10.0, 0, 0, yconstraints);
 		
-				xprofiledPID.setTolerance(0.015); // 1cm tolerance
-				yprofiledPID.setTolerance(0.015); // 1cm tolerance
+				xprofiledPID.setTolerance(0.01); // 1cm tolerance
+				yprofiledPID.setTolerance(0.01); // 1cm tolerance
 		
 				return this.runOnce(() -> {
 					isDocked = false;
 					startPose[0] = iOdata.state.Pose;
 					xprofiledPID.reset(0);
 					yprofiledPID.reset(0);
-		
 					SmartDashboard.putBoolean("Climb/isDocked", false);
-		
-					offsettoladder[0] = poleAlignmentSub.get();
+					offsettoladder[0] = poleAlignmentSub.get()-0.13;// adjust for camera offset (m) from robot center
+					SmartDashboard.putNumber("Climb/camera offset", offsettoladder[0]);
 		})
 		.andThen(
 			Commands.run(() -> { 
@@ -231,7 +230,7 @@ public class Drive extends SubsystemBase {
 				double xVelocity = xprofiledPID.calculate(xDistance, targetDistanceMeters);
 
 				double yVelocity = yprofiledPID.calculate(yDistance, offsettoladder[0]);
-
+				
 				driveKraken.setSwerveRequest(ROBOT_CENTRIC
 					.withVelocityX(xVelocity)
 					.withVelocityY(yVelocity)
@@ -253,7 +252,13 @@ public class Drive extends SubsystemBase {
 	public boolean isDocked() {
 		return isDocked;
 	}
-
+	// Combines the align and dock commands into one sequence for autonomous
+	public Command AutonDockToLadder() {
+		return Commands.sequence(
+				this.run(() -> alignToPole()),
+				this.run(() -> dockToLadder())
+				);
+	}
 	public Command alignToPole() {
 		return runPathFinding(new Pose2d(15.5, 5.5, Rotation2d.fromDegrees(-90)));
 	}

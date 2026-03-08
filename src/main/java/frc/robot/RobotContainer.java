@@ -103,8 +103,14 @@ public class RobotContainer {
 			.run(() -> drivetrain.teleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
 		//Robot Centric Drive
-		driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.robotCentricTeleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
-	
+		//driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.robotCentricTeleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+		driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.alignToPole()));
+		// driver.rightBumper().whileTrue(
+		// 	Commands.sequence(
+		// 		drivetrain.run(() -> drivetrain.alignToPole()),
+		// 		drivetrain.run(() -> drivetrain.dockToLadder()))
+		// 		);
+		
 		//Slow Mode
 		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
