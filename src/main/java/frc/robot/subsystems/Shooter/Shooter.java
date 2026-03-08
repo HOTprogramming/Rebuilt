@@ -166,6 +166,27 @@ public class Shooter extends SubsystemBase {
 		});
 	}
 
+	public Command PresetBatter() {
+		return runOnce(() -> {
+			mShooterKraken.runPosition(0);
+			mShooterKraken.runVelocity(0); 
+		});
+	}
+
+	public Command PresetTrench() {
+		return runOnce(() -> {
+			mShooterKraken.runPosition(0);
+			mShooterKraken.runVelocity(0); 
+		});
+	}
+
+	public Command PresetClimberPole() {
+		return runOnce(() -> {
+			mShooterKraken.runPosition(0);
+			mShooterKraken.runVelocity(0); 
+		});
+	}
+
 	public BooleanSupplier readyToShoot() {
 		return () -> (getShooterSpeed() >= ShooterConstants.kShooterSpeed - ShooterConstants.kShooterError && (getTargetHoodAngle() >= ShooterConstants.kTargetHoodAngle));
 	}
