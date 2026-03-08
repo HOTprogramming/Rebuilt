@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Test"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignPole"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test"
+            "pathName": "Red-Path"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "OTF"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test"
           }
         }
       ]

@@ -7,8 +7,6 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
-import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -28,13 +26,13 @@ public class IntakeConstants {
 	public static double kRetractTolerance = 0.02;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 100.0;
+	public static double kIntakeSpeed = 60.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 44 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.43 : 0.0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -.788 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
@@ -52,11 +50,11 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(1)
+			.withKP(10.0)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0)
-			.withKV(0.12));
+			.withKS(0.3)
+			.withKV(1.0));
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -71,7 +69,7 @@ public class IntakeConstants {
 			.withPeakReverseTorqueCurrent(-120))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
-			.withNeutralMode(NeutralModeValue.Brake))
+			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
 			.withKP(128)
 			.withKI(0)

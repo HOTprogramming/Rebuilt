@@ -21,6 +21,13 @@ public class RobotState {
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 	public static ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
 
+	private enum Mode {
+			normal,
+			climb
+		}
+
+	private	Mode mode; 
+
 
 	private enum Zone {
 		ALLIANCE, 
@@ -58,6 +65,9 @@ public class RobotState {
 	public static Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
 	public RobotState() {
+
+		this.mode = Mode.normal; 
+		
 		shooter = new Shooter();
 		autoAimCommands = Map.of(
 			Zone.ALLIANCE, shooter.autoAimHub(), 
@@ -97,10 +107,12 @@ public class RobotState {
 			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.LEFT;
 		}
 
-		if (isInZoneRadius(trenches[0].getX(), trenches[0].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[1].getX(), trenches[1].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
+		double totalSpeed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)/5.0;
+
+		if (isInZoneRadius(trenches[0].getX(), trenches[0].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		else if (isInZoneRadius(trenches[1].getX(), trenches[1].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
 
 		SmartDashboard.putString("zone", shooterZone.name());		
 	}
@@ -108,5 +120,21 @@ public class RobotState {
 	public Command autoAim() {
 		return Commands.select(autoAimCommands, shooterZoneSup);
 	}
+
+	public void setClimbMode(){
+		mode = Mode.climb; 
+	}
+
+	public void setNormalMode (){
+		mode = Mode.normal; 
+	}
+
+	public boolean isClimbMode() {
+    return mode == Mode.climb;
+}
+
+	public boolean isNormalMode() {
+    return mode == Mode.normal;
+}
 }
 
