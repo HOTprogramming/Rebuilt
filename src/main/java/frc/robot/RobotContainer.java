@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
@@ -104,12 +105,14 @@ public class RobotContainer {
 
 		//Robot Centric Drive
 		//driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.robotCentricTeleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
-		driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.alignToPole()));
-		// driver.rightBumper().whileTrue(
-		// 	Commands.sequence(
-		// 		drivetrain.run(() -> drivetrain.alignToPole()),
-		// 		drivetrain.run(() -> drivetrain.dockToLadder()))
-		// 		);
+		//driver.rightBumper().whileTrue(drivetrain.alignToPole());
+		driver.rightBumper().onTrue(
+			Commands.sequence(
+				drivetrain.alignToPole(),
+				Commands.waitSeconds(0.25),
+				drivetrain.dockToLadder())
+				);
+				
 		
 		//Slow Mode
 		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));

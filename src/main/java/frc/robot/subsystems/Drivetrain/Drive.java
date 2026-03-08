@@ -96,7 +96,7 @@ public class Drive extends SubsystemBase {
 	private DriveKraken driveKraken;
 	private DriveIOdata iOdata;
 
-	private PathConstraints constraints;
+	private PathConstraints alignToLadderConstraints;
 
 	private double rampedX;
 	private double rampedY;
@@ -152,7 +152,7 @@ public class Drive extends SubsystemBase {
     	translationControllerX.setTolerance(0.05, 0.1);
 		configurePathPlanner();
 
-		constraints = new PathConstraints(5.0, 3.0, 2 * Math.PI, 4 * Math.PI);
+		alignToLadderConstraints = new PathConstraints(3.0, 2.0, 2 * Math.PI, 2 * Math.PI);
 	}
 
 	private void UpdateTelemetry() {
@@ -207,8 +207,8 @@ public class Drive extends SubsystemBase {
 				var xprofiledPID = new ProfiledPIDController(10.0, 0, 0, xconstraints);
 				var yprofiledPID = new ProfiledPIDController(10.0, 0, 0, yconstraints);
 		
-				xprofiledPID.setTolerance(0.01); // 1cm tolerance
-				yprofiledPID.setTolerance(0.01); // 1cm tolerance
+				xprofiledPID.setTolerance(0.02); // 1cm tolerance
+				yprofiledPID.setTolerance(0.02); // 1cm tolerance
 		
 				return this.runOnce(() -> {
 					isDocked = false;
@@ -216,7 +216,7 @@ public class Drive extends SubsystemBase {
 					xprofiledPID.reset(0);
 					yprofiledPID.reset(0);
 					SmartDashboard.putBoolean("Climb/isDocked", false);
-					offsettoladder[0] = poleAlignmentSub.get()-0.13;// adjust for camera offset (m) from robot center
+					offsettoladder[0] = poleAlignmentSub.get()+0.13;// adjust for camera offset (m) from robot center
 					SmartDashboard.putNumber("Climb/camera offset", offsettoladder[0]);
 		})
 		.andThen(
@@ -229,7 +229,8 @@ public class Drive extends SubsystemBase {
 
 				double xVelocity = xprofiledPID.calculate(xDistance, targetDistanceMeters);
 
-				double yVelocity = yprofiledPID.calculate(yDistance, offsettoladder[0]);
+				//double yVelocity = yprofiledPID.calculate(yDistance, offsettoladder[0]);
+				double yVelocity = 0;
 				
 				driveKraken.setSwerveRequest(ROBOT_CENTRIC
 					.withVelocityX(xVelocity)
@@ -260,11 +261,12 @@ public class Drive extends SubsystemBase {
 				);
 	}
 	public Command alignToPole() {
-		return runPathFinding(new Pose2d(15.5, 5.5, Rotation2d.fromDegrees(-90)));
+		System.out.println("Aligning to pole with vision data: " + poleAlignmentSub.get());
+		return runPathFinding(new Pose2d(15.5, 5.5, Rotation2d.fromDegrees(0)));
 	}
 
 	public Command runPathFinding(Pose2d target) {
-		return AutoBuilder.pathfindToPose(target, constraints);
+		return AutoBuilder.pathfindToPose(target, alignToLadderConstraints);
 	}
 
 	public void teleopDrive(double driveX, double driveY, double driveTheta) {
