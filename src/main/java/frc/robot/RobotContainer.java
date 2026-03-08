@@ -128,7 +128,6 @@ public class RobotContainer {
 
 		// Align to trench (Hood will go down)
 		driver.y().whileTrue(drivetrain.driveToTrenchY(() -> -driver.getLeftY()));	
-		driver.y().whileTrue(manager.shooter.dodgeTrench());
 
 		// Indexer Controls (aka shoot)
 		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
@@ -147,10 +146,10 @@ public class RobotContainer {
 
 		//Shot Map: Deploy Climber
 		operator.x().onTrue(
-    	Commands.either(
+    	Commands.repeatingSequence(Commands.either(
 		climber.deployCommand(), 
 		manager.autoAim(),
-        manager::isClimbMode));
+        manager::isClimbMode)));
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(

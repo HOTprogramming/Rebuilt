@@ -46,11 +46,11 @@ public class IntakeKraken {
 	}
 
 	public void runPosition(double desiredRotations) {
-		m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage);
+		// m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage);
 	}
 
 	public void runAgitatePosition(double desiredRotations) {
-		m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage);
+		// m_ExtendKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage);
 	}
 
 	public void runVelocity(double desiredVelocity) {
