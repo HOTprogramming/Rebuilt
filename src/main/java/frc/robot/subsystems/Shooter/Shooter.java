@@ -195,7 +195,7 @@ public class Shooter extends SubsystemBase {
 
 	public boolean readyToShoot() {
 		return (
-			// (getShooterSpeed() - targetSpeed) <= ShooterConstants.kShooterError &&
+			Math.abs(getShooterSpeed() - targetSpeed) <= ShooterConstants.kShooterError &&
 			Math.abs(mShooterKraken.m_krakenFXHood.position.getValueAsDouble() - targetHood) <= ShooterConstants.kShooterHoodError);
 	}
 
