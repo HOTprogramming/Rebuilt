@@ -30,14 +30,15 @@ public class CameraBase {
 	StructSubscriber<Pose2d> subscriber;
 	AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-	Vector<N3> singleTagStdDevs = VecBuilder.fill(5, 5, 5);
-	Vector<N3> multiTagStdDevs = VecBuilder.fill(.85, .85, 1);
+	Vector<N3> singleTagStdDevs = VecBuilder.fill(5, 5, 7.5);
+	Vector<N3> multiTagStdDevs = VecBuilder.fill(.6, .6, 2);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
 	double numTags;
 	Translation2d prevTranslation = new Translation2d(0, 0);
 	String name;
+	Pose2d prevPose = new Pose2d();
 
 
 	public CameraBase(Drive drive, String name) {
@@ -69,20 +70,45 @@ public class CameraBase {
 			SmartDashboard.putNumber(name + " Avg dist", avgDist);
 
 			if(subTable.getEntry("num_tags").getInteger(0) == 1){
-				if (avgDist > 3) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				if (avgDist > 2.25) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (subTable.getEntry("num_tags").getInteger(0) > 1){
-				if (avgDist > 6) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else estStdDevs = multiTagStdDevs;
+				if (subTable.getEntry("num_tags").getInteger(0) > 2){
+					if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					else estStdDevs = multiTagStdDevs;
+				} else {
+					if (avgDist > 5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+					else estStdDevs = multiTagStdDevs;
+				}
 			}
 
 			double distFromRobot = poseArray.getTranslation().getDistance(drivetrain.getPose().getTranslation());
-
-			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0) * (1 + distFromRobot/2.0)));
-
-			if(avgDist < 6){
-				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
+			double distFromPrev = 0;
+			if (prevPose.getX() != 100){
+				distFromPrev = poseArray.getTranslation().getDistance(prevPose.getTranslation());
 			}
+
+			SmartDashboard.putNumber("Dist From Robot", distFromRobot);
+
+			if(distFromPrev > .5){
+				estStdDevs = VecBuilder.fill(20, 20, 20);
+			} else {
+				if(subTable.getEntry("num_tags").getInteger(0) > 2){
+					estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 60.0)));
+				} else {
+					estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
+				}
+			}
+
+			SmartDashboard.putNumber("DIst from prev", distFromPrev);
+
+			if(avgDist < 10 && distFromPrev < .5 && estStdDevs.get(0) <= 25){
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.04, estStdDevs);
+			}
+
+			prevPose = poseArray;
+		} else {
+			prevPose = new Pose2d(100, 100, new Rotation2d());
 		}
     }
 }

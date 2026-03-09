@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Test"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignPole"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test"
+            "pathName": "Red-Path"
           }
         },
         {
@@ -27,11 +15,17 @@
           "data": {
             "name": "OTF"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Red Autos",
+  "folder": "Dev Autos",
   "choreoAuto": false
 }

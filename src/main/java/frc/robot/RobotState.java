@@ -21,11 +21,17 @@ public class RobotState {
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 	public static ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
 
+	private enum Mode {
+			normal,
+			climb
+		}
+
+	private	Mode mode; 
+
 
 	private enum Zone {
 		ALLIANCE, 
-		NEUTRAL, 
-		OPPONENT,
+		NEUTRAL,
 		LEFT,
 		RIGHT,
 		TRENCH
@@ -53,25 +59,24 @@ public class RobotState {
 	public Shooter shooter;
 
 	public static Zone shooterZone = Zone.ALLIANCE;
-	private static Map<Zone, Command> autoAimCommands;	
-	private static Map<Zone, Command> autoAimwithhoodCommands;
-
+	private static Map<Zone, Command> autoAimCommands;
 	private static Supplier<Zone> shooterZoneSup = () -> shooterZone;
 	public static Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
 	public RobotState() {
+
+		this.mode = Mode.normal; 
+
+		
 		shooter = new Shooter();
 		autoAimCommands = Map.of(
 			Zone.ALLIANCE, shooter.autoAimHub(), 
 			Zone.LEFT, shooter.autoAimLeftCorner(),
 			Zone.RIGHT, shooter.autoAimRightCorner(),
 			Zone.TRENCH, shooter.dodgeTrench());
-		autoAimwithhoodCommands = Map.of(
-			Zone.ALLIANCE, shooter.autoAimHubwithhood(), 
-			Zone.LEFT, shooter.autoAimLeftCornerwithhood(),
-			Zone.RIGHT, shooter.autoAimRightCornerwithhood(),
-			Zone.TRENCH, shooter.dodgeTrench());
+
 	}
+
 
 	private static boolean isInZoneBox(double xmin, double xmax, double ymin, double ymax) {
 		return pose.getX() > xmin && pose.getX() < xmax && pose.getY() > ymin && pose.getY() < ymax;
@@ -85,29 +90,57 @@ public class RobotState {
 
 	public static void update() {
 		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
-		shootOnTheFly.update(pose, speeds, color == Alliance.Red);
+		findZone();
+		Translation2d target = new Translation2d(0.0, 0.0);
+		if (shooterZone == Zone.ALLIANCE) {
+			if (color == Alliance.Red) {
+				target = ShooterConstants.redHub;
+			} else {
+				target = ShooterConstants.blueHub;
+			}
+		} else {
+			if (color == Alliance.Red) {
+				if (shooterZone == Zone.RIGHT) {
+					target = new Translation2d(15.5, 7.0);// right
+				} else {
+					target = new Translation2d(15.5, 1.0);// left
+				}
+			} else {
+				if (shooterZone == Zone.RIGHT) {
+					target = new Translation2d(1.0, 1.0);// right
+				} else {
+					target = new Translation2d(1.0, 7.0);// left
+				}
+			}
+		}
+
+		
+		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
+		SmartDashboard.putNumberArray("TargetLocation", new Double[] {target.getX(), target.getY()});
+		shootOnTheFly.update(pose, speeds, target, color);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
-		findZone();
 	}
 
 	private static void findZone() {
+		shooterZone = Zone.NEUTRAL;
+
 		if (color == Alliance.Blue) {
-			SmartDashboard.putNumber("Distance to Goal", ShooterConstants.blueHub.getDistance(pose.getTranslation()));
 			if (isInZoneBox(0, bluezonex, 0, fieldy)) shooterZone = Zone.ALLIANCE;
 			else if (isInZoneBox(bluezonex, fieldx, 0, midfieldy)) shooterZone = Zone.RIGHT;
 			else if (isInZoneBox(bluezonex, fieldx, midfieldy, fieldy)) shooterZone = Zone.LEFT;
 		} else {
-			SmartDashboard.putNumber("Distance to Goal", ShooterConstants.redHub.getDistance(pose.getTranslation()));
 			if (isInZoneBox(redzonex, fieldx, 0, fieldy)) shooterZone = Zone.ALLIANCE;
-			else if (isInZoneBox(0, redzonex, 0, midfieldy)) shooterZone = Zone.RIGHT;
-			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.LEFT;
+			else if (isInZoneBox(0, redzonex, 0, midfieldy)) shooterZone = Zone.LEFT;
+			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.RIGHT;
 		}
 
-		if (isInZoneRadius(trenches[0].getX(), trenches[0].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[1].getX(), trenches[1].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius)) shooterZone = Zone.TRENCH;
+		double totalSpeed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)/5.0;
+
+		if (isInZoneRadius(trenches[0].getX(), trenches[0].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		else if (isInZoneRadius(trenches[1].getX(), trenches[1].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
 
 		SmartDashboard.putString("zone", shooterZone.name());		
 	}
@@ -116,8 +149,20 @@ public class RobotState {
 		return Commands.select(autoAimCommands, shooterZoneSup);
 	}
 
-	public Command autoAimwithhood() {
-		return Commands.select(autoAimwithhoodCommands, shooterZoneSup);
+	public void setClimbMode(){
+		mode = Mode.climb; 
 	}
+
+	public void setNormalMode (){
+		mode = Mode.normal; 
+	}
+
+	public boolean isClimbMode() {
+    return mode == Mode.climb;
+}
+
+	public boolean isNormalMode() {
+    return mode == Mode.normal;
+}
 }
 
