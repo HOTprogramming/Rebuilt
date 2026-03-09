@@ -1,0 +1,102 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.48366265060241,
+        "y": 7.378879518072289
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.31883005320499,
+        "y": 7.313777807618762
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.363228915662651,
+        "y": 7.378879518072289
+      },
+      "prevControl": {
+        "x": 4.557544863552734,
+        "y": 7.413227167280496
+      },
+      "nextControl": {
+        "x": 5.675788741287988,
+        "y": 7.3655545736116865
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.767325301204821,
+        "y": 6.154975903614457
+      },
+      "prevControl": {
+        "x": 7.773962978532651,
+        "y": 6.666077057857339
+      },
+      "nextControl": {
+        "x": 7.756397590361445,
+        "y": 5.313542168674698
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.767325301204821,
+        "y": 3.0733614457831333
+      },
+      "prevControl": {
+        "x": 7.767325301204821,
+        "y": 4.342152912222717
+      },
+      "nextControl": {
+        "x": 7.767325301204821,
+        "y": 2.18821686746988
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.8984578313303135,
+        "y": 1.128228915662652
+      },
+      "prevControl": {
+        "x": 7.789180722891565,
+        "y": 1.5544096385542163
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "intake1"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": -8.32565033042693
+  },
+  "reversed": false,
+  "folder": "stealshootballs",
+  "idealStartingState": {
+    "velocity": 3.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

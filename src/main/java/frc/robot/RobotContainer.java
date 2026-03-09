@@ -68,6 +68,7 @@ public class RobotContainer {
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
 		Autos.addOption("Right Side", "RightSide");
 		Autos.addOption("autoaim test", "autoaim test");
+		Autos.addOption("DepotScoreClimbRight", "DepotScoreClimbRight");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -256,7 +257,8 @@ public class RobotContainer {
 		prevAuto = autoSelect;
 	}
 
-	public Command getAutonomousCommand() {
-		return autoCommand;
+public Command getAutonomousCommand() {
+    updateAutonCommand(); 
+    return autoCommand;
 	}
 }

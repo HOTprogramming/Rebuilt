@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 16.148879518072288,
+        "y": 1.2165783132482382
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 15.911822358592323,
+        "y": 1.480565849742562
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 14.066519258202568,
+        "y": 4.031469329529244
+      },
+      "prevControl": {
+        "x": 13.484279600570613,
+        "y": 3.513922967189729
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Deploy Shooter",
+      "waypointRelativePos": 0.5,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "RedDepotScoreClimb",
+  "idealStartingState": {
+    "velocity": 0.75,
+    "rotation": 88.59787292337435
+  },
+  "useDefaultConstraints": false
+}
