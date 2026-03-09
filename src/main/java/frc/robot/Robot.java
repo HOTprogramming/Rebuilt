@@ -82,6 +82,9 @@ public class Robot extends TimedRobot {
 		/*
 		 * Fire off the Pathplanner Auto to initialize Path Planner (Work around a bug)
 		 */
+
+		CommandScheduler.getInstance().cancelAll();
+		CommandScheduler.getInstance().clearComposedCommands();
 		if (!ppConfigured) {
 			ppConfigured = true;
 		}

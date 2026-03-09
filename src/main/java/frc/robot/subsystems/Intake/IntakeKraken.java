@@ -61,4 +61,7 @@ public class IntakeKraken {
 		m_RollerKrakenLeader.stop();
 		m_RollerKrakenFollower.stop();
 	}
+	public void stopExtend() {
+		m_ExtendKraken.stop();
+	}
 }
