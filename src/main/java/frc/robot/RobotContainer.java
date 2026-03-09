@@ -5,11 +5,13 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
@@ -89,7 +92,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
-		NamedCommands.registerCommand("hood down",manager.shooter.setHoodAngle(0));
+		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(44))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAimHub());
 
 		NamedCommands.registerCommand("Auto Aim", 			
@@ -107,7 +110,8 @@ public class RobotContainer {
 				Commands.parallel(
 					manager.shooter.dodgeTrench(),
 					indexer.indexOffCommand(),
-					intake.stop()
+					intake.stop(),
+					Commands.runOnce(() -> PPHolonomicDriveController.clearFeedbackOverrides())
 			));
 
 		configureBindings();
@@ -141,7 +145,7 @@ public class RobotContainer {
 			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
-    
+
 		// X the Wheels
 		driver.x().whileTrue(drivetrain.xLockCommand());
 
@@ -154,25 +158,44 @@ public class RobotContainer {
 
 		driver.rightTrigger().whileTrue(
 			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
+				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(manager::isManualMode),
+				Commands.either(
 					manager.shooter.autoAimHub(),
-					Commands.sequence(
-						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
-						indexer.indexOnCommand(),
-						intake.agitateRetract()
-					)
+					manager.shooter.holdTarget(),
+					manager::isNormalMode),
+				Commands.sequence(
+					Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && (drivetrain.isAtTargetAngle() || manager.isManualMode())),
+					new WaitCommand(.1),
+					indexer.indexOnCommand(),
+					intake.agitateRetract()
+				)
 			)
 		).onFalse(
 			Commands.parallel(
-				manager.shooter.dodgeTrench(),
-				indexer.indexOffCommand(),
+				Commands.sequence(
+					indexer.indexOffCommand(),
+					new WaitCommand(.1), 
+					manager.shooter.dodgeTrench()
+				), 
 				intake.stop()
 			)
 		);
 
 
 		//Intake
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+		driver.leftTrigger().whileTrue(
+			Commands.sequence(
+				Commands.runOnce(() -> {
+					if(intake.IsIntakeExtended()){
+						intake.shouldStop = true;
+					}
+				}),
+				Commands.either(
+					intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)			
+			)
+		).whileFalse(intake.completeStop());
+
 		operator.leftBumper().onTrue(intake.retract());
 
 		//OPERATOR CONTROLS
@@ -187,28 +210,28 @@ public class RobotContainer {
 		operator.x().onTrue(
     	Commands.repeatingSequence(Commands.either(
 		climber.deployCommand(), 
-		manager.autoAim(),
+		Commands.runOnce(() -> manager.setNormalMode()),
         manager::isClimbMode)));
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
     	Commands.either(
 		climber.retractCommand(), 
-		manager.shooter.PresetClimberPole(),
+		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),
         manager::isClimbMode));
 
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
 		climber.rotateCommand(), 
-		manager.shooter.PresetTrench(),
+		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetTrench()),
         manager::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
 		operator.y().onTrue(
     	Commands.either(
 		climber.spinhomeCommand(), 
-		manager.shooter.PresetBatter(),
+		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetBatter()),
         manager::isClimbMode));
 
 		//Agitate

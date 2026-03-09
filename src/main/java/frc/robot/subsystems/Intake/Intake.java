@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class Intake extends SubsystemBase {
 	public final IntakeKraken mIntakeKraken;
 
+	public boolean shouldStop = false;
+
 	public Intake() {
 		mIntakeKraken = IntakeKraken.getInstance();
 	}
@@ -26,7 +28,7 @@ public class Intake extends SubsystemBase {
 		// }	
 		// SmartDashboard.putBoolean("Is Extended", IsIntakeExtended()); 
 
-		// SmartDashboard.putNumber("intakeExtend", Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kDeployedPosition)); 
+		SmartDashboard.putBoolean("intakeExtend", IsIntakeExtended()); 
 	}
 
 	public Command extend() {
@@ -80,6 +82,7 @@ public class Intake extends SubsystemBase {
 			runOnce(() -> {
 				mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
 				mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed / 2.0);
+				shouldStop = false;
 			}));
 	}
 
@@ -112,12 +115,19 @@ public class Intake extends SubsystemBase {
 	public Command rollerSpin() {
 		return runOnce(() -> {
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
-			});
+		});
 	}
 
 	public Command stop() {
 		return runOnce(() -> {
 			mIntakeKraken.stop();
+		});
+	}
+
+	public Command stopButSpin(){
+		return runOnce(() -> {
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+			mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
 		});
 	}
 
