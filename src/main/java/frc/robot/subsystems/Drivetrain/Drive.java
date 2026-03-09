@@ -377,6 +377,10 @@ public class Drive extends SubsystemBase {
 	}
 
 	public boolean isAtTargetAngle(){
-		return Math.abs(iOdata.state.Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
+		if (RobotState.color == Alliance.Red) {
+			return Math.abs(iOdata.state.Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
+		} else {			
+			return Math.abs(iOdata.state.Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
+		}
 	}
 }

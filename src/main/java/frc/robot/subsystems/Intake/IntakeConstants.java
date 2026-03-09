@@ -26,13 +26,13 @@ public class IntakeConstants {
 	public static double kRetractTolerance = 0.02;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 60.0;
+	public static double kIntakeSpeed = 90.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 44 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -.788 : 0.0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.762939453125 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
