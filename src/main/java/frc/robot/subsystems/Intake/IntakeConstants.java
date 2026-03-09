@@ -33,8 +33,8 @@ public class IntakeConstants {
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
-	public static int kIntakeMotorIDKicker = Constants.getRobot() == RobotType.COMPBOT ? 59 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.762939453125 : 0.0;
+	public static int kIntakeMotorIDKicker = Constants.getRobot() == RobotType.COMPBOT ? 14 : 0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.8100 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
@@ -73,11 +73,11 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(10.0)
+			.withKP(1)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0.3)
-			.withKV(1.0));
+			.withKS(0.2)
+			.withKV(0.1));
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
