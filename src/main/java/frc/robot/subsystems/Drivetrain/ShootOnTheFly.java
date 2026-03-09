@@ -10,6 +10,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -47,7 +48,7 @@ public class ShootOnTheFly {
 
     
     
-    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, Translation2d goalTranslate2d) {
+    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, Translation2d goalTranslate2d, Alliance alliance) {
         double latency = 0.1; //needs to be tuned, in seconds
         ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
@@ -124,7 +125,11 @@ public class ShootOnTheFly {
         
         //Aim from the CURRENT position to the VIRTUAL target
         Rotation2d turretRotation = goalTranslate2d.minus(lookaheadPos).getAngle();
-        turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+		if (Alliance.Red == alliance) {
+        	turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+		} else {
+        	turretAngle = turretRotation.getRadians();
+		}
         
 		SmartDashboard.putNumber("lookAheadDistance	", lookaheadToTargetDistance);
 
@@ -135,7 +140,7 @@ public class ShootOnTheFly {
         // SmartDashboard.putNumber("SolverLoops", i);
         // SmartDashboard.putNumber("Distance", dist);
         // SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
-        // SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
+        SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
         // SmartDashboard.putNumber("vx", fieldSpeeds.vxMetersPerSecond);
         // SmartDashboard.putNumber("vy", fieldSpeeds.vyMetersPerSecond);
         // SmartDashboard.putNumber("vx_filtered", vx_filt);
