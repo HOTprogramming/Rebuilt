@@ -69,6 +69,7 @@ public class RobotContainer {
 		Autos.addOption("funkycheck", "funkycheck");
 		Autos.addOption("Right Side", "RightSide");
 		Autos.addOption("autoaim test", "autoaim test");
+		Autos.addOption("DepotScoreClimbRight", "DepotScoreClimbRight");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -81,14 +82,10 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
-		NamedCommands.registerCommand("intake", intake.extend());
-		NamedCommands.registerCommand("intake off", intake.retract());
 		NamedCommands.registerCommand("intake agitate", intake.agitate());
 
 		//Start autoaim at start of auton
 		// NamedCommands.registerCommand("auto aim", manager.autoAim());
-		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
-		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 		NamedCommands.registerCommand("intake", intake.extend());
 		NamedCommands.registerCommand("intake off", intake.retract());
@@ -101,10 +98,6 @@ public class RobotContainer {
 		NamedCommands.registerCommand("deploy climber", climber.deployCommand());
 		NamedCommands.registerCommand("retract climber", climber.retractCommand());
 		NamedCommands.registerCommand("shooter on", manager.shooter.autoAimHub());
-
-
-		NamedCommands.registerCommand("hood down",manager.shooter.setHoodAngle(0));
-		NamedCommands.registerCommand("shooter on",manager.shooter.autoAimHub());
 
 		NamedCommands.registerCommand("Auto Aim", 			
 			Commands.parallel(
@@ -270,7 +263,12 @@ public class RobotContainer {
 		prevAuto = autoSelect;
 	}
 
-	public Command getAutonomousCommand() {
-		return autoCommand;
-	}
+public Command getAutonomousCommand() {
+	
+    updateAutonCommand(); 
+    
+    if (autoCommand == null) {
+        return Commands.none(); 
+    }
+    return autoCommand;
 }

@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.77267469879518,
-        "y": 2.352132530120481
+        "x": 16.027533128896135,
+        "y": 7.39766887886609
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.761769362070101,
-        "y": 3.279185600786228
+        "x": 15.796217204011235,
+        "y": 6.834276194480813
       },
       "isLocked": false,
-      "linkedName": "turn"
+      "linkedName": "Ball1"
     },
     {
       "anchor": {
-        "x": 8.77267469879518,
-        "y": 6.581156626506024
+        "x": 14.42166274577868,
+        "y": 3.9350913708527626
       },
       "prevControl": {
-        "x": 8.767236222863936,
-        "y": 6.327231458824406
+        "x": 14.284498629122915,
+        "y": 4.932166226997756
+      },
+      "nextControl": {
+        "x": 14.45573349960743,
+        "y": 3.6874238846266922
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 15.341226261694878,
+        "y": 2.09938594897895
+      },
+      "prevControl": {
+        "x": 14.757273379638836,
+        "y": 3.062109363948796
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "return"
+      "linkedName": "Ball2"
     }
   ],
   "rotationTargets": [],
@@ -41,13 +57,13 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.0,
+    "velocity": 0,
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "stealshootballs",
+  "folder": null,
   "idealStartingState": {
-    "velocity": 3.0,
+    "velocity": 0,
     "rotation": 90.0
   },
   "useDefaultConstraints": true
