@@ -66,7 +66,8 @@ public class RobotContainer {
 		Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
 		Autos.addOption("Grid Test", "Grid Test");
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
-		Autos.addOption("Triple T", "Triple T");
+		Autos.addOption("Right Side", "RightSide");
+		Autos.addOption("autoaim test", "autoaim test");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -90,6 +91,24 @@ public class RobotContainer {
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 		NamedCommands.registerCommand("hood down",manager.shooter.setHoodAngle(0));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAimHub());
+
+		NamedCommands.registerCommand("Auto Aim", 			
+			Commands.parallel(
+				drivetrain.run(() -> drivetrain.aim(0,0)),
+					manager.shooter.autoAimHub(),
+					Commands.sequence(
+						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
+						indexer.indexOnCommand(),
+						intake.agitateRetract()
+					)
+			));
+
+		NamedCommands.registerCommand("Stop Shooting", 
+				Commands.parallel(
+					manager.shooter.dodgeTrench(),
+					indexer.indexOffCommand(),
+					intake.stop()
+			));
 
 		configureBindings();
 	}
