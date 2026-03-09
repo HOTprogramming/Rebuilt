@@ -184,7 +184,10 @@ public class RobotContainer {
 
 		//Intake
 		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
-		driver.leftTrigger().whileTrue(
+		driver.leftTrigger().onTrue(
+			Commands.runOnce( () -> intake.shouldStop = false )
+
+		).whileTrue(
 			Commands.sequence(
 				Commands.runOnce(() -> {
 					if(intake.IsIntakeExtended()){
