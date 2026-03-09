@@ -66,6 +66,7 @@ public class RobotState {
 	public RobotState() {
 
 		this.mode = Mode.normal; 
+
 		
 		shooter = new Shooter();
 		autoAimCommands = Map.of(
@@ -73,7 +74,9 @@ public class RobotState {
 			Zone.LEFT, shooter.autoAimLeftCorner(),
 			Zone.RIGHT, shooter.autoAimRightCorner(),
 			Zone.TRENCH, shooter.dodgeTrench());
+
 	}
+
 
 	private static boolean isInZoneBox(double xmin, double xmax, double ymin, double ymax) {
 		return pose.getX() > xmin && pose.getX() < xmax && pose.getY() > ymin && pose.getY() < ymax;
@@ -111,6 +114,7 @@ public class RobotState {
 			}
 		}
 
+		
 		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
 		SmartDashboard.putNumberArray("TargetLocation", new Double[] {target.getX(), target.getY()});
 		shootOnTheFly.update(pose, speeds, target);
