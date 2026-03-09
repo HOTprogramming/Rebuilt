@@ -117,7 +117,7 @@ public class RobotState {
 		
 		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
 		SmartDashboard.putNumberArray("TargetLocation", new Double[] {target.getX(), target.getY()});
-		shootOnTheFly.update(pose, speeds, target);
+		shootOnTheFly.update(pose, speeds, target, color);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
 	}
