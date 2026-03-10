@@ -27,7 +27,7 @@ public class IntakeConstants {
 
 	public static double kExpelSpeed = -100.0;
 	public static double kIntakeSpeed = 90.0;
-	public static double kKickerSpeed = 50.0;
+	public static double kKickerSpeed = 65.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 44 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
@@ -70,7 +70,7 @@ public class IntakeConstants {
 			.withPeakForwardTorqueCurrent(60)
 			.withPeakReverseTorqueCurrent(-60))
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
 			.withKP(1)

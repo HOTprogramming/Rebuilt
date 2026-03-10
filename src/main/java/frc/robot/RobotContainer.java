@@ -91,12 +91,12 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 		NamedCommands.registerCommand("hood down",manager.shooter.setHoodAngle(0));
-		NamedCommands.registerCommand("shooter on",manager.shooter.autoAimHub());
+		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 
 		NamedCommands.registerCommand("Auto Aim", 			
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(0,0)),
-					manager.shooter.autoAimHub(),
+					manager.shooter.autoAim(),
 					Commands.sequence(
 						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						indexer.indexOnCommand(),
@@ -161,12 +161,10 @@ public class RobotContainer {
 
 		// Indexer Controls (aka shoot)
 		// driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
-		
-
 		driver.rightTrigger().whileTrue(
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
-					manager.shooter.autoAimHub(),
+					manager.shooter.autoAim(),
 					Commands.sequence(
 						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						indexer.indexOnCommand(),
@@ -175,12 +173,14 @@ public class RobotContainer {
 			)
 		).onFalse(
 			Commands.parallel(
-				manager.shooter.dodgeTrench(),
+				Commands.sequence(manager.shooter.autoAim().withTimeout(0.5), manager.shooter.dodgeTrench()),
 				indexer.indexOffCommand(),
 				intake.stop()
 			)
 		);
 
+		//Shooter
+		// manager.shooter.setDefaultCommand(manager.idleCommands());
 
 		//Intake
 		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
@@ -212,7 +212,7 @@ public class RobotContainer {
 		operator.x().onTrue(
     	Commands.repeatingSequence(Commands.either(
 		climber.deployCommand(), 
-		manager.autoAim(),
+		manager.idleCommands(),
         manager::isClimbMode)));
 
 		//Climber Pole Preset: Step 1 of Climb
