@@ -49,7 +49,7 @@ public final class CompBotConstants {
     private static final SteerFeedbackType kSteerFeedbackType = SteerFeedbackType.FusedCANcoder;
 
     // Wheel, inversion, and inertia
-    private static final Distance kWheelRadius = Inches.of(2);
+    private static final Distance kWheelRadius = Inches.of(1.95);
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
     private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.01);
