@@ -46,8 +46,8 @@ public class RobotState {
 	private static double fieldy = 8.07;
 	private static double midfieldy = 4.03;
 
-	private static double bluezonex = 4.03;
-	private static double redzonex = 12.51;
+	private static double bluezonex = 4.33;
+	private static double redzonex = 12.21;
 
 	private static Translation2d topBlueTrench = new Translation2d(4.614, 7.472);
 	private static Translation2d topRedTrench = new Translation2d(11.926, 7.472);
