@@ -197,10 +197,11 @@ public class Drive extends SubsystemBase {
 	Pose2d startPose;
 	double targetDistanceMeters = -0.7; // 18 inches to ensure we hit the ladder
 	double offsettoladder = 0;
-	TrapezoidProfile.Constraints xconstraints = new TrapezoidProfile.Constraints(0.15, 0.15);
+	TrapezoidProfile.Constraints xconstraints = new TrapezoidProfile.Constraints(0.25, 0.25);
 	TrapezoidProfile.Constraints yconstraints = new TrapezoidProfile.Constraints(0.25, 0.25);
-	ProfiledPIDController xprofiledPID = new ProfiledPIDController(5, 0, 0, xconstraints);
-	ProfiledPIDController yprofiledPID = new ProfiledPIDController(5, 0, 0, yconstraints);
+	ProfiledPIDController xprofiledPID = new ProfiledPIDController(2, 0, 0, xconstraints);
+	ProfiledPIDController yprofiledPID = new ProfiledPIDController(2, 0, 0, yconstraints);
+	PIDController dockThetaController = new PIDController(2, 0, 0);
 
 	public Command lineUpToLadder(){
 		return Commands.runOnce(() -> {
@@ -209,6 +210,7 @@ public class Drive extends SubsystemBase {
 			startPose = iOdata.state.Pose;
 			xprofiledPID.reset(startPose.getX());
 			yprofiledPID.reset(startPose.getY());
+			thetaController.reset();
 			offsettoladder = poleAlignmentSub.get() + .129;
 		}).andThen(new WaitCommand(.25)).andThen(
 			Commands.run(() -> {
@@ -216,10 +218,12 @@ public class Drive extends SubsystemBase {
 				double yVelocity = yprofiledPID.calculate(iOdata.state.Pose.getY(), startPose.getY() - targetDistanceMeters);
 				double xVelocity = xprofiledPID.calculate(iOdata.state.Pose.getX(), startPose.getX() + offsettoladder);
 
-				driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+				driveKraken.setSwerveRequest(FIELD_CENTRIC
 					.withVelocityX(xVelocity)
 					.withVelocityY(yVelocity)
-					.withTargetDirection(Rotation2d.fromDegrees(90)));
+					.withRotationalRate(dockThetaController
+						.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(90)))
+					);
 			})
 		).withTimeout(5);
 	}
@@ -351,7 +355,8 @@ public class Drive extends SubsystemBase {
 		return runPathFinding(new Pose2d(1.05, 2.2, Rotation2d.fromDegrees(90))) // 15.5, 5.5
 			.andThen(this.run(() -> {
 				driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
-					.withTargetDirection(Rotation2d.fromDegrees(90)));
+					.withTargetDirection(Rotation2d.fromDegrees(90))
+					.withVelocityY(0.1));
 			}
 			).withTimeout(1));
 	}
