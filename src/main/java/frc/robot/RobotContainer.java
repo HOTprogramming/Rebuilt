@@ -164,7 +164,6 @@ public class RobotContainer {
 					manager::isNormalMode),
 				Commands.sequence(
 					Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && (drivetrain.isAtTargetAngle() || manager.isManualMode())),
-					new WaitCommand(.1),
 					indexer.indexOnCommand(),
 					intake.agitateRetract()
 				)
@@ -213,7 +212,8 @@ public class RobotContainer {
 		operator.x().onTrue(
     	Commands.repeatingSequence(Commands.either(
 		climber.deployCommand(), 
-		manager.autoAim(),
+		Commands.runOnce(() -> manager.setNormalMode()),
+		//manager.idleCommands(),
         manager::isClimbMode)));
 
 		//Climber Pole Preset: Step 1 of Climb
