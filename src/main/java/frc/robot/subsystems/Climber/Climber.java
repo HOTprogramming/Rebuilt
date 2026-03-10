@@ -160,7 +160,7 @@ public class Climber extends SubsystemBase {
 		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
 
-	public Command autonClimb() {
+	public Command autoClimb() {
 		return run(() -> setElbowPosition(ClimberConstants.liftElbowClimbPos)).until(isLifted());
 	}
 
