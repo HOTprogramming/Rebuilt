@@ -93,12 +93,12 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(44))));
-		NamedCommands.registerCommand("shooter on",manager.shooter.autoAimHub());
+		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 
 		NamedCommands.registerCommand("Auto Aim", 			
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(0,0)),
-					manager.shooter.autoAimHub(),
+					manager.shooter.autoAim(),
 					Commands.sequence(
 						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						indexer.indexOnCommand(),
@@ -117,6 +117,7 @@ public class RobotContainer {
 		configureBindings();
 	}
 
+	
 	private void configureBindings() {
 
 		//DRIVER CONTROLS
@@ -154,13 +155,11 @@ public class RobotContainer {
 
 		// Indexer Controls (aka shoot)
 		// driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
-		
-
 		driver.rightTrigger().whileTrue(
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(manager::isManualMode),
 				Commands.either(
-					manager.shooter.autoAimHub(),
+					manager.shooter.autoAim(),
 					manager.shooter.holdTarget(),
 					manager::isNormalMode),
 				Commands.sequence(
@@ -174,28 +173,29 @@ public class RobotContainer {
 			Commands.parallel(
 				Commands.sequence(
 					indexer.indexOffCommand(),
-					new WaitCommand(.1), 
+					new WaitCommand(.25), 
 					manager.shooter.dodgeTrench()
 				), 
 				intake.stop()
 			)
 		);
 
+		//Shooter
+		// manager.shooter.setDefaultCommand(manager.idleCommands());
 
 		//Intake
 		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
-		driver.leftTrigger().onTrue(
-			Commands.runOnce( () -> intake.shouldStop = false )
 
+		driver.leftTrigger().onTrue(
+			Commands.runOnce(() -> intake.shouldStop = false)
 		).whileTrue(
-			Commands.sequence(
+			Commands.repeatingSequence(
 				Commands.runOnce(() -> {
 					if(intake.IsIntakeExtended()){
 						intake.shouldStop = true;
 					}
 				}),
-				Commands.either(
-					intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)			
+				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
 			)
 		).whileFalse(intake.completeStop());
 
@@ -213,7 +213,7 @@ public class RobotContainer {
 		operator.x().onTrue(
     	Commands.repeatingSequence(Commands.either(
 		climber.deployCommand(), 
-		Commands.runOnce(() -> manager.setNormalMode()),
+		manager.autoAim(),
         manager::isClimbMode)));
 
 		//Climber Pole Preset: Step 1 of Climb
