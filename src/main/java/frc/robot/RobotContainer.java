@@ -114,6 +114,7 @@ public class RobotContainer {
 		configureBindings();
 	}
 
+	
 	private void configureBindings() {
 
 		//DRIVER CONTROLS
@@ -182,7 +183,21 @@ public class RobotContainer {
 
 
 		//Intake
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+
+		driver.leftTrigger().onTrue(
+			Commands.runOnce(() -> intake.shouldStop = false)
+		).whileTrue(
+			Commands.repeatingSequence(
+				Commands.runOnce(() -> {
+					if(intake.IsIntakeExtended()){
+						intake.shouldStop = true;
+					}
+				}),
+				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
+			)
+		).whileFalse(intake.completeStop());
+
 		operator.leftBumper().onTrue(intake.retract());
 
 		//OPERATOR CONTROLS
