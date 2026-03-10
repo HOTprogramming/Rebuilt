@@ -62,15 +62,15 @@ public class Intake extends SubsystemBase {
 		return Commands.sequence(
 			runOnce(() -> {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
-					.withMotionMagicAcceleration(1)
-					.withMotionMagicCruiseVelocity(1));
+					.withMotionMagicAcceleration(8)
+					.withMotionMagicCruiseVelocity(8));
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(
 					new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(8)
+						.withStatorCurrentLimit(40)
 						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimit(8)
+						.withSupplyCurrentLimit(40)
 						.withSupplyCurrentLimitEnable(true)
-						.withSupplyCurrentLowerLimit(5)
+						.withSupplyCurrentLowerLimit(30)
 						.withSupplyCurrentLowerTime(1));
 			}),
 			new WaitCommand(.02),
