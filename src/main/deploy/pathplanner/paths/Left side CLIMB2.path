@@ -1,0 +1,107 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.558059523809522,
+        "y": 5.600654761904761
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.547261904761905,
+        "y": 6.442869047619046
+      },
+      "isLocked": false,
+      "linkedName": "Left blue climb1"
+    },
+    {
+      "anchor": {
+        "x": 1.5106904761904771,
+        "y": 7.025940476190476
+      },
+      "prevControl": {
+        "x": 1.755835645113207,
+        "y": 6.976911442405929
+      },
+      "nextControl": {
+        "x": 1.1902413673344072,
+        "y": 7.0900302979616905
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.7224642857142869,
+        "y": 7.025940476190476
+      },
+      "prevControl": {
+        "x": 1.0977372082586752,
+        "y": 7.063467768444913
+      },
+      "nextControl": {
+        "x": 0.4737049881617895,
+        "y": 7.001064546435227
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.5389047619047627,
+        "y": 5.816607142857142
+      },
+      "prevControl": {
+        "x": 0.5389047619047627,
+        "y": 6.464869069972993
+      },
+      "nextControl": {
+        "x": 0.5389047619047627,
+        "y": 5.546666666666668
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.7374404761904771,
+        "y": 5.687035714285714
+      },
+      "prevControl": {
+        "x": 1.3703214285714296,
+        "y": 5.633047619047621
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left blue climb 2"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.2473029045643291,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Blue paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -315.0
+  },
+  "useDefaultConstraints": true
+}
