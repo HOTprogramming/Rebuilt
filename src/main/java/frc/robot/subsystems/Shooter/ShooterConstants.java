@@ -100,7 +100,7 @@ public class ShooterConstants {
 			.withReverseSoftLimitEnable(true))
 			//HOOD PID
 		.withSlot0(new Slot0Configs()
-			.withKP(150)
+			.withKP(120)
 			.withKI(0.0)
 			.withKD(0.0)
 			.withKS(0.5)
