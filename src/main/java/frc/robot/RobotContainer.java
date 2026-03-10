@@ -69,7 +69,8 @@ public class RobotContainer {
 		Autos.addOption("funkycheck", "funkycheck");
 		Autos.addOption("Right Side", "RightSide");
 		Autos.addOption("autoaim test", "autoaim test");
-		Autos.addOption("DepotScoreClimbRight", "DepotScoreClimbRight");
+		Autos.addOption("Depotright", "Depotright");
+		Autos.addOption("Depotleft", "Depotleft");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -271,4 +272,5 @@ public Command getAutonomousCommand() {
         return Commands.none(); 
     }
     return autoCommand;
+}
 }

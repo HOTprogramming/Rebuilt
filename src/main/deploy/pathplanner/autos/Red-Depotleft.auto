@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "redGoToDepot"
+            "pathName": "RGoToDepot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "redIntake"
+            "pathName": "RIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "redShoot"
+            "pathName": "RShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "redClimbRight"
+            "pathName": "RClimbLeft"
           }
         }
       ]

@@ -1,0 +1,61 @@
+{
+    "version": "2025.0",
+    "waypoints": [
+        {
+            "anchor": {
+                "x": 14.066519258202568,
+                "y": 4.031469329529244
+            },
+            "prevControl": null,
+            "nextControl": {
+                "x": 13.818899683164883,
+                "y": 3.9970520946293275
+            },
+            "isLocked": false,
+            "linkedName": null
+        },
+        {
+            "anchor": {
+                "x": 15.438017118402282,
+                "y": 5.441783166904423
+            },
+            "prevControl": {
+                "x": 14.985164051355206,
+                "y": 5.428844507845934
+            },
+            "nextControl": null,
+            "isLocked": false,
+            "linkedName": null
+        }
+    ],
+    "rotationTargets": [],
+    "constraintZones": [],
+    "pointTowardsZones": [],
+    "eventMarkers": [
+        {
+            "name": "Stop",
+            "waypointRelativePos": 0,
+            "endWaypointRelativePos": null,
+            "command": null
+        }
+    ],
+    "globalConstraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+    },
+    "goalEndState": {
+        "velocity": 0.0,
+        "rotation": 0.0
+    },
+    "reversed": false,
+    "folder": "DepotScoreClimb",
+    "idealStartingState": {
+        "velocity": 1.0,
+        "rotation": 0.0
+    },
+    "useDefaultConstraints": false
+}

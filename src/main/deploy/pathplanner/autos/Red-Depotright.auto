@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GoToDepot"
+            "pathName": "RGoToDepot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Intake"
+            "pathName": "RIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot"
+            "pathName": "RShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ClimbLeft"
+            "pathName": "RClimbRight"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue Autos",
+  "folder": "Red Autos",
   "choreoAuto": false
 }

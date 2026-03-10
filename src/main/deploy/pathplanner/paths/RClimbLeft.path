@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 16.148879518072288,
-        "y": 3.022253922967189
+        "x": 14.066519258202568,
+        "y": 4.031469329529244
       },
       "prevControl": null,
       "nextControl": {
-        "x": 16.148952274174658,
-        "y": 2.77225393355409
+        "x": 13.818899683164883,
+        "y": 3.9970520946293275
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Rclimb"
     },
     {
       "anchor": {
-        "x": 16.148879518072288,
-        "y": 1.2165783132482382
+        "x": 15.45095577746077,
+        "y": 3.1775178316690447
       },
       "prevControl": {
-        "x": 16.148893556685884,
-        "y": 1.4665783128540728
+        "x": 14.998102710413693,
+        "y": 3.164579172610556
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,29 +33,29 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "End Intake",
-      "waypointRelativePos": 1.0,
+      "name": "Stop",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
-    "rotation": 88.59787292337435
+    "velocity": 0.0,
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "RedDepotScoreClimb",
+  "folder": null,
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": 90.04647704831235
+    "rotation": -179.64829755545895
   },
   "useDefaultConstraints": false
 }

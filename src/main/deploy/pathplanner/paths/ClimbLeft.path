@@ -20,8 +20,8 @@
         "y": 4.882482168330956
       },
       "prevControl": {
-        "x": 1.5418972895863048,
-        "y": 4.895420827389445
+        "x": 1.5807132667617685,
+        "y": 4.597831669044222
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "DepotScoreClimb",
+  "folder": null,
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": 0.0
+    "rotation": -1.0350229590696552e-13
   },
   "useDefaultConstraints": false
 }

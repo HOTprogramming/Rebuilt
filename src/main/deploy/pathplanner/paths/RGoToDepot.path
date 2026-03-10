@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 16.148879518072288,
-        "y": 3.022253922967189
+        "x": 16.046134094151213,
+        "y": 3.0581312410841655
       },
       "prevControl": {
-        "x": 16.162582025677604,
-        "y": 3.423352353780313
+        "x": 16.05983660175653,
+        "y": 3.4592296718972895
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Rintake"
     }
   ],
   "rotationTargets": [],
@@ -56,8 +56,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -65,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 1.0,
-    "rotation": 90.04647704831235
+    "rotation": -0.32484592014749697
   },
   "reversed": false,
-  "folder": "RedDepotScoreClimb",
+  "folder": null,
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": 90.0
+    "rotation": 0.2940243564299074
   },
   "useDefaultConstraints": false
 }
