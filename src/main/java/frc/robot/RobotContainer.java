@@ -102,11 +102,12 @@ public class RobotContainer {
 					Commands.sequence(
 						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						indexer.indexOnCommand(),
+						
 					Commands.repeatingSequence(
+						new WaitCommand(.35),
 						intake.agitateRetract(),
 						new WaitCommand(.5),
-						intake.extend(),
-						new WaitCommand(.35)
+						intake.extend()
 					)
 				)
 			));
