@@ -2,8 +2,10 @@ package frc.robot.subsystems.Intake;
 
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,14 +21,28 @@ public class Intake extends SubsystemBase {
 	@Override
 	public void periodic() {
 		mIntakeKraken.updateStats();
+		// if(IsIntakeExtended()) {
+		// 	mIntakeKraken.stopExtend();
+		// }	
+		// SmartDashboard.putBoolean("Is Extended", IsIntakeExtended()); 
+
+		// SmartDashboard.putNumber("intakeExtend", Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kDeployedPosition)); 
 	}
 
 	public Command extend() {
-		return Commands.repeatingSequence(
+		return Commands.sequence(
 			runOnce(() -> {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(64)
 					.withMotionMagicCruiseVelocity(64));
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(
+					new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(40)
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimit(40)
+						.withSupplyCurrentLimitEnable(true)
+						.withSupplyCurrentLowerLimit(30)
+						.withSupplyCurrentLowerTime(1));
 			}),
 			new WaitCommand(.02),
 			runOnce(() -> {
@@ -46,11 +62,19 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Command agitateRetract(){
-		return Commands.repeatingSequence(
+		return Commands.sequence(
 			runOnce(() -> {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(1)
 					.withMotionMagicCruiseVelocity(1));
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(
+					new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(8)
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimit(8)
+						.withSupplyCurrentLimitEnable(true)
+						.withSupplyCurrentLowerLimit(5)
+						.withSupplyCurrentLowerTime(1));
 			}),
 			new WaitCommand(.02),
 			runOnce(() -> {
@@ -122,4 +146,11 @@ public class Intake extends SubsystemBase {
 		// return Commands.repeatingSequence(agitateExtend().until(isExtended()),agitateRetract().until(isRetracted()));
 		return agitateRetract();
 	}
+
+
+	public Boolean IsIntakeExtended() {
+		return Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance;
+	}
+
 }
+

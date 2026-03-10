@@ -10,6 +10,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -41,17 +42,13 @@ public class ShootOnTheFly {
 	timeOfFlightMap.put(5.0, 1.15);
 
 
-    // timeOfFlightMap.put(5.68, 1.16);
-    // timeOfFlightMap.put(4.55, 1.12);
-    // timeOfFlightMap.put(3.15, 1.11);
-    // timeOfFlightMap.put(1.88, 1.09);
-    // timeOfFlightMap.put(1.38, 0.90);
-    // timeOfFlightMap.put(1.0, 0.70);    
+    timeOfFlightMap.put(5.1, 1.16);
+    timeOfFlightMap.put(17.0, 2.0);
     }
 
     
     
-    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, boolean allyRed) {
+    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, Translation2d goalTranslate2d, Alliance alliance) {
         double latency = 0.1; //needs to be tuned, in seconds
         ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond) ;
@@ -61,16 +58,7 @@ public class ShootOnTheFly {
             new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency)
         );
 
-
-        double goalX;
-        if (allyRed) {
-            goalX = 11.91; //Red hub x
-        } else {
-            goalX = 4.63; //Blue hub x
-        }
-
-        Translation2d goalLocation = new Translation2d(goalX, 4.03); //4.03 is both hubs' y pos
-        Translation2d targetVec = goalLocation.minus(releasePos);
+        Translation2d targetVec = goalTranslate2d.minus(releasePos);
         double dist = targetVec.getNorm();
         Translation2d targetDirection = targetVec.div(dist); 
         
@@ -127,18 +115,24 @@ public class ShootOnTheFly {
             lookaheadPos = releasePos.plus(new Translation2d(offsetX, offsetY));
 
             // Update distance for next ToF lookup
-            lookaheadToTargetDistance = goalLocation.getDistance(lookaheadPos);
+            lookaheadToTargetDistance = goalTranslate2d.getDistance(lookaheadPos);
         }
 
         // Calculate "Virtual Target" (Iterative Aim Point) for visualization
         // It's the Goal minus the Robot's displacement during flight
         Translation2d robotDisplacement = lookaheadPos.minus(releasePos);
-        Translation2d aimPointIterative = goalLocation.minus(robotDisplacement);
+        Translation2d aimPointIterative = goalTranslate2d.minus(robotDisplacement);
         
         //Aim from the CURRENT position to the VIRTUAL target
-        Rotation2d turretRotation = goalLocation.minus(lookaheadPos).getAngle();
-        turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+        Rotation2d turretRotation = goalTranslate2d.minus(lookaheadPos).getAngle();
+		if (Alliance.Red == alliance) {
+        	turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+		} else {
+        	turretAngle = turretRotation.getRadians();
+		}
         
+		SmartDashboard.putNumber("lookAheadDistance	", lookaheadToTargetDistance);
+
         // SmartDashboard.putNumberArray("Aim Point (vel)", new double[] {aimPoint.getX(), aimPoint.getY()}); 
         // SmartDashboard.putNumberArray("Aim Point (iterative)", new double[] {aimPointIterative.getX(), aimPointIterative.getY()}); 
         // SmartDashboard.putNumber("Shooting Angle", Math.toDegrees(turretAngle));
@@ -146,7 +140,7 @@ public class ShootOnTheFly {
         // SmartDashboard.putNumber("SolverLoops", i);
         // SmartDashboard.putNumber("Distance", dist);
         // SmartDashboard.putNumber("TimeOfFlight", timeOfFlight);
-        // SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
+        SmartDashboard.putNumberArray("LaunchPos", new double [] {lookaheadPos.getX(), lookaheadPos.getY()});
         // SmartDashboard.putNumber("vx", fieldSpeeds.vxMetersPerSecond);
         // SmartDashboard.putNumber("vy", fieldSpeeds.vyMetersPerSecond);
         // SmartDashboard.putNumber("vx_filtered", vx_filt);
