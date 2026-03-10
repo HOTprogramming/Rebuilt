@@ -5,7 +5,6 @@ import java.util.function.BooleanSupplier;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,12 +20,6 @@ public class Intake extends SubsystemBase {
 	@Override
 	public void periodic() {
 		mIntakeKraken.updateStats();
-		// if(IsIntakeExtended()) {
-		// 	mIntakeKraken.stopExtend();
-		// }	
-		// SmartDashboard.putBoolean("Is Extended", IsIntakeExtended()); 
-
-		// SmartDashboard.putNumber("intakeExtend", Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kDeployedPosition)); 
 	}
 
 	public Command extend() {
@@ -48,6 +41,7 @@ public class Intake extends SubsystemBase {
 			runOnce(() -> {
 				mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition);
 				mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+				mIntakeKraken.runKickerVelocity(IntakeConstants.kKickerSpeed);
 			}));
 	}
 
@@ -58,6 +52,7 @@ public class Intake extends SubsystemBase {
 				.withMotionMagicCruiseVelocity(64));
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+			mIntakeKraken.runKickerVelocity(IntakeConstants.kKickerSpeed);
 		});
 	}
 
@@ -80,6 +75,7 @@ public class Intake extends SubsystemBase {
 			runOnce(() -> {
 				mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
 				mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed / 2.0);
+				mIntakeKraken.runKickerVelocity(IntakeConstants.kKickerSpeed);
 			}));
 	}
 
@@ -126,6 +122,7 @@ public class Intake extends SubsystemBase {
 				mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
 				mIntakeKraken.m_RollerKrakenFollower.motor.setVoltage(0);
 				mIntakeKraken.m_RollerKrakenLeader.motor.setVoltage(0);
+				mIntakeKraken.m_KickerKraken.motor.setVoltage(0);
 			}
 		);
 	}
