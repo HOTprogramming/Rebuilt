@@ -59,7 +59,7 @@ public class RobotState {
 	public Shooter shooter;
 
 	public static Zone shooterZone = Zone.ALLIANCE;
-	private static Map<Zone, Command> autoAimCommands;
+	private static Map<Zone, Command> neutralShooterCommands;
 	private static Supplier<Zone> shooterZoneSup = () -> shooterZone;
 	public static Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
@@ -69,12 +69,12 @@ public class RobotState {
 
 		
 		shooter = new Shooter();
-		autoAimCommands = Map.of(
-			Zone.ALLIANCE, shooter.autoAimHub(), 
-			Zone.LEFT, shooter.autoAimLeftCorner(),
-			Zone.RIGHT, shooter.autoAimRightCorner(),
-			Zone.TRENCH, shooter.dodgeTrench());
-
+		neutralShooterCommands = Map.of(
+			Zone.ALLIANCE, shooter.maintainFlywheel(), 
+			Zone.LEFT, shooter.idle(),
+			Zone.RIGHT, shooter.idle(),
+			Zone.TRENCH, shooter.dodgeTrench(), 
+			Zone.NEUTRAL, shooter.idle());
 	}
 
 
@@ -145,8 +145,8 @@ public class RobotState {
 		SmartDashboard.putString("zone", shooterZone.name());		
 	}
 
-	public Command autoAim() {
-		return Commands.select(autoAimCommands, shooterZoneSup);
+	public Command idleCommands() {
+		return Commands.select(neutralShooterCommands, shooterZoneSup);
 	}
 
 	public void setClimbMode(){
