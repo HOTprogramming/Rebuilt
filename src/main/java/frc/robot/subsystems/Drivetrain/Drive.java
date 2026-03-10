@@ -197,27 +197,31 @@ public class Drive extends SubsystemBase {
 	Pose2d startPose;
 	double targetDistanceMeters = -0.7; // 18 inches to ensure we hit the ladder
 	double offsettoladder = 0;
-	TrapezoidProfile.Constraints xconstraints = new TrapezoidProfile.Constraints(0.25, 0.25);
-	TrapezoidProfile.Constraints yconstraints = new TrapezoidProfile.Constraints(0.25, 0.25);
-	ProfiledPIDController xprofiledPID = new ProfiledPIDController(2, 0, 0, xconstraints);
-	ProfiledPIDController yprofiledPID = new ProfiledPIDController(2, 0, 0, yconstraints);
+	TrapezoidProfile.Constraints xconstraints = new TrapezoidProfile.Constraints(0.25, 0.75);
+	TrapezoidProfile.Constraints yconstraints = new TrapezoidProfile.Constraints(0.45, 0.75);
+	ProfiledPIDController xprofiledPID = new ProfiledPIDController(5, 0, 0, xconstraints);
+	ProfiledPIDController yprofiledPID = new ProfiledPIDController(5, 0, 0, yconstraints);
 	PIDController dockThetaController = new PIDController(2, 0, 0);
+	
 
 	public Command lineUpToLadder(){
 		return Commands.runOnce(() -> {
 			xprofiledPID.setTolerance(0.01);
 			yprofiledPID.setTolerance(0.01);
+			dockThetaController.enableContinuousInput(-Math.PI, Math.PI);
 			startPose = iOdata.state.Pose;
 			xprofiledPID.reset(startPose.getX());
 			yprofiledPID.reset(startPose.getY());
 			thetaController.reset();
-			offsettoladder = poleAlignmentSub.get() + .129;
-		}).andThen(new WaitCommand(.25)).andThen(
+			// offsettoladder = poleAlignmentSub.get() + .129;
+			offsettoladder = 0;
+		})
+		.andThen(new WaitCommand(0.04)).andThen(
 			Commands.run(() -> {
 				SmartDashboard.putNumber("Climb/Goal X", (startPose.getX() + offsettoladder));
 				double yVelocity = yprofiledPID.calculate(iOdata.state.Pose.getY(), startPose.getY() - targetDistanceMeters);
 				double xVelocity = xprofiledPID.calculate(iOdata.state.Pose.getX(), startPose.getX() + offsettoladder);
-				double thetaVelocity = dockThetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(90));
+				double thetaVelocity = dockThetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(0));
 				SmartDashboard.putNumber("Climb/xVelocity", xVelocity);
 				SmartDashboard.putNumber("Climb/yVelocity", yVelocity);
 				SmartDashboard.putNumber("Climb/thetaVelocity", thetaVelocity);
