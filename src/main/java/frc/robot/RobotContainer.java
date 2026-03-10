@@ -66,8 +66,8 @@ public class RobotContainer {
 		Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
 		Autos.addOption("Grid Test", "Grid Test");
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
-		Autos.addOption("Right Side", "RightSide");
-		Autos.addOption("autoaim test", "autoaim test");
+		Autos.addOption("Triple T", "Triple T");
+		Autos.addOption("LeftsideCLIMB", "LeftsideCLIMB");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -91,24 +91,6 @@ public class RobotContainer {
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 		NamedCommands.registerCommand("hood down",manager.shooter.setHoodAngle(0));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAimHub());
-
-		NamedCommands.registerCommand("Auto Aim", 			
-			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(0,0)),
-					manager.shooter.autoAimHub(),
-					Commands.sequence(
-						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
-						indexer.indexOnCommand(),
-						intake.agitateRetract()
-					)
-			));
-
-		NamedCommands.registerCommand("Stop Shooting", 
-				Commands.parallel(
-					manager.shooter.dodgeTrench(),
-					indexer.indexOffCommand(),
-					intake.stop()
-			));
 
 		configureBindings();
 	}
@@ -147,33 +129,13 @@ public class RobotContainer {
 
 		// Align to trench (Hood will go down)
 		driver.y().whileTrue(drivetrain.driveToTrenchY(() -> -driver.getLeftY()));	
+		driver.y().whileTrue(manager.shooter.dodgeTrench());
 
 		// Indexer Controls (aka shoot)
-		// driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
+		driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 		
-
-		driver.rightTrigger().whileTrue(
-			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
-					manager.shooter.autoAimHub(),
-					Commands.sequence(
-						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
-						indexer.indexOnCommand(),
-						intake.agitateRetract()
-					)
-			)
-		).onFalse(
-			Commands.parallel(
-				manager.shooter.dodgeTrench(),
-				indexer.indexOffCommand(),
-				intake.stop()
-			)
-		);
-
-
 		//Intake
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
-		operator.leftBumper().onTrue(intake.retract());
+		driver.leftTrigger().whileTrue(intake.extend());
 
 		//OPERATOR CONTROLS
 
@@ -185,10 +147,10 @@ public class RobotContainer {
 
 		//Shot Map: Deploy Climber
 		operator.x().onTrue(
-    	Commands.repeatingSequence(Commands.either(
+    	Commands.either(
 		climber.deployCommand(), 
 		manager.autoAim(),
-        manager::isClimbMode)));
+        manager::isClimbMode));
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
@@ -221,6 +183,18 @@ public class RobotContainer {
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
 			.onlyIf(manager::isClimbMode));
+
+		//Snow Blow to Left
+		operator.leftBumper().whileTrue(
+   	 	manager.shooter.autoAimLeftCorner().onlyIf(() -> manager.isNormalMode()));
+
+		//Snow Blow to Right
+		operator.rightBumper().whileTrue(
+   	 	manager.shooter.autoAimRightCorner().onlyIf(() -> manager.isNormalMode()));
+
+		//Hood Down Override
+		operator.povDown().whileTrue(manager.shooter.dodgeTrench());
+
 	}
 
 
