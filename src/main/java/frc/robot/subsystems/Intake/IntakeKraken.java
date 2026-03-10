@@ -12,7 +12,7 @@ public class IntakeKraken {
 		.RollerConfigs(), "Intake", "Roller");
 	public Kraken m_RollerKrakenFollower = new Kraken(IntakeConstants.kIntakeMotorIDRollerFollower, "rio", IntakeConstants.IntakeConfigs
 		.RollerConfigs(), "Intake", "Roller");
-	public Kraken m_KickerKraken = new Kraken(IntakeConstants.kIntakeMotorIDKicker, "rio", IntakeConstants.IntakeConfigs
+	public Kraken m_KickerKraken = new Kraken(IntakeConstants.kIntakeMotorIDKicker, "RF", IntakeConstants.IntakeConfigs
 		.KickerConfigs(), "Intake", "IntakeKicker");
 
 	private static IntakeKraken instance = null;
