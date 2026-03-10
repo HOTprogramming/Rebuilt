@@ -125,7 +125,7 @@ public class RobotContainer {
 		//Robot Centric Drive
 		//driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.robotCentricTeleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 		driver.rightBumper().onTrue(drivetrain.alignToPole());
-		driver.leftBumper().onTrue(drivetrain.dockToLadder());
+		driver.leftBumper().onTrue(drivetrain.lineUpToLadder());
 		driver.a().onTrue(drivetrain.dockToLadder_Y_then_X());
 		// driver.rightBumper().onTrue(
 		// 	Commands.sequence(
