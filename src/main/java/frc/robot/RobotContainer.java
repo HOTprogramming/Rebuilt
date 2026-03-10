@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -135,12 +136,16 @@ public class RobotContainer {
 	operator.a().onTrue(climber.stow());
 	operator.b().onTrue(climber.fullDeploy());
 	operator.rightBumper().onTrue(climber.stageThreeClimb());
-	operator.leftBumper().onTrue(climber.reset());
+	operator.leftBumper().onTrue(
+		Commands.sequence(Commands.race(drivetrain.lockInClimber(), climber.liftUpWheelsSlow()), drivetrain.stopDrive(), climber.lift()));
+	operator.x().onTrue(climber.wristClimb());
+	operator.y().onTrue(climber.finalElbowExtend());
+
 	operator.rightTrigger().onTrue(climber.zeroSpinner());
 	operator.start().onTrue(climber.stop());
+	
 
-	operator.x().onTrue(climber.spinToZero());
-	operator.y().onTrue(climber.teleopDeploy());
+
 		
 
 		// Intake Controls

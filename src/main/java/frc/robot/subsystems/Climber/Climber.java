@@ -16,12 +16,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Climber extends SubsystemBase {
 	public final ClimberKraken m_ClimbKraken = ClimberKraken.getInstance();
 
+	private double finLeftEdgePos;
+	private double finRightEdgePos;
+
 	private BooleanPublisher beambreakPub;
 	private DoublePublisher zeroPosPub;
-
-	double zeroPosA = 0;
-	double zeroPos = 0;
-	DoubleSupplier zeroPossUp = () -> zeroPos + ClimberConstants.wristZeroOffset;
 	
 	public Climber() {
 
@@ -31,7 +30,7 @@ public class Climber extends SubsystemBase {
 
 		beambreakPub = table.getBooleanTopic("Beambreak").publish();
 		zeroPosPub = table.getDoubleTopic("Zero Position").publish();
-		SmartDashboard.putBoolean("elbowclimber",Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.l3ElbowPos) < 0.002);
+		SmartDashboard.putBoolean("elbowclimber",Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
 	}
 
 	@Override
@@ -40,23 +39,26 @@ public class Climber extends SubsystemBase {
 	public void periodic() {
 		m_ClimbKraken.updateStats();
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
-		zeroPosPub.set(zeroPos);
 	}
 
 	private void setElbowPosition(double targetPos) {
-		m_ClimbKraken.runPosition(targetPos);
+		m_ClimbKraken.setElbowPosition(targetPos);
+	}
+	
+	private void setElbowVelocity(double targetVel) {
+		m_ClimbKraken.setElbowVelocity(targetVel);
 	}
 
 	private void setWristPosition(double targetPos) {
-		m_ClimbKraken.spinrunPosition(targetPos);
+		m_ClimbKraken.setWristPosition(targetPos);
 	}
 
 	private void setWristVelocity(double targetVel) {
-		m_ClimbKraken.spinRunVelocity(targetVel);
+		m_ClimbKraken.setWristVelocity(targetVel);
 	}
 
 	private void spinWristPosition(double wristPosRevs) {
-		setWristPosition(zeroPos + (wristPosRevs * ClimberConstants.wristGearRatio));
+		setWristPosition((wristPosRevs * ClimberConstants.wristGearRatio));
 	}
 
 
@@ -67,42 +69,47 @@ public class Climber extends SubsystemBase {
 	}
 	
 	private BooleanSupplier isZeroed() {
-		return () -> Math.abs(zeroPos - m_ClimbKraken.getSpinPosition()) < 1;
+		return () -> Math.abs(m_ClimbKraken.getWristPos() - ClimberConstants.wristZeroOffset) < 0.005;
 	}
-	
+
 	private BooleanSupplier isStowed() {
-		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.storedPos) < 0.002;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.storedPos) < 0.002;
 	}
 	
 	private BooleanSupplier isDeployed() {
-		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.deployedPos) < 0.002;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.deployedPos) < 0.002;
 	}
 	
 	private BooleanSupplier isClimbed() {
-		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.climbedPos) < 0.01;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.climbedPos) < 0.01;
 	}
 	
 	private BooleanSupplier isWristClimbed() {
-		return () -> Math.abs(((m_ClimbKraken.getSpinPosition() - zeroPos) / ClimberConstants.wristGearRatio) - ClimberConstants.wristBeforeClimbPos) < 0.01;
+		return () -> Math.abs((m_ClimbKraken.getWristPos() / ClimberConstants.wristGearRatio) - ClimberConstants.wristClimbPos) < 0.01;
 	}
 	
 	private BooleanSupplier isWristPartClimbed() {
-		return () -> Math.abs(((m_ClimbKraken.getSpinPosition() - zeroPos) / ClimberConstants.wristGearRatio) - ClimberConstants.wristPartClimbPos) < 0.05;
+		return () -> Math.abs((m_ClimbKraken.getWristPos() / ClimberConstants.wristGearRatio) - ClimberConstants.startL3ExtendAtPos) < 0.05;
 	}
 	
 	private BooleanSupplier isWristPast() {
-		return () -> Math.abs(((m_ClimbKraken.getSpinPosition() - zeroPos) / ClimberConstants.wristGearRatio) - ClimberConstants.wristPastClimbPos) < 0.01;
+		return () -> Math.abs((m_ClimbKraken.getWristPos() / ClimberConstants.wristGearRatio) - ClimberConstants.wristPastClimbPos) < 0.01;
 	}
+	
 	private BooleanSupplier isLifted() {
-		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.liftElbowClimbPos) < 0.01;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.liftElbowClimbPos) < 0.005;
 	}
 	
 	public BooleanSupplier isElbowl3Climbed() {
-		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.l3ElbowPos) < 0.002;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.005;
 	}
 
 	public BooleanSupplier isPartClimbed() {
-		return () -> Math.abs(m_ClimbKraken.getClimbPosition() - ClimberConstants.partElbowLiftPos) < 0.01;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.startWristAtPos) < 0.01;
+	}
+
+	public BooleanSupplier areWheelsUp() {
+		return () -> m_ClimbKraken.getElbowPos() < ClimberConstants.wheelsUpPos;
 	}
 
 	//main commands
@@ -114,23 +121,20 @@ public class Climber extends SubsystemBase {
 		);
 	}
 	public Command zeroSpinner() {
-		return Commands.sequence(spintoBeambreak(), spinOutBeambreak(), 
-		spinOutSlow(), 
-
-		runOnce(() -> zeroPosA = m_ClimbKraken.getSpinPosition()),
-
-		spinBackSlow(),
-
-		runOnce(() -> {m_ClimbKraken.resetSpinnerEncoder();
-		zeroPos = 0;}),
-
+		return Commands.sequence(
+		spintoBeambreak(),
+		spinOutBeambreak(), 
+		spinOutSlow(), runOnce(() -> finLeftEdgePos = m_ClimbKraken.getWristPos()),
+		spinBackSlow(), runOnce(() -> finRightEdgePos = m_ClimbKraken.getWristPos()),
+		run(() -> m_ClimbKraken.setWristPosition((finLeftEdgePos + finRightEdgePos) / 2)).withTimeout(1),
+		reset(),
 		spinToZero()
 		);
 	}
 
 	public Command spinToZero() {
 		return run(() -> {
-				setWristPosition(zeroPossUp.getAsDouble());
+				setWristPosition(ClimberConstants.wristZeroOffset);
 			}).until(isZeroed()); 
 	}
 
@@ -144,7 +148,7 @@ public class Climber extends SubsystemBase {
 	public Command teleopDeploy() {
 		return run(() -> {
 			setElbowPosition(ClimberConstants.deployedPos);
-			setWristPosition(zeroPossUp.getAsDouble());
+			setWristPosition(ClimberConstants.wristZeroOffset);
 		});
 	}
 
@@ -174,18 +178,27 @@ public class Climber extends SubsystemBase {
 			run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped()));
 	}
 
+	public Command liftUpWheelsSlow() {
+		return run(() -> setElbowVelocity(ClimberConstants.liftSpeed)).until(areWheelsUp());
+	}
 
-	private Command wristClimb() {
+	public Command lift() {
+		return run(() -> setElbowPosition(ClimberConstants.liftElbowClimbPos)).until(isLifted());
+	}
+
+	public Command wristClimb() {
 		return run(() -> {
 			spinWristPosition(ClimberConstants.wristClimbPos);
+			setElbowPosition(ClimberConstants.liftElbowClimbPos);
 	}).until(isWristClimbed());
 	}
 
 
-	private Command finalElbowExtend() {
+	public Command finalElbowExtend() {
 		return run(() -> {
 				setElbowPosition(ClimberConstants.l3ElbowPos);
-				System.out.println("running");
+				spinWristPosition(ClimberConstants.wristClimbPos);
+				// System.out.println("running");
 			}).until(isElbowl3Climbed()); 
 	}
 
@@ -196,8 +209,9 @@ public class Climber extends SubsystemBase {
 	}
 
 	private Command startClimb() {
-		return run(() -> setElbowPosition(ClimberConstants.partElbowLiftPos)).until(isPartClimbed());
+		return run(() -> setElbowPosition(ClimberConstants.startWristAtPos)).until(isPartClimbed());
 	}
+
 
 	private Command spinOutBeambreak() {
 		return run(() -> setWristVelocity(100)).onlyWhile(isBeamBreakTripped());
@@ -211,10 +225,8 @@ public class Climber extends SubsystemBase {
 		return run(() -> setElbowPosition(ClimberConstants.climbedPos)).until(isClimbed());
 	}
 
-	private Command lift() {
-		return run(() -> setElbowPosition(ClimberConstants.liftElbowClimbPos)).until(isLifted());
-	}
-	public Command reset() {
-		return run(() -> setWristPosition(0));
+
+	private Command reset() {
+		return runOnce(() -> m_ClimbKraken.resetWristEncoder());
 	}
 }

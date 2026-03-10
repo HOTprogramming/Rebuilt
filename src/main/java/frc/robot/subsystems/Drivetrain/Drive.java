@@ -180,6 +180,16 @@ public class Drive extends SubsystemBase {
 		UpdateTelemetry();
 	}
 
+
+	public Command lockInClimber() {
+		return run(() -> driveKraken.setControl(ROBOT_CENTRIC.withVelocityX(0)));
+	}
+
+	public Command stopDrive() {
+		return runOnce(() -> driveKraken.setControl(FIELD_CENTRIC.withVelocityX(0).withVelocityY(0).withRotationalRate(0)));
+	}
+
+
 /**
 	 * Robot-centric forward drive for docking. 
 	 * Detects if the robot hits the ladder and "jiggles" to engage hooks.

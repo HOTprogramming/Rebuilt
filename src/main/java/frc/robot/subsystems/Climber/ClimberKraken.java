@@ -36,10 +36,10 @@ public class ClimberKraken {
 	public boolean getBeambreakStatus() {
 		return beambreak.get();
 	}
-	public double getSpinPosition() {
+	public double getWristPos() {
 		return m_spinnerKraken.position.getValueAsDouble();
 	}
-	public double getClimbPosition() {
+	public double getElbowPos() {
 		return m_climberKraken.position.getValueAsDouble();
 	}
 
@@ -48,18 +48,20 @@ public class ClimberKraken {
 		m_spinnerKraken.motor.setControl(new DutyCycleOut(percentOutputWrist));
 	}
 
-	public void runPosition(double desiredRotations) {
+	public void setElbowPosition(double desiredRotations) {
 		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 0);
 	}
-
-	public void spinrunPosition(double desiredRotations) {
+	public void setElbowVelocity(double desiredRotations) {
+		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 1);
+	}
+	public void setWristPosition(double desiredRotations) {
 		m_spinnerKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 0);
 	}
 
-	public void spinRunVelocity(double desiredVelocity) {
+	public void setWristVelocity(double desiredVelocity) {
 		m_spinnerKraken.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityVoltage, 1);
 	}
-	public void resetSpinnerEncoder() {
+	public void resetWristEncoder() {
 		m_spinnerKraken.motor.setPosition(0);
 	}
 }

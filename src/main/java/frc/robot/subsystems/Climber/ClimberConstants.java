@@ -23,23 +23,28 @@ public class ClimberConstants {
 	public static int kClimbermotorID = Constants.getRobot() == RobotType.COMPBOT ? 20 : 16;
 	public static int kClimberspinnerID = Constants.getRobot() == RobotType.COMPBOT ? 21 : 17;
 	public static int kClimbEncoder = 44;
- 
+
 	public static String kBusName = Constants.canName;
 
-	public static double wristZeroOffset = (3.0/360.0) * 634.8;
 	public static double wristGearRatio = 634.8;
-	public static double wristPartClimbPos = 0.3;
+	public static double elbowGearRatio = 602.18;
+
+	public static double wristZeroOffset = (3.0/360.0) * wristGearRatio;
+	public static double startL3ExtendAtPos = 0.3;
 	public static double wristPastClimbPos = 0.508;
-	public static double wristBeforeClimbPos = 0.492;
+	public static double wristFinalAdjustPos = 0.492;
 	public static double wristClimbPos = 0.50;
 
-	public static double storedPos = -0.2517;
-	public static double deployedPos = 0.2761;
-	public static double climbedPos = 0.152;
-	public static double partElbowLiftPos = 0.175;
-	public static double liftElbowClimbPos = 0.0555;
-	public static double partL3ElbowClimb = 0.2245;
-	public static double l3ElbowPos = 0.272;
+	public static double storedPos = -0.2517 ;
+	public static double deployedPos = 0.2761 - 1;
+	public static double climbedPos = 0.152 - 1;
+	public static double startWristAtPos = 0.175 - 1;
+	public static double liftElbowClimbPos = 0.0555 - 1;
+	public static double l3ElbowPos = 0.272 - 1;
+	public static double wheelsUpPos = 0.2125 - 1;
+
+	public static double liftSpeed = 0.06 * elbowGearRatio;
+
 
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs()
@@ -76,6 +81,12 @@ public class ClimberConstants {
 			.withKD(0.0)
 			.withKS(0.27)
 			.withKV(1))
+		.withSlot1(new Slot1Configs()
+			.withKP(300)
+			.withKI(0.0)
+			.withKD(0.0)
+			.withKS(0.27)
+			.withKV(0.2))
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(0.3)
 			.withMotionMagicAcceleration(0.6)
