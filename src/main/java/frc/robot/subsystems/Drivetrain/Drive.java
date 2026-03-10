@@ -214,15 +214,17 @@ public class Drive extends SubsystemBase {
 			offsettoladder = poleAlignmentSub.get() + .129;
 		}).andThen(new WaitCommand(.25)).andThen(
 			Commands.run(() -> {
-				SmartDashboard.putNumber("Goal X", (startPose.getX() + offsettoladder));
+				SmartDashboard.putNumber("Climb/Goal X", (startPose.getX() + offsettoladder));
 				double yVelocity = yprofiledPID.calculate(iOdata.state.Pose.getY(), startPose.getY() - targetDistanceMeters);
 				double xVelocity = xprofiledPID.calculate(iOdata.state.Pose.getX(), startPose.getX() + offsettoladder);
-
+				double thetaVelocity = dockThetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(90));
+				SmartDashboard.putNumber("Climb/xVelocity", xVelocity);
+				SmartDashboard.putNumber("Climb/yVelocity", yVelocity);
+				SmartDashboard.putNumber("Climb/thetaVelocity", thetaVelocity);
 				driveKraken.setSwerveRequest(FIELD_CENTRIC
 					.withVelocityX(xVelocity)
 					.withVelocityY(yVelocity)
-					.withRotationalRate(dockThetaController
-						.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(90)))
+					.withRotationalRate(thetaVelocity)
 					);
 			})
 		).withTimeout(5);
@@ -356,9 +358,25 @@ public class Drive extends SubsystemBase {
 			.andThen(this.run(() -> {
 				driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
 					.withTargetDirection(Rotation2d.fromDegrees(90))
-					.withVelocityY(0.1));
+					.withVelocityY(0.1)); //trying to drive across the field slightly to set swerve to Y dir
 			}
 			).withTimeout(1));
+	}
+
+	public Command driveToPoleCoordinate() {
+		return Commands.runOnce(() -> {
+			startPose = iOdata.state.Pose;
+			offsettoladder = poleAlignmentSub.get() + .129;
+		}).andThen(new WaitCommand(.25)).andThen(
+			Commands.run(() -> {
+				double yTarget = startPose.getY() - targetDistanceMeters;
+				double xTarget = startPose.getX() + offsettoladder;
+				SmartDashboard.putNumber("Climb/Goal X", xTarget);
+				SmartDashboard.putNumber("Climb/Goal Y", yTarget);
+				runPathFinding(new Pose2d(xTarget, yTarget, Rotation2d.fromDegrees(90)));
+				}
+			)				
+		).withTimeout(5);
 	}
 
 	public Command runPathFinding(Pose2d target) {
