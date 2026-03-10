@@ -44,8 +44,8 @@ public class ClimberKraken {
 	}
 
 	public void runManual(double percentOutputElbow, double percentOutputWrist) {
-		m_climberKraken.motor.setControl(new DutyCycleOut(percentOutputElbow));
-		m_spinnerKraken.motor.setControl(new DutyCycleOut(percentOutputWrist));
+		m_climberKraken.motor.setControl(new DutyCycleOut(percentOutputElbow * 0.3));
+		m_spinnerKraken.motor.setControl(new DutyCycleOut(percentOutputWrist * 0.3));
 	}
 
 	public void setElbowPosition(double desiredRotations) {
