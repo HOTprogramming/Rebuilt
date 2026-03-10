@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class Intake extends SubsystemBase {
 	public final IntakeKraken mIntakeKraken;
 
+	public boolean shouldStop = false;
+
 	public Intake() {
 		mIntakeKraken = IntakeKraken.getInstance();
 	}
@@ -118,6 +120,13 @@ public class Intake extends SubsystemBase {
 	public Command stop() {
 		return runOnce(() -> {
 			mIntakeKraken.stop();
+		});
+	}
+
+	public Command stopButSpin() {
+		return runOnce(() -> {
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+			mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
 		});
 	}
 
