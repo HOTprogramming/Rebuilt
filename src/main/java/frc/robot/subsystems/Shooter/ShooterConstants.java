@@ -26,7 +26,7 @@ public class ShooterConstants {
 	public static int kMotorIDLeftBottom = Constants.getRobot() == RobotType.COMPBOT ? 10 : 0;
 	public static int kMotorIDRightTop = Constants.getRobot() == RobotType.COMPBOT ? 11 : 0;
 	public static double kShootReduction = (1.0 / 1.0);
-	public static double kIdleSpeed = (10.0);
+	public static double kIdleSpeed = (20.0);
 	public static double kShooterSpeed = (48.0);
 	public static double kTargetShootSpeed = kShooterSpeed;
 	public static double kShooterError = 2.5;
@@ -100,7 +100,7 @@ public class ShooterConstants {
 			.withReverseSoftLimitEnable(true))
 			//HOOD PID
 		.withSlot0(new Slot0Configs()
-			.withKP(120)
+			.withKP(100)
 			.withKI(0.0)
 			.withKD(0.0)
 			.withKS(0.5)

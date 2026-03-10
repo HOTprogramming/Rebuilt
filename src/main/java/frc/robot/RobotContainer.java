@@ -163,14 +163,14 @@ public class RobotContainer {
 			)
 		).onFalse(
 			Commands.parallel(
-				manager.shooter.dodgeTrench(),
+				Commands.sequence(manager.shooter.autoAim().withTimeout(0.5), manager.shooter.dodgeTrench()),
 				indexer.indexOffCommand(),
 				intake.stop()
 			)
 		);
 
 		//Shooter
-		manager.shooter.setDefaultCommand(manager.idleCommands());
+		// manager.shooter.setDefaultCommand(manager.idleCommands());
 
 		//Intake
 		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());

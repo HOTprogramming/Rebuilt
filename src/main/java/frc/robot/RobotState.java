@@ -73,7 +73,8 @@ public class RobotState {
 			Zone.ALLIANCE, shooter.maintainFlywheel(), 
 			Zone.LEFT, shooter.idle(),
 			Zone.RIGHT, shooter.idle(),
-			Zone.TRENCH, shooter.dodgeTrench());
+			Zone.TRENCH, shooter.dodgeTrench(), 
+			Zone.NEUTRAL, shooter.idle());
 	}
 
 
