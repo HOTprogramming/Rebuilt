@@ -102,8 +102,13 @@ public class RobotContainer {
 					Commands.sequence(
 						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						indexer.indexOnCommand(),
-						intake.agitateRetract()
+					Commands.repeatingSequence(
+						intake.agitateRetract(),
+						new WaitCommand(.5),
+						intake.extend(),
+						new WaitCommand(.35)
 					)
+				)
 			));
 
 		NamedCommands.registerCommand("Stop Shooting", 
@@ -165,7 +170,12 @@ public class RobotContainer {
 				Commands.sequence(
 					Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && (drivetrain.isAtTargetAngle() || manager.isManualMode())),
 					indexer.indexOnCommand(),
-					intake.agitateRetract()
+					Commands.repeatingSequence(
+						intake.agitateRetract(),
+						new WaitCommand(.5),
+						intake.extend(),
+						new WaitCommand(.35)
+					)
 				)
 			)
 		).onFalse(
@@ -198,7 +208,7 @@ public class RobotContainer {
 			)
 		).whileFalse(intake.completeStop());
 
-		operator.leftBumper().onTrue(intake.retract());
+		operator.leftBumper().onTrue(intake.agitateRetract());
 
 		//OPERATOR CONTROLS
 
