@@ -104,10 +104,10 @@ public class RobotContainer {
 						indexer.indexOnCommand(),
 						
 					Commands.repeatingSequence(
-						new WaitCommand(.35),
 						intake.agitateRetract(),
 						new WaitCommand(.5),
-						intake.extend()
+						intake.extend(),
+						new WaitCommand(.35)
 					)
 				)
 			));
