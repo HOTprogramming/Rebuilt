@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "random"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "intake"
@@ -25,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "intake off"
+            "name": "intake agitate"
           }
         },
         {
