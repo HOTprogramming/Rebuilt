@@ -81,7 +81,7 @@ public class Climber extends SubsystemBase {
 	}
 	
 	private BooleanSupplier isClimbed() {
-		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.climbedPos) < 0.01;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l1autonclimbedpos) < 0.01;
 	}
 	
 	private BooleanSupplier isWristClimbed() {
@@ -222,7 +222,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	private Command climb() {
-		return run(() -> setElbowPosition(ClimberConstants.climbedPos)).until(isClimbed());
+		return run(() -> setElbowPosition(ClimberConstants.l1autonclimbedpos)).until(isClimbed());
 	}
 
 

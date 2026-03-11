@@ -136,6 +136,7 @@ public class RobotContainer {
 		driver.b().whileTrue(drivetrain.run(() -> {
 			double rot = drivetrain.getPose().getRotation().getDegrees();
 			double fact;
+
 			fact = Math.abs(rot) > 90 ? 3 : 1;
 			if (rot < 0)
 				fact *= -1;
@@ -190,11 +191,17 @@ public class RobotContainer {
 		).whileFalse(intake.completeStop());
 
 		operator.leftBumper().onTrue(intake.retract());
+		
 
 		//OPERATOR CONTROLS
 
 		//Climb Mode
-		operator.start().onTrue(Commands.runOnce(() -> manager.setClimbMode())); 
+		operator.start().onTrue(
+			Commands.parallel(
+				Commands.runOnce(() -> manager.setClimbMode()),
+				intake.retract(),
+				manager.shooter.shooterOff()
+			)); 
 
 		//Normal Mode
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 

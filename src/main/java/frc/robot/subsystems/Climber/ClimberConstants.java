@@ -22,26 +22,27 @@ import frc.robot.Constants.RobotType;
 public class ClimberConstants {
 	public static int kClimbermotorID = Constants.getRobot() == RobotType.COMPBOT ? 20 : 16;
 	public static int kClimberspinnerID = Constants.getRobot() == RobotType.COMPBOT ? 21 : 17;
-	public static int kClimbEncoder = 44;
+	public static int kClimbEncoder = 47;
 
 	public static String kBusName = Constants.canName;
 
 	public static double wristGearRatio = 634.8;
 	public static double elbowGearRatio = 602.18;
 
-	public static double wristZeroOffset = (3.0/360.0) * wristGearRatio;
+	public static double wristZeroOffset = (0.0/360.0) * wristGearRatio;
 	public static double startL3ExtendAtPos = 0.3;
 	public static double wristPastClimbPos = 0.508;
 	public static double wristFinalAdjustPos = 0.492;
 	public static double wristClimbPos = 0.50;
 
-	public static double storedPos = -0.2517 ;
-	public static double deployedPos = 0.2761 - 1;
-	public static double climbedPos = 0.152 - 1;
-	public static double startWristAtPos = 0.175 - 1;
-	public static double liftElbowClimbPos = 0.0555 - 1;
-	public static double l3ElbowPos = 0.272 - 1;
-	public static double wheelsUpPos = 0.2125 - 1;
+	public static double storedPos = -0.2585;
+	public static double deployedPos = 0.2199;
+	public static double l1autonclimbedpos = 0.438; // unset
+	public static double startWristAtPos = 0.175;
+	public static double liftElbowClimbPos = 0.438;
+	public static double l3ElbowPos = 0.272;
+	public static double wheelsUpPos = 0.2125;
+
 
 	public static double liftSpeed = 0.06 * elbowGearRatio;
 
@@ -49,7 +50,7 @@ public class ClimberConstants {
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs()
 			.withAbsoluteSensorDiscontinuityPoint(0.5)
-			.withMagnetOffset(.117676)
+			.withMagnetOffset(0.37745)
 			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
