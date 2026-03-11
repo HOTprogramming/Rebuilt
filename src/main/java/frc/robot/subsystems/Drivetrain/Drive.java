@@ -280,7 +280,7 @@ public class Drive extends SubsystemBase {
 			SmartDashboard.putNumber("Climb/Goal X", targetX);
 			SmartDashboard.putNumber("Climb/Goal Y", targetY);
 			SmartDashboard.putNumber("Climb/Rotation Offset", rotationOffset);
-			
+			SmartDashboard.putNumber("Climb/Tan Angle", Math.tan(angleErrorRad));
 			return runPathFinding(new Pose2d(targetX, targetY, targetRotation));
 			
 		}, Set.of(this)); // 'this' ensures it reserves the drivetrain
