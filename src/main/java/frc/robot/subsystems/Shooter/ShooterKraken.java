@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Shooter;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import frc.util.Kraken;
@@ -15,7 +16,7 @@ public class ShooterKraken {
 	public Kraken m_krakenFXLeftBottom = new Kraken(ShooterConstants.kMotorIDLeftBottom, ShooterConstants.ShooterConfigs.shooterMotorConfigs(), "Shooter", "Left Bottom");
 	public Kraken m_krakenFXRightTop = new Kraken(ShooterConstants.kMotorIDRightTop, ShooterConstants.ShooterConfigs.shooterMotorConfigs(), "Shooter", "Right Top");
 
-	public Kraken m_krakenFXHood = new KrakenWithCancoder(ShooterConstants.kHoodMotorID, ShooterConstants.kHoodEncoderID, ShooterConstants.ShooterConfigs.hoodMotorConfigs(), 
+	public KrakenWithCancoder m_krakenFXHood = new KrakenWithCancoder(ShooterConstants.kHoodMotorID, ShooterConstants.kHoodEncoderID, ShooterConstants.ShooterConfigs.hoodMotorConfigs(), 
 		ShooterConstants.ShooterConfigs.hoodEncoderConfigs(), "Shooter", "Hood");
 
 	public ShooterKraken() {
@@ -24,6 +25,7 @@ public class ShooterKraken {
 		m_krakenFXRightTop.setup();
 		m_krakenFXHood.setup();
 
+		m_krakenFXHood.motor.setPosition(m_krakenFXHood.canCoder.getAbsolutePosition().getValueAsDouble() * 92);
 		// m_krakenFXLeftBottom.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
 		// m_krakenFXRightTop.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
 	}

@@ -5,11 +5,13 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -90,7 +92,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
-		NamedCommands.registerCommand("hood down",manager.shooter.setHoodAngle(0));
+		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(44))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 
 		NamedCommands.registerCommand("Auto Aim", 			
@@ -100,15 +102,22 @@ public class RobotContainer {
 					Commands.sequence(
 						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						indexer.indexOnCommand(),
-						intake.agitateRetract()
+						
+					Commands.repeatingSequence(
+						intake.agitateRetract(),
+						new WaitCommand(.5),
+						intake.extend(),
+						new WaitCommand(.35)
 					)
+				)
 			));
 
 		NamedCommands.registerCommand("Stop Shooting", 
 				Commands.parallel(
 					manager.shooter.dodgeTrench(),
 					indexer.indexOffCommand(),
-					intake.stop()
+					intake.stop(),
+					Commands.runOnce(() -> PPHolonomicDriveController.clearFeedbackOverrides())
 			));
 
 		configureBindings();
@@ -152,7 +161,7 @@ public class RobotContainer {
 			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
 				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
 		}));
-    
+
 		// X the Wheels
 		driver.x().whileTrue(drivetrain.xLockCommand());
 
@@ -163,18 +172,29 @@ public class RobotContainer {
 		// driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
 		driver.rightTrigger().whileTrue(
 			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
+				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(manager::isManualMode),
+				Commands.either(
 					manager.shooter.autoAim(),
-					Commands.sequence(
-						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
-						indexer.indexOnCommand(),
-						intake.agitateRetract()
+					manager.shooter.holdTarget(),
+					manager::isNormalMode),
+				Commands.sequence(
+					Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && (drivetrain.isAtTargetAngle() || manager.isManualMode())),
+					indexer.indexOnCommand(),
+					Commands.repeatingSequence(
+						intake.agitateRetract(),
+						new WaitCommand(.5),
+						intake.extend(),
+						new WaitCommand(.35)
 					)
+				)
 			)
 		).onFalse(
 			Commands.parallel(
-				Commands.sequence(manager.shooter.autoAim().withTimeout(0.5), manager.shooter.dodgeTrench()),
-				indexer.indexOffCommand(),
+				Commands.sequence(
+					indexer.indexOffCommand(),
+					new WaitCommand(.25), 
+					manager.shooter.dodgeTrench()
+				), 
 				intake.stop()
 			)
 		);
@@ -198,7 +218,7 @@ public class RobotContainer {
 			)
 		).whileFalse(intake.completeStop());
 
-		operator.leftBumper().onTrue(intake.retract());
+		operator.leftBumper().onTrue(intake.agitateRetract());
 
 		//OPERATOR CONTROLS
 
@@ -212,28 +232,29 @@ public class RobotContainer {
 		operator.x().onTrue(
     	Commands.repeatingSequence(Commands.either(
 		climber.deployCommand(), 
-		manager.idleCommands(),
+		Commands.runOnce(() -> manager.setNormalMode()),
+		//manager.idleCommands(),
         manager::isClimbMode)));
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
     	Commands.either(
 		climber.retractCommand(), 
-		manager.shooter.PresetClimberPole(),
+		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),
         manager::isClimbMode));
 
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
 		climber.rotateCommand(), 
-		manager.shooter.PresetTrench(),
+		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetTrench()),
         manager::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
 		operator.y().onTrue(
     	Commands.either(
 		climber.spinhomeCommand(), 
-		manager.shooter.PresetBatter(),
+		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetBatter()),
         manager::isClimbMode));
 
 		//Agitate

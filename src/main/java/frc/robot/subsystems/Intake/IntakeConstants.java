@@ -21,7 +21,7 @@ import frc.robot.Robot;
 public class IntakeConstants {
 	public static double kDeployedPosition = 0.9;
 	public static double kRetractPosition = 0.02;
-	public static double kRetractPositionAgitate = 0.28;
+	public static double kRetractPositionAgitate = 0.16;
 	public static double kExtendTolerance = 0.02;
 	public static double kRetractTolerance = 0.02;
 
@@ -73,7 +73,7 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(1)
+			.withKP(10)
 			.withKI(0)
 			.withKD(0)
 			.withKS(0.2)
