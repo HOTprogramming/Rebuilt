@@ -89,12 +89,12 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left pass 1"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.3443983402489657,
+      "waypointRelativePos": 1.3859275053304845,
       "rotationDegrees": 180.0
     },
     {
@@ -102,12 +102,12 @@
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 4.132780082987552,
-      "rotationDegrees": -135.0
+      "waypointRelativePos": 4.157782515991469,
+      "rotationDegrees": 135.0
     },
     {
-      "waypointRelativePos": 4.771784232365145,
-      "rotationDegrees": -135.0
+      "waypointRelativePos": 4.701492537313433,
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [
@@ -163,13 +163,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "Red paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -180.28833002947474
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }

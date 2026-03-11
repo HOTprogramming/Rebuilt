@@ -13,7 +13,7 @@ class InitTest {
 
     @BeforeEach
     void setup() {
-        assert HAL.initialize(500, 0);
+        assert HAL.initialize(500, 0); 
     }
 
     @Test

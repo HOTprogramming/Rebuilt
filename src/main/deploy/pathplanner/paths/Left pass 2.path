@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 13.982,
-        "y": 2.4590000000000005
+        "x": 13.981940476190477,
+        "y": 2.4593452380952394
       },
       "prevControl": null,
       "nextControl": {
-        "x": 15.234523809523811,
-        "y": 1.681571428571428
+        "x": 15.234464285714289,
+        "y": 1.681916666666667
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left pass 1"
     },
     {
       "anchor": {
@@ -126,8 +126,8 @@
       "rotationDegrees": -180.0
     },
     {
-      "waypointRelativePos": 4.8298755186722,
-      "rotationDegrees": -135.0
+      "waypointRelativePos": 5.104477611940289,
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [
@@ -170,13 +170,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "Red paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }

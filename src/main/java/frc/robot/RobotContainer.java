@@ -68,6 +68,8 @@ public class RobotContainer {
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
 		Autos.addOption("Triple T", "Triple T");
 		Autos.addOption("LeftsideCLIMB", "LeftsideCLIMB");
+		Autos.addOption("LeftSide", "LeftSide");
+		Autos.addOption("RightSide", "RightSide");
 
 		SmartDashboard.putData("Autos", Autos);
 

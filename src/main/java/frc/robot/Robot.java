@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
 
 	private DoublePublisher timeRemainingInCurrentShift;
 	private BooleanPublisher hubActive;
-	private BooleanPublisher hubActiveNext;
+	private BooleanPublisher hubActiveNext; 
 
 	private boolean ppConfigured = false;
 

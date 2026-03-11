@@ -146,7 +146,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Red Autos",
   "choreoAuto": false
 }
