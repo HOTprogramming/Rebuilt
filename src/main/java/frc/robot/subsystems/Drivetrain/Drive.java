@@ -235,112 +235,7 @@ public class Drive extends SubsystemBase {
 		).withTimeout(5);
 	}
 
-	public Command dockToLadder() {
-		Pose2d[] startPose = {new Pose2d()};
-		double targetDistanceMeters = 0.5; // 18 inches to ensure we hit the ladder
-		double[] offsettoladder = {0};
-		var xconstraints = new TrapezoidProfile.Constraints(0.15, 0.5);
-		var yconstraints = new TrapezoidProfile.Constraints(0.25, 0.5);
-		var xprofiledPID = new ProfiledPIDController(8.0, 0, 0, xconstraints);
-		var yprofiledPID = new ProfiledPIDController(8.0, 0, 0, yconstraints);
-
-		xprofiledPID.setTolerance(0.01); // 1cm tolerance
-		yprofiledPID.setTolerance(0.01); // 1cm tolerance
-
-		return this.runOnce(() -> {
-			isDocked = false;
-			startPose[0] = iOdata.state.Pose;
-			xprofiledPID.reset(0);
-			yprofiledPID.reset(0);
-			SmartDashboard.putBoolean("Climb/isDocked", false);
-			offsettoladder[0] = poleAlignmentSub.get();// + 0.13;// adjust for camera offset (m) from robot center
-			SmartDashboard.putNumber("Climb/camera offset", offsettoladder[0]);
-		})
-			.andThen(Commands.run(() -> {
-				double xDistance = startPose[0].getX() - iOdata.state.Pose.getX();
-				double yDistance = startPose[0].getY() - iOdata.state.Pose.getY();
-				SmartDashboard.putNumber("Climb/xDistance", xDistance);
-				SmartDashboard.putNumber("Climb/yDistance", yDistance);
-
-				double yVelocity = yprofiledPID.calculate(yDistance, targetDistanceMeters);
-
-				double xVelocity = xprofiledPID.calculate(xDistance, offsettoladder[0]);
-				// double xVelocity = 0;
-
-				driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
-					.withVelocityX(xVelocity)
-					.withVelocityY(yVelocity)
-					.withTargetDirection(Rotation2d.fromDegrees(0)));
-			}, this))
-			.until(() -> yprofiledPID.atGoal())
-			.finallyDo(interrupted -> {
-				driveKraken.setSwerveRequest(ROBOT_CENTRIC.withVelocityX(0).withRotationalRate(0));
-				double finalDist = iOdata.state.Pose.getTranslation().getDistance(startPose[0].getTranslation());
-				isDocked = !interrupted && (finalDist >= targetDistanceMeters - 0.05);
-
-				SmartDashboard.putBoolean("Climb/isDocked", isDocked);
-			})
-			.withTimeout(2.0);
-
-	}
-
-	public Command dockToLadder_Y_then_X() {
-
-		final Pose2d[] startPose = {new Pose2d()};
-		double targetDistanceMeters = 0.5; // 18 inches to ensure we hit the ladder
-		double[] offsettoladder = {0};
-		var xconstraints = new TrapezoidProfile.Constraints(0.15, 0.5);
-		var yconstraints = new TrapezoidProfile.Constraints(0.25, 0.5);
-		var xprofiledPID = new ProfiledPIDController(8.0, 0, 0, xconstraints);
-		var yprofiledPID = new ProfiledPIDController(8.0, 0, 0, yconstraints);
-
-		xprofiledPID.setTolerance(0.01); // 1cm tolerance
-		yprofiledPID.setTolerance(0.01); // 1cm tolerance
-
-		return this.runOnce(() -> {
-			isDocked = false;
-			startPose[0] = iOdata.state.Pose;
-			xprofiledPID.reset(0);
-			yprofiledPID.reset(0);
-			SmartDashboard.putBoolean("Climb/isDocked", false);
-			offsettoladder[0] = poleAlignmentSub.get() + 0.13;// adjust for camera offset (m) from robot center
-			SmartDashboard.putNumber("Climb/camera offset", offsettoladder[0]);
-		})
-			.andThen(
-				// First drive in x to align with ladder, then drive in y to dock
-				Commands.run(() -> {
-					double xDistance = startPose[0].getX() - iOdata.state.Pose.getX();
-					SmartDashboard.putNumber("Climb/xDistance", xDistance);
-					double xVelocity = xprofiledPID.calculate(xDistance, offsettoladder[0]);
-
-					driveKraken.setSwerveRequest(ROBOT_CENTRIC
-						.withVelocityX(xVelocity)
-						.withVelocityY(0));
-				}, this))
-			.until(() -> xprofiledPID.atGoal())
-
-			.andThen(Commands.run(() -> {
-				double yDistance = startPose[0].getY() - iOdata.state.Pose.getY();
-				SmartDashboard.putNumber("Climb/yDistance", yDistance);
-				double yVelocity = yprofiledPID.calculate(yDistance, targetDistanceMeters);
-
-				driveKraken.setSwerveRequest(ROBOT_CENTRIC
-					.withVelocityX(0)
-					.withVelocityY(yVelocity));
-			}, this))
-			.until(() -> yprofiledPID.atGoal())
-
-			.finallyDo(interrupted -> {
-				driveKraken.setSwerveRequest(ROBOT_CENTRIC.withVelocityX(0).withRotationalRate(0));
-				double finalDist = iOdata.state.Pose.getTranslation().getDistance(startPose[0].getTranslation());
-				isDocked = !interrupted && (finalDist >= targetDistanceMeters - 0.05);
-
-				SmartDashboard.putBoolean("Climb/isDocked", isDocked);
-			})
-			.withTimeout(3.0);
-
-	}
-
+	
 	/**
 	 * Getter for the Climber sequence to check if we actually made it to the ladder
 	 */
@@ -350,13 +245,8 @@ public class Drive extends SubsystemBase {
 
 	// Combines the align and dock commands into one sequence for autonomous
 	public Command AutonDockToLadder() {
-		return Commands.sequence(this.run(() -> alignToPole()), this.run(() -> dockToLadder()));
+		return Commands.sequence(this.run(() -> alignToPole()), this.run(() -> driveToPoleCoordinate()));
 	}
-	// public Command alignToPole() {
-	// System.out.println("Aligning to pole with vision data: " +
-	// poleAlignmentSub.get());
-	// return runPathFinding(new Pose2d(15.5, 5.5, Rotation2d.fromDegrees(-180)));
-	// }
 
 	public Command alignToPole() {
 		return runPathFinding(new Pose2d(1.05, 2.2, Rotation2d.fromDegrees(90))) // 15.5, 5.5
@@ -370,11 +260,18 @@ public class Drive extends SubsystemBase {
 	
 	double xTarget = 0;
 	double yTarget = 0;
+	double rotationOffset = 0;
+	double targetAngleRad = Math.toRadians(90);
+	double currentAngleRad = 0;
+	double angleErrorRad = 0;
 	
 	public Command driveToPoleCoordinate() {
 		return Commands.defer(() -> {
 			Pose2d currentPose = iOdata.state.Pose;
-			offsettoladder = poleAlignmentSub.get() + 0.1;// adjust for camera offset (m) from robot center
+			currentAngleRad = currentPose.getRotation().getRadians();
+			angleErrorRad = targetAngleRad - currentAngleRad;
+			rotationOffset = Math.abs(targetDistanceMeters) * Math.tan(angleErrorRad); //no idea if offset is right direction
+			offsettoladder = poleAlignmentSub.get() + 0.1 + rotationOffset;// adjust for camera offset (m) from robot rotation
 			//offsettoladder = 0.13;// dummy value
 			double targetX = currentPose.getX() + offsettoladder;
 			double targetY = currentPose.getY() - targetDistanceMeters;
@@ -382,6 +279,7 @@ public class Drive extends SubsystemBase {
 
 			SmartDashboard.putNumber("Climb/Goal X", targetX);
 			SmartDashboard.putNumber("Climb/Goal Y", targetY);
+			SmartDashboard.putNumber("Climb/Rotation Offset", rotationOffset);
 			
 			return runPathFinding(new Pose2d(targetX, targetY, targetRotation));
 			
