@@ -21,12 +21,13 @@ public class RobotState {
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 	public static ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
 
-	private enum Mode {
+	public enum Mode {
 			normal,
+			manual,			
 			climb
 		}
 
-	private	Mode mode; 
+	public	static Mode mode; 
 
 
 	private enum Zone {
@@ -45,8 +46,8 @@ public class RobotState {
 	private static double fieldy = 8.07;
 	private static double midfieldy = 4.03;
 
-	private static double bluezonex = 4.03;
-	private static double redzonex = 12.51;
+	private static double bluezonex = 4.33;
+	private static double redzonex = 12.21;
 
 	private static Translation2d topBlueTrench = new Translation2d(4.614, 7.472);
 	private static Translation2d topRedTrench = new Translation2d(11.926, 7.472);
@@ -65,9 +66,8 @@ public class RobotState {
 
 	public RobotState() {
 
-		this.mode = Mode.normal; 
+		mode = Mode.normal; 
 
-		
 		shooter = new Shooter();
 		neutralShooterCommands = Map.of(
 			Zone.ALLIANCE, shooter.maintainFlywheel(), 
@@ -117,6 +117,7 @@ public class RobotState {
 		
 		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
 		SmartDashboard.putNumberArray("TargetLocation", new Double[] {target.getX(), target.getY()});
+		SmartDashboard.putString("Robot Mode", mode.name());
 		shootOnTheFly.update(pose, speeds, target, color);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
@@ -157,12 +158,20 @@ public class RobotState {
 		mode = Mode.normal; 
 	}
 
+	public void setManualMode() {
+		mode = Mode.manual;
+	}
+
 	public boolean isClimbMode() {
-    return mode == Mode.climb;
-}
+    	return mode == Mode.climb;
+	}
 
 	public boolean isNormalMode() {
-    return mode == Mode.normal;
-}
+    	return mode == Mode.normal;
+	}
+
+	public boolean isManualMode() {
+		return mode == Mode.manual;
+	}
 }
 

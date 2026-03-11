@@ -95,7 +95,7 @@ public class Kraken {
 		torqueCurrent = motor.getTorqueCurrent();
 		tempCelsius = motor.getDeviceTemp();
 
-		BaseStatusSignal.setUpdateFrequencyForAll(100.0, position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius);
+		BaseStatusSignal.setUpdateFrequencyForAll(50.0, position, velocity);
 	}
 
 	public void setup(){
@@ -117,7 +117,7 @@ public class Kraken {
 			refreshSim();
 		}
 
-		boolean isOk = BaseStatusSignal.refreshAll(position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius).isOK();
+		boolean isOk = BaseStatusSignal.refreshAll(position, velocity).isOK();
 
 		updateTelemetry();
 
