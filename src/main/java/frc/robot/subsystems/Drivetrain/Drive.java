@@ -196,7 +196,7 @@ public class Drive extends SubsystemBase {
 	}
 
 	Pose2d startPose;
-	double targetDistanceMeters = -0.7; // 18 inches to ensure we hit the ladder
+	double targetDistanceMeters = -0.75; // 18 inches to ensure we hit the ladder
 	double offsettoladder = 0;
 	TrapezoidProfile.Constraints xconstraints = new TrapezoidProfile.Constraints(0.25, 0.75);
 	TrapezoidProfile.Constraints yconstraints = new TrapezoidProfile.Constraints(0.45, 0.75);
@@ -270,8 +270,8 @@ public class Drive extends SubsystemBase {
 			Pose2d currentPose = iOdata.state.Pose;
 			currentAngleRad = currentPose.getRotation().getRadians();
 			angleErrorRad = targetAngleRad - currentAngleRad;
-			rotationOffset = Math.abs(targetDistanceMeters) * Math.tan(angleErrorRad); //no idea if offset is right direction
-			offsettoladder = poleAlignmentSub.get() + 0.1 + rotationOffset;// adjust for camera offset (m) from robot rotation
+			rotationOffset = Math.abs(targetDistanceMeters) * Math.sin(angleErrorRad); //no idea if offset is right direction
+			offsettoladder = poleAlignmentSub.get() + 0.1 - rotationOffset;// adjust for camera offset (m) from robot rotation
 			//offsettoladder = 0.13;// dummy value
 			double targetX = currentPose.getX() + offsettoladder;
 			double targetY = currentPose.getY() - targetDistanceMeters;
