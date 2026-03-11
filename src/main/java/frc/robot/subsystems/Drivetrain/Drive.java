@@ -127,7 +127,7 @@ public class Drive extends SubsystemBase {
 	private DoubleArrayPublisher robotStatePose;
 	private DoublePublisher hubTimeRemaining;
 	private BooleanPublisher hubActive;
-	//private DoublePublisher matchTime;
+	private DoublePublisher matchTime;
 	
 	private boolean isDocked = false;
 
@@ -146,7 +146,7 @@ public class Drive extends SubsystemBase {
 		robotStatePose = table.getDoubleArrayTopic("Robot State Pose").publish();
 		hubTimeRemaining = table.getDoubleTopic("Hub Time Remaining").publish(); 
 		hubActive = table.getBooleanTopic("Hub Active").publish();
-		//matchTime = table.getDoubleTopic("Match Time").publish();
+		matchTime = table.getDoubleTopic("Match Time").publish();
 
 
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -173,7 +173,7 @@ public class Drive extends SubsystemBase {
 
 		hubTimeRemaining.set(HubTracker.timeRemainingInCurrentShift().map(t -> t.in(edu.wpi.first.units.Units.Seconds)).orElse(0.0));
 		hubActive.set(HubTracker.isActive());
-		//matchTime.set(HubTracker.getMatchTime());
+		matchTime.set(DriverStation.getMatchTime());
 	}
 
 	@Override
