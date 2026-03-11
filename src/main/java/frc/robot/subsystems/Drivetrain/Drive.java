@@ -47,6 +47,7 @@ import static frc.robot.subsystems.Drivetrain.DriveConstants.kRotationRateLimite
 import static frc.robot.subsystems.Drivetrain.DriveConstants.kTranslationRateLimiter;
 import static frc.robot.subsystems.Drivetrain.DriveConstants.slowModeMultiplier;
 
+import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -155,7 +156,7 @@ public class Drive extends SubsystemBase {
 		translationControllerX.setTolerance(0.05, 0.1);
 		configurePathPlanner();
 
-		alignToLadderConstraints = new PathConstraints(1.0, 1.0, 2 * Math.PI, 1 * Math.PI);
+		alignToLadderConstraints = new PathConstraints(.50, .50, 2 * Math.PI, 1 * Math.PI);
 	}
 
 	private void UpdateTelemetry() {
@@ -214,14 +215,14 @@ public class Drive extends SubsystemBase {
 			yprofiledPID.reset(startPose.getY());
 			thetaController.reset();
 			// offsettoladder = poleAlignmentSub.get() + .129;
-			offsettoladder = 0;
+			offsettoladder = 0.10;
 		})
 		.andThen(new WaitCommand(0.04)).andThen(
 			Commands.run(() -> {
 				SmartDashboard.putNumber("Climb/Goal X", (startPose.getX() + offsettoladder));
 				double yVelocity = yprofiledPID.calculate(iOdata.state.Pose.getY(), startPose.getY() - targetDistanceMeters);
 				double xVelocity = xprofiledPID.calculate(iOdata.state.Pose.getX(), startPose.getX() + offsettoladder);
-				double thetaVelocity = dockThetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(0));
+				double thetaVelocity = dockThetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(90));
 				SmartDashboard.putNumber("Climb/xVelocity", xVelocity);
 				SmartDashboard.putNumber("Climb/yVelocity", yVelocity);
 				SmartDashboard.putNumber("Climb/thetaVelocity", thetaVelocity);
@@ -366,21 +367,25 @@ public class Drive extends SubsystemBase {
 			}
 			).withTimeout(1));
 	}
-
+	
+	double xTarget = 0;
+	double yTarget = 0;
+	
 	public Command driveToPoleCoordinate() {
-		return Commands.runOnce(() -> {
-			startPose = iOdata.state.Pose;
-			offsettoladder = poleAlignmentSub.get() + .129;
-		}).andThen(new WaitCommand(.25)).andThen(
-			Commands.run(() -> {
-				double yTarget = startPose.getY() - targetDistanceMeters;
-				double xTarget = startPose.getX() + offsettoladder;
-				SmartDashboard.putNumber("Climb/Goal X", xTarget);
-				SmartDashboard.putNumber("Climb/Goal Y", yTarget);
-				runPathFinding(new Pose2d(xTarget, yTarget, Rotation2d.fromDegrees(90)));
-				}
-			)				
-		).withTimeout(5);
+		return Commands.defer(() -> {
+			Pose2d currentPose = iOdata.state.Pose;
+			offsettoladder = poleAlignmentSub.get() + 0.1;// adjust for camera offset (m) from robot center
+			//offsettoladder = 0.13;// dummy value
+			double targetX = currentPose.getX() + offsettoladder;
+			double targetY = currentPose.getY() - targetDistanceMeters;
+			Rotation2d targetRotation = Rotation2d.fromDegrees(90);
+
+			SmartDashboard.putNumber("Climb/Goal X", targetX);
+			SmartDashboard.putNumber("Climb/Goal Y", targetY);
+			
+			return runPathFinding(new Pose2d(targetX, targetY, targetRotation));
+			
+		}, Set.of(this)); // 'this' ensures it reserves the drivetrain
 	}
 
 	public Command runPathFinding(Pose2d target) {
