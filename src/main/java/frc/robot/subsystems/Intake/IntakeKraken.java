@@ -27,6 +27,8 @@ public class IntakeKraken {
 			.withMotionMagicAcceleration(64)
 			.withMotionMagicCruiseVelocity(64));
 
+		m_ExtendKraken.motor.setPosition(0);
+
 		//m_RollerKrakenFollower.setFollower(IntakeConstants.kIntakeMotorIDRollerLeader, MotorAlignmentValue.Aligned);
 	}
 

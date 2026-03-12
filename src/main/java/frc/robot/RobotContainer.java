@@ -65,13 +65,8 @@ public class RobotContainer {
 		// Left","Shoot Left");"
 		Autos.setDefaultOption("Path", "Path");
 
-		Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
-		Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
-		Autos.addOption("Grid Test", "Grid Test");
-		Autos.addOption("SNOWBLOW", "SNOWBLOW");
-		Autos.addOption("Right Side", "RightSide");
-		Autos.addOption("autoaim test", "autoaim test");
 		Autos.addOption("ohno", "ohno");
+		Autos.addOption("FunkyCheck", "FunkyCheck");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -97,12 +92,29 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 		NamedCommands.registerCommand("auton spin", manager.shooter.AutonSpin());
 
+
 		NamedCommands.registerCommand("Auto Aim", 			
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(0,0)),
 					manager.shooter.autoAim(),
 					Commands.sequence(
 						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngleAuton()),
+						indexer.indexOnCommand(),
+						
+					Commands.repeatingSequence(
+						intake.agitateRetract(),
+						new WaitCommand(.35),
+						intake.extend(),
+						new WaitCommand(.35)
+					)
+				)
+			));
+
+		NamedCommands.registerCommand("Auto Aim test", 			
+			Commands.parallel(
+					manager.shooter.autoAim(),
+					Commands.sequence(
+						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot()),
 						indexer.indexOnCommand(),
 						
 					Commands.repeatingSequence(
