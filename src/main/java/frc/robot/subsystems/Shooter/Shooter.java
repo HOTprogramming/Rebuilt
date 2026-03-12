@@ -26,9 +26,9 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		hoodAngleMap = new InterpolatingDoubleTreeMap();
 
-		hoodAngleMap.put(1.0, 2.484);
-		hoodAngleMap.put(2.0, 3.5);
-		hoodAngleMap.put(3.0, 5.5);
+		hoodAngleMap.put(1.0, 3.2);
+		hoodAngleMap.put(2.0, 4.5);
+		hoodAngleMap.put(3.0, 6.1);
 		hoodAngleMap.put(4.0, 6.416);
 		hoodAngleMap.put(5.3, 6.696);
 
@@ -41,9 +41,9 @@ public class Shooter extends SubsystemBase {
 
 		shooterSpeedMap.put(1.0, 41.0);
 		shooterSpeedMap.put(2.0, 42.0);
-		shooterSpeedMap.put(3.0, 43.0);
-		shooterSpeedMap.put(4.0, 45.5);
-		shooterSpeedMap.put(5.3, 51.0);
+		shooterSpeedMap.put(3.0, 45.0);
+		shooterSpeedMap.put(4.0, 47.5);
+		shooterSpeedMap.put(5.3, 53.0);
 
 		shooterSpeedMap.put(5.35, 46.0);
 		shooterSpeedMap.put(17.0, 90.0);
@@ -166,8 +166,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetBatter() {
 		return runOnce(() -> {
-			targetSpeed = .025;
-			targetHood = 30;
+			targetHood = 2.504;			
+			targetSpeed = 41.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
 		});
@@ -175,8 +175,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetTrench() {
 		return runOnce(() -> {
-			targetHood = .075;
-			targetSpeed = 50;
+			targetHood = 5.8;
+			targetSpeed = 44.1;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});
@@ -184,8 +184,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetClimberPole() {
 		return runOnce(() -> {
-			targetHood = .05;
-			targetSpeed = 50;
+			targetHood = 5.479;
+			targetSpeed = 43.2;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
 		});
@@ -195,6 +195,14 @@ public class Shooter extends SubsystemBase {
 		return (
 			Math.abs(getShooterSpeed() - targetSpeed) <= ShooterConstants.kShooterError &&
 			Math.abs(mShooterKraken.m_krakenFXHood.position.getValueAsDouble() - targetHood) <= ShooterConstants.kShooterHoodError);
+	}
+
+	
+	public Command AutonSpin() {
+		return runOnce(() -> {
+			targetSpeed = 42.0;
+			mShooterKraken.runVelocity(targetSpeed); 
+		});
 	}
 
 }

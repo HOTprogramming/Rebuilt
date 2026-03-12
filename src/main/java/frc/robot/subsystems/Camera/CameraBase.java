@@ -31,7 +31,7 @@ public class CameraBase {
 	AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(5, 5, 7.5);
-	Vector<N3> multiTagStdDevs = VecBuilder.fill(.6, .6, 2);
+	Vector<N3> multiTagStdDevs = VecBuilder.fill(.5, .5, 2);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -70,7 +70,7 @@ public class CameraBase {
 			SmartDashboard.putNumber(name + " Avg dist", avgDist);
 
 			if(subTable.getEntry("num_tags").getInteger(0) == 1){
-				if (avgDist > 2.25) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (subTable.getEntry("num_tags").getInteger(0) > 1){
 				if (subTable.getEntry("num_tags").getInteger(0) > 2){
@@ -102,8 +102,8 @@ public class CameraBase {
 
 			SmartDashboard.putNumber("DIst from prev", distFromPrev);
 
-			if(avgDist < 10 && distFromPrev < .5 && estStdDevs.get(0) <= 25){
-				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.04, estStdDevs);
+			if(avgDist < 10 && distFromPrev < .5 && estStdDevs.get(0) <= 100){
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.02, estStdDevs);
 			}
 
 			prevPose = poseArray;
