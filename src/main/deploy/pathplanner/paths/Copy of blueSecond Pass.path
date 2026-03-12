@@ -32,76 +32,28 @@
     },
     {
       "anchor": {
-        "x": 6.099401709401709,
+        "x": 6.326428571428572,
         "y": 0.8566239316239319
       },
       "prevControl": {
-        "x": 5.662083320203614,
-        "y": 0.6275523944249318
+        "x": 5.950930544232103,
+        "y": 0.5361206176674508
       },
       "nextControl": {
-        "x": 6.370726495726496,
-        "y": 0.9987464387464378
+        "x": 6.963488095238096,
+        "y": 1.4003809523809525
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.926296296296296,
-        "y": 1.6705982905982908
+        "x": 5.905321428571429,
+        "y": 3.7650595238095237
       },
       "prevControl": {
-        "x": 6.797094017094016,
-        "y": 1.425113960113962
-      },
-      "nextControl": {
-        "x": 7.177945001725251,
-        "y": 2.1487308309133026
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.262222222222223,
-        "y": 3.440669515669516
-      },
-      "prevControl": {
-        "x": 7.507706552706554,
-        "y": 3.221025641025642
-      },
-      "nextControl": {
-        "x": 6.973201159858196,
-        "y": 3.6992673083110126
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.194985754985754,
-        "y": 2.4590000000000005
-      },
-      "prevControl": {
-        "x": 5.739886457019519,
-        "y": 2.4592896031775147
-      },
-      "nextControl": {
-        "x": 4.691096866096866,
-        "y": 2.458732193732195
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.6884615384615382,
-        "y": 2.4590000000000005
-      },
-      "prevControl": {
-        "x": 3.373306539480813,
-        "y": 2.5168278185487396
+        "x": 5.916119047619048,
+        "y": 2.5557261904761903
       },
       "nextControl": null,
       "isLocked": false,
@@ -114,27 +66,23 @@
       "rotationDegrees": -270.0
     },
     {
-      "waypointRelativePos": 1.7626556016597532,
-      "rotationDegrees": -270.0
-    },
-    {
-      "waypointRelativePos": 3.095948827292099,
-      "rotationDegrees": 131.315160069923
-    },
-    {
-      "waypointRelativePos": 4.72068230277186,
+      "waypointRelativePos": 1.660580912863072,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 5.705756929637529,
+      "waypointRelativePos": 2.4522821576763487,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 3.75,
       "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
     {
       "name": "ramp",
-      "minWaypointRelativePos": 4.796758946657634,
-      "maxWaypointRelativePos": 5.72045914922348,
+      "minWaypointRelativePos": 3.5,
+      "maxWaypointRelativePos": 3.75,
       "constraints": {
         "maxVelocity": 1.6,
         "maxAcceleration": 1.5,
@@ -195,7 +143,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 45.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
