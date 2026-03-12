@@ -139,11 +139,11 @@
     },
     {
       "name": "ramp",
-      "minWaypointRelativePos": 4.198511166253102,
+      "minWaypointRelativePos": 4.213369345037139,
       "maxWaypointRelativePos": 5.0,
       "constraints": {
         "maxVelocity": 2.0,
-        "maxAcceleration": 1.5,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,

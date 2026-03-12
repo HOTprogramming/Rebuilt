@@ -71,6 +71,7 @@ public class RobotContainer {
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
 		Autos.addOption("Right Side", "RightSide");
 		Autos.addOption("autoaim test", "autoaim test");
+		Autos.addOption("ohno", "ohno");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -84,7 +85,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
 		NamedCommands.registerCommand("intake", intake.extend());
-		NamedCommands.registerCommand("intake off", intake.retract());
+		NamedCommands.registerCommand("intake off", intake.teleopRetract());
 		NamedCommands.registerCommand("intake agitate", intake.agitate());
 
 		//Start autoaim at start of auton
@@ -92,20 +93,21 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
-		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(44))));
+		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(47))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
+		NamedCommands.registerCommand("auton spin", manager.shooter.AutonSpin());
 
 		NamedCommands.registerCommand("Auto Aim", 			
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(0,0)),
 					manager.shooter.autoAim(),
 					Commands.sequence(
-						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
+						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngleAuton()),
 						indexer.indexOnCommand(),
 						
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
-						new WaitCommand(.5),
+						new WaitCommand(.35),
 						intake.extend(),
 						new WaitCommand(.35)
 					)
@@ -114,10 +116,11 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("Stop Shooting", 
 				Commands.parallel(
-					manager.shooter.dodgeTrench(),
 					indexer.indexOffCommand(),
-					intake.stop(),
-					Commands.runOnce(() -> PPHolonomicDriveController.clearFeedbackOverrides())
+					Commands.sequence(
+						new WaitCommand(.125),
+						manager.shooter.dodgeTrench()
+					)
 			));
 
 		configureBindings();
@@ -173,9 +176,9 @@ public class RobotContainer {
 					indexer.indexOnCommand(),
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
-						new WaitCommand(.5),
+						new WaitCommand(.25),
 						intake.extend(),
-						new WaitCommand(.35)
+						new WaitCommand(.25)
 					)
 				)
 			)
@@ -192,6 +195,7 @@ public class RobotContainer {
 
 		//Shooter
 		// manager.shooter.setDefaultCommand(manager.idleCommands());
+		operator.rightBumper().onTrue(manager.shooter.goToIdle());
 
 		//Intake
 		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
@@ -202,6 +206,7 @@ public class RobotContainer {
 			Commands.repeatingSequence(
 				Commands.runOnce(() -> {
 					if(intake.IsIntakeExtended()){
+		
 						intake.shouldStop = true;
 					}
 				}),
@@ -209,7 +214,7 @@ public class RobotContainer {
 			)
 		).whileFalse(intake.completeStop());
 
-		operator.leftBumper().onTrue(intake.agitateRetract());
+		operator.leftBumper().onTrue(intake.teleopRetract());
 
 		//OPERATOR CONTROLS
 
