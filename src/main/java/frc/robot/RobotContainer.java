@@ -71,6 +71,7 @@ public class RobotContainer {
 		Autos.addOption("SNOWBLOW", "SNOWBLOW");
 		Autos.addOption("Right Side", "RightSide");
 		Autos.addOption("autoaim test", "autoaim test");
+		Autos.addOption("funkycheck", "funkycheck");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -92,6 +93,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
+		NamedCommands.registerCommand("hood up", manager.shooter.setHoodAngle(5) );
 		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(44))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 
