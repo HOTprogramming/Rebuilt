@@ -34,6 +34,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -265,26 +266,37 @@ public class Drive extends SubsystemBase {
 	double currentAngleRad = 0;
 	double angleErrorRad = 0;
 	
-	public Command driveToPoleCoordinate() {
-		return Commands.defer(() -> {
-			Pose2d currentPose = iOdata.state.Pose;
-			currentAngleRad = currentPose.getRotation().getRadians();
-			angleErrorRad = targetAngleRad - currentAngleRad;
-			rotationOffset = Math.abs(targetDistanceMeters) * Math.sin(angleErrorRad); //no idea if offset is right direction
-			offsettoladder = poleAlignmentSub.get() + 0.1 - rotationOffset;// adjust for camera offset (m) from robot rotation
-			//offsettoladder = 0.13;// dummy value
-			double targetX = currentPose.getX() + offsettoladder;
-			double targetY = currentPose.getY() - targetDistanceMeters;
-			Rotation2d targetRotation = Rotation2d.fromDegrees(90);
+public Command driveToPoleCoordinate() {
+    return Commands.defer(() -> {
+        Pose2d currentPose = iOdata.state.Pose;
+        currentAngleRad = currentPose.getRotation().getRadians();
+        angleErrorRad = targetAngleRad - currentAngleRad;
+        rotationOffset = Math.abs(targetDistanceMeters) * Math.sin(angleErrorRad); 
+        offsettoladder = poleAlignmentSub.get() + 0.1 - rotationOffset;
+        double targetX = currentPose.getX() + offsettoladder;
+        double targetY = currentPose.getY() - targetDistanceMeters;
+        Rotation2d targetRotation = Rotation2d.fromDegrees(90);
+		double rearAxleOffsetMeters = -0.3175; // Distance from center to back wheels
+        double sweepFrequency = 3.0;        // Shakes per second
+        double sweepMagnitudeRad = 0.15;     // How wide the "arc" is (in Radians)
+        double forwardMps = 0.25;           // Constant push from back motors
+		
+		Command wiggle = Commands.run(() -> {
+            double rotationWiggle = Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI * sweepFrequency) * sweepMagnitudeRad;
 
-			SmartDashboard.putNumber("Climb/Goal X", targetX);
-			SmartDashboard.putNumber("Climb/Goal Y", targetY);
-			SmartDashboard.putNumber("Climb/Rotation Offset", rotationOffset);
-			SmartDashboard.putNumber("Climb/Tan Angle", Math.tan(angleErrorRad));
-			return runPathFinding(new Pose2d(targetX, targetY, targetRotation));
-			
-		}, Set.of(this)); // 'this' ensures it reserves the drivetrain
-	}
+            driveKraken.setSwerveRequest(ROBOT_CENTRIC
+                .withVelocityX(forwardMps)
+                .withVelocityY(0)
+                .withRotationalRate(rotationWiggle)
+                .withCenterOfRotation(new Translation2d(rearAxleOffsetMeters, 0))
+            );
+        }, this).withTimeout(1.0);
+
+        return runPathFinding(new Pose2d(targetX, targetY, targetRotation))
+               .andThen(wiggle);
+               
+    }, Set.of(this));
+}
 
 	public Command runPathFinding(Pose2d target) {
 		return AutoBuilder.pathfindToPose(target, alignToLadderConstraints);
