@@ -5,27 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Red-Path"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "OTF"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Test"
+            "name": "hood down"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Dev Autos",
+  "folder": null,
   "choreoAuto": false
 }

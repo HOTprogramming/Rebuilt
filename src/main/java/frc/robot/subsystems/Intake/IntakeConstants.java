@@ -19,9 +19,9 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.9;
+	public static double kDeployedPosition = 0.95;
 	public static double kRetractPosition = 0.02;
-	public static double kRetractPositionAgitate = 0.16;
+	public static double kRetractPositionAgitate = 0.236;
 	public static double kExtendTolerance = 0.02;
 	public static double kRetractTolerance = 0.02;
 
@@ -100,11 +100,7 @@ public class IntakeConstants {
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(150.0)
 			.withMotionMagicAcceleration(125.0))
-		.withFeedback(new FeedbackConfigs()
-			.withFeedbackRemoteSensorID(kIntakeEncoderID)
-			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-			.withSensorToMechanismRatio(1.0)
-			.withRotorToSensorRatio(1.0));
+		.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(50));
 
 	public static final CANcoderConfiguration IntakeEncoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(!Robot.isSimulation() ? kEncoderOffset : 0.0)
