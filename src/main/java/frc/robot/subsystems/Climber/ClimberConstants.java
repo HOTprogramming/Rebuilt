@@ -32,7 +32,7 @@ public class ClimberConstants {
 	public static double wristZeroOffset = (0.0/360.0) * wristGearRatio;
 
 
-	public static double startElbowAdjustmentPos = 0.25;
+	public static double startElbowAdjustmentPos = 0.15;
 	public static double wristClimbPos = 0.50;
 
 	public static double wristPastClimbPos = .508;

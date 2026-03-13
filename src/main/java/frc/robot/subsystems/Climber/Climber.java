@@ -88,7 +88,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	private BooleanSupplier startElbowAdjustment() {
-		return () -> m_ClimbKraken.getWristPos() > ClimberConstants.startElbowAdjustmentPos;
+		return () -> (m_ClimbKraken.getWristPos() / ClimberConstants.wristGearRatio) > ClimberConstants.startElbowAdjustmentPos;
 	}
 	
 	private BooleanSupplier isWristClimbed() {
@@ -98,7 +98,6 @@ public class Climber extends SubsystemBase {
 	public BooleanSupplier isElbowl3Climbed() {
 		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.005;
 	}
-
 
 
 	private BooleanSupplier isClimbed() {
@@ -194,7 +193,7 @@ public class Climber extends SubsystemBase {
 	}
 
 
-	
+
 	public Command stageThreeClimb() {
 		return Commands.sequence(
 		lift(),
@@ -216,14 +215,14 @@ public class Climber extends SubsystemBase {
 
 	public Command initialWristClimb() {
 		return run(() -> {
-			setWristPosition(ClimberConstants.wristClimbPos);
+			setWristPosition(ClimberConstants.wristClimbPos * ClimberConstants.wristGearRatio);
 			setElbowPosition(ClimberConstants.initalElbowClimbPos);
 		}).until(startElbowAdjustment());
 	}
 
 	public Command elbowAdjustment() {
 		return run(() -> {
-			setWristPosition(ClimberConstants.wristClimbPos);
+			setWristPosition(ClimberConstants.wristClimbPos * ClimberConstants.wristGearRatio);
 			setElbowPosition(ClimberConstants.adjustedElbowClimbPos);
 		}).until(isWristClimbed());	
 	}
@@ -231,9 +230,9 @@ public class Climber extends SubsystemBase {
 
 	public Command finalElbowExtend() {
 		return run(() -> {
-				setElbowPosition(ClimberConstants.l3ElbowPos);
-				spinWristPosition(ClimberConstants.wristClimbPos);
-			}).until(isElbowl3Climbed()); 
+			setWristPosition(ClimberConstants.wristClimbPos * ClimberConstants.wristGearRatio);
+			setElbowPosition(ClimberConstants.l3ElbowPos);
+		}).until(isElbowl3Climbed()); 
 	}
 
 
