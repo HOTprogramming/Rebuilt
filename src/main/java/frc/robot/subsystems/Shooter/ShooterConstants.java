@@ -29,8 +29,8 @@ public class ShooterConstants {
 	public static double kIdleSpeed = (20.0);
 	public static double kShooterSpeed = (48.0);
 	public static double kTargetShootSpeed = kShooterSpeed;
-	public static double kShooterError = 2.5;
-	public static double kShooterHoodError = .03;
+	public static double kShooterError = 2;
+	public static double kShooterHoodError = .1;
 
 	public static Translation2d redHub = new Translation2d(11.926, 4.048);
 	public static Translation2d blueHub = new Translation2d(4.614, 4.048);
@@ -92,28 +92,24 @@ public class ShooterConstants {
 			.withPeakReverseTorqueCurrent(-120))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
-			.withNeutralMode(NeutralModeValue.Coast))
+			.withNeutralMode(NeutralModeValue.Brake))
 		.withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
-			.withForwardSoftLimitThreshold(0.16)
+			.withForwardSoftLimitThreshold(15)
 			.withReverseSoftLimitThreshold(0)
 			.withForwardSoftLimitEnable(true)
 			.withReverseSoftLimitEnable(true))
 			//HOOD PID
 		.withSlot0(new Slot0Configs()
-			.withKP(100)
+			.withKP(3.5)
 			.withKI(0.0)
 			.withKD(0.0)
-			.withKS(0.5)
+			.withKS(0.25)
 			.withKV(0.0))
 		.withSlot1(new Slot1Configs()
 			.withKP(60.0)
 			.withKI(0.0)
 			.withKD(6.0))
-		.withFeedback(new FeedbackConfigs()
-			.withFeedbackRemoteSensorID(kHoodEncoderID)
-			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-			.withSensorToMechanismRatio(1.0)
-			.withRotorToSensorRatio(1.0));
+		.withFeedback(new FeedbackConfigs());
 
 	public static final CANcoderConfiguration hoodEncoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(!Robot.isSimulation() ? kHoodEncoderOffset : 0.0)

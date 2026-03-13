@@ -13,43 +13,40 @@ import frc.robot.RobotState;
 import frc.util.Kraken;
 
 public class Shooter extends SubsystemBase {
-	private final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
+	public final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
 
 	private InterpolatingDoubleTreeMap hoodAngleMap;
 	private InterpolatingDoubleTreeMap shooterSpeedMap;
 
-	double targetSpeed = 0;
-	double targetHood = 0;
+	public double targetSpeed = 0;
+	public double targetHood = 0;
 
 	double distance = 0;
 
 	public Shooter() {
 		hoodAngleMap = new InterpolatingDoubleTreeMap();
 
-		hoodAngleMap.put(1.0, 0.027);
-		hoodAngleMap.put(2.0, 0.047);
-		hoodAngleMap.put(3.0, 0.065);
-		hoodAngleMap.put(4.0, 0.073);
-		hoodAngleMap.put(5.0, 0.088);
-		hoodAngleMap.put(5.1, 0.105);
-		hoodAngleMap.put(17.0, 0.145);
+		hoodAngleMap.put(1.0, 3.2);
+		hoodAngleMap.put(2.0, 4.5);
+		hoodAngleMap.put(3.0, 6.1);
+		hoodAngleMap.put(4.0, 6.416);
+		hoodAngleMap.put(5.3, 6.696);
+
+		hoodAngleMap.put(5.35, 9.66);
+		hoodAngleMap.put(17.0, 10.24);
+
 
 
 		shooterSpeedMap = new InterpolatingDoubleTreeMap();
 
-		shooterSpeedMap.put(1.0, 41.5);
-		shooterSpeedMap.put(2.0, 42.5);
-		shooterSpeedMap.put(3.0, 44.0);
-		shooterSpeedMap.put(4.0, 46.5);
-		shooterSpeedMap.put(5.0, 50.0);
-		shooterSpeedMap.put(5.1, 46.0);
+		shooterSpeedMap.put(1.0, 41.0);
+		shooterSpeedMap.put(2.0, 42.0);
+		shooterSpeedMap.put(3.0, 45.0);
+		shooterSpeedMap.put(4.0, 47.5);
+		shooterSpeedMap.put(5.3, 53.0);
+
+		shooterSpeedMap.put(5.35, 46.0);
 		shooterSpeedMap.put(17.0, 90.0);
-
-
-
-
-
-		mShooterKraken.m_krakenFXHood.motor.setPosition(0.0);
 	}
 
 	public double getTargetShootSpeed() {
@@ -99,6 +96,17 @@ public class Shooter extends SubsystemBase {
 	public Command dodgeTrench() {
 		return runOnce(() -> {
 			mShooterKraken.runPosition(0);
+			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance);
+			if(RobotState.mode == RobotState.Mode.normal) {
+				mShooterKraken.runVelocity(targetSpeed);
+			}
+		});
+	}
+
+	public Command holdTarget() {
+		return runOnce(() -> {
+			mShooterKraken.runPosition(targetHood);
+			mShooterKraken.runVelocity(targetSpeed);
 		});
 	}
 
@@ -158,22 +166,28 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetBatter() {
 		return runOnce(() -> {
-			mShooterKraken.runPosition(0);
-			mShooterKraken.runVelocity(0); 
+			targetHood = 2.504;			
+			targetSpeed = 41.0;
+			mShooterKraken.runPosition(targetHood);
+			mShooterKraken.runVelocity(targetSpeed); 
 		});
 	}
 
 	public Command PresetTrench() {
 		return runOnce(() -> {
-			mShooterKraken.runPosition(0);
-			mShooterKraken.runVelocity(0); 
+			targetHood = 5.8;
+			targetSpeed = 44.1;
+			mShooterKraken.runPosition(targetHood);
+			mShooterKraken.runVelocity(targetSpeed);
 		});
 	}
 
 	public Command PresetClimberPole() {
 		return runOnce(() -> {
-			mShooterKraken.runPosition(0);
-			mShooterKraken.runVelocity(0); 
+			targetHood = 5.479;
+			targetSpeed = 43.2;
+			mShooterKraken.runPosition(targetHood);
+			mShooterKraken.runVelocity(targetSpeed); 
 		});
 	}
 
@@ -181,6 +195,14 @@ public class Shooter extends SubsystemBase {
 		return (
 			Math.abs(getShooterSpeed() - targetSpeed) <= ShooterConstants.kShooterError &&
 			Math.abs(mShooterKraken.m_krakenFXHood.position.getValueAsDouble() - targetHood) <= ShooterConstants.kShooterHoodError);
+	}
+
+	
+	public Command AutonSpin() {
+		return runOnce(() -> {
+			targetSpeed = 42.0;
+			mShooterKraken.runVelocity(targetSpeed); 
+		});
 	}
 
 }

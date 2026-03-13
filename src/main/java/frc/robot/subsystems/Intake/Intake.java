@@ -30,14 +30,6 @@ public class Intake extends SubsystemBase {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(64)
 					.withMotionMagicCruiseVelocity(64));
-				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(
-					new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(40)
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimit(40)
-						.withSupplyCurrentLimitEnable(true)
-						.withSupplyCurrentLowerLimit(30)
-						.withSupplyCurrentLowerTime(1));
 			}),
 			new WaitCommand(.02),
 			runOnce(() -> {
@@ -64,14 +56,6 @@ public class Intake extends SubsystemBase {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(8)
 					.withMotionMagicCruiseVelocity(8));
-				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(
-					new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(40)
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimit(40)
-						.withSupplyCurrentLimitEnable(true)
-						.withSupplyCurrentLowerLimit(30)
-						.withSupplyCurrentLowerTime(1));
 			}),
 			new WaitCommand(.02),
 			runOnce(() -> {
@@ -81,7 +65,14 @@ public class Intake extends SubsystemBase {
 			}));
 	}
 
-	public Command retract() {
+
+	public Command teleopRetract() {
+		return runOnce(() -> {
+			mIntakeKraken.runPosition(IntakeConstants.kRetractPositionAgitate);
+			mIntakeKraken.stop();
+		});
+	}
+	public Command fullretract() {
 		return runOnce(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
 		});
@@ -110,7 +101,7 @@ public class Intake extends SubsystemBase {
 	public Command rollerSpin() {
 		return runOnce(() -> {
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
-			});
+		});
 	}
 
 	public Command stop() {

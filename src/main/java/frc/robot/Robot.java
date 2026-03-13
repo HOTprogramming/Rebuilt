@@ -83,6 +83,8 @@ public class Robot extends TimedRobot {
 		 * Fire off the Pathplanner Auto to initialize Path Planner (Work around a bug)
 		 */
 
+		SmartDashboard.putBoolean("Teleop", false);
+		SmartDashboard.putBoolean("Auton", false);
 		CommandScheduler.getInstance().cancelAll();
 		CommandScheduler.getInstance().clearComposedCommands();
 		if (!ppConfigured) {
@@ -103,6 +105,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		m_autonomousCommand = Commands.waitSeconds(0.01).andThen(m_robotContainer.getAutonomousCommand());
+		SmartDashboard.putBoolean("Auton", true);
 
 		if (m_autonomousCommand != null) {
 			CommandScheduler.getInstance().schedule(m_autonomousCommand);
@@ -117,6 +120,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		SmartDashboard.putBoolean("Teleop", true);
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}

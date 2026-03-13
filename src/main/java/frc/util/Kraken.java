@@ -55,10 +55,6 @@ public class Kraken {
 
 	public final StatusSignal<Angle> position;
 	public final StatusSignal<AngularVelocity> velocity;
-	public final StatusSignal<Voltage> appliedVolts;
-	public final StatusSignal<Current> supplyCurrent;
-	public final StatusSignal<Current> torqueCurrent;
-	public final StatusSignal<Temperature> tempCelsius;
 
 	public DoublePublisher positionPublisher;
 	public DoublePublisher velocityPublisher;
@@ -90,12 +86,8 @@ public class Kraken {
 
 		position = motor.getPosition();
 		velocity = motor.getVelocity();
-		appliedVolts = motor.getMotorVoltage();
-		supplyCurrent = motor.getSupplyCurrent();
-		torqueCurrent = motor.getTorqueCurrent();
-		tempCelsius = motor.getDeviceTemp();
 
-		BaseStatusSignal.setUpdateFrequencyForAll(100.0, position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius);
+		BaseStatusSignal.setUpdateFrequencyForAll(50.0, position, velocity);
 	}
 
 	public void setup(){
@@ -117,7 +109,7 @@ public class Kraken {
 			refreshSim();
 		}
 
-		boolean isOk = BaseStatusSignal.refreshAll(position, velocity, appliedVolts, supplyCurrent, torqueCurrent, tempCelsius).isOK();
+		boolean isOk = BaseStatusSignal.refreshAll(position, velocity).isOK();
 
 		updateTelemetry();
 
