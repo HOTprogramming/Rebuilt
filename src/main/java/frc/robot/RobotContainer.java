@@ -130,7 +130,6 @@ public class RobotContainer {
 				Commands.parallel(
 					indexer.indexOffCommand(),
 					Commands.sequence(
-						new WaitCommand(.125),
 						manager.shooter.dodgeTrench()
 					)
 			));

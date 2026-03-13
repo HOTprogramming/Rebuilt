@@ -166,7 +166,7 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetBatter() {
 		return runOnce(() -> {
-			targetHood = 2.504;			
+			targetHood = 3.2;			
 			targetSpeed = 41.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
@@ -175,17 +175,17 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetTrench() {
 		return runOnce(() -> {
-			targetHood = 5.8;
-			targetSpeed = 44.1;
-			mShooterKraken.runPosition(targetHood);
-			mShooterKraken.runVelocity(targetSpeed);
+			// targetHood = 5.8;
+			// targetSpeed = 44.1;
+			mShooterKraken.runPosition(shooterSpeedMap.get(3.6));
+			mShooterKraken.runVelocity(hoodAngleMap.get(3.6));
 		});
 	}
 
 	public Command PresetClimberPole() {
 		return runOnce(() -> {
-			targetHood = 5.479;
-			targetSpeed = 43.2;
+			targetHood = 6.1;
+			targetSpeed = 45.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
 		});
