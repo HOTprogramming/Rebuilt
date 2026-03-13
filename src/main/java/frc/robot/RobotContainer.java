@@ -189,10 +189,10 @@ public class RobotContainer {
 						intake.agitateRetract(),
 						new WaitCommand(.25),
 						intake.extend(),
+					
 						new WaitCommand(.25)
-					)
-				)
-				
+					).until(() -> driver.leftTrigger().getAsBoolean())
+				)	
 			)
 		).onFalse(
 			Commands.parallel(
@@ -231,7 +231,12 @@ public class RobotContainer {
 		//OPERATOR CONTROLS
 
 		//Climb Mode
-		operator.start().onTrue(Commands.runOnce(() -> manager.setClimbMode())); 
+		operator.start().onTrue(
+			Commands.sequence(
+				Commands.runOnce(() -> manager.setClimbMode()),
+				intake.fullretract()
+		)); 
+
 
 		//Normal Mode
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 

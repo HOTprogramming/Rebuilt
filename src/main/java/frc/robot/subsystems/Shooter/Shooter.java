@@ -177,8 +177,8 @@ public class Shooter extends SubsystemBase {
 		return runOnce(() -> {
 			targetHood = hoodAngleMap.get(3.6);
 			targetSpeed = shooterSpeedMap.get(3.6);
-			mShooterKraken.runPosition(shooterSpeedMap.get(3.6));
-			mShooterKraken.runVelocity(hoodAngleMap.get(3.6));
+			mShooterKraken.runPosition(targetHood);
+			mShooterKraken.runVelocity(targetSpeed);
 		});
 	}
 
