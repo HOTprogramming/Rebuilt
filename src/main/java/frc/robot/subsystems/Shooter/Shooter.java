@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
 
 		hoodAngleMap.put(1.0, 3.2);
 		hoodAngleMap.put(2.0, 4.5);
-		hoodAngleMap.put(3.0, 6.1);
+		hoodAngleMap.put(3.0, 5.90); //6.1
 		hoodAngleMap.put(4.0, 6.416);
 		hoodAngleMap.put(5.3, 6.696);
 
@@ -175,8 +175,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetTrench() {
 		return runOnce(() -> {
-			// targetHood = 5.8;
-			// targetSpeed = 44.1;
+			targetHood = hoodAngleMap.get(3.6);
+			targetSpeed = shooterSpeedMap.get(3.6);
 			mShooterKraken.runPosition(shooterSpeedMap.get(3.6));
 			mShooterKraken.runVelocity(hoodAngleMap.get(3.6));
 		});
