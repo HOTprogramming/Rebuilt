@@ -35,8 +35,8 @@ public class ClimberConstants {
 	public static double wristFinalAdjustPos = 0.492;
 	public static double wristClimbPos = 0.50;
 
-	public static double storedPos = 0.248;
-	public static double deployedPos = -0.232;
+	public static double storedPos = 0;
+	public static double deployedPos = -283.7 / elbowGearRatio;
 	public static double l1autonclimbedpos = 0.438; // unset
 	public static double startWristAtPos = 0.175;
 	public static double liftElbowClimbPos = 0.438;
@@ -70,12 +70,9 @@ public class ClimberConstants {
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(10.0)
 			.withMotionMagicAcceleration(10.0))
-		// .withFeedback(
-		// 	new FeedbackConfigs()
-		// 		.withFeedbackRemoteSensorID(kClimbEncoder)
-		// 		.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-		// 		.withSensorToMechanismRatio(1.0)
-		// 		.withRotorToSensorRatio(1.0))
+		.withFeedback(
+			new FeedbackConfigs()
+				.withSensorToMechanismRatio(602.18))
 		.withSlot0(new Slot0Configs()
 			.withKP(500)
 			.withKI(0.0)

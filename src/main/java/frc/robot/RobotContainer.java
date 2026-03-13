@@ -236,12 +236,13 @@ public class RobotContainer {
 		operator.start().onTrue(
 			Commands.parallel(
 				Commands.runOnce(() -> manager.setClimbMode()),
-				intake.teleopRetract(),
+				intake.fullretract(),
 				manager.shooter.shooterOff()
 			)); 
 
 		//Normal Mode
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 
+
 
 		//Shot Map: Deploy Climber
 		operator.x().onTrue(
