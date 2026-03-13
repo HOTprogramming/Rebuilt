@@ -39,10 +39,10 @@ public class RobotContainer {
 
 	private final Drive drivetrain;
 	private final Camera camera;
-	private final Index indexer;
+	public final Index indexer;
 	private final Climber climber;
-	private final RobotState manager;
-	private final Intake intake;
+	public final RobotState manager;
+	public final Intake intake;
 
 
 	private final CommandXboxController driver = new CommandXboxController(0);
@@ -198,7 +198,7 @@ public class RobotContainer {
 			Commands.parallel(
 				Commands.sequence(
 					indexer.indexOffCommand(),
-					new WaitCommand(.25), 
+					new WaitCommand(.1), 
 					manager.shooter.dodgeTrench()
 				), 
 				intake.stop()
@@ -207,7 +207,7 @@ public class RobotContainer {
 
 		//Shooter
 		// manager.shooter.setDefaultCommand(manager.idleCommands());
-		operator.rightBumper().onTrue(manager.shooter.goToIdle());
+		operator.rightBumper().onTrue(manager.shooter.idle());
 
 		//Intake
 		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
@@ -217,7 +217,7 @@ public class RobotContainer {
 		).whileTrue(
 			Commands.repeatingSequence(
 				Commands.runOnce(() -> {
-					if(intake.IsIntakeExtended()){
+					if(intake.IsIntakeExtended() || intake.mIntakeKraken.m_ExtendKraken.motor.getSupplyCurrent().getValueAsDouble() > 80.0){
 		
 						intake.shouldStop = true;
 					}
