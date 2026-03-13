@@ -30,7 +30,9 @@ public class Climber extends SubsystemBase {
 
 		beambreakPub = table.getBooleanTopic("Beambreak").publish();
 		zeroPosPub = table.getDoubleTopic("Zero Position").publish();
-		SmartDashboard.putBoolean("elbowclimber",Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
+		SmartDashboard.putBoolean("elbowclimber", Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
+		
+		m_ClimbKraken.m_climberKraken.motor.setPosition(0);
 	}
 
 	@Override

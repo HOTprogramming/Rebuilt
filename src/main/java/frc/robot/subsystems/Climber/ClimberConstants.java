@@ -70,12 +70,12 @@ public class ClimberConstants {
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(10.0)
 			.withMotionMagicAcceleration(10.0))
-		.withFeedback(
-			new FeedbackConfigs()
-				.withFeedbackRemoteSensorID(kClimbEncoder)
-				.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-				.withSensorToMechanismRatio(1.0)
-				.withRotorToSensorRatio(1.0))
+		// .withFeedback(
+		// 	new FeedbackConfigs()
+		// 		.withFeedbackRemoteSensorID(kClimbEncoder)
+		// 		.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+		// 		.withSensorToMechanismRatio(1.0)
+		// 		.withRotorToSensorRatio(1.0))
 		.withSlot0(new Slot0Configs()
 			.withKP(500)
 			.withKI(0.0)
