@@ -44,6 +44,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Dev Autos",
+  "folder": null,
   "choreoAuto": false
 }
