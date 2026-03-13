@@ -30,18 +30,24 @@ public class ClimberConstants {
 	public static double elbowGearRatio = 602.18;
 
 	public static double wristZeroOffset = (0.0/360.0) * wristGearRatio;
-	public static double startL3ExtendAtPos = 0.3;
-	public static double wristPastClimbPos = 0.508;
-	public static double wristFinalAdjustPos = 0.492;
+
+
+	public static double startElbowAdjustmentPos = 0.25;
 	public static double wristClimbPos = 0.50;
+
+	public static double wristPastClimbPos = .508;
+	public static double wristFinalAdjustPos = 0.492;
+
 
 	public static double storedPos = 0;
 	public static double deployedPos = -283.7 / elbowGearRatio;
+	public static double initalElbowClimbPos = -0.621;
+	public static double adjustedElbowClimbPos = -0.74;
+	public static double l3ElbowPos = -0.5;
+
+	public static double wheelsUpPos = 0.2125; // unset
 	public static double l1autonclimbedpos = 0.438; // unset
-	public static double startWristAtPos = 0.175;
-	public static double liftElbowClimbPos = 0.438;
-	public static double l3ElbowPos = 0.272;
-	public static double wheelsUpPos = 0.2125;
+	public static double startWristAtPos = -0.605;
 
 
 	public static double liftSpeed = 0.06 * elbowGearRatio;
@@ -106,8 +112,9 @@ public class ClimberConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(10.0)
-			.withMotionMagicAcceleration(10.0))
+			.withMotionMagicCruiseVelocity(100.0)
+			.withMotionMagicAcceleration(160.0)
+			.withMotionMagicJerk(1000))
 		.withSlot0(new Slot0Configs()
 			.withKP(5)
 			.withKI(0.0)
@@ -126,12 +133,7 @@ public class ClimberConstants {
 			.withKA(0)
 			.withKP(5)
 			.withKI(0)
-			.withKD(0))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(120.0)
-			.withMotionMagicAcceleration(200)
-			.withMotionMagicJerk(2000)
-		);
+			.withKD(0));
 
 
 

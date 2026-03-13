@@ -244,6 +244,7 @@ public class RobotContainer {
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 
 
 
+
 		//Shot Map: Deploy Climber
 		operator.x().onTrue(
     	Commands.repeatingSequence(Commands.either(
@@ -284,8 +285,8 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
     // Climber Controls
     climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual( 
-		Math.abs(operator.getRightX()) >= 0.15 ? operator.getRightX() * 0.3 : 0,
-        Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.3 : 0)));
+		Math.abs(operator.getRightX()) >= 0.15 ? operator.getRightX() * 0.6 : 0,
+        Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.6 : 0)));
 
 	// operator.leftBumper().onTrue(
 	// 	Commands.sequence(Commands.race(drivetrain.lockInClimber(), climber.liftUpWheelsSlow()), drivetrain.stopDrive(), climber.lift()));
