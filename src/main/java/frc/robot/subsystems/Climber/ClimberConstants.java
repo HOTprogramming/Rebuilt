@@ -35,8 +35,8 @@ public class ClimberConstants {
 	public static double wristFinalAdjustPos = 0.492;
 	public static double wristClimbPos = 0.50;
 
-	public static double storedPos = -0.2585;
-	public static double deployedPos = 0.2199;
+	public static double storedPos = 0.248;
+	public static double deployedPos = -0.232;
 	public static double l1autonclimbedpos = 0.438; // unset
 	public static double startWristAtPos = 0.175;
 	public static double liftElbowClimbPos = 0.438;
@@ -50,7 +50,7 @@ public class ClimberConstants {
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs()
 			.withAbsoluteSensorDiscontinuityPoint(0.5)
-			.withMagnetOffset(0.37745)
+			.withMagnetOffset(-0.413)
 			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
