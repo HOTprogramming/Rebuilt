@@ -198,10 +198,9 @@ public class RobotContainer {
 				Commands.sequence(
 					indexer.indexOffCommand(),
 					manager.shooter.dodgeTrench()
-				), 
-				intake.stop()
+				)
 			)
-		);
+		).onFalse(intake.stop());
 
 		//Shooter
 		// manager.shooter.setDefaultCommand(manager.idleCommands());
