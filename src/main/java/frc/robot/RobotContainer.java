@@ -188,7 +188,7 @@ public class RobotContainer {
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
 						new WaitCommand(.25),
-						intake.extend(),
+						intake.extendShort(),
 						new WaitCommand(.25)
 					).until(() -> driver.leftTrigger().getAsBoolean())
 				)	
