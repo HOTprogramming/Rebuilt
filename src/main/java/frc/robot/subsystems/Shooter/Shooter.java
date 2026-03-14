@@ -21,6 +21,8 @@ public class Shooter extends SubsystemBase {
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
+	public double shotMapOffset = 0;
+
 	double distance = 0;
 
 	public Shooter() {
@@ -71,8 +73,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command autoAim() {
 		return run(() -> {
-			targetHood = hoodAngleMap.get(RobotState.lookAheadDistance);
-			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance);
+			targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
+			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});
