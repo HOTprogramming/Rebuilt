@@ -189,7 +189,6 @@ public class RobotContainer {
 						intake.agitateRetract(),
 						new WaitCommand(.25),
 						intake.extend(),
-					
 						new WaitCommand(.25)
 					).until(() -> driver.leftTrigger().getAsBoolean())
 				)	
@@ -198,7 +197,6 @@ public class RobotContainer {
 			Commands.parallel(
 				Commands.sequence(
 					indexer.indexOffCommand(),
-					new WaitCommand(.1), 
 					manager.shooter.dodgeTrench()
 				), 
 				intake.stop()
