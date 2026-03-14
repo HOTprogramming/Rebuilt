@@ -27,7 +27,7 @@ public final class CompBotConstants {
     public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
         .withCANBusName(kCANBus.getName())
         .withPigeon2Id(kPigeonId)
-        .withPigeon2Configs(null);
+        .withPigeon2Configs(new Pigeon2Configuration());
 
     // Steer gains
     private static final Slot0Configs steerGains = new Slot0Configs()
