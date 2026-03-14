@@ -27,8 +27,8 @@ public class Shooter extends SubsystemBase {
 		hoodAngleMap = new InterpolatingDoubleTreeMap();
 
 		hoodAngleMap.put(1.0, 3.2);
-		hoodAngleMap.put(2.0, 4.5);
-		hoodAngleMap.put(3.0, 5.90); //6.1
+		hoodAngleMap.put(2.0, 4.4); //4.3
+		hoodAngleMap.put(3.0, 5.70); //6.1  5.9
 		hoodAngleMap.put(4.0, 6.416);
 		hoodAngleMap.put(5.3, 6.696);
 
@@ -166,7 +166,7 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetBatter() {
 		return runOnce(() -> {
-			targetHood = 3.2;			
+			targetHood = 2.8;			
 			targetSpeed = 41.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
@@ -184,7 +184,7 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetClimberPole() {
 		return runOnce(() -> {
-			targetHood = 6.1;
+			targetHood = 6.0;
 			targetSpeed = 45.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 

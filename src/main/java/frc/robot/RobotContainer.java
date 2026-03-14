@@ -153,7 +153,7 @@ public class RobotContainer {
 		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 
 		// Aim
-		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
+		//driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
 		// Rotate for Bump
 		driver.b().whileTrue(drivetrain.run(() -> {
@@ -221,7 +221,14 @@ public class RobotContainer {
 				}),
 				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
 			)
-		).whileFalse(intake.completeStop());
+		).whileFalse(intake.completeStop())
+		.onFalse(
+			Commands.repeatingSequence(
+				intake.agitateRetract(),
+				new WaitCommand(.25),
+				intake.extendShort(),
+				new WaitCommand(.25)
+			).onlyIf(() -> driver.rightTrigger().getAsBoolean()));
 
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
