@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -279,6 +281,15 @@ public class RobotContainer {
 
 		//Intake Roller Stop
 		operator.leftTrigger().whileTrue(intake.rollerStop());
+
+		operator.povUp().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset += 0.1524;
+		}));
+
+		operator.povDown().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset -= 0.1524;
+		}));
+
 
 		//Climber Controls
 		climber.setDefaultCommand(climber
