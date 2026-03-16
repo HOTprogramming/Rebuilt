@@ -29,7 +29,7 @@ public class IndexConstants {
 			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
 			.withSupplyCurrentLowerLimit(30)
-			.withSupplyCurrentLowerTime(1))
+			.withSupplyCurrentLowerTime(2))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
 			.withPeakForwardTorqueCurrent(80)
 			.withPeakReverseTorqueCurrent(-80))

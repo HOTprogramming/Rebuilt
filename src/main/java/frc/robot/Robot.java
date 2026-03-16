@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.util.Kraken;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
@@ -124,6 +125,13 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+
+		CommandScheduler.getInstance().cancelAll();
+
+		m_robotContainer.indexer.m_IndexKraken.m_floorKraken.motor.setVoltage(0);
+		m_robotContainer.indexer.m_IndexKraken.m_leftKickKraken.motor.setVoltage(0);
+		m_robotContainer.indexer.m_IndexKraken.m_rightKickKraken.motor.setVoltage(0);
+		m_robotContainer.manager.shooter.mShooterKraken.m_krakenFXHood.setPosition(0, Kraken.PositionControlType.PositionVoltage);
 	}
 
 	@Override

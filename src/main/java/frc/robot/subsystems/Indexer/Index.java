@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Index extends SubsystemBase {
-	private final IndexKraken m_IndexKraken = IndexKraken.getInstance();
+	public final IndexKraken m_IndexKraken = IndexKraken.getInstance();
 
 	public Index() {
 
