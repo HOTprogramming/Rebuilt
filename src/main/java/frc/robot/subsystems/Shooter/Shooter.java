@@ -21,16 +21,18 @@ public class Shooter extends SubsystemBase {
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
+	public double shotMapOffset = 0;
+
 	double distance = 0;
 
 	public Shooter() {
 		hoodAngleMap = new InterpolatingDoubleTreeMap();
 
-		hoodAngleMap.put(1.0, 3.2);
-		hoodAngleMap.put(2.0, 4.5);
-		hoodAngleMap.put(3.0, 6.1);
-		hoodAngleMap.put(4.0, 6.416);
-		hoodAngleMap.put(5.3, 6.696);
+		hoodAngleMap.put(1.0, 2.7); 
+		hoodAngleMap.put(2.0, 3.6); //4.3
+		hoodAngleMap.put(3.0, 5.0); //6.1  5.9
+		hoodAngleMap.put(4.0, 5.916);
+		hoodAngleMap.put(5.3, 6.196);
 
 		hoodAngleMap.put(5.35, 9.66);
 		hoodAngleMap.put(17.0, 10.24);
@@ -71,8 +73,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command autoAim() {
 		return run(() -> {
-			targetHood = hoodAngleMap.get(RobotState.lookAheadDistance);
-			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance);
+			targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
+			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});
@@ -166,7 +168,7 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetBatter() {
 		return runOnce(() -> {
-			targetHood = 2.504;			
+			targetHood = 2.8;			
 			targetSpeed = 41.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
@@ -175,8 +177,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetTrench() {
 		return runOnce(() -> {
-			targetHood = 5.8;
-			targetSpeed = 44.1;
+			targetHood = hoodAngleMap.get(3.6);
+			targetSpeed = shooterSpeedMap.get(3.6);
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});
@@ -184,8 +186,8 @@ public class Shooter extends SubsystemBase {
 
 	public Command PresetClimberPole() {
 		return runOnce(() -> {
-			targetHood = 5.479;
-			targetSpeed = 43.2;
+			targetHood = 6.0;
+			targetSpeed = 45.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
 		});

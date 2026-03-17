@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -22,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Camera.Camera;
@@ -88,7 +89,7 @@ public class RobotContainer {
 		// NamedCommands.registerCommand("auto aim", manager.autoAim());
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
-		NamedCommands.registerCommand("autoclimb",climber.autoClimb());
+		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
 		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(47))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 		NamedCommands.registerCommand("auton spin", manager.shooter.AutonSpin());
@@ -131,7 +132,6 @@ public class RobotContainer {
 				Commands.parallel(
 					indexer.indexOffCommand(),
 					Commands.sequence(
-						new WaitCommand(.125),
 						manager.shooter.dodgeTrench()
 					)
 			));
@@ -161,7 +161,6 @@ public class RobotContainer {
 		driver.b().whileTrue(drivetrain.run(() -> {
 			double rot = drivetrain.getPose().getRotation().getDegrees();
 			double fact;
-
 			fact = Math.abs(rot) > 90 ? 3 : 1;
 			if (rot < 0)
 				fact *= -1;
@@ -191,21 +190,19 @@ public class RobotContainer {
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
 						new WaitCommand(.25),
-						intake.extend(),
+						intake.extendShort(),
 						new WaitCommand(.25)
-					)
-				)
+					).until(() -> driver.leftTrigger().getAsBoolean())
+				)	
 			)
 		).onFalse(
 			Commands.parallel(
 				Commands.sequence(
 					indexer.indexOffCommand(),
-					new WaitCommand(.1), 
 					manager.shooter.dodgeTrench()
-				), 
-				intake.stop()
+				)
 			)
-		);
+		).onFalse(intake.stop());
 
 		//Shooter
 		// manager.shooter.setDefaultCommand(manager.idleCommands());
@@ -226,7 +223,14 @@ public class RobotContainer {
 				}),
 				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
 			)
-		).whileFalse(intake.completeStop());
+		).whileFalse(intake.completeStop())
+		.onFalse(
+			Commands.repeatingSequence(
+				intake.agitateRetract(),
+				new WaitCommand(.25),
+				intake.extendShort(),
+				new WaitCommand(.25)
+			).onlyIf(() -> driver.rightTrigger().getAsBoolean()));
 
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
@@ -234,21 +238,19 @@ public class RobotContainer {
 
 		//Climb Mode
 		operator.start().onTrue(
-			Commands.parallel(
+			Commands.sequence(
 				Commands.runOnce(() -> manager.setClimbMode()),
-				intake.fullretract(),
-				manager.shooter.shooterOff()
-			)); 
+				intake.fullretract()
+		)); 
+
 
 		//Normal Mode
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 
 
-
-
 		//Shot Map: Deploy Climber
 		operator.x().onTrue(
     	Commands.repeatingSequence(Commands.either(
-		climber.fullDeploy(), 
+		climber.deployCommand(), 
 		Commands.runOnce(() -> manager.setNormalMode()),
 		//manager.idleCommands(),
         manager::isClimbMode)));
@@ -256,21 +258,21 @@ public class RobotContainer {
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
     	Commands.either(
-		climber.lift(), 
+		climber.retractCommand(), 
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),
         manager::isClimbMode));
 
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
-		climber.wristClimb(), 
+		climber.rotateCommand(), 
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetTrench()),
         manager::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
 		operator.y().onTrue(
     	Commands.either(
-		climber.finalElbowExtend(), 
+		climber.spinhomeCommand(), 
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetBatter()),
         manager::isClimbMode));
 
@@ -280,29 +282,19 @@ public class RobotContainer {
 		//Intake Roller Stop
 		operator.leftTrigger().whileTrue(intake.rollerStop());
 
+		operator.povUp().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset += 0.1524;
+		}));
+
+		operator.povDown().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset -= 0.1524;
+		}));
+
+
 		//Climber Controls
 		climber.setDefaultCommand(climber
-			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX())));
-    // Climber Controls
-    climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual( 
-		Math.abs(operator.getRightX()) >= 0.15 ? operator.getRightX() * 0.6 : 0,
-        Math.abs(operator.getLeftX()) >= 0.15 ? operator.getLeftX() * 0.6 : 0)));
-
-	// operator.leftBumper().onTrue(
-	// 	Commands.sequence(Commands.race(drivetrain.lockInClimber(), climber.liftUpWheelsSlow()), drivetrain.stopDrive(), climber.lift()));
-	
-
-
-		
-
-		// Intake Controls
-		// intake.setDefaultCommand(intake.agitateRetract());
-		// new Trigger(intake.isAgitateRetracted()).onTrue(intake.stop()).onFalse(intake.run(() -> intake.mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)));
-		// operator.rightBumper().toggleOnTrue(intake.extend());
-		// operator.leftBumper().onTrue(intake.agitate());
-		// operator.leftTrigger().toggleOnTrue(intake.rollerStop());
-		climber.setDefaultCommand(climber.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
-		.onlyIf(manager::isClimbMode));
+			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
+			.onlyIf(manager::isClimbMode));
 	}
 
 
