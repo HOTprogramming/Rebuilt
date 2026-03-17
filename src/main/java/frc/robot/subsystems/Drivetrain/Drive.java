@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.VecBuilder;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -194,6 +195,7 @@ public class Drive extends SubsystemBase {
 		UpdateTelemetry();
 
 		SmartDashboard.putBoolean("Drivertrain good", isAtTargetAngle());
+		SmartDashboard.putBoolean("Climb/iAmDocking", iAmDockingLeaveMeAlone);
 	}
 
 	Pose2d startPose;
@@ -237,13 +239,6 @@ public class Drive extends SubsystemBase {
 	}
 
 	
-	/**
-	 * Getter for the Climber sequence to check if we actually made it to the ladder
-	 */
-	public boolean isDocked() {
-		return isDocked;
-	}
-
 	// Combines the align and dock commands into one sequence for autonomous
 	public Command AutonDockToLadder() {
 		return Commands.sequence(this.run(() -> alignToPole()), this.run(() -> driveToPoleCoordinate()));
@@ -265,6 +260,7 @@ public class Drive extends SubsystemBase {
 	double targetAngleRad = Math.toRadians(90);
 	double currentAngleRad = 0;
 	double angleErrorRad = 0;
+	private boolean iAmDockingLeaveMeAlone = false;
 	
 public Command driveToPoleCoordinate() {
     return Commands.defer(() -> {
@@ -278,9 +274,10 @@ public Command driveToPoleCoordinate() {
         Rotation2d targetRotation = Rotation2d.fromDegrees(90);
 		double rearAxleOffsetMeters = -0.3175; // Distance from center to back wheels
         double sweepFrequency = 3.0;        // Shakes per second
-        double sweepMagnitudeRad = 0.15;     // How wide the "arc" is (in Radians)
+        double sweepMagnitudeRad = 0.35;     // How wide the "arc" is (in Radians)
         double forwardMps = 0.25;           // Constant push from back motors
-		
+		iAmDockingLeaveMeAlone = true;
+
 		Command wiggle = Commands.run(() -> {
             double rotationWiggle = Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI * sweepFrequency) * sweepMagnitudeRad;
 
@@ -293,7 +290,7 @@ public Command driveToPoleCoordinate() {
         }, this).withTimeout(1.0);
 
         return runPathFinding(new Pose2d(targetX, targetY, targetRotation))
-               .andThen(wiggle);
+               .andThen(wiggle).andThen(() -> iAmDockingLeaveMeAlone = false);
                
     }, Set.of(this));
 }
@@ -396,6 +393,9 @@ public Command driveToPoleCoordinate() {
 	}
 
 	public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
+		if (iAmDockingLeaveMeAlone) {
+			stDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+		}
 		this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);
 	}
 
