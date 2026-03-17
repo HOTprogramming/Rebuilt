@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.util.Kraken;
 import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
@@ -83,6 +84,8 @@ public class Robot extends TimedRobot {
 		 * Fire off the Pathplanner Auto to initialize Path Planner (Work around a bug)
 		 */
 
+		SmartDashboard.putBoolean("Teleop", false);
+		SmartDashboard.putBoolean("Auton", false);
 		CommandScheduler.getInstance().cancelAll();
 		CommandScheduler.getInstance().clearComposedCommands();
 		if (!ppConfigured) {
@@ -103,6 +106,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		m_autonomousCommand = Commands.waitSeconds(0.01).andThen(m_robotContainer.getAutonomousCommand());
+		SmartDashboard.putBoolean("Auton", true);
 
 		if (m_autonomousCommand != null) {
 			CommandScheduler.getInstance().schedule(m_autonomousCommand);
@@ -117,9 +121,17 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		SmartDashboard.putBoolean("Teleop", true);
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+
+		CommandScheduler.getInstance().cancelAll();
+
+		m_robotContainer.indexer.m_IndexKraken.m_floorKraken.motor.setVoltage(0);
+		m_robotContainer.indexer.m_IndexKraken.m_leftKickKraken.motor.setVoltage(0);
+		m_robotContainer.indexer.m_IndexKraken.m_rightKickKraken.motor.setVoltage(0);
+		m_robotContainer.manager.shooter.mShooterKraken.m_krakenFXHood.setPosition(0, Kraken.PositionControlType.PositionVoltage);
 	}
 
 	@Override

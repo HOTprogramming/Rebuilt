@@ -39,6 +39,21 @@ public class Intake extends SubsystemBase {
 			}));
 	}
 
+	public Command extendShort() {
+		return Commands.sequence(
+			runOnce(() -> {
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
+					.withMotionMagicAcceleration(64)
+					.withMotionMagicCruiseVelocity(64));
+			}),
+			new WaitCommand(.02),
+			runOnce(() -> {
+				mIntakeKraken.runAgitatePosition(IntakeConstants.kShortDeployedPosition);
+				mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+				mIntakeKraken.runKickerVelocity(IntakeConstants.kKickerSpeed);
+			}));
+	}
+
 	public Command agitateExtend(){
 		return runOnce(() -> {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
@@ -65,7 +80,14 @@ public class Intake extends SubsystemBase {
 			}));
 	}
 
-	public Command retract() {
+
+	public Command teleopRetract() {
+		return runOnce(() -> {
+			mIntakeKraken.runPosition(IntakeConstants.kRetractPositionAgitate);
+			mIntakeKraken.stop();
+		});
+	}
+	public Command fullretract() {
 		return runOnce(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
 		});

@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -39,10 +41,10 @@ public class RobotContainer {
 
 	private final Drive drivetrain;
 	private final Camera camera;
-	private final Index indexer;
+	public final Index indexer;
 	private final Climber climber;
-	private final RobotState manager;
-	private final Intake intake;
+	public final RobotState manager;
+	public final Intake intake;
 
 
 	private final CommandXboxController driver = new CommandXboxController(0);
@@ -65,12 +67,8 @@ public class RobotContainer {
 		// Left","Shoot Left");"
 		Autos.setDefaultOption("Path", "Path");
 
-		Autos.addOption("First Camera Test Auto", "First Camera Test Auto");
-		Autos.addOption("NEUTRALSTEAL", "NEUTRALSTEAL");
-		Autos.addOption("Grid Test", "Grid Test");
-		Autos.addOption("SNOWBLOW", "SNOWBLOW");
-		Autos.addOption("Right Side", "RightSide");
-		Autos.addOption("autoaim test", "autoaim test");
+		Autos.addOption("ohno", "ohno");
+		Autos.addOption("FunkyCheck", "FunkyCheck");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -84,7 +82,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
 		NamedCommands.registerCommand("intake", intake.extend());
-		NamedCommands.registerCommand("intake off", intake.retract());
+		NamedCommands.registerCommand("intake off", intake.teleopRetract());
 		NamedCommands.registerCommand("intake agitate", intake.agitate());
 
 		//Start autoaim at start of auton
@@ -92,20 +90,38 @@ public class RobotContainer {
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
 		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
-		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(44))));
+		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(47))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
+		NamedCommands.registerCommand("auton spin", manager.shooter.AutonSpin());
+
 
 		NamedCommands.registerCommand("Auto Aim", 			
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(0,0)),
 					manager.shooter.autoAim(),
 					Commands.sequence(
-						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
+						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngleAuton()),
 						indexer.indexOnCommand(),
 						
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
-						new WaitCommand(.5),
+						new WaitCommand(.35),
+						intake.extend(),
+						new WaitCommand(.35)
+					)
+				)
+			));
+
+		NamedCommands.registerCommand("Auto Aim test", 			
+			Commands.parallel(
+					manager.shooter.autoAim(),
+					Commands.sequence(
+						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot()),
+						indexer.indexOnCommand(),
+						
+					Commands.repeatingSequence(
+						intake.agitateRetract(),
+						new WaitCommand(.35),
 						intake.extend(),
 						new WaitCommand(.35)
 					)
@@ -114,10 +130,10 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("Stop Shooting", 
 				Commands.parallel(
-					manager.shooter.dodgeTrench(),
 					indexer.indexOffCommand(),
-					intake.stop(),
-					Commands.runOnce(() -> PPHolonomicDriveController.clearFeedbackOverrides())
+					Commands.sequence(
+						manager.shooter.dodgeTrench()
+					)
 			));
 
 		configureBindings();
@@ -182,25 +198,24 @@ public class RobotContainer {
 					indexer.indexOnCommand(),
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
-						new WaitCommand(.5),
-						intake.extend(),
-						new WaitCommand(.35)
-					)
-				)
+						new WaitCommand(.25),
+						intake.extendShort(),
+						new WaitCommand(.25)
+					).until(() -> driver.leftTrigger().getAsBoolean())
+				)	
 			)
 		).onFalse(
 			Commands.parallel(
 				Commands.sequence(
 					indexer.indexOffCommand(),
-					new WaitCommand(.25), 
 					manager.shooter.dodgeTrench()
-				), 
-				intake.stop()
+				)
 			)
-		);
+		).onFalse(intake.stop());
 
 		//Shooter
 		// manager.shooter.setDefaultCommand(manager.idleCommands());
+		operator.rightBumper().onTrue(manager.shooter.idle());
 
 		//Intake
 		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
@@ -210,20 +225,33 @@ public class RobotContainer {
 		).whileTrue(
 			Commands.repeatingSequence(
 				Commands.runOnce(() -> {
-					if(intake.IsIntakeExtended()){
+					if(intake.IsIntakeExtended() || intake.mIntakeKraken.m_ExtendKraken.motor.getSupplyCurrent().getValueAsDouble() > 80.0){
+		
 						intake.shouldStop = true;
 					}
 				}),
 				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
 			)
-		).whileFalse(intake.completeStop());
+		).whileFalse(intake.completeStop())
+		.onFalse(
+			Commands.repeatingSequence(
+				intake.agitateRetract(),
+				new WaitCommand(.25),
+				intake.extendShort(),
+				new WaitCommand(.25)
+			).onlyIf(() -> driver.rightTrigger().getAsBoolean()));
 
-		operator.leftBumper().onTrue(intake.agitateRetract());
+		operator.leftBumper().onTrue(intake.teleopRetract());
 
 		//OPERATOR CONTROLS
 
 		//Climb Mode
-		operator.start().onTrue(Commands.runOnce(() -> manager.setClimbMode())); 
+		operator.start().onTrue(
+			Commands.sequence(
+				Commands.runOnce(() -> manager.setClimbMode()),
+				intake.fullretract()
+		)); 
+
 
 		//Normal Mode
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 
@@ -262,6 +290,15 @@ public class RobotContainer {
 
 		//Intake Roller Stop
 		operator.leftTrigger().whileTrue(intake.rollerStop());
+
+		operator.povUp().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset += 0.1524;
+		}));
+
+		operator.povDown().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset -= 0.1524;
+		}));
+
 
 		//Climber Controls
 		climber.setDefaultCommand(climber
