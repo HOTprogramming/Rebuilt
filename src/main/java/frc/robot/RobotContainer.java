@@ -90,7 +90,7 @@ public class RobotContainer {
 		// NamedCommands.registerCommand("auto aim", manager.autoAim());
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
-		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
+		NamedCommands.registerCommand("autoclimb",climber.autoClimb());
 		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(47))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 		NamedCommands.registerCommand("auton spin", manager.shooter.AutonSpin());
@@ -244,45 +244,47 @@ public class RobotContainer {
 
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
-		//OPERATOR CONTROLS
-
 		//Climb Mode
 		operator.start().onTrue(
-			Commands.sequence(
+			Commands.parallel(
 				Commands.runOnce(() -> manager.setClimbMode()),
-				intake.fullretract()
-		)); 
-
+				intake.fullretract(),
+				manager.shooter.shooterOff()
+			)); 
 
 		//Normal Mode
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 
 
 		//Shot Map: Deploy Climber
 		operator.x().onTrue(
-    	Commands.repeatingSequence(Commands.either(
-		climber.deployCommand(), 
+    	Commands.either(
+		climber.fullDeploy(), 
 		Commands.runOnce(() -> manager.setNormalMode()),
 		//manager.idleCommands(),
-        manager::isClimbMode)));
+        manager::isClimbMode));
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
     	Commands.either(
-		climber.retractCommand(), 
-		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),
-        manager::isClimbMode));
+			Commands.parallel(
+				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
+				Commands.sequence(Commands.waitSeconds(0.5), climber.stageThreeClimb())
+			),
+			Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),
+			manager::isClimbMode
+		));
 
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
-		climber.rotateCommand(), 
+		climber.stow(), 
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetTrench()),
         manager::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
 		operator.y().onTrue(
     	Commands.either(
-		climber.spinhomeCommand(), 
+		climber.teleopDeploy(), 
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetBatter()),
         manager::isClimbMode));
 
