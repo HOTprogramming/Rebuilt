@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -130,7 +132,6 @@ public class RobotContainer {
 				Commands.parallel(
 					indexer.indexOffCommand(),
 					Commands.sequence(
-						new WaitCommand(.125),
 						manager.shooter.dodgeTrench()
 					)
 			));
@@ -189,21 +190,19 @@ public class RobotContainer {
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
 						new WaitCommand(.25),
-						intake.extend(),
+						intake.extendShort(),
 						new WaitCommand(.25)
-					)
-				)
+					).until(() -> driver.leftTrigger().getAsBoolean())
+				)	
 			)
 		).onFalse(
 			Commands.parallel(
 				Commands.sequence(
 					indexer.indexOffCommand(),
-					new WaitCommand(.1), 
 					manager.shooter.dodgeTrench()
-				), 
-				intake.stop()
+				)
 			)
-		);
+		).onFalse(intake.stop());
 
 		//Shooter
 		// manager.shooter.setDefaultCommand(manager.idleCommands());
@@ -224,11 +223,16 @@ public class RobotContainer {
 				}),
 				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
 			)
-		).whileFalse(intake.completeStop());
+		).whileFalse(intake.completeStop())
+		.onFalse(
+			Commands.repeatingSequence(
+				intake.agitateRetract(),
+				new WaitCommand(.25),
+				intake.extendShort(),
+				new WaitCommand(.25)
+			).onlyIf(() -> driver.rightTrigger().getAsBoolean()));
 
 		operator.leftBumper().onTrue(intake.teleopRetract());
-
-		//OPERATOR CONTROLS
 
 		//Climb Mode
 		operator.start().onTrue(
@@ -279,6 +283,15 @@ public class RobotContainer {
 
 		//Intake Roller Stop
 		operator.leftTrigger().whileTrue(intake.rollerStop());
+
+		operator.povUp().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset += 0.1524;
+		}));
+
+		operator.povDown().onTrue(Commands.runOnce(() -> {
+			manager.shooter.shotMapOffset -= 0.1524;
+		}));
+
 
 		//Climber Controls
 		climber.setDefaultCommand(climber
