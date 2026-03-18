@@ -80,11 +80,11 @@ public class Climber extends SubsystemBase {
 
 	
 	private BooleanSupplier isDeployed() {
-		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.deployedPos) < 0.002;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.deployedPos) < 0.01;
 	}
 
 	private BooleanSupplier isLifted() {
-		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.initalElbowClimbPos) < 0.005;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.initalElbowClimbPos) < 0.01;
 	}
 
 	private BooleanSupplier startElbowAdjustment() {
@@ -96,12 +96,12 @@ public class Climber extends SubsystemBase {
 	}
 
 	public BooleanSupplier isElbowl3Climbed() {
-		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.005;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.01;
 	}
 
 
 	private BooleanSupplier isClimbed() {
-		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l1autonclimbedpos) < 0.002;
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l1autonclimbedpos) < 0.01;
 	}
 
 	private BooleanSupplier isPartWristClimbed() {
@@ -213,14 +213,14 @@ public class Climber extends SubsystemBase {
 		);
 	}
 
-	public Command initialWristClimb() {
+	private Command initialWristClimb() {
 		return run(() -> {
 			setWristPosition(ClimberConstants.wristClimbPos * ClimberConstants.wristGearRatio);
 			setElbowPosition(ClimberConstants.initalElbowClimbPos);
 		}).until(startElbowAdjustment());
 	}
 
-	public Command elbowAdjustment() {
+	private Command elbowAdjustment() {
 		return run(() -> {
 			setWristPosition(ClimberConstants.wristClimbPos * ClimberConstants.wristGearRatio);
 			setElbowPosition(ClimberConstants.adjustedElbowClimbPos);
@@ -232,7 +232,7 @@ public class Climber extends SubsystemBase {
 		return run(() -> {
 			setWristPosition(ClimberConstants.wristClimbPos * ClimberConstants.wristGearRatio);
 			setElbowPosition(ClimberConstants.l3ElbowPos);
-		}).until(isElbowl3Climbed()); 
+		});
 	}
 
 

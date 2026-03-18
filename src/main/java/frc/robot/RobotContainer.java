@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Inches;
-
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -89,7 +87,7 @@ public class RobotContainer {
 		// NamedCommands.registerCommand("auto aim", manager.autoAim());
 		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
-		NamedCommands.registerCommand("autoclimb",climber.LV1Command());
+		NamedCommands.registerCommand("autoclimb",climber.autoClimb());
 		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(47))));
 		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
 		NamedCommands.registerCommand("auton spin", manager.shooter.AutonSpin());
@@ -132,6 +130,7 @@ public class RobotContainer {
 				Commands.parallel(
 					indexer.indexOffCommand(),
 					Commands.sequence(
+						new WaitCommand(.125),
 						manager.shooter.dodgeTrench()
 					)
 			));
@@ -190,19 +189,21 @@ public class RobotContainer {
 					Commands.repeatingSequence(
 						intake.agitateRetract(),
 						new WaitCommand(.25),
-						intake.extendShort(),
+						intake.extend(),
 						new WaitCommand(.25)
-					).until(() -> driver.leftTrigger().getAsBoolean())
-				)	
+					)
+				)
 			)
 		).onFalse(
 			Commands.parallel(
 				Commands.sequence(
 					indexer.indexOffCommand(),
+					new WaitCommand(.1), 
 					manager.shooter.dodgeTrench()
-				)
+				), 
+				intake.stop()
 			)
-		).onFalse(intake.stop());
+		);
 
 		//Shooter
 		// manager.shooter.setDefaultCommand(manager.idleCommands());
@@ -223,14 +224,7 @@ public class RobotContainer {
 				}),
 				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
 			)
-		).whileFalse(intake.completeStop())
-		.onFalse(
-			Commands.repeatingSequence(
-				intake.agitateRetract(),
-				new WaitCommand(.25),
-				intake.extendShort(),
-				new WaitCommand(.25)
-			).onlyIf(() -> driver.rightTrigger().getAsBoolean()));
+		).whileFalse(intake.completeStop());
 
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
@@ -238,41 +232,45 @@ public class RobotContainer {
 
 		//Climb Mode
 		operator.start().onTrue(
-			Commands.sequence(
+			Commands.parallel(
 				Commands.runOnce(() -> manager.setClimbMode()),
-				intake.fullretract()
-		)); 
-
+				intake.fullretract(),
+				manager.shooter.shooterOff()
+			)); 
 
 		//Normal Mode
 		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 
 
 		//Shot Map: Deploy Climber
 		operator.x().onTrue(
-    	Commands.repeatingSequence(Commands.either(
-		climber.deployCommand(), 
+    	Commands.either(
+		climber.fullDeploy(), 
 		Commands.runOnce(() -> manager.setNormalMode()),
 		//manager.idleCommands(),
-        manager::isClimbMode)));
+        manager::isClimbMode));
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
     	Commands.either(
-		climber.retractCommand(), 
-		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),
-        manager::isClimbMode));
+			Commands.parallel(
+				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
+				Commands.sequence(Commands.waitSeconds(0.5), climber.stageThreeClimb())
+			),
+			Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),
+			manager::isClimbMode
+		));
 
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
-		climber.rotateCommand(), 
+		climber.stow(), 
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetTrench()),
         manager::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
 		operator.y().onTrue(
     	Commands.either(
-		climber.spinhomeCommand(), 
+		climber.teleopDeploy(), 
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetBatter()),
         manager::isClimbMode));
 
@@ -281,15 +279,6 @@ public class RobotContainer {
 
 		//Intake Roller Stop
 		operator.leftTrigger().whileTrue(intake.rollerStop());
-
-		operator.povUp().onTrue(Commands.runOnce(() -> {
-			manager.shooter.shotMapOffset += 0.1524;
-		}));
-
-		operator.povDown().onTrue(Commands.runOnce(() -> {
-			manager.shooter.shotMapOffset -= 0.1524;
-		}));
-
 
 		//Climber Controls
 		climber.setDefaultCommand(climber
