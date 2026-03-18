@@ -158,7 +158,7 @@ public class Drive extends SubsystemBase {
 		translationControllerX.setTolerance(0.05, 0.1);
 		configurePathPlanner();
 
-		alignToLadderConstraints = new PathConstraints(.50, .50, 2 * Math.PI, 1 * Math.PI);
+		alignToLadderConstraints = new PathConstraints(1.5, 1.5, 2 * Math.PI, 1 * Math.PI); //.5
 	}
 
 	private void UpdateTelemetry() {
@@ -268,14 +268,14 @@ public Command driveToPoleCoordinate() {
         currentAngleRad = currentPose.getRotation().getRadians();
         angleErrorRad = targetAngleRad - currentAngleRad;
         rotationOffset = Math.abs(targetDistanceMeters) * Math.sin(angleErrorRad); 
-        offsettoladder = poleAlignmentSub.get() + 0.1 - rotationOffset;
+        offsettoladder = poleAlignmentSub.get() + 0.15 - rotationOffset;
         double targetX = currentPose.getX() + offsettoladder;
         double targetY = currentPose.getY() - targetDistanceMeters;
         Rotation2d targetRotation = Rotation2d.fromDegrees(90);
 		double rearAxleOffsetMeters = -0.3175; // Distance from center to back wheels
         double sweepFrequency = 3.0;        // Shakes per second
-        double sweepMagnitudeRad = 0.35;     // How wide the "arc" is (in Radians)
-        double forwardMps = 0.25;           // Constant push from back motors
+        double sweepMagnitudeRad = 0.75;     // How wide the "arc" is (in Radians)
+        double forwardMps = 0.4;           // Constant push from back motors
 		iAmDockingLeaveMeAlone = true;
 
 		Command wiggle = Commands.run(() -> {

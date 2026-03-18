@@ -64,5 +64,6 @@
     "editor.insertSpaces": false,
     "editor.detectIndentation": false
   },
-  "java.checkstyle.configuration": "/google_checks.xml"
+  "java.checkstyle.configuration": "/google_checks.xml",
+  "wpilib.autoStartRioLog": false
 }

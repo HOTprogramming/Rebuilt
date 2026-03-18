@@ -69,6 +69,7 @@ public class RobotContainer {
 
 		Autos.addOption("ohno", "ohno");
 		Autos.addOption("FunkyCheck", "FunkyCheck");
+		Autos.addOption("Climb", "Climb");
 
 		SmartDashboard.putData("Autos", Autos);
 
@@ -79,7 +80,7 @@ public class RobotContainer {
 		manager = new RobotState();
 		intake = new Intake();
 
-		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
+		NamedCommands.registerCommand("align pole", drivetrain.driveToPoleCoordinate());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
 		NamedCommands.registerCommand("intake", intake.extend());
 		NamedCommands.registerCommand("intake off", intake.teleopRetract());
