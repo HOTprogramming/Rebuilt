@@ -308,7 +308,7 @@
             "height": 384.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/Shuffleboard/tab/Match time",
+              "topic": "/HOT/Drive/Match Time",
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
@@ -345,23 +345,6 @@
             }
           },
           {
-            "title": "Hub Active",
-            "x": 1024.0,
-            "y": 0.0,
-            "width": 512.0,
-            "height": 384.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/HOT/Drive/Hub Active",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4280336166,
-              "false_color": 4278190080,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
             "title": "Battery Voltage",
             "x": 1024.0,
             "y": 512.0,
@@ -377,6 +360,23 @@
               "divisions": 5,
               "inverted": false,
               "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Hub Active",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/HOT/Drive/Hub Active",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
             }
           }
         ]
