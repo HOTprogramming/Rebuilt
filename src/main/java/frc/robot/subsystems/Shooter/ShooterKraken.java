@@ -25,7 +25,7 @@ public class ShooterKraken {
 		m_krakenFXRightTop.setup();
 		m_krakenFXHood.setup();
 
-		m_krakenFXHood.motor.setPosition(m_krakenFXHood.canCoder.getAbsolutePosition().getValueAsDouble() * 92);
+		m_krakenFXHood.motor.setPosition(0);
 		// m_krakenFXLeftBottom.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
 		// m_krakenFXRightTop.setFollower(ShooterConstants.kMotorIDLeftTop, MotorAlignmentValue.Aligned);
 	}

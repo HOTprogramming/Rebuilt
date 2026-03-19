@@ -396,4 +396,19 @@ public class Drive extends SubsystemBase {
 			return Math.abs(iOdata.state.Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
 		}
 	}
+
+	public boolean isAtTargetAngleAuton(){
+		if (RobotState.color == Alliance.Red) {
+			return Math.abs(iOdata.state.Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
+		} else {			
+			return Math.abs(iOdata.state.Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
+		}
+	}
+
+	public Command driveTowardsClimberSide(double speed) {
+		return run(() -> {
+			driveKraken.setSwerveRequest(ROBOT_CENTRIC
+			.withVelocityY(speed));
+		}).finallyDo(() -> driveKraken.setSwerveRequest(ROBOT_CENTRIC.withVelocityY(0)));
+	}
 }
