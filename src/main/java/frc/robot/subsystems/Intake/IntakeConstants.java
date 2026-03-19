@@ -19,9 +19,11 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.9;
+	public static double kDeployedPosition = 0.95;
+	public static double kShortDeployedPosition = 0.65;
+
 	public static double kRetractPosition = 0.02;
-	public static double kRetractPositionAgitate = 0.16;
+	public static double kRetractPositionAgitate = 0.236;
 	public static double kExtendTolerance = 0.02;
 	public static double kRetractTolerance = 0.02;
 
@@ -34,7 +36,7 @@ public class IntakeConstants {
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
 	public static int kIntakeMotorIDKicker = Constants.getRobot() == RobotType.COMPBOT ? 14 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.8100 : 0.0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.24 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
@@ -100,11 +102,7 @@ public class IntakeConstants {
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(150.0)
 			.withMotionMagicAcceleration(125.0))
-		.withFeedback(new FeedbackConfigs()
-			.withFeedbackRemoteSensorID(kIntakeEncoderID)
-			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
-			.withSensorToMechanismRatio(1.0)
-			.withRotorToSensorRatio(1.0));
+		.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(50));
 
 	public static final CANcoderConfiguration IntakeEncoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(!Robot.isSimulation() ? kEncoderOffset : 0.0)
