@@ -33,6 +33,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -131,10 +132,9 @@ public class Drive extends SubsystemBase {
 	private DoublePublisher robotRealSpeed;
 	private DoubleArrayPublisher robotPose;
 	private DoubleArrayPublisher robotStatePose;
+	private StructPublisher<Pose2d> dockingTargetPub;
 
 	private DoubleSubscriber poleAlignmentSub;
-
-	private boolean isDocked = false;
 
 	public Drive(DriveKraken driveKraken) {
 		this.driveKraken = driveKraken;
@@ -152,6 +152,7 @@ public class Drive extends SubsystemBase {
 		robotRealSpeed = table.getDoubleTopic("Robot Real Speed").publish();
 		robotPose = table.getDoubleArrayTopic("Robot Pose").publish();
 		robotStatePose = table.getDoubleArrayTopic("Robot State Pose").publish();
+		dockingTargetPub = table.getStructTopic("Docking Target", Pose2d.struct).publish();
 
 		thetaController.enableContinuousInput(-Math.PI, Math.PI);
 		translationControllerY.setTolerance(0.05, 0.1);
@@ -207,43 +208,6 @@ public class Drive extends SubsystemBase {
 	ProfiledPIDController yprofiledPID = new ProfiledPIDController(5, 0, 0, yconstraints);
 	PIDController dockThetaController = new PIDController(2, 0, 0);
 	
-
-	public Command lineUpToLadder(){
-		return Commands.runOnce(() -> {
-			xprofiledPID.setTolerance(0.01);
-			yprofiledPID.setTolerance(0.01);
-			dockThetaController.enableContinuousInput(-Math.PI, Math.PI);
-			startPose = iOdata.state.Pose;
-			xprofiledPID.reset(startPose.getX());
-			yprofiledPID.reset(startPose.getY());
-			thetaController.reset();
-			// offsettoladder = poleAlignmentSub.get() + .129;
-			offsettoladder = 0.10;
-		})
-		.andThen(new WaitCommand(0.04)).andThen(
-			Commands.run(() -> {
-				SmartDashboard.putNumber("Climb/Goal X", (startPose.getX() + offsettoladder));
-				double yVelocity = yprofiledPID.calculate(iOdata.state.Pose.getY(), startPose.getY() - targetDistanceMeters);
-				double xVelocity = xprofiledPID.calculate(iOdata.state.Pose.getX(), startPose.getX() + offsettoladder);
-				double thetaVelocity = dockThetaController.calculate(iOdata.state.Pose.getRotation().getRadians(), Math.toRadians(90));
-				SmartDashboard.putNumber("Climb/xVelocity", xVelocity);
-				SmartDashboard.putNumber("Climb/yVelocity", yVelocity);
-				SmartDashboard.putNumber("Climb/thetaVelocity", thetaVelocity);
-				driveKraken.setSwerveRequest(FIELD_CENTRIC
-					.withVelocityX(xVelocity)
-					.withVelocityY(yVelocity)
-					.withRotationalRate(thetaVelocity)
-					);
-			})
-		).withTimeout(5);
-	}
-
-	
-	// Combines the align and dock commands into one sequence for autonomous
-	public Command AutonDockToLadder() {
-		return Commands.sequence(this.run(() -> alignToPole()), this.run(() -> driveToPoleCoordinate()));
-	}
-
 	public Command alignToPole() {
 		return runPathFinding(new Pose2d(1.05, 2.2, Rotation2d.fromDegrees(90))) // 15.5, 5.5
 			.andThen(this.run(() -> {
@@ -292,6 +256,58 @@ public Command driveToPoleCoordinate() {
         return runPathFinding(new Pose2d(targetX, targetY, targetRotation))
                .andThen(wiggle).andThen(() -> iAmDockingLeaveMeAlone = false);
                
+    }, Set.of(this));
+}
+final double CLIMBER_CHASSIS_OFFSET = 0.0; 	// Climber on front
+final double FIELD_WIDTH_MIDPOINT = 4.035;   // Midpoint of the 8.069m width
+final double TARGET_DISTANCE = 0.7;          // The 0.7m gap from Auto drop-off
+
+public Command driveToPoleCoordinate_autoflip() {
+    return Commands.defer(() -> {
+        Pose2d currentPose = iOdata.state.Pose;
+        boolean aboveYMidpoint = currentPose.getY() > FIELD_WIDTH_MIDPOINT;
+        double approachDirection = aboveYMidpoint ? -1.0 : 1.0;
+        
+        // Desired Chassis Rotation
+        double baseApproachAngle = aboveYMidpoint ? -90.0 : 90.0;
+        Rotation2d targetRotation = Rotation2d.fromDegrees(baseApproachAngle - CLIMBER_CHASSIS_OFFSET);
+
+        // Chassis Rotation Error
+        double currentAngleRad = currentPose.getRotation().getRadians();
+        double angleErrorRad = targetRotation.getRadians() - currentAngleRad;
+        
+        // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
+        double rotationXOffset = Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
+        
+        // targetY: Move 0.7m toward middle of field
+        double targetY = currentPose.getY() + (TARGET_DISTANCE * approachDirection);
+        
+        // targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
+        double targetX = currentPose.getX() + (poleAlignmentSub.get() + 0.15 + rotationXOffset)  * approachDirection;
+
+        Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
+        
+        // Telemetry & Vision off while docking
+        dockingTargetPub.set(finalTarget);
+        iAmDockingLeaveMeAlone = true;
+
+        //Wiggle
+        double pushXvel = 0.4; // 0.4 meters per second forward
+
+        Command wiggle = Commands.run(() -> {
+            double rotationWiggle = Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI * 3.0) * 0.75;
+            driveKraken.setSwerveRequest(ROBOT_CENTRIC
+                .withVelocityX(pushXvel)
+                .withVelocityY(0)
+                .withRotationalRate(rotationWiggle)
+                .withCenterOfRotation(new Translation2d(-0.3175, 0)) // Meters
+            );
+        }, this).withTimeout(1.0);
+
+        return runPathFinding(finalTarget)
+                .andThen(wiggle)
+                .finallyDo(() -> iAmDockingLeaveMeAlone = false);
+                
     }, Set.of(this));
 }
 

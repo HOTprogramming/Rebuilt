@@ -81,6 +81,7 @@ public class RobotContainer {
 		intake = new Intake();
 
 		NamedCommands.registerCommand("align pole", drivetrain.driveToPoleCoordinate());
+		NamedCommands.registerCommand("align pole autoflip", drivetrain.driveToPoleCoordinate_autoflip());
 		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
 		NamedCommands.registerCommand("intake", intake.extend());
 		NamedCommands.registerCommand("intake off", intake.teleopRetract());
@@ -152,8 +153,9 @@ public class RobotContainer {
 		//Robot Centric Drive
 		//driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.robotCentricTeleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
 		driver.rightBumper().onTrue(drivetrain.alignToPole());
-		driver.leftBumper().onTrue(drivetrain.lineUpToLadder());
+
 		driver.a().onTrue(drivetrain.driveToPoleCoordinate());
+		driver.b().onTrue(drivetrain.driveToPoleCoordinate_autoflip());
 		// driver.rightBumper().onTrue(
 		// 	Commands.sequence(
 		// 		drivetrain.alignToPole(),
@@ -168,16 +170,16 @@ public class RobotContainer {
 		//driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
 		// Rotate for Bump
-		driver.b().whileTrue(drivetrain.run(() -> {
-			double rot = drivetrain.getPose().getRotation().getDegrees();
-			double fact;
-			fact = Math.abs(rot) > 90 ? 3 : 1;
-			if (rot < 0)
-				fact *= -1;
+		// driver.b().whileTrue(drivetrain.run(() -> {
+		// 	double rot = drivetrain.getPose().getRotation().getDegrees();
+		// 	double fact;
+		// 	fact = Math.abs(rot) > 90 ? 3 : 1;
+		// 	if (rot < 0)
+		// 		fact *= -1;
 
-			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
-				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
-		}));
+		// 	drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
+		// 		: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
+		// }));
 
 		// X the Wheels
 		driver.x().whileTrue(drivetrain.xLockCommand());
