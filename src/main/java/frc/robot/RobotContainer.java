@@ -56,7 +56,7 @@ public class RobotContainer {
 				shooter.stop()
 			)); 
 
-		//Shot Map: Deploy Climber
+		// Deploy Climber
 		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
 
 		//Climber Pole Preset: Step 1 of Climb
