@@ -1,9 +1,6 @@
 package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
-
-import edu.wpi.first.wpilibj.DigitalInput;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.util.Kraken;
 import frc.util.KrakenWithCancoder;

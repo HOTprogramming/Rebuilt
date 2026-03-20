@@ -1,13 +1,6 @@
 package frc.robot.subsystems.indexer;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.IntakeConstants.IntakeConfigs;
 import frc.util.Kraken;
 
 public class IndexKraken {
@@ -24,8 +17,6 @@ public class IndexKraken {
 		m_floorKraken.setup();
 		m_leftKickKraken.setup();
 		m_rightKickKraken.setup();
-
-		// m_rightKickKraken.setFollower(IndexConstants.kLeftKickID, MotorAlignmentValue.Aligned);
 	}
 
 	public static IndexKraken getInstance() {

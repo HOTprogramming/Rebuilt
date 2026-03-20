@@ -1,9 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
-
 import frc.util.Kraken;
-import frc.util.KrakenWithCancoder;
 
 public class IntakeKraken {
 	public Kraken m_ExtendKraken = new Kraken(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.IntakeConfigs
@@ -28,8 +26,6 @@ public class IntakeKraken {
 			.withMotionMagicCruiseVelocity(64));
 
 		m_ExtendKraken.motor.setPosition(0);
-
-		//m_RollerKrakenFollower.setFollower(IntakeConstants.kIntakeMotorIDRollerLeader, MotorAlignmentValue.Aligned);
 	}
 
 	public static IntakeKraken getInstance() {

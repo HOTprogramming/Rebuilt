@@ -1,15 +1,11 @@
 package frc.robot.subsystems.climber;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.networktables.BooleanPublisher;
-import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -20,24 +16,19 @@ public class Climber extends SubsystemBase {
 	private double finRightEdgePos;
 
 	private BooleanPublisher beambreakPub;
-	private DoublePublisher zeroPosPub;
 	
 	public Climber() {
-
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
 		NetworkTable table = inst.getTable("HOT/Climber");
 
 		beambreakPub = table.getBooleanTopic("Beambreak").publish();
-		zeroPosPub = table.getDoubleTopic("Zero Position").publish();
 		SmartDashboard.putBoolean("elbowclimber", Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
 		
 		m_ClimbKraken.m_climberKraken.motor.setPosition(0);
 	}
 
 	@Override
-
-	//voids
 	public void periodic() {
 		m_ClimbKraken.updateStats();
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
@@ -59,12 +50,6 @@ public class Climber extends SubsystemBase {
 		m_ClimbKraken.setWristVelocity(targetVel);
 	}
 
-	private void spinWristPosition(double wristPosRevs) {
-		setWristPosition((wristPosRevs * ClimberConstants.wristGearRatio));
-	}
-
-
-
 	//booleans
 	private BooleanSupplier isBeamBreakTripped() {
 		return () -> m_ClimbKraken.getBeambreakStatus();
@@ -78,7 +63,6 @@ public class Climber extends SubsystemBase {
 		return () -> Math.abs(m_ClimbKraken.getElbowPos()) < 0.002;
 	}
 
-	
 	private BooleanSupplier isDeployed() {
 		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.deployedPos) < 0.01;
 	}
@@ -99,11 +83,6 @@ public class Climber extends SubsystemBase {
 		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.01;
 	}
 
-
-	private BooleanSupplier isClimbed() {
-		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l1autonclimbedpos) < 0.01;
-	}
-
 	private BooleanSupplier isPartWristClimbed() {
 		return () -> Math.abs((m_ClimbKraken.getWristPos() / ClimberConstants.wristGearRatio) - ClimberConstants.startElbowAdjustmentPos) < 0.05;
 	}
@@ -115,9 +94,6 @@ public class Climber extends SubsystemBase {
 	public BooleanSupplier areWheelsUp() {
 		return () -> m_ClimbKraken.getElbowPos() < ClimberConstants.wheelsUpPos;
 	}
-
-
-
 
 	public Command zeroSpinner() {
 		return Commands.sequence(
@@ -159,7 +135,6 @@ public class Climber extends SubsystemBase {
 			run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped()));
 	}
 
-
 	public Command fullDeploy() {
 		return Commands.sequence(
 			runOnce(() -> setElbowPosition(ClimberConstants.deployedPos)),
@@ -177,8 +152,6 @@ public class Climber extends SubsystemBase {
 		});
 	}	
 
-
-
 	public Command stop() {
 		return runOnce(() -> {});
 	}
@@ -187,12 +160,9 @@ public class Climber extends SubsystemBase {
 		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
 
-	
 	public Command autoClimb() {
 		return run(() -> setElbowPosition(ClimberConstants.initalElbowClimbPos)).until(isLifted());
 	}
-
-
 
 	public Command stageThreeClimb() {
 		return Commands.sequence(
@@ -227,15 +197,12 @@ public class Climber extends SubsystemBase {
 		}).until(isWristClimbed());	
 	}
 
-
 	public Command finalElbowExtend() {
 		return run(() -> {
 			setWristPosition(ClimberConstants.wristClimbPos * ClimberConstants.wristGearRatio);
 			setElbowPosition(ClimberConstants.l3ElbowPos);
 		});
 	}
-
-
 
 	public Command liftUpWheelsSlow() {
 		return run(() -> setElbowVelocity(ClimberConstants.liftSpeed)).until(areWheelsUp());
@@ -244,12 +211,6 @@ public class Climber extends SubsystemBase {
 	public Command partWristClimb() {
 		return run(() -> setWristPosition(ClimberConstants.startElbowAdjustmentPos)).until(isPartWristClimbed());
 	}
-
-	private Command climb() {
-		return run(() -> setElbowPosition(ClimberConstants.l1autonclimbedpos)).until(isClimbed());
-	}
-
-
 
 	private Command reset() {
 		return runOnce(() -> {

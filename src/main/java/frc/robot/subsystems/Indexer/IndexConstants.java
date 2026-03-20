@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
-import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,10 +16,10 @@ import frc.robot.Constants.RobotType;
 public class IndexConstants {
 	public static int kLeftKickID = Constants.getRobot() == RobotType.COMPBOT ? 18 : 14;
 	public static int kRightKickID = Constants.getRobot() == RobotType.COMPBOT ? 19 : 15;
-	public static int kFloorID = Constants.getRobot() == RobotType.COMPBOT ? 13 : 13; // 13, set to 0 for broken floor
+	public static int kFloorID = Constants.getRobot() == RobotType.COMPBOT ? 13 : 13;
 	public static String kBusName = Constants.canName;
 	public static double kickerSpeed = 120;
-	public static double floorSpeed = 90; /// max about 85
+	public static double floorSpeed = 90;
 
 	public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -45,34 +44,19 @@ public class IndexConstants {
 			.withKD(0)
 			.withKS(3)
 			.withKV(2))
-		/* .withSlot0(new Slot0Configs() //Wheels torque
-			.withKP(3)
-			.withKI(0.0)
-			.withKD(0)
-			.withKS(3)
-			.withKV(0.055))*/
 		.withSlot1(new Slot1Configs() //Roller Floor torque
 			.withKP(240)
 			.withKI(0.0)
 			.withKD(0)
 			.withKS(12)
 			.withKV(1.6))
-		/*.withSlot1(new Slot1Configs() // Old Roller Floor torque
-			.withKP(10)
-			.withKI(0.0)
-			.withKD(0)
-			.withKS(12)
-			.withKV(0.2))*/
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(80.0)
 			.withMotionMagicAcceleration(160)
 			.withMotionMagicJerk(1600)
 		);
 
-	/********************************************************
-	 * Based on the robot selected, load Intake configs with the selected robot
-	 * configuration
-	 ********************************************************/
+
 	public static final IndexConfigs IndexConfigs = switch (Constants.getRobot()) {
 		case COMPBOT -> new IndexConfigs(indexWheelConfigs);
 		case CAMERABOT -> new IndexConfigs(indexWheelConfigs);
@@ -82,9 +66,6 @@ public class IndexConstants {
 		case ALPHABOT -> new IndexConfigs(indexWheelConfigs);
 	};
 
-	/*****************
-	 * Define the Climber Config Class
-	 *****************/
 	public record IndexConfigs(
 		TalonFXConfiguration indexWheelConfigs) {}
 

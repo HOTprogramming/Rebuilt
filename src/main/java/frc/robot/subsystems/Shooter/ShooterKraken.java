@@ -1,10 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
-
 import frc.util.Kraken;
-import frc.util.KrakenWithCancoder;
 
 public class ShooterKraken {
 	private static ShooterKraken instance = null;
