@@ -39,7 +39,7 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.a().whileTrue(shooter.autoAim()).and(() -> RobotState.allowedToShoot);
+		driver.a().whileTrue(shooter.autoAim()).whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).and(() -> RobotState.allowedToShoot);
     }
 
     public Command getAutonomousCommand() {

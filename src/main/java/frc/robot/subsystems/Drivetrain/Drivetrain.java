@@ -11,7 +11,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -21,6 +20,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.RobotState;
 import frc.robot.subsystems.drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.drivetrain.constants.DrivetrainConstants.TunerSwerveDrivetrain;
 
@@ -40,6 +40,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
+			.withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+			.withHeadingPID(7, 0, 0);
 
     private final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
 
@@ -89,6 +94,13 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 			.withRotationalRate(rampedTheta * MaxAngularRate));
 	}
 
+	public void aim(double driveX, double driveY) {
+		setControl(FIELD_CENTRIC_FACING_ANGLE
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * .25)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * .25)
+			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
+	}
+
     public Command applyRequest(Supplier<SwerveRequest> request) {
         return run(() -> this.setControl(request.get()));
     }
@@ -106,7 +118,10 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
         }
 
         tipped = Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2 || Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2;
-    }
+
+		RobotState.pose = getState().Pose;
+		RobotState.speeds = getState().Speeds;
+	}
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
