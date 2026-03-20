@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
@@ -6,8 +6,8 @@ import frc.util.Kraken;
 import frc.util.KrakenWithCancoder;
 
 public class IntakeKraken {
-	public KrakenWithCancoder m_ExtendKraken = new KrakenWithCancoder(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.kIntakeEncoderID, IntakeConstants.IntakeConfigs
-		.IntakeExtendConfigs(), IntakeConstants.IntakeConfigs.IntakeEncoderConfigs(), "Intake", "Extend");
+	public Kraken m_ExtendKraken = new Kraken(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.IntakeConfigs
+		.IntakeExtendConfigs(), "Intake", "Extend");
 	public Kraken m_RollerKrakenLeader = new Kraken(IntakeConstants.kIntakeMotorIDRollerLeader, "rio", IntakeConstants.IntakeConfigs
 		.RollerConfigs(), "Intake", "Roller");
 	public Kraken m_RollerKrakenFollower = new Kraken(IntakeConstants.kIntakeMotorIDRollerFollower, "rio", IntakeConstants.IntakeConfigs

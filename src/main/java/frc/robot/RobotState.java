@@ -12,10 +12,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.Climber.Climber;
-import frc.robot.subsystems.Drivetrain.ShootOnTheFly;
-import frc.robot.subsystems.Shooter.Shooter;
-import frc.robot.subsystems.Shooter.ShooterConstants;
+import frc.robot.subsystems.drivetrain.ShootOnTheFly;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterConstants;
 
 public class RobotState {
 
@@ -70,7 +69,6 @@ public class RobotState {
 		mode = Mode.normal; 
 
 		shooter = new Shooter();
-
 		neutralShooterCommands = Map.of(
 			Zone.ALLIANCE, shooter.maintainFlywheel(), 
 			Zone.LEFT, shooter.idle(),

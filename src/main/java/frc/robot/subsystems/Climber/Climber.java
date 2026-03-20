@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Climber;
+package frc.robot.subsystems.climber;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;

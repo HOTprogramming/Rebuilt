@@ -1,6 +1,5 @@
 package frc.util;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
@@ -23,9 +22,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Temperature;
-import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
 import frc.util.sim.PhysicsSim;
 
@@ -86,8 +82,6 @@ public class Kraken {
 
 		position = motor.getPosition();
 		velocity = motor.getVelocity();
-
-		BaseStatusSignal.setUpdateFrequencyForAll(50.0, position, velocity);
 	}
 
 	public void setup(){
@@ -104,16 +98,12 @@ public class Kraken {
 		PhysicsSim.getInstance().run();
 	}
 
-	public boolean refresh(){
+	public void refresh(){
 		if (Utils.isSimulation()) {
 			refreshSim();
 		}
 
-		boolean isOk = BaseStatusSignal.refreshAll(position, velocity).isOK();
-
 		updateTelemetry();
-
-		return true;
 	}
 
 	public void createTelemetry(String subsystem, String deviceName){

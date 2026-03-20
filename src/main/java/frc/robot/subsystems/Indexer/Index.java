@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Indexer;
+package frc.robot.subsystems.indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
