@@ -144,7 +144,7 @@ public class Drive extends SubsystemBase {
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
 		NetworkTable table = inst.getTable("HOT/Drive");
-		NetworkTable objectDetection = inst.getTable("HOTVision/FRONT/object_detection");
+		NetworkTable objectDetection = inst.getTable("HOTVision/LEFT/object_detection");
 
 		poleAlignmentSub = objectDetection.getDoubleTopic("pipe_alignment").subscribe(0.0);
 
@@ -159,7 +159,7 @@ public class Drive extends SubsystemBase {
 		translationControllerX.setTolerance(0.05, 0.1);
 		configurePathPlanner();
 
-		alignToLadderConstraints = new PathConstraints(1.5, 1.5, 2 * Math.PI, 1 * Math.PI); //.5
+		alignToLadderConstraints = new PathConstraints(0.75, 1.0, 2 * Math.PI, 1 * Math.PI); //.5
 	}
 
 	private void UpdateTelemetry() {
@@ -209,11 +209,11 @@ public class Drive extends SubsystemBase {
 	PIDController dockThetaController = new PIDController(2, 0, 0);
 	
 	public Command alignToPole() {
-		return runPathFinding(new Pose2d(1.05, 2.2, Rotation2d.fromDegrees(90))) // 15.5, 5.5
+		return runPathFinding(new Pose2d(1.15, 2.33, Rotation2d.fromDegrees(1.5))) // 15.5, 5.5
 			.andThen(this.run(() -> {
-				driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
-					.withTargetDirection(Rotation2d.fromDegrees(90))
-					.withVelocityY(0.1)); //trying to drive across the field slightly to set swerve to Y dir
+				// driveKraken.setSwerveRequest(FIELD_CENTRIC_FACING_ANGLE
+				// 	.withTargetDirection(Rotation2d.fromDegrees(0))
+				// 	.withVelocityY(0.1)); //trying to drive across the field slightly to set swerve to Y dir
 			}
 			).withTimeout(1));
 	}
@@ -258,9 +258,9 @@ public Command driveToPoleCoordinate() {
                
     }, Set.of(this));
 }
-final double CLIMBER_CHASSIS_OFFSET = 0.0; 	// Climber on front
+final double CLIMBER_CHASSIS_OFFSET = 90.0; 	// Climber on front
 final double FIELD_WIDTH_MIDPOINT = 4.035;   // Midpoint of the 8.069m width
-final double TARGET_DISTANCE = 0.7;          // The 0.7m gap from Auto drop-off
+final double TARGET_DISTANCE = 0.6;          // The 0.7m gap from Auto drop-off
 
 public Command driveToPoleCoordinate_autoflip() {
     return Commands.defer(() -> {
@@ -278,34 +278,45 @@ public Command driveToPoleCoordinate_autoflip() {
         
         // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
         double rotationXOffset = Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
-        
+		SmartDashboard.putNumber("rotationXOffset", rotationXOffset);
+
         // targetY: Move 0.7m toward middle of field
         double targetY = currentPose.getY() + (TARGET_DISTANCE * approachDirection);
         
         // targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
-        double targetX = currentPose.getX() + (poleAlignmentSub.get() + 0.15 + rotationXOffset)  * approachDirection;
-
+        double camtargetX = currentPose.getX() + (poleAlignmentSub.get() + 0.15 + rotationXOffset)  * approachDirection;
+		double targetX = 1.04;
         Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
-        
+		Pose2d camfinalTarget = new Pose2d(camtargetX, targetY, targetRotation);
+
         // Telemetry & Vision off while docking
-        dockingTargetPub.set(finalTarget);
+        dockingTargetPub.set(camfinalTarget);
         iAmDockingLeaveMeAlone = true;
 
         //Wiggle
-        double pushXvel = 0.4; // 0.4 meters per second forward
+        double pushXvel = 0.3; // 0.4 meters per second forward
 
         Command wiggle = Commands.run(() -> {
             double rotationWiggle = Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI * 3.0) * 0.75;
             driveKraken.setSwerveRequest(ROBOT_CENTRIC
-                .withVelocityX(pushXvel)
-                .withVelocityY(0)
+                .withVelocityY(pushXvel)
+                .withVelocityX(0)
                 .withRotationalRate(rotationWiggle)
                 .withCenterOfRotation(new Translation2d(-0.3175, 0)) // Meters
             );
-        }, this).withTimeout(1.0);
+        }, this).withTimeout(1.5);
+
+		Command drive = Commands.run(() -> {
+            driveKraken.setSwerveRequest(ROBOT_CENTRIC
+                .withVelocityY(1.0)
+                .withVelocityX(0)
+                .withRotationalRate(0)
+            );
+        }, this).withTimeout(0.8);
 
         return runPathFinding(finalTarget)
                 .andThen(wiggle)
+				.andThen(drive)
                 .finallyDo(() -> iAmDockingLeaveMeAlone = false);
                 
     }, Set.of(this));
@@ -409,9 +420,9 @@ public Command driveToPoleCoordinate_autoflip() {
 	}
 
 	public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
-		if (iAmDockingLeaveMeAlone) {
-			stDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-		}
+		// if (iAmDockingLeaveMeAlone) {
+		// 	stDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+		// }
 		this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);
 	}
 

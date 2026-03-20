@@ -13,13 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "align pole"
+            "name": "align pole autoflip"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

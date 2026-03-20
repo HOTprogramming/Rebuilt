@@ -69,7 +69,8 @@ public class RobotContainer {
 
 		Autos.addOption("ohno", "ohno");
 		Autos.addOption("FunkyCheck", "FunkyCheck");
-		Autos.addOption("Climb", "Climb");
+		Autos.addOption("RightClimb", "Climb");
+		Autos.addOption("LeftClimb", "LeftClimb");
 
 		SmartDashboard.putData("Autos", Autos);
 
