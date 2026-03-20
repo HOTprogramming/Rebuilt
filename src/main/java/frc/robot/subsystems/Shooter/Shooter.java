@@ -4,6 +4,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
+import frc.robot.RobotState.Zone;
 
 public class Shooter extends SubsystemBase {
 	public final ShooterKraken mShooterKraken = new ShooterKraken();
@@ -51,8 +52,15 @@ public class Shooter extends SubsystemBase {
 
 	public Command hoodDown(){
 		return runOnce(() -> {
-			mShooterKraken.runPosition(0);
-			mShooterKraken.runVelocity(targetSpeed);
+			targetHood = 0;
+			mShooterKraken.runPosition(targetHood);
+			if(targetSpeed != 0){
+				if(RobotState.getZone() == Zone.ALLIANCE) targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+				else targetSpeed = ShooterConstants.kIdleSpeed;
+				mShooterKraken.runVelocity(targetSpeed);
+			} else {
+				mShooterKraken.runVelocity(targetSpeed);
+			}
 		});
 	}
 

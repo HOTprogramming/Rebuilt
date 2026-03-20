@@ -98,6 +98,8 @@ public class RobotState {
 			allowedToShoot = true;
 		}
 
+		SmartDashboard.putBoolean("Allowed to Shoot", allowedToShoot);
+
 		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
 		SmartDashboard.putString("Robot Mode", mode.name());
 		SmartDashboard.putString("Zone", shooterZone.name());		

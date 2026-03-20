@@ -4,7 +4,9 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -41,7 +43,16 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.a().whileTrue(shooter.autoAim()).whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).and(() -> RobotState.allowedToShoot);
+		driver.a().and(() -> RobotState.allowedToShoot).whileTrue(shooter.autoAim()).whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
+
+		RobotModeTriggers.disabled().onTrue(
+			Commands.run(() -> {
+				shooter.targetSpeed = 0;
+				shooter.mShooterKraken.stop();
+				intake.mIntakeKraken.stop();
+				indexer.m_IndexKraken.stop();
+			}).ignoringDisable(true)
+		);
     }
 
     public Command getAutonomousCommand() {
