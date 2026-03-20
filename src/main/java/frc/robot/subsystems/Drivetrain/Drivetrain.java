@@ -32,7 +32,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	private final SlewRateLimiter xLimiter = new SlewRateLimiter(3.5);
 	private final SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
-	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(0.75);
+	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
 
 	private double MaxSpeed = 1.0 * DrivetrainConstants.kSpeedAt12Volts.in(MetersPerSecond);
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
@@ -98,7 +98,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		setControl(FIELD_CENTRIC_FACING_ANGLE
 			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * .25)
 			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * .25)
-			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
+			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle + Math.PI)));
 	}
 
     public Command applyRequest(Supplier<SwerveRequest> request) {

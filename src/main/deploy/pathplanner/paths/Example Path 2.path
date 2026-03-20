@@ -1,0 +1,112 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.5381740370898713,
+        "y": 2.462952924393724
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7022444444444444,
+        "y": 1.413744444444443
+      },
+      "isLocked": false,
+      "linkedName": "Shoot Point"
+    },
+    {
+      "anchor": {
+        "x": 3.5731777777777776,
+        "y": 0.575722222222222
+      },
+      "prevControl": {
+        "x": 2.5731777777777776,
+        "y": 0.575722222222222
+      },
+      "nextControl": {
+        "x": 4.573177777777778,
+        "y": 0.575722222222222
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.964244444444444,
+        "y": 0.575722222222222
+      },
+      "prevControl": {
+        "x": 6.16336111111111,
+        "y": 0.5708500000000004
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8983114446529025,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.9806167400881094,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Aim Override",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Aim Override"
+        }
+      }
+    },
+    {
+      "name": "Cancel Override",
+      "waypointRelativePos": 0.7973568281938308,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Cancel Override"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 37.02572927810758
+  },
+  "useDefaultConstraints": true
+}

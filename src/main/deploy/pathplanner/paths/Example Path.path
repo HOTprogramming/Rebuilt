@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 7.260784593437946,
-        "y": 0.5350927246790311
+        "y": 0.5350927246790314
       },
       "nextControl": {
         "x": 8.208377295660366,
@@ -40,7 +40,7 @@
         "y": 2.501768901569187
       },
       "nextControl": {
-        "x": 5.497120770007978,
+        "x": 5.497120770007977,
         "y": 2.4540300417656207
       },
       "isLocked": false,
@@ -57,7 +57,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot Point"
     }
   ],
   "rotationTargets": [
@@ -71,7 +71,7 @@
     },
     {
       "waypointRelativePos": 2.7761194029850698,
-      "rotationDegrees": 59.99999999999999
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
@@ -103,7 +103,30 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Out",
+      "waypointRelativePos": 0.2920704845814924,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Out"
+        }
+      }
+    },
+    {
+      "name": "Intake Stop",
+      "waypointRelativePos": 1.370484581497808,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Stop"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 2.5,
@@ -114,7 +137,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 37.20792192178155
+    "rotation": 37.02572927810758
   },
   "reversed": false,
   "folder": null,

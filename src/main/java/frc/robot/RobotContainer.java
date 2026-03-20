@@ -1,7 +1,14 @@
 package frc.robot;
 
+import java.util.Optional;
+
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -26,7 +33,26 @@ public class RobotContainer {
 	public final Intake intake = new Intake();
 	public final Shooter shooter = new Shooter();
 
+	PIDController theta = new PIDController(7, 0, 0);
+
     public RobotContainer() {
+		theta.enableContinuousInput(-Math.PI, Math.PI);
+		
+		NamedCommands.registerCommand("Intake Out", intake.extend());
+		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
+		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
+		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0, 0)));
+		NamedCommands.registerCommand("Aim Override", 
+			Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
+				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle + Math.PI))
+			));
+		NamedCommands.registerCommand("Cancel Override", 
+			Commands.runOnce(() -> PPHolonomicDriveController.clearRotationFeedbackOverride())
+		);
+
+		
+		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
+
         configureBindings();
 
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
@@ -42,8 +68,6 @@ public class RobotContainer {
         );
 
 		shooter.setDefaultCommand(shooter.hoodDown());
-
-		driver.a().and(() -> RobotState.allowedToShoot).whileTrue(shooter.autoAim()).whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
