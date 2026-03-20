@@ -1,5 +1,4 @@
-
-package frc.robot.subsystems.camera;
+package frc.robot.subsystems.Camera;
 
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -11,7 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.networktables.StructTopic;
-import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.Vector;
 

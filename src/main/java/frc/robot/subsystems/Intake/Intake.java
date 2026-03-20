@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.Intake;
 
 import java.util.function.BooleanSupplier;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;

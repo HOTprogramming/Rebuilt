@@ -1,4 +1,4 @@
-package frc.robot.subsystems.drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import static edu.wpi.first.units.Units.*;
 import java.util.function.Supplier;
@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotState;
-import frc.robot.subsystems.drivetrain.constants.DrivetrainConstants;
-import frc.robot.subsystems.drivetrain.constants.DrivetrainConstants.TunerSwerveDrivetrain;
+import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
+import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.TunerSwerveDrivetrain;
 
 public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.004;

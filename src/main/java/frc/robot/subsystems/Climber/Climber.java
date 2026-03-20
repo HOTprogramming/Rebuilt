@@ -1,4 +1,4 @@
-package frc.robot.subsystems.climber;
+package frc.robot.subsystems.Climber;
 
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.networktables.BooleanPublisher;
