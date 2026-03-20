@@ -76,7 +76,7 @@ public class CameraBase {
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
 
-			if(drivetrain.getState().Pose.getTranslation().getDistance(poseArray.getTranslation()) > 1.25){
+			if(drivetrain.getState().Pose.getTranslation().getDistance(poseArray.getTranslation()) > 1){
 				estStdDevs = VecBuilder.fill(25, 25, 2);
 			}
 
