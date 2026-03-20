@@ -45,6 +45,45 @@ public class RobotContainer {
 
 		driver.a().and(() -> RobotState.allowedToShoot).whileTrue(shooter.autoAim()).whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
+		operator.leftBumper().onTrue(intake.teleopRetract());
+
+		operator.back().onTrue(Commands.runOnce(() -> RobotState.setNormalMode())); 
+
+		operator.start().onTrue(
+			Commands.parallel(
+				Commands.runOnce(() -> RobotState.setClimbMode()),
+				intake.fullretract(),
+				shooter.stop()
+			)); 
+
+		//Shot Map: Deploy Climber
+		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
+
+		//Climber Pole Preset: Step 1 of Climb
+		operator.a().whileTrue(
+    	Commands.either(
+			Commands.parallel(
+				// drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
+				Commands.sequence(Commands.waitSeconds(0.5), climber.stageThreeClimb())
+			),
+			shooter.PresetClimberPole(),
+			RobotState::isClimbMode
+		));
+
+		//Trench Preset: Step 2 of Climb
+		operator.b().whileTrue(
+    	Commands.either(
+		climber.stow(), 
+		shooter.PresetTrench(),
+        RobotState::isClimbMode));
+
+		//Batter Shot Preset : Step 3 of Climb
+		operator.y().whileTrue(
+    	Commands.either(
+		climber.teleopDeploy(), 
+		shooter.PresetBatter(),
+        RobotState::isClimbMode));
+
 		RobotModeTriggers.disabled().onTrue(
 			Commands.run(() -> {
 				shooter.targetSpeed = 0;

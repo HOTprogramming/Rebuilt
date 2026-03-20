@@ -133,27 +133,27 @@ public class RobotState {
 		return shooterZone;
 	}
 
-	public void setClimbMode(){
+	public static void setClimbMode(){
 		mode = Mode.climb; 
 	}
 
-	public void setNormalMode (){
+	public static void setNormalMode (){
 		mode = Mode.normal; 
 	}
 
-	public void setManualMode() {
+	public static void setManualMode() {
 		mode = Mode.manual;
 	}
 
-	public boolean isClimbMode() {
+	public static boolean isClimbMode() {
     	return mode == Mode.climb;
 	}
 
-	public boolean isNormalMode() {
+	public static boolean isNormalMode() {
     	return mode == Mode.normal;
 	}
 
-	public boolean isManualMode() {
+	public static boolean isManualMode() {
 		return mode == Mode.manual;
 	}
 }

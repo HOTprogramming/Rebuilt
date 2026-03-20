@@ -1,5 +1,6 @@
 package frc.util;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -62,7 +63,7 @@ public class Kraken {
 	}
 
 	public Kraken(int id, String canBusName, TalonFXConfiguration config, String subsystem, String deviceName) {
-		motor = new TalonFX(id, canBusName);
+		motor = new TalonFX(id, new CANBus(canBusName));
 
 		this.subsystem = subsystem;
 		this.deviceName = deviceName;

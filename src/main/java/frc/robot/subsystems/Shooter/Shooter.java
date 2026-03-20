@@ -51,7 +51,10 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command hoodDown(){
-		return runOnce(() -> {
+		return run(() -> {
+			if(RobotState.isManualMode()){
+				RobotState.setNormalMode();
+			}
 			targetHood = 0;
 			mShooterKraken.runPosition(targetHood);
 			if(targetSpeed != 0){
@@ -74,7 +77,8 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command PresetBatter() {
-		return runOnce(() -> {
+		return run(() -> {
+			RobotState.setManualMode();
 			targetHood = 2.8;			
 			targetSpeed = 41.0;
 			mShooterKraken.runPosition(targetHood);
@@ -83,7 +87,8 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command PresetTrench() {
-		return runOnce(() -> {
+		return run(() -> {
+			RobotState.setManualMode();
 			targetHood = hoodAngleMap.get(3.6);
 			targetSpeed = shooterSpeedMap.get(3.6);
 			mShooterKraken.runPosition(targetHood);
@@ -92,11 +97,19 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command PresetClimberPole() {
-		return runOnce(() -> {
+		return run(() -> {
+			RobotState.setManualMode();
 			targetHood = 6.0;
 			targetSpeed = 45.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
+		});
+	}
+
+	public Command stop(){
+		return runOnce(() -> {
+			targetSpeed = 0;
+			mShooterKraken.stop();
 		});
 	}
 
