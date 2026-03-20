@@ -24,9 +24,9 @@ public class IndexKraken {
 	}
 
 	public void updateStats() {
-		m_floorKraken.refresh();
-		m_leftKickKraken.refresh();
-		m_rightKickKraken.refresh();
+		m_floorKraken.update();
+		m_leftKickKraken.update();
+		m_rightKickKraken.update();
 	}
 
 	public void startIndex() {

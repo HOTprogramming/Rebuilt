@@ -33,10 +33,10 @@ public class IntakeKraken {
 	}
 
 	public void updateStats() {
-		m_ExtendKraken.refresh();
-		m_KickerKraken.refresh();
-		m_RollerKrakenLeader.refresh();
-		m_RollerKrakenFollower.refresh();
+		m_ExtendKraken.update();
+		m_KickerKraken.update();
+		m_RollerKrakenLeader.update();
+		m_RollerKrakenFollower.update();
 	}
 
 	public double getExtendPosition() {

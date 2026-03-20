@@ -43,7 +43,7 @@ public class Kraken {
 	private final MotionMagicExpoTorqueCurrentFOC mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0);
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 	private final VelocityTorqueCurrentFOC velocityTorque = new VelocityTorqueCurrentFOC(0);
-	private final NeutralOut brake = new NeutralOut();
+	private final NeutralOut stop = new NeutralOut();
 
 	public DoublePublisher positionPublisher;
 	public DoublePublisher velocityPublisher;
@@ -88,7 +88,7 @@ public class Kraken {
 		PhysicsSim.getInstance().run();
 	}
 
-	public void refresh(){
+	public void update(){
 		if (Utils.isSimulation()) {
 			refreshSim();
 		}
@@ -110,7 +110,7 @@ public class Kraken {
 	}
 
 	public void stop() {
-		motor.setControl(brake);
+		motor.setControl(stop);
 	}
 
 	public void setPosition(double desiredRotations, PositionControlType controlType) {

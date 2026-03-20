@@ -1,8 +1,5 @@
 package frc.robot;
 
-import java.util.Map;
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,14 +7,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drivetrain.ShootOnTheFly;
-import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 
 public class RobotState {
-
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 	public static ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
 
@@ -27,16 +20,17 @@ public class RobotState {
 			climb
 		}
 
-	public	static Mode mode; 
+	public static Mode mode; 
 
-
-	private enum Zone {
+	public enum Zone {
 		ALLIANCE, 
 		NEUTRAL,
 		LEFT,
 		RIGHT,
 		TRENCH
 	}
+
+	public static boolean allowedToShoot = true;
 
 	private static ShootOnTheFly shootOnTheFly = new ShootOnTheFly();
 	public static double lookAheadDistance = 0;
@@ -57,26 +51,12 @@ public class RobotState {
 	private static Translation2d[] trenches = new Translation2d[] {topBlueTrench, topRedTrench, bottomBlueTrench, bottomRedTrench};
 	private static double trenchdodgeradius = 1;
 
-	public Shooter shooter;
-
 	public static Zone shooterZone = Zone.ALLIANCE;
-	private static Map<Zone, Command> neutralShooterCommands;
-	private static Supplier<Zone> shooterZoneSup = () -> shooterZone;
 	public static Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 
 	public RobotState() {
-
 		mode = Mode.normal; 
-
-		shooter = new Shooter();
-		neutralShooterCommands = Map.of(
-			Zone.ALLIANCE, shooter.maintainFlywheel(), 
-			Zone.LEFT, shooter.idle(),
-			Zone.RIGHT, shooter.idle(),
-			Zone.TRENCH, shooter.dodgeTrench(), 
-			Zone.NEUTRAL, shooter.idle());
 	}
-
 
 	private static boolean isInZoneBox(double xmin, double xmax, double ymin, double ymax) {
 		return pose.getX() > xmin && pose.getX() < xmax && pose.getY() > ymin && pose.getY() < ymax;
@@ -85,8 +65,6 @@ public class RobotState {
 	private static boolean isInZoneRadius(double x, double y, double radius) {
 		return pose.getTranslation().getDistance(new Translation2d(x, y)) < radius;
 	}
-
-
 
 	public static void update() {
 		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
@@ -114,10 +92,15 @@ public class RobotState {
 			}
 		}
 
-		
+		if(shooterZone == Zone.TRENCH) {
+			allowedToShoot = false;
+		} else {
+			allowedToShoot = true;
+		}
+
 		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
-		SmartDashboard.putNumberArray("TargetLocation", new Double[] {target.getX(), target.getY()});
 		SmartDashboard.putString("Robot Mode", mode.name());
+		SmartDashboard.putString("Zone", shooterZone.name());		
 		shootOnTheFly.update(pose, speeds, target, color);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
@@ -136,18 +119,16 @@ public class RobotState {
 			else if (isInZoneBox(0, redzonex, midfieldy, fieldy)) shooterZone = Zone.RIGHT;
 		}
 
-		double totalSpeed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond)/5.0;
+		double totalSpeed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) / 5.0;
 
 		if (isInZoneRadius(trenches[0].getX(), trenches[0].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
 		else if (isInZoneRadius(trenches[1].getX(), trenches[1].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
 		else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
 		else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
-
-		SmartDashboard.putString("zone", shooterZone.name());		
 	}
 
-	public Command idleCommands() {
-		return Commands.select(neutralShooterCommands, shooterZoneSup);
+	public static Zone getZone() {
+		return shooterZone;
 	}
 
 	public void setClimbMode(){

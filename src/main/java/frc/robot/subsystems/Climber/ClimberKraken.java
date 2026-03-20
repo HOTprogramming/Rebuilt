@@ -26,8 +26,8 @@ public class ClimberKraken {
 	}
 
 	public void updateStats() {
-		m_climberKraken.refresh();
-		m_spinnerKraken.refresh();
+		m_climberKraken.update();
+		m_spinnerKraken.update();
 	}
 
 	public boolean getBeambreakStatus() {

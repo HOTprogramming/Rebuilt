@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems.Camera;
+package frc.robot.subsystems.camera;
 
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
