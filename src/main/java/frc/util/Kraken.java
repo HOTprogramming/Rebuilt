@@ -1,7 +1,6 @@
 package frc.util;
 
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -16,12 +15,9 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.Constants;
 import frc.util.sim.PhysicsSim;
 
@@ -48,9 +44,6 @@ public class Kraken {
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 	private final VelocityTorqueCurrentFOC velocityTorque = new VelocityTorqueCurrentFOC(0);
 	private final NeutralOut brake = new NeutralOut();
-
-	public final StatusSignal<Angle> position;
-	public final StatusSignal<AngularVelocity> velocity;
 
 	public DoublePublisher positionPublisher;
 	public DoublePublisher velocityPublisher;
@@ -79,9 +72,6 @@ public class Kraken {
 		if (!statusCode.isOK()) {
 			System.out.println("Configuration Failed on motor " + subsystem + " " + deviceName);
 		}
-
-		position = motor.getPosition();
-		velocity = motor.getVelocity();
 	}
 
 	public void setup(){
@@ -108,7 +98,6 @@ public class Kraken {
 
 	public void createTelemetry(String subsystem, String deviceName){
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
-
         NetworkTable table = inst.getTable("HOT/" + subsystem + "/" + deviceName);
 
         positionPublisher = table.getDoubleTopic(subsystem + deviceName + "Position").publish();
@@ -116,8 +105,8 @@ public class Kraken {
 	}
 
 	public void updateTelemetry(){
-		positionPublisher.set(position.getValueAsDouble());
-		velocityPublisher.set(velocity.getValueAsDouble());
+		positionPublisher.set(motor.getPosition().getValueAsDouble());
+		velocityPublisher.set(motor.getVelocity().getValueAsDouble());
 	}
 
 	public void stop() {

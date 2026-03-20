@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems.camera;
+package frc.robot.subsystems.Camera;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drivetrain.Drivetrain;

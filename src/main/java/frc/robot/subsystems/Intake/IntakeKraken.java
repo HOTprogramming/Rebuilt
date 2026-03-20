@@ -44,15 +44,15 @@ public class IntakeKraken {
 	}
 
 	public double getExtendPosition() {
-		return m_ExtendKraken.position.getValueAsDouble();
+		return m_ExtendKraken.motor.getPosition().getValueAsDouble();
 	}
 
 	public double getRetractPosition() {
-		return m_ExtendKraken.position.getValueAsDouble();
+		return m_ExtendKraken.motor.getPosition().getValueAsDouble();
 	}
 
 	public double getKickerVelocity() {
-		return m_KickerKraken.velocity.getValueAsDouble();
+		return m_KickerKraken.motor.getVelocity().getValueAsDouble();
 	}
 
 	public void runPosition(double desiredRotations) {

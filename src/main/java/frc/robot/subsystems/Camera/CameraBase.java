@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems.camera;
+package frc.robot.subsystems.Camera;
 
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -76,7 +76,7 @@ public class CameraBase {
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
 
-			if(drivetrain.getState().Pose.getTranslation().getDistance(poseArray.getTranslation()) > 1){
+			if(drivetrain.getState().Pose.getTranslation().getDistance(poseArray.getTranslation()) > 1.25){
 				estStdDevs = VecBuilder.fill(25, 25, 2);
 			}
 

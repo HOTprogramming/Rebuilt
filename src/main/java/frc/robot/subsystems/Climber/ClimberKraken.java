@@ -37,10 +37,10 @@ public class ClimberKraken {
 		return beambreak.get();
 	}
 	public double getWristPos() {
-		return m_spinnerKraken.position.getValueAsDouble();
+		return m_spinnerKraken.motor.getPosition().getValueAsDouble();
 	}
 	public double getElbowPos() {
-		return m_climberKraken.position.getValueAsDouble();
+		return m_climberKraken.motor.getPosition().getValueAsDouble();
 	}
 
 	public void runManual(double percentOutputElbow, double percentOutputWrist) {

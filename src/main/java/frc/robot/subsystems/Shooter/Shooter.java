@@ -60,7 +60,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public double getShooterSpeed() {
-		return mShooterKraken.m_krakenFXLeftTop.velocity.getValueAsDouble();
+		return mShooterKraken.m_krakenFXLeftTop.motor.getVelocity().getValueAsDouble();
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public class Shooter extends SubsystemBase {
 	public boolean readyToShoot() {
 		return (
 			Math.abs(getShooterSpeed() - targetSpeed) <= ShooterConstants.kShooterError &&
-			Math.abs(mShooterKraken.m_krakenFXHood.position.getValueAsDouble() - targetHood) <= ShooterConstants.kShooterHoodError);
+			Math.abs(mShooterKraken.m_krakenFXHood.motor.getPosition().getValueAsDouble() - targetHood) <= ShooterConstants.kShooterHoodError);
 	}
 
 	

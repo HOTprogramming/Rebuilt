@@ -1,14 +1,18 @@
 package frc.robot.subsystems.drivetrain;
 
+import static edu.wpi.first.units.Units.*;
 import java.util.function.Supplier;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,6 +21,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.subsystems.drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.drivetrain.constants.DrivetrainConstants.TunerSwerveDrivetrain;
 
 public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
@@ -25,12 +30,27 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private double m_lastSimTime;
     public boolean tipped = false;
 
+	private final SlewRateLimiter xLimiter = new SlewRateLimiter(3.5);
+	private final SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
+	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(0.75);
+
+	private double MaxSpeed = 1.0 * DrivetrainConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+
+    private final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
+
     public Drivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
         configureAutoBuilder();
+
+		registerTelemetry(logger::telemeterize);
     }
 
     private void configureAutoBuilder() {
@@ -58,6 +78,17 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
         }
     }
 
+	public void teleopDrive(double driveX, double driveY, double driveTheta) {
+		double rampedX = xLimiter.calculate((driveX * Math.abs(driveX)));
+		double rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));
+		double rampedTheta = rotLimiter.calculate(driveTheta * Math.abs(driveTheta));
+
+		setControl(teleopDrive
+			.withVelocityX(rampedX * MaxSpeed)
+			.withVelocityY(rampedY * MaxSpeed)
+			.withRotationalRate(rampedTheta * MaxAngularRate));
+	}
+
     public Command applyRequest(Supplier<SwerveRequest> request) {
         return run(() -> this.setControl(request.get()));
     }
@@ -75,10 +106,6 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
         }
 
         tipped = Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2 || Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2;
-
-        // if(!tipped){
-        //     setStateStdDevs(VecBuilder.fill(.25, .25, .01));
-        // }
     }
 
     private void startSimThread() {
