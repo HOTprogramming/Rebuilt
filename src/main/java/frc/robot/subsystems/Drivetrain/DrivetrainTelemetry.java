@@ -39,7 +39,7 @@ public class DrivetrainTelemetry {
     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
     /* Robot swerve drive state */
-    private final NetworkTable driveStateTable = inst.getTable("DriveState");
+    private final NetworkTable driveStateTable = inst.getTable("HOT/Drive");
     private final StructPublisher<Pose2d> drivePose = driveStateTable.getStructTopic("Pose", Pose2d.struct).publish();
     private final StructPublisher<ChassisSpeeds> driveSpeeds = driveStateTable.getStructTopic("Speeds", ChassisSpeeds.struct).publish();
     private final StructArrayPublisher<SwerveModuleState> driveModuleStates = driveStateTable.getStructArrayTopic("ModuleStates", SwerveModuleState.struct).publish();
