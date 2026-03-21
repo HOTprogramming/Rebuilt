@@ -21,6 +21,11 @@ public class DriveConstants {
 
     public static final double auto_align_tolerance = 0.01;
 
+	public static final double right_blue_ladder_angle_deg = 2;
+	public static final double left_blue_ladder_angle_deg = -1;
+
+
+
     private static final PIDConstants autoPidConstantsTranslation = new PIDConstants(5, 0, 0);
     private static final PIDConstants autoPidConstantsTheta = new PIDConstants(7, 0, 0);
     private static final PIDConstants teleopPidConstantsTheta = new PIDConstants(10, 0, 0.5);

@@ -156,7 +156,7 @@ public class RobotContainer {
 		driver.rightBumper().onTrue(drivetrain.alignToPole());
 
 		driver.a().onTrue(drivetrain.driveToPoleCoordinate());
-		driver.b().onTrue(drivetrain.driveToPoleCoordinate_autoflip());
+		driver.b().onTrue(Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		// driver.rightBumper().onTrue(
 		// 	Commands.sequence(
 		// 		drivetrain.alignToPole(),

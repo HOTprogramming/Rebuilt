@@ -15,7 +15,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.VecBuilder;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -160,6 +160,15 @@ public class Drive extends SubsystemBase {
 		configurePathPlanner();
 
 		alignToLadderConstraints = new PathConstraints(0.75, 1.0, 2 * Math.PI, 1 * Math.PI); //.5
+		
+		SmartDashboard.putBoolean("Override Target X", false);
+		SmartDashboard.putNumber("Manual Target X", 1.04);
+		SmartDashboard.putBoolean("Override Cam Offset", false);
+		SmartDashboard.putNumber("Manual Cam Offset", 0.11);
+		SmartDashboard.putBoolean("Override Rot Offset", false);
+		SmartDashboard.putNumber("Manual Rot Offset", 0.0);
+		SmartDashboard.putBoolean("Use Vision in Docking", true);
+		SmartDashboard.putNumber("rotationXOffset", 0.0);
 	}
 
 	private void UpdateTelemetry() {
@@ -181,6 +190,22 @@ public class Drive extends SubsystemBase {
 	public void periodic() {
 		RobotState.pose = iOdata.state.Pose;
 		RobotState.speeds = iOdata.state.Speeds;
+
+
+		
+        // Chassis Rotation Error
+        double currentAngleRad = iOdata.state.Pose.getRotation().getRadians();
+        double angleErrorRad = Math.toRadians(2) - currentAngleRad;
+        
+        // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
+        double rotationXOffset =  0.5 * Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
+
+		SmartDashboard.putNumber("o/rotationXOffset", rotationXOffset);
+		SmartDashboard.putNumber("o/offset to pole", poleAlignmentSub.get());
+		SmartDashboard.putNumber("o/net offset", poleAlignmentSub.get() + rotationXOffset);
+
+
+
 
 		thetaController.setPID(thetaP, thetaI, thetaD);
 
@@ -269,7 +294,7 @@ public Command driveToPoleCoordinate_autoflip() {
         double approachDirection = aboveYMidpoint ? -1.0 : 1.0;
         
         // Desired Chassis Rotation
-        double baseApproachAngle = aboveYMidpoint ? -90.0 : 90.0;
+        double baseApproachAngle = (aboveYMidpoint ? -90.0 + left_blue_ladder_angle_deg : 90.0 + right_blue_ladder_angle_deg);
         Rotation2d targetRotation = Rotation2d.fromDegrees(baseApproachAngle - CLIMBER_CHASSIS_OFFSET);
 
         // Chassis Rotation Error
@@ -277,20 +302,37 @@ public Command driveToPoleCoordinate_autoflip() {
         double angleErrorRad = targetRotation.getRadians() - currentAngleRad;
         
         // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
-        double rotationXOffset = Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
-		SmartDashboard.putNumber("rotationXOffset", rotationXOffset);
+        double rotationXOffset = 0.5 * Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
+		
 
         // targetY: Move 0.7m toward middle of field
         double targetY = currentPose.getY() + (TARGET_DISTANCE * approachDirection);
-        
         // targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
-        double camtargetX = currentPose.getX() + (poleAlignmentSub.get() + 0.15 + rotationXOffset)  * approachDirection;
-		double targetX = 1.04;
-        Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
-		Pose2d camfinalTarget = new Pose2d(camtargetX, targetY, targetRotation);
+		double targetX;
+		double camOffset = 0.11; // Default camera offset in meters
+        boolean useXOverride = SmartDashboard.getBoolean("Override Target X", false);
+        double xOverrideValue = SmartDashboard.getNumber("Manual Target X", 1.04);
+        boolean useCamOfstOverride = SmartDashboard.getBoolean("Override Cam Offset", false);
+        double CamOfstOverrideValue = SmartDashboard.getNumber("Manual Cam Offset", 0.11);	
+		boolean useRotOfstOverride = SmartDashboard.getBoolean("Override Rot Offset", false);
+        double RotOfstOverrideValue = SmartDashboard.getNumber("Manual Rot Offset", 0.0);		
 
+		if (useCamOfstOverride) {
+			camOffset = CamOfstOverrideValue;
+		} 
+		if (useRotOfstOverride) {
+			rotationXOffset = RotOfstOverrideValue;
+		} 
+        if (useXOverride) {
+            targetX = xOverrideValue;
+        } else {
+            targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3) + camOffset + rotationXOffset) * approachDirection;
+        }
+
+        Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
+		
         // Telemetry & Vision off while docking
-        dockingTargetPub.set(camfinalTarget);
+        dockingTargetPub.set(finalTarget);
         iAmDockingLeaveMeAlone = true;
 
         //Wiggle
@@ -308,11 +350,13 @@ public Command driveToPoleCoordinate_autoflip() {
 
 		Command drive = Commands.run(() -> {
             driveKraken.setSwerveRequest(ROBOT_CENTRIC
-                .withVelocityY(1.0)
+                .withVelocityY(1.0) //climber is on the side of the robot to the left
                 .withVelocityX(0)
                 .withRotationalRate(0)
             );
-        }, this).withTimeout(0.8);
+        }, this).withTimeout(0.5);
+
+
 
         return runPathFinding(finalTarget)
                 .andThen(wiggle)
@@ -321,6 +365,16 @@ public Command driveToPoleCoordinate_autoflip() {
                 
     }, Set.of(this));
 }
+
+	public Command angleSwerveWheels() {
+		return Commands.run(() -> {
+            driveKraken.setSwerveRequest(ROBOT_CENTRIC
+                .withVelocityY(0.1) 
+                .withVelocityX(0)
+                .withRotationalRate(0)
+            );
+        }, this).withTimeout(0.25);
+	}
 
 	public Command runPathFinding(Pose2d target) {
 		return AutoBuilder.pathfindToPose(target, alignToLadderConstraints);
@@ -420,9 +474,10 @@ public Command driveToPoleCoordinate_autoflip() {
 	}
 
 	public void addVisionMeasurement(Pose2d calculatedPose, double timestamp, Matrix<N3, N1> stDevs) {
-		// if (iAmDockingLeaveMeAlone) {
-		// 	stDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-		// }
+		boolean useVisionWhileDock = SmartDashboard.getBoolean("Use Vision in Docking", true);
+		if (iAmDockingLeaveMeAlone && !useVisionWhileDock) {
+		 	stDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+		 }
 		this.driveKraken.updateVision(calculatedPose, timestamp, stDevs);
 	}
 

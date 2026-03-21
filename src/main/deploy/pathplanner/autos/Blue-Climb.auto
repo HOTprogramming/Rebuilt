@@ -9,12 +9,6 @@
           "data": {
             "pathName": "Climb Path"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "align pole autoflip"
-          }
         }
       ]
     }
