@@ -1,11 +1,13 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,6 +34,8 @@ public class RobotContainer {
 
 	PIDController theta = new PIDController(7, 0, 0);
 
+	private final SendableChooser<Command> autoChooser;
+
     public RobotContainer() {
 		RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
 
@@ -40,7 +44,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
-		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0,0)).withTimeout(1));
+		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0,0)).withTimeout(.5));
 		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
 				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle + Math.PI))));
 		NamedCommands.registerCommand("Stop Shooting", 
@@ -51,8 +55,13 @@ public class RobotContainer {
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
+		NamedCommands.registerCommand("Agitate", intake.agitate());
 
         configureBindings();
+
+		autoChooser = AutoBuilder.buildAutoChooser();
+
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     }
@@ -69,7 +78,7 @@ public class RobotContainer {
 		shooter.setDefaultCommand(shooter.hoodDown());
 
 		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
-		.and(() -> shooter.readyToShoot()).whileTrue(Commands.parallel(
+		.and(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).whileTrue(Commands.parallel(
 			indexer.indexOnCommand(),
 			intake.agitate()
 		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
@@ -116,7 +125,7 @@ public class RobotContainer {
         RobotState::isClimbMode));
 
 		RobotModeTriggers.disabled().onTrue(
-			Commands.run(() -> {
+			Commands.runOnce(() -> {
 				shooter.targetSpeed = 0;
 				shooter.mShooterKraken.stop();
 				intake.mIntakeKraken.stop();
@@ -126,6 +135,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Test");
+    	return autoChooser.getSelected();
     }
 }

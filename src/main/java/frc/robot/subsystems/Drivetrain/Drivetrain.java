@@ -100,7 +100,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		setControl(FIELD_CENTRIC_FACING_ANGLE
 			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * .25)
 			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * .25)
-			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle + Math.PI)));
+			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 	}
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
@@ -110,13 +110,9 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     @Override
     public void periodic() {
         if (DriverStation.isDisabled()) {
-            DriverStation.getAlliance().ifPresent(allianceColor -> {
-                setOperatorPerspectiveForward(
-                    allianceColor == Alliance.Red
+			setOperatorPerspectiveForward(RobotState.color == Alliance.Red
                         ? Rotation2d.k180deg
-                        : Rotation2d.kZero
-                );
-            });
+                        : Rotation2d.kZero);
         }
 
         tipped = Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2 || Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2;
@@ -143,5 +139,13 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 			setControl(ROBOT_CENTRIC
 			.withVelocityY(speed));
 		}).finallyDo(() -> setControl(ROBOT_CENTRIC.withVelocityY(0)));
+	}
+
+	public boolean isAtTargetAngle(){
+		if (RobotState.color == Alliance.Red) {
+			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
+		} else {			
+			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
+		}
 	}
 }

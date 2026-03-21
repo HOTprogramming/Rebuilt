@@ -2,6 +2,8 @@ package frc.robot.subsystems.Intake;
 
 import java.util.function.BooleanSupplier;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -130,7 +132,7 @@ public class Intake extends SubsystemBase {
 
 	public Command agitate(){
 		return Commands.sequence(
-			new WaitCommand(.5),
+			DriverStation.isAutonomous() ? new WaitCommand(0) : new WaitCommand(.5),
 			agitateRetract(),
 			new WaitCommand(.5),
 			extend(),

@@ -160,6 +160,17 @@
       }
     },
     {
+      "name": "Agitate",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Agitate"
+        }
+      }
+    },
+    {
       "name": "Stop Shooting",
       "waypointRelativePos": 0.8656387665198315,
       "endWaypointRelativePos": null,
