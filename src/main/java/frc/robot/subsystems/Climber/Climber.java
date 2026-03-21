@@ -148,7 +148,7 @@ public class Climber extends SubsystemBase {
 			zeroSpinner(), 
 			deploy());
 	}	
-	private Command deploy() {
+	public Command deploy() {
 		return run(() -> setElbowPosition(ClimberConstants.deployedPos)).until(isDeployed());
 	}
 	
