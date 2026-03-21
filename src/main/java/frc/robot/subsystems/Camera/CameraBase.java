@@ -80,6 +80,9 @@ public class CameraBase {
 			}
 
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
+				if (drivetrain.iAmDockingLeaveMeAlone) {
+					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				}
 				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.06, estStdDevs);
 			}
 		}
