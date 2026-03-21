@@ -38,9 +38,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "sequential",
                       "data": {
-                        "name": "Agitate"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Agitate"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "deploy climber"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -69,15 +82,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "deploy climber"
-                }
-              },
               {
                 "type": "path",
                 "data": {

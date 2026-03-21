@@ -202,10 +202,10 @@ public Command driveToPoleCoordinate_autoflip() {
         double currentAngleRad = currentPose.getRotation().getRadians();
         double angleErrorRad = targetRotation.getRadians() - currentAngleRad;
         
-		boolean useCamDistOverride = SmartDashboard.getBoolean("climb/Use Cam Dist", false);
-		if (useCamDistOverride) {
+		boolean useCamDistOverride = SmartDashboard.getBoolean("climb/Use Cam Dist", true);
+		
 			TARGET_DISTANCE = MathUtil.clamp(poleDistanceSub.get(), 0.5, 1.0);
-		}
+		
 
         // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
         double rotationXOffset = 0.5 * Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
@@ -224,6 +224,7 @@ public Command driveToPoleCoordinate_autoflip() {
 		SmartDashboard.putNumber("climb/cmd_camOffset", camOffset);
 		SmartDashboard.putNumber("climb/cmd_currPoseX", currentPose.getX());
 		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3)) );
+		SmartDashboard.putNumber("climb/cmd_TargetDistance", TARGET_DISTANCE);
         
 		// Telemetry & Vision off while docking
         logger.dockingTargetPub.set(finalTarget);
@@ -252,10 +253,12 @@ public Command driveToPoleCoordinate_autoflip() {
 
 
 
-        return runPathFinding(finalTarget)
-                .andThen(wiggle)
-				.andThen(drive)
-                .finallyDo(() -> iAmDockingLeaveMeAlone = false);
+        return Commands.sequence(
+			runPathFinding(finalTarget),
+                wiggle,
+				drive,
+                runOnce(() -> iAmDockingLeaveMeAlone = false))
+			.onlyIf(() -> Math.abs(poleAlignmentSub.get()) < 0.3 && poleDistanceSub.get() > 0.5 && poleDistanceSub.get() < 1.0);
                 
     }, Set.of(this));
 }

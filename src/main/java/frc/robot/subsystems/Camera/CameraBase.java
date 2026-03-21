@@ -85,7 +85,7 @@ public class CameraBase {
 
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
 				boolean useCamWhlDock = SmartDashboard.getBoolean("climb/Use Cam Whl Dock", false);
-				if (drivetrain.iAmDockingLeaveMeAlone && !useCamWhlDock) {
+				if (drivetrain.iAmDockingLeaveMeAlone) {
 					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				}
 				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.075, estStdDevs);

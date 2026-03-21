@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
@@ -73,7 +74,9 @@ public class RobotContainer {
 
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+        CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());        
+		CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
+
     }
 
     private void configureBindings() {
@@ -117,7 +120,7 @@ public class RobotContainer {
 			)); 
 
 		// Deploy Climber
-		operator.x().and(RobotState::isClimbMode).onTrue(climber.zeroSpinner());
+		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
