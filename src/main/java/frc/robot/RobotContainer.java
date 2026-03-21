@@ -42,6 +42,7 @@ public class RobotContainer {
 		theta.enableContinuousInput(-Math.PI, Math.PI);
 		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
+		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
@@ -97,6 +98,12 @@ public class RobotContainer {
 				
 		operator.leftBumper().onTrue(intake.teleopRetract());
 		operator.rightBumper().onTrue(intake.packingAgitate());
+		//Temp button to trigger the L1 climb sequence
+		operator.leftTrigger().onTrue(climber.autoClimb());
+		// Undock from the pole after climbing
+		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
+		// Stow climber after undocking
+		//operator.rightBumper().onTrue(climber.stow());
 
 		operator.back().onTrue(Commands.runOnce(() -> RobotState.setNormalMode())); 
 
