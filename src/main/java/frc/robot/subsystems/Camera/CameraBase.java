@@ -22,8 +22,8 @@ public class CameraBase {
 	StructSubscriber<Pose2d> subscriber;
 	AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-	Vector<N3> singleTagStdDevs = VecBuilder.fill(5, 5, 8);
-	Vector<N3> multiTagStdDevs = VecBuilder.fill(.75, .75, 2);
+	Vector<N3> singleTagStdDevs = VecBuilder.fill(4.5, 4.5, 8);
+	Vector<N3> multiTagStdDevs = VecBuilder.fill(.6, .6, 1.5);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -65,22 +65,24 @@ public class CameraBase {
 				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (numTags == 2){
-				if (drivetrain.tipped && avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				if(!drivetrain.tipped && avgDist > 4) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				if(avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = multiTagStdDevs;
-			} else if (numTags > 3){
+			} else if (numTags == 3){
 				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else estStdDevs = multiTagStdDevs.times(2);
+				else if (avgDist > 6.5) estStdDevs = multiTagStdDevs.times(2);
+			} else if (numTags > 3){
+				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else if (avgDist > 7.5) estStdDevs = multiTagStdDevs.times(2);
 			}
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
 
-			if(drivetrain.getState().Pose.getTranslation().getDistance(poseArray.getTranslation()) > 1.25){
-				estStdDevs = VecBuilder.fill(25, 25, 2);
-			}
+			// if(drivetrain.getState().Pose.getTranslation().getDistance(poseArray.getTranslation()) > 1.25){
+			// 	estStdDevs = VecBuilder.fill(25, 25, 2);
+			// }
 
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
-				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.06, estStdDevs);
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.075, estStdDevs);
 			}
 		}
     }

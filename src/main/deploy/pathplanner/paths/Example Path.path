@@ -32,15 +32,15 @@
     },
     {
       "anchor": {
-        "x": 5.746961483594864,
+        "x": 5.981886363636363,
         "y": 2.462952924393724
       },
       "prevControl": {
-        "x": 6.833808844507845,
+        "x": 7.068733724549344,
         "y": 2.501768901569187
       },
       "nextControl": {
-        "x": 5.497120770007977,
+        "x": 5.732045650049476,
         "y": 2.4540300417656207
       },
       "isLocked": false,
@@ -48,11 +48,11 @@
     },
     {
       "anchor": {
-        "x": 2.5381740370898713,
+        "x": 2.178670454545454,
         "y": 2.462952924393724
       },
       "prevControl": {
-        "x": 3.8061626248216838,
+        "x": 3.4466590422772665,
         "y": 2.42413694721826
       },
       "nextControl": null,
@@ -67,11 +67,11 @@
     },
     {
       "waypointRelativePos": 1.9381663113006407,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 50.0
     },
     {
       "waypointRelativePos": 2.7761194029850698,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 50.0
     }
   ],
   "constraintZones": [
@@ -81,7 +81,7 @@
       "maxWaypointRelativePos": 0.6158001350438944,
       "constraints": {
         "maxVelocity": 4.5,
-        "maxAcceleration": 4.5,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -94,6 +94,19 @@
       "maxWaypointRelativePos": 1.4422687373396375,
       "constraints": {
         "maxVelocity": 2.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Ramp",
+      "minWaypointRelativePos": 1.9551166965888678,
+      "maxWaypointRelativePos": 2.763016157989224,
+      "constraints": {
+        "maxVelocity": 2.5,
         "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -128,8 +141,8 @@
     },
     {
       "name": "Go To Shoot",
-      "waypointRelativePos": 1.9731277533039515,
-      "endWaypointRelativePos": null,
+      "waypointRelativePos": 1.9551166965888653,
+      "endWaypointRelativePos": 3.0,
       "command": {
         "type": "named",
         "data": {

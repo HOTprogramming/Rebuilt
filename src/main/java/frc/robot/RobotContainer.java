@@ -32,7 +32,7 @@ public class RobotContainer {
 	public final Intake intake = new Intake();
 	public final Shooter shooter = new Shooter();
 
-	PIDController theta = new PIDController(7, 0, 0);
+	PIDController theta = new PIDController(5, 0, 0);
 
 	private final SendableChooser<Command> autoChooser;
 
@@ -44,9 +44,13 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
-		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0,0)).withTimeout(.5));
+		NamedCommands.registerCommand("Aim", 
+			Commands.parallel(
+				 Commands.run(() -> 
+				 drivetrain.aim(0,0)), 
+				 shooter.autoAim()).withTimeout(.5));
 		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
-				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle + Math.PI))));
+				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle))));
 		NamedCommands.registerCommand("Stop Shooting", 
 			Commands.parallel(
 				Commands.runOnce(() -> PPHolonomicDriveController.clearRotationFeedbackOverride()),
@@ -77,14 +81,14 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
 		.whileTrue(
 			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).andThen(Commands.parallel(
 				indexer.indexOnCommand(),
 				intake.agitate())
 		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
 
-		driver.leftTrigger().whileTrue(intake.extend());
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
 		
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
@@ -133,6 +137,13 @@ public class RobotContainer {
 				indexer.m_IndexKraken.stop();
 			}).ignoringDisable(true)
 		);
+
+		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(.25)).ignoringDisable(true));
+
+		//Climber Controls
+		climber.setDefaultCommand(climber
+			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
+			.onlyIf(RobotState::isClimbMode));
     }
 
     public Command getAutonomousCommand() {

@@ -59,11 +59,17 @@
           "data": {
             "name": "Agitate"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Go To Shoot"
+          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }
