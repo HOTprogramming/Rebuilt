@@ -89,7 +89,7 @@ public class RobotContainer {
 		.whileTrue(
 			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).andThen(Commands.parallel(
 				indexer.indexOnCommand(),
-				intake.agitate())
+				intake.packingAgitate())
 		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
@@ -97,6 +97,7 @@ public class RobotContainer {
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 				
 		operator.leftBumper().onTrue(intake.teleopRetract());
+		operator.rightBumper().onTrue(intake.packingAgitate());
 
 		operator.back().onTrue(Commands.runOnce(() -> RobotState.setNormalMode())); 
 
