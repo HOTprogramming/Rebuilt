@@ -38,6 +38,8 @@ import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.TunerSwerveDrivetrain;
 import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.left_blue_ladder_angle_deg;
 import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.right_blue_ladder_angle_deg;
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.left_red_ladder_angle_deg;
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.right_red_ladder_angle_deg;
 
 public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.004;
@@ -66,6 +68,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
 	
 	private DoubleSubscriber poleAlignmentSub;
+	private DoubleSubscriber poleDistanceSub;
 	private PathConstraints alignToLadderConstraints = new PathConstraints(0.75, 1.0, 2 * Math.PI, 1 * Math.PI); //.5;
 
 
@@ -79,9 +82,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		registerTelemetry(logger::telemeterize);
 		
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
-		NetworkTable table = inst.getTable("HOT/Drive");
 		NetworkTable objectDetection = inst.getTable("HOTVision/LEFT/object_detection");
 		poleAlignmentSub = objectDetection.getDoubleTopic("pipe_alignment").subscribe(0.0);
+		poleDistanceSub = objectDetection.getDoubleTopic("pipe_distance").subscribe(0.0);
+
+		SmartDashboard.putBoolean("climb/Use Cam Dist", false);
     }
 
     private void configureAutoBuilder() {
@@ -175,7 +180,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 final double CLIMBER_CHASSIS_OFFSET = 90.0; 	// Climber on front
 final double FIELD_WIDTH_MIDPOINT = 4.035;   // Midpoint of the 8.069m width
-final double TARGET_DISTANCE = 0.6;          // The 0.7m gap from Auto drop-off
+double TARGET_DISTANCE = 0.6;          // The 0.7m gap from Auto drop-off
 public boolean iAmDockingLeaveMeAlone = false;
 
 public Command driveToPoleCoordinate_autoflip() {
@@ -184,48 +189,41 @@ public Command driveToPoleCoordinate_autoflip() {
         boolean aboveYMidpoint = currentPose.getY() > FIELD_WIDTH_MIDPOINT;
         double approachDirection = aboveYMidpoint ? -1.0 : 1.0;
         
+		double baseApproachAngle = 0.0;
         // Desired Chassis Rotation
-        double baseApproachAngle = (aboveYMidpoint ? -90.0 + left_blue_ladder_angle_deg : 90.0 + right_blue_ladder_angle_deg);
+		if (DriverStation.getAlliance().get() == Alliance.Red) {
+       		baseApproachAngle = (aboveYMidpoint ? -90.0 + left_blue_ladder_angle_deg : 90.0 + right_blue_ladder_angle_deg);
+		} else {
+			baseApproachAngle = (aboveYMidpoint ? -90.0 + right_red_ladder_angle_deg : 90.0 + left_red_ladder_angle_deg);
+		}
         Rotation2d targetRotation = Rotation2d.fromDegrees(baseApproachAngle - CLIMBER_CHASSIS_OFFSET);
 
         // Chassis Rotation Error
         double currentAngleRad = currentPose.getRotation().getRadians();
         double angleErrorRad = targetRotation.getRadians() - currentAngleRad;
         
+		boolean useCamDistOverride = SmartDashboard.getBoolean("climb/Use Cam Dist", false);
+		if (useCamDistOverride) {
+			TARGET_DISTANCE = MathUtil.clamp(poleDistanceSub.get(), 0.5, 1.0);
+		}
+
         // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
         double rotationXOffset = 0.5 * Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
 		
-
-        // targetY: Move 0.7m toward middle of field
+		// targetY: Move 0.7m toward middle of field
         double targetY = currentPose.getY() + (TARGET_DISTANCE * approachDirection);
-        // targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
-		double targetX;
+        
+		// targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
 		double camOffset = 0.11; // Default camera offset in meters
-        boolean useXOverride = SmartDashboard.getBoolean("Override Target X", false);
-        double xOverrideValue = SmartDashboard.getNumber("Manual Target X", 1.04);
-        boolean useCamOfstOverride = SmartDashboard.getBoolean("Override Cam Offset", false);
-        double CamOfstOverrideValue = SmartDashboard.getNumber("Manual Cam Offset", 0.11);	
-		boolean useRotOfstOverride = SmartDashboard.getBoolean("Override Rot Offset", false);
-        double RotOfstOverrideValue = SmartDashboard.getNumber("Manual Rot Offset", 0.0);		
 
-		if (useCamOfstOverride) {
-			camOffset = CamOfstOverrideValue;
-		} 
-		if (useRotOfstOverride) {
-			rotationXOffset = RotOfstOverrideValue;
-		} 
-        if (useXOverride) {
-            targetX = xOverrideValue;
-        } else {
-            targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3) + camOffset + rotationXOffset) * approachDirection;
-        }
+        double targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3) + camOffset + rotationXOffset) * approachDirection;
 
         Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
 		
-		SmartDashboard.putNumber("o/cmd_rotationXOffset", rotationXOffset);
-		SmartDashboard.putNumber("o/cmd_camOffset", camOffset);
-		SmartDashboard.putNumber("o/cmd_currPoseX", currentPose.getX());
-		SmartDashboard.putNumber("o/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3)) );
+		SmartDashboard.putNumber("climb/cmd_rotationXOffset", rotationXOffset);
+		SmartDashboard.putNumber("climb/cmd_camOffset", camOffset);
+		SmartDashboard.putNumber("climb/cmd_currPoseX", currentPose.getX());
+		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3)) );
         
 		// Telemetry & Vision off while docking
         logger.dockingTargetPub.set(finalTarget);

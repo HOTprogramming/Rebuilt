@@ -20,7 +20,8 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 public class DrivetrainConstants {
     public static final double right_blue_ladder_angle_deg = 2;
 	public static final double left_blue_ladder_angle_deg = -1;
-	
+	public static final double right_red_ladder_angle_deg = 2;
+	public static final double left_red_ladder_angle_deg = -1;
 	
 	// Both sets of gains need to be tuned to your individual robot.
 
