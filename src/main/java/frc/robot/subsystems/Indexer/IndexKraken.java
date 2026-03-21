@@ -11,16 +11,10 @@ public class IndexKraken {
 	public Kraken m_floorKraken = new Kraken(IndexConstants.kFloorID, IndexConstants.IndexConfigs
 		.indexWheelConfigs(), InvertedValue.CounterClockwise_Positive, "Indexer", "Floor");
 
-	private static IndexKraken instance = null;
-
 	public IndexKraken() {
 		m_floorKraken.setup();
 		m_leftKickKraken.setup();
 		m_rightKickKraken.setup();
-	}
-
-	public static IndexKraken getInstance() {
-		return instance = instance == null ? new IndexKraken() : instance;
 	}
 
 	public void updateStats() {
@@ -33,7 +27,6 @@ public class IndexKraken {
 		m_rightKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 		m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
-	
 	}
 
 	public void stop() {

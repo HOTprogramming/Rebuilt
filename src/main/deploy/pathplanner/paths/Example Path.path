@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.7858725928261805,
-        "y": 0.6644793152639101
+        "x": 6.818077777777778,
+        "y": 0.673166666666666
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 2.1394864479315263
       },
       "prevControl": {
-        "x": 7.260784593437946,
-        "y": 0.5350927246790314
+        "x": 7.480700000000001,
+        "y": 0.5952111111111105
       },
       "nextControl": {
-        "x": 8.208377295660366,
-        "y": 5.054380996816721
+        "x": 7.8212147534771095,
+        "y": 5.1093304272006215
       },
       "isLocked": false,
       "linkedName": null
@@ -123,6 +123,17 @@
         "type": "named",
         "data": {
           "name": "Intake Stop"
+        }
+      }
+    },
+    {
+      "name": "Go To Shoot",
+      "waypointRelativePos": 1.9731277533039515,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Go To Shoot"
         }
       }
     }

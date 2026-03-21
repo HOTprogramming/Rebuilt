@@ -1,14 +1,10 @@
 package frc.robot;
 
-import java.util.Optional;
-
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -41,16 +37,16 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
-		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0, 0)));
-		NamedCommands.registerCommand("Aim Override", 
-			Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
-				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle + Math.PI))
-			));
-		NamedCommands.registerCommand("Cancel Override", 
-			Commands.runOnce(() -> PPHolonomicDriveController.clearRotationFeedbackOverride())
+		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0,0)).withTimeout(1));
+		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
+				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle + Math.PI))));
+		NamedCommands.registerCommand("Stop Shooting", 
+			Commands.parallel(
+				Commands.runOnce(() -> PPHolonomicDriveController.clearRotationFeedbackOverride()),
+				indexer.indexOffCommand(),
+				shooter.hoodDown()
+			)
 		);
-
-		
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
 
         configureBindings();

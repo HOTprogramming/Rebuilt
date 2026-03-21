@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Indexer;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
@@ -9,7 +8,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import frc.robot.Constants;
 import frc.robot.Constants.RobotType;
 
@@ -35,9 +33,6 @@ public class IndexConstants {
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(10.0)
-			.withMotionMagicAcceleration(10.0))
 		.withSlot0(new Slot0Configs() //Wheels torque
 			.withKP(120)
 			.withKI(0.0)
@@ -49,12 +44,7 @@ public class IndexConstants {
 			.withKI(0.0)
 			.withKD(0)
 			.withKS(12)
-			.withKV(1.6))
-		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(80.0)
-			.withMotionMagicAcceleration(160)
-			.withMotionMagicJerk(1600)
-		);
+			.withKV(1.6));
 
 
 	public static final IndexConfigs IndexConfigs = switch (Constants.getRobot()) {

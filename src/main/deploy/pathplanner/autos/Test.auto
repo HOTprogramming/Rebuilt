@@ -11,19 +11,19 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 1.0
+                  "name": "Aim"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Aim"
+                  "name": "Shoot"
                 }
               }
             ]
@@ -33,6 +33,25 @@
           "type": "path",
           "data": {
             "pathName": "Example Path 2"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Aim"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
+                }
+              }
+            ]
           }
         }
       ]

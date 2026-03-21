@@ -89,12 +89,12 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot Point"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8983114446529025,
+      "waypointRelativePos": 0.9174484052532867,
       "rotationDegrees": 90.0
     },
     {
@@ -122,10 +122,23 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.9806167400881094,
+      "maxWaypointRelativePos": 0.9361233480176262,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 0.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.0330396475770947,
+      "maxWaypointRelativePos": 2.046255506607969,
+      "constraints": {
+        "maxVelocity": 4.5,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -147,13 +160,35 @@
       }
     },
     {
-      "name": "Cancel Override",
-      "waypointRelativePos": 0.7973568281938308,
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0.8656387665198315,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Cancel Override"
+          "name": "Stop Shooting"
+        }
+      }
+    },
+    {
+      "name": "Intake Out",
+      "waypointRelativePos": 1.5000000000000115,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Out"
+        }
+      }
+    },
+    {
+      "name": "Intake Stop",
+      "waypointRelativePos": 3.5176211453744335,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Stop"
         }
       }
     }
@@ -168,7 +203,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 37.71395873518144
+    "rotation": 37.02572927810758
   },
   "reversed": false,
   "folder": null,

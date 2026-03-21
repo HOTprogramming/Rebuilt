@@ -64,14 +64,16 @@ public class IntakeKraken {
 		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 	}
 
-		public void runKickerVelocity(double desiredVelocity) {
+	public void runKickerVelocity(double desiredVelocity) {
 		m_KickerKraken.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 	}
+
 	public void stop() {
 		m_RollerKrakenLeader.stop();
 		m_RollerKrakenFollower.stop();
 		m_KickerKraken.stop();
 	}
+
 	public void stopExtend() {
 		m_ExtendKraken.stop();
 	}
