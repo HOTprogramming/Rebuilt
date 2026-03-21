@@ -257,7 +257,7 @@ public class RobotContainer {
 		operator.a().onTrue(
     	Commands.either(
 			Commands.parallel(
-				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
+			//	drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
 				Commands.sequence(Commands.waitSeconds(0.5), climber.stageThreeClimb())
 			),
 			Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetClimberPole()),

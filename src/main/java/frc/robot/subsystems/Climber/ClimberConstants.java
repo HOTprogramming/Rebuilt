@@ -39,11 +39,11 @@ public class ClimberConstants {
 	public static double wristFinalAdjustPos = 0.492;
 
 
-	public static double storedPos = 0;
-	public static double deployedPos = -283.7 / elbowGearRatio;
+	public static double storedPos = -0.106; //was 0
+	public static double deployedPos = -0.546;
 	public static double initalElbowClimbPos = -0.675;
-	public static double adjustedElbowClimbPos = -0.74;
-	public static double l3ElbowPos = -0.477;
+	public static double adjustedElbowClimbPos = -0.858; //was -0.74
+	public static double l3ElbowPos = -0.602; //was -0.477
 
 	public static double wheelsUpPos = 0.2125; // unset
 	public static double l1autonclimbedpos = 0.438; // unset
@@ -56,7 +56,7 @@ public class ClimberConstants {
 	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs()
 			.withAbsoluteSensorDiscontinuityPoint(0.5)
-			.withMagnetOffset(-0.413)
+			.withMagnetOffset(0.268)
 			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
@@ -78,7 +78,9 @@ public class ClimberConstants {
 			.withMotionMagicAcceleration(10.0))
 		.withFeedback(
 			new FeedbackConfigs()
-				.withSensorToMechanismRatio(602.18))
+				.withSensorToMechanismRatio(1.0)
+				.withFeedbackRemoteSensorID(kClimbEncoder)
+				.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder))
 		.withSlot0(new Slot0Configs()
 			.withKP(500)
 			.withKI(0.0)
