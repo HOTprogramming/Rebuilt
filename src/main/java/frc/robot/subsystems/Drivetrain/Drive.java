@@ -193,16 +193,17 @@ public class Drive extends SubsystemBase {
 
 
 		
-        // Chassis Rotation Error
-        double currentAngleRad = iOdata.state.Pose.getRotation().getRadians();
-        double angleErrorRad = Math.toRadians(2) - currentAngleRad;
+		
+        // // Chassis Rotation Error
+        // double currentAngleRad = iOdata.state.Pose.getRotation().getRadians();
+        // double angleErrorRad = Math.toRadians(2) - currentAngleRad;
         
-        // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
-        double rotationXOffset =  0.5 * Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
+        // // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
+        // double rotationXOffset =  0.5 * Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
 
-		SmartDashboard.putNumber("o/rotationXOffset", rotationXOffset);
-		SmartDashboard.putNumber("o/offset to pole", poleAlignmentSub.get());
-		SmartDashboard.putNumber("o/net offset", poleAlignmentSub.get() + rotationXOffset);
+		// SmartDashboard.putNumber("o/rotationXOffset", rotationXOffset);
+		// SmartDashboard.putNumber("o/offset to pole", poleAlignmentSub.get());
+		// SmartDashboard.putNumber("o/net offset", poleAlignmentSub.get() + rotationXOffset);
 
 
 
@@ -221,7 +222,6 @@ public class Drive extends SubsystemBase {
 		UpdateTelemetry();
 
 		SmartDashboard.putBoolean("Drivertrain good", isAtTargetAngle());
-		SmartDashboard.putBoolean("Climb/iAmDocking", iAmDockingLeaveMeAlone);
 	}
 
 	Pose2d startPose;
@@ -331,7 +331,12 @@ public Command driveToPoleCoordinate_autoflip() {
 
         Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
 		
-        // Telemetry & Vision off while docking
+		SmartDashboard.putNumber("o/cmd_rotationXOffset", rotationXOffset);
+		SmartDashboard.putNumber("o/cmd_camOffset", camOffset);
+		SmartDashboard.putNumber("o/cmd_currPoseX", currentPose.getX());
+		SmartDashboard.putNumber("o/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3)) );
+        
+		// Telemetry & Vision off while docking
         dockingTargetPub.set(finalTarget);
         iAmDockingLeaveMeAlone = true;
 
