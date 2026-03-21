@@ -118,6 +118,17 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "zero wrist",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "zero wrist"
+        }
+      }
+    },
+    {
       "name": "Intake Out",
       "waypointRelativePos": 0.23026025584473364,
       "endWaypointRelativePos": null,

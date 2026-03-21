@@ -43,7 +43,8 @@ public class RobotContainer {
 		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
-		NamedCommands.registerCommand("deploy climber", climber.fullDeploy());
+		NamedCommands.registerCommand("deploy climber", climber.teleopDeploy());
+		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("Aim", 
@@ -63,7 +64,7 @@ public class RobotContainer {
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
-		NamedCommands.registerCommand("Agitate", intake.agitate());
+		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
 
         configureBindings();
 
@@ -109,7 +110,7 @@ public class RobotContainer {
 			)); 
 
 		// Deploy Climber
-		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
+		operator.x().and(RobotState::isClimbMode).onTrue(climber.zeroSpinner());
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(

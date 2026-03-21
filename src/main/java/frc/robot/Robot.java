@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -29,6 +30,9 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
 		CommandScheduler.getInstance().cancelAll();
+
+		SmartDashboard.putBoolean("Auton", false);
+		SmartDashboard.putBoolean("Teleop", false);
 	}
 
     @Override
@@ -47,7 +51,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+		SmartDashboard.putBoolean("Auton", true);
+	}
 
     @Override
     public void autonomousExit() {}
@@ -57,6 +63,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
+
+		SmartDashboard.putBoolean("Teleop", true);
     }
 
     @Override

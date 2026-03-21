@@ -57,7 +57,7 @@ public class Intake extends SubsystemBase {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(8)
-					.withMotionMagicCruiseVelocity(8));
+					.withMotionMagicCruiseVelocity(80));
 		}), new WaitCommand(.02), runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
