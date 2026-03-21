@@ -51,11 +51,11 @@ public class Intake extends SubsystemBase {
 		return Commands.sequence(runOnce(() -> {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
-					.withMotionMagicAcceleration(8)
-					.withMotionMagicCruiseVelocity(8));
+					.withMotionMagicAcceleration(2.5)
+					.withMotionMagicCruiseVelocity(2.5));
 		}), new WaitCommand(.02), runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
-			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed / 2.0);
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
 			mIntakeKraken.runKickerVelocity(IntakeConstants.kKickerSpeed);
 		}));
 	}
@@ -126,6 +126,17 @@ public class Intake extends SubsystemBase {
 	public Boolean IsIntakeExtended() {
 		return Math.abs(mIntakeKraken.getExtendPosition()
 			- IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance;
+	}
+
+	public Command agitate(){
+		return Commands.sequence(
+			new WaitCommand(.5),
+			agitateRetract(),
+			new WaitCommand(.5),
+			extend(),
+			new WaitCommand(.5),
+			agitateRetract()
+		);
 	}
 
 }

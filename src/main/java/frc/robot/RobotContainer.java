@@ -68,6 +68,14 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
+		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
+		.and(() -> shooter.readyToShoot()).whileTrue(Commands.parallel(
+			indexer.indexOnCommand(),
+			intake.agitate()
+		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
+
+		driver.b().whileTrue(intake.extend());
+		
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
 		operator.back().onTrue(Commands.runOnce(() -> RobotState.setNormalMode())); 
