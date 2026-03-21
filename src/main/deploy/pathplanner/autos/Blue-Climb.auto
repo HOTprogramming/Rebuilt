@@ -7,37 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Intake1"
+            "pathName": "Climb Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "align pole autoflip"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.0
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Intake2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Intake3"
+            "name": "auto climb"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

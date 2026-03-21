@@ -7,37 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Steal1"
+            "pathName": "Left Climb Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "align pole autoflip"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.0
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Steal2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Climb"
+            "name": "auto climb"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

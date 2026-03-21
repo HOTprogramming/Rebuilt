@@ -1,8 +1,7 @@
 package frc.util;
 
-import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -17,15 +16,9 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Temperature;
-import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
 import frc.util.sim.PhysicsSim;
 
@@ -51,10 +44,7 @@ public class Kraken {
 	private final MotionMagicExpoTorqueCurrentFOC mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0);
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 	private final VelocityTorqueCurrentFOC velocityTorque = new VelocityTorqueCurrentFOC(0);
-	private final NeutralOut brake = new NeutralOut();
-
-	public final StatusSignal<Angle> position;
-	public final StatusSignal<AngularVelocity> velocity;
+	private final NeutralOut stop = new NeutralOut();
 
 	public DoublePublisher positionPublisher;
 	public DoublePublisher velocityPublisher;
@@ -73,7 +63,7 @@ public class Kraken {
 	}
 
 	public Kraken(int id, String canBusName, TalonFXConfiguration config, String subsystem, String deviceName) {
-		motor = new TalonFX(id, canBusName);
+		motor = new TalonFX(id, new CANBus(canBusName));
 
 		this.subsystem = subsystem;
 		this.deviceName = deviceName;
@@ -83,11 +73,6 @@ public class Kraken {
 		if (!statusCode.isOK()) {
 			System.out.println("Configuration Failed on motor " + subsystem + " " + deviceName);
 		}
-
-		position = motor.getPosition();
-		velocity = motor.getVelocity();
-
-		BaseStatusSignal.setUpdateFrequencyForAll(50.0, position, velocity);
 	}
 
 	public void setup(){
@@ -104,21 +89,16 @@ public class Kraken {
 		PhysicsSim.getInstance().run();
 	}
 
-	public boolean refresh(){
+	public void update(){
 		if (Utils.isSimulation()) {
 			refreshSim();
 		}
 
-		boolean isOk = BaseStatusSignal.refreshAll(position, velocity).isOK();
-
 		updateTelemetry();
-
-		return true;
 	}
 
 	public void createTelemetry(String subsystem, String deviceName){
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
-
         NetworkTable table = inst.getTable("HOT/" + subsystem + "/" + deviceName);
 
         positionPublisher = table.getDoubleTopic(subsystem + deviceName + "Position").publish();
@@ -126,12 +106,12 @@ public class Kraken {
 	}
 
 	public void updateTelemetry(){
-		positionPublisher.set(position.getValueAsDouble());
-		velocityPublisher.set(velocity.getValueAsDouble());
+		positionPublisher.set(motor.getPosition().getValueAsDouble());
+		velocityPublisher.set(motor.getVelocity().getValueAsDouble());
 	}
 
 	public void stop() {
-		motor.setControl(brake);
+		motor.setControl(stop);
 	}
 
 	public void setPosition(double desiredRotations, PositionControlType controlType) {

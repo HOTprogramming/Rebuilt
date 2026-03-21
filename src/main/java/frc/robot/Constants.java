@@ -14,7 +14,6 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
   public static final double loopPeriodSecs = 0.02;
   private static RobotType robotType = RobotType.COMPBOT;
   public static final boolean tuningMode = false;

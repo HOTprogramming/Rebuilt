@@ -11,7 +11,6 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -44,6 +43,7 @@ public class ClimberConstants {
 	public static double initalElbowClimbPos = -0.675;
 	public static double adjustedElbowClimbPos = -0.74;
 	public static double l3ElbowPos = -0.477;
+	public static double autoClimbPos = -0.625; 
 
 	public static double wheelsUpPos = 0.2125; // unset
 	public static double l1autonclimbedpos = 0.438; // unset

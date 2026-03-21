@@ -1,5 +1,6 @@
 package frc.util;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -30,7 +31,7 @@ public class KrakenWithCancoder extends Kraken {
 		CANcoderConfiguration encoderConfig, String subsystem, String deviceName) {
 
 		super(motorID, canBusName, motorConfig, subsystem, deviceName);
-		this.canCoder = new CANcoder(canCoderID, canBusName);
+		this.canCoder = new CANcoder(canCoderID, new CANBus(canBusName));
 
 		StatusCode statusCode = canCoder.getConfigurator().apply(encoderConfig);
 
