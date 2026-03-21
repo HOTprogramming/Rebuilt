@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Drivetrain;
 
 import static edu.wpi.first.units.Units.*;
+
+import java.util.Set;
 import java.util.function.Supplier;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -11,18 +13,33 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotState;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.TunerSwerveDrivetrain;
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.left_blue_ladder_angle_deg;
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.right_blue_ladder_angle_deg;
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.left_red_ladder_angle_deg;
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.right_red_ladder_angle_deg;
 
 public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.004;
@@ -49,6 +66,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
 
     private final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
+	
+	private DoubleSubscriber poleAlignmentSub;
+	private DoubleSubscriber poleDistanceSub;
+	private PathConstraints alignToLadderConstraints = new PathConstraints(0.75, 1.0, 2 * Math.PI, 1 * Math.PI); //.5;
+
 
     public Drivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
@@ -58,6 +80,13 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
         configureAutoBuilder();
 
 		registerTelemetry(logger::telemeterize);
+		
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
+		NetworkTable objectDetection = inst.getTable("HOTVision/LEFT/object_detection");
+		poleAlignmentSub = objectDetection.getDoubleTopic("pipe_alignment").subscribe(0.0);
+		poleDistanceSub = objectDetection.getDoubleTopic("pipe_distance").subscribe(0.0);
+
+		SmartDashboard.putBoolean("climb/Use Cam Dist", false);
     }
 
     private void configureAutoBuilder() {
@@ -147,5 +176,101 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		} else {			
 			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
 		}
+	}
+
+final double CLIMBER_CHASSIS_OFFSET = 90.0; 	// Climber on front
+final double FIELD_WIDTH_MIDPOINT = 4.035;   // Midpoint of the 8.069m width
+double TARGET_DISTANCE = 0.6;          // The 0.7m gap from Auto drop-off
+public boolean iAmDockingLeaveMeAlone = false;
+
+public Command driveToPoleCoordinate_autoflip() {
+    return Commands.defer(() -> {
+        Pose2d currentPose = getState().Pose;
+        boolean aboveYMidpoint = currentPose.getY() > FIELD_WIDTH_MIDPOINT;
+        double approachDirection = aboveYMidpoint ? -1.0 : 1.0;
+        
+		double baseApproachAngle = 0.0;
+        // Desired Chassis Rotation
+		if (DriverStation.getAlliance().get() == Alliance.Red) {
+       		baseApproachAngle = (aboveYMidpoint ? -90.0 + left_blue_ladder_angle_deg : 90.0 + right_blue_ladder_angle_deg);
+		} else {
+			baseApproachAngle = (aboveYMidpoint ? -90.0 + right_red_ladder_angle_deg : 90.0 + left_red_ladder_angle_deg);
+		}
+        Rotation2d targetRotation = Rotation2d.fromDegrees(baseApproachAngle - CLIMBER_CHASSIS_OFFSET);
+
+        // Chassis Rotation Error
+        double currentAngleRad = currentPose.getRotation().getRadians();
+        double angleErrorRad = targetRotation.getRadians() - currentAngleRad;
+        
+		boolean useCamDistOverride = SmartDashboard.getBoolean("climb/Use Cam Dist", false);
+		if (useCamDistOverride) {
+			TARGET_DISTANCE = MathUtil.clamp(poleDistanceSub.get(), 0.5, 1.0);
+		}
+
+        // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset
+        double rotationXOffset = 0.5 * Math.abs(TARGET_DISTANCE) * Math.sin(angleErrorRad); 
+		
+		// targetY: Move 0.7m toward middle of field
+        double targetY = currentPose.getY() + (TARGET_DISTANCE * approachDirection);
+        
+		// targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
+		double camOffset = 0.11; // Default camera offset in meters
+
+        double targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3) + camOffset + rotationXOffset) * approachDirection;
+
+        Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
+		
+		SmartDashboard.putNumber("climb/cmd_rotationXOffset", rotationXOffset);
+		SmartDashboard.putNumber("climb/cmd_camOffset", camOffset);
+		SmartDashboard.putNumber("climb/cmd_currPoseX", currentPose.getX());
+		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3)) );
+        
+		// Telemetry & Vision off while docking
+        logger.dockingTargetPub.set(finalTarget);
+        iAmDockingLeaveMeAlone = true;
+
+        //Wiggle
+        double pushXvel = 0.3; // 0.4 meters per second forward
+
+        Command wiggle = Commands.run(() -> {
+            double rotationWiggle = Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI * 3.0) * 0.75;
+            setControl(ROBOT_CENTRIC
+                .withVelocityY(pushXvel)
+                .withVelocityX(0)
+                .withRotationalRate(rotationWiggle)
+                .withCenterOfRotation(new Translation2d(-0.3175, 0)) // Meters
+            );
+        }, this).withTimeout(1.5);
+
+		Command drive = Commands.run(() -> {
+            setControl(ROBOT_CENTRIC
+                .withVelocityY(1.0) //climber is on the side of the robot to the left
+                .withVelocityX(0)
+                .withRotationalRate(0)
+            );
+        }, this).withTimeout(0.5);
+
+
+
+        return runPathFinding(finalTarget)
+                .andThen(wiggle)
+				.andThen(drive)
+                .finallyDo(() -> iAmDockingLeaveMeAlone = false);
+                
+    }, Set.of(this));
+}
+
+	public Command angleSwerveWheels() {
+		return Commands.run(() -> {
+            setControl(ROBOT_CENTRIC
+                .withVelocityY(0.1) 
+                .withVelocityX(0)
+                .withRotationalRate(0)
+            );
+        }, this).withTimeout(0.4);
+	}
+
+	public Command runPathFinding(Pose2d target) {
+		return AutoBuilder.pathfindToPose(target, alignToLadderConstraints);
 	}
 }

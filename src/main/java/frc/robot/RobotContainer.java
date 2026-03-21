@@ -22,6 +22,7 @@ import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Shooter.Shooter;
 
 public class RobotContainer {
+	SendableChooser<String> Autos = new SendableChooser<>();
 	private final CommandXboxController driver = new CommandXboxController(0);
 	private final CommandXboxController operator = new CommandXboxController(1);
 
@@ -38,13 +39,15 @@ public class RobotContainer {
 
     public RobotContainer() {
 		RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
-
 		theta.enableContinuousInput(-Math.PI, Math.PI);
 		
+		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0,0)).withTimeout(.5));
+		NamedCommands.registerCommand("auto climb", climber.autoClimb());
+		
 		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
 				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle + Math.PI))));
 		NamedCommands.registerCommand("Stop Shooting", 
@@ -83,7 +86,9 @@ public class RobotContainer {
 				indexer.indexOnCommand(),
 				intake.agitate())
 		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
-
+		
+		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
+		
 		driver.leftTrigger().whileTrue(intake.extend());
 		
 		operator.leftBumper().onTrue(intake.teleopRetract());
