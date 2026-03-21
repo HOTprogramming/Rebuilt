@@ -61,6 +61,8 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("Aim", Commands.run(() -> drivetrain.aim(0,0)).withTimeout(.5));
+		NamedCommands.registerCommand("auto climb", climber.autoClimb());
+		
 		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
 				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle + Math.PI))));
 		NamedCommands.registerCommand("Stop Shooting", 
