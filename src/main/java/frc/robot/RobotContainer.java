@@ -5,6 +5,7 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,6 +33,8 @@ public class RobotContainer {
 	PIDController theta = new PIDController(7, 0, 0);
 
     public RobotContainer() {
+		RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
+
 		theta.enableContinuousInput(-Math.PI, Math.PI);
 		
 		NamedCommands.registerCommand("Intake Out", intake.extend());
@@ -72,7 +75,7 @@ public class RobotContainer {
 		operator.start().onTrue(
 			Commands.parallel(
 				Commands.runOnce(() -> RobotState.setClimbMode()),
-				intake.fullretract(),
+				intake.fullRetract(),
 				shooter.stop()
 			)); 
 
@@ -83,7 +86,7 @@ public class RobotContainer {
 		operator.a().whileTrue(
     	Commands.either(
 			Commands.parallel(
-				// drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
+				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
 				Commands.sequence(Commands.waitSeconds(0.5), climber.stageThreeClimb())
 			),
 			shooter.PresetClimberPole(),

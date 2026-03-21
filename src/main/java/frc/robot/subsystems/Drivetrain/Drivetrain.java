@@ -46,6 +46,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withHeadingPID(7, 0, 0);
 
+	private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
+
     private final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
 
     public Drivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
@@ -135,4 +137,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
+
+	public Command driveTowardsClimberSide(double speed) {
+		return run(() -> {
+			setControl(ROBOT_CENTRIC
+			.withVelocityY(speed));
+		}).finallyDo(() -> setControl(ROBOT_CENTRIC.withVelocityY(0)));
+	}
 }

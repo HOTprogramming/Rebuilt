@@ -67,9 +67,10 @@ public class Intake extends SubsystemBase {
 		});
 	}
 
-	public Command fullretract() {
+	public Command fullRetract() {
 		return runOnce(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
+			mIntakeKraken.stop();
 		});
 	}
 
