@@ -41,21 +41,6 @@ public class RobotContainer {
 		RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
 		theta.enableContinuousInput(-Math.PI, Math.PI);
 		
-		// IMPORTANT: When adding autons, they must have their name start with either
-		// "Blue-" or "Red-". When adding them to the chooser, do not include the
-		// "Blue-" or "Red-"
-		// in the name. Example: an auton called "Red-Shoot Left" should be added with a
-		// blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot
-		// Left","Shoot Left");"
-		Autos.setDefaultOption("Path", "Path");
-
-		Autos.addOption("ohno", "ohno");
-		Autos.addOption("FunkyCheck", "FunkyCheck");
-		Autos.addOption("RightClimb", "Climb");
-		Autos.addOption("LeftClimb", "LeftClimb");
-
-		SmartDashboard.putData("Autos", Autos);
-		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
