@@ -61,4 +61,9 @@ public class ClimberKraken {
 	public void resetWristEncoder() {
 		m_spinnerKraken.motor.setPosition(0);
 	}
+
+	public void stop(){
+		m_climberKraken.stop();
+		m_spinnerKraken.stop();
+	}
 }

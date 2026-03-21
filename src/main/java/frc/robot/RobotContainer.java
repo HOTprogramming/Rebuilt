@@ -43,6 +43,7 @@ public class RobotContainer {
 		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
+		NamedCommands.registerCommand("deploy climber", climber.fullDeploy());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("Aim", 
@@ -110,7 +111,7 @@ public class RobotContainer {
 		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
 
 		//Climber Pole Preset: Step 1 of Climb
-		operator.a().whileTrue(
+		operator.a().onTrue(
     	Commands.either(
 			Commands.parallel(
 				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
@@ -121,14 +122,14 @@ public class RobotContainer {
 		));
 
 		//Trench Preset: Step 2 of Climb
-		operator.b().whileTrue(
+		operator.b().onTrue(
     	Commands.either(
 		climber.stow(), 
 		shooter.PresetTrench(),
         RobotState::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
-		operator.y().whileTrue(
+		operator.y().onTrue(
     	Commands.either(
 		climber.teleopDeploy(), 
 		shooter.PresetBatter(),
@@ -140,6 +141,7 @@ public class RobotContainer {
 				shooter.mShooterKraken.stop();
 				intake.mIntakeKraken.stop();
 				indexer.m_IndexKraken.stop();
+				climber.m_ClimbKraken.stop();
 			}).ignoringDisable(true)
 		);
 
