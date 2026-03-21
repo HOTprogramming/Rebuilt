@@ -42,7 +42,7 @@ public class RobotContainer {
 		theta.enableContinuousInput(-Math.PI, Math.PI);
 		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
-		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.0).withTimeout(0.5)));
+		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
