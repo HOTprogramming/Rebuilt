@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.networktables.StructTopic;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.Vector;
@@ -41,6 +42,7 @@ public class CameraBase {
 		subTable = hotVisionTable.getSubTable(name + "/apriltag");
 		pose2dTopic = subTable.getStructTopic("robot_pose2d", Pose2d.struct);
 		subscriber = pose2dTopic.subscribe(new Pose2d());
+		SmartDashboard.putBoolean("climb/Use Cam Whl Dock", false);
 	}
 
 	public void periodic() {
@@ -82,6 +84,10 @@ public class CameraBase {
 			// }
 
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
+				boolean useCamWhlDock = SmartDashboard.getBoolean("climb/Use Cam Whl Dock", false);
+				if (drivetrain.iAmDockingLeaveMeAlone && useCamWhlDock) {
+					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				}
 				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.075, estStdDevs);
 			}
 		}

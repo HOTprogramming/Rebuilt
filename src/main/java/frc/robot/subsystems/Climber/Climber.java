@@ -83,6 +83,13 @@ public class Climber extends SubsystemBase {
 		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.01;
 	}
 
+	public BooleanSupplier isAutoClimbed() {
+		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.autoClimbPos) < 0.01;
+	}
+
+
+
+	
 	private BooleanSupplier isPartWristClimbed() {
 		return () -> Math.abs((m_ClimbKraken.getWristPos() / ClimberConstants.wristGearRatio) - ClimberConstants.startElbowAdjustmentPos) < 0.05;
 	}
@@ -161,7 +168,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	public Command autoClimb() {
-		return run(() -> setElbowPosition(ClimberConstants.initalElbowClimbPos)).until(isLifted());
+		return run(() -> setElbowPosition(ClimberConstants.autoClimbPos)).until(isAutoClimbed());
 	}
 
 	public Command stageThreeClimb() {
