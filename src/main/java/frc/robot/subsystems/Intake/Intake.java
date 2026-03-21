@@ -3,11 +3,14 @@ package frc.robot.subsystems.Intake;
 import java.util.function.BooleanSupplier;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Intake extends SubsystemBase {
 	public final IntakeKraken mIntakeKraken = new IntakeKraken();
@@ -53,8 +56,8 @@ public class Intake extends SubsystemBase {
 		return Commands.sequence(runOnce(() -> {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
-					.withMotionMagicAcceleration(2.5)
-					.withMotionMagicCruiseVelocity(2.5));
+					.withMotionMagicAcceleration(8)
+					.withMotionMagicCruiseVelocity(8));
 		}), new WaitCommand(.02), runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
@@ -141,4 +144,34 @@ public class Intake extends SubsystemBase {
 		);
 	}
 
+	public Command packingAgitate() {
+		return Commands.repeatingSequence(
+			agitateRetract(),
+			run(() -> {}).until(currentTrippedDebounced()),
+			reExtend()
+		).until(isAgitateRetracted());
+	}
+
+	private Trigger currentTrippedDebounced() {
+		return new Trigger(
+			() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() > IntakeConstants.agitateCurrentThreshold
+		).debounce(IntakeConstants.agitateCurrentTime);
+	}
+	
+	double targetreextendpos = 0.9;
+	double reextendoffset = 0.2;
+
+	private Command reExtend() {
+		return Commands.sequence(
+			runOnce(() -> {
+				targetreextendpos = MathUtil.clamp(mIntakeKraken.getExtendPosition() + reextendoffset, 0.1, IntakeConstants.kDeployedPosition);
+				mIntakeKraken.runAgitatePosition(targetreextendpos);
+			}),
+			run(() -> {}).until(isReExetended())
+		);
+	}
+
+	private BooleanSupplier isReExetended() {
+		return () -> Math.abs(mIntakeKraken.getExtendPosition() - targetreextendpos) < IntakeConstants.kExtendTolerance;
+	}
 }
