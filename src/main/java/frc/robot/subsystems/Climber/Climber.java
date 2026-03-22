@@ -32,6 +32,9 @@ public class Climber extends SubsystemBase {
 	public void periodic() {
 		m_ClimbKraken.updateStats();
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
+		if(this.getCurrentCommand() != null){
+			SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
+		}
 	}
 
 	private void setElbowPosition(double targetPos) {
@@ -64,6 +67,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	private BooleanSupplier isDeployed() {
+		System.out.println("is deployed");
 		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.deployedPos) < 0.01;
 	}
 
@@ -155,8 +159,8 @@ public class Climber extends SubsystemBase {
 	public Command teleopDeploy() {
 		return run(() -> {
 			setElbowPosition(ClimberConstants.deployedPos);
-			setWristPosition(ClimberConstants.wristZeroOffset);
-		});
+			// setWristPosition(ClimberConstants.wristZeroOffset);
+		}).until(isDeployed());
 	}	
 
 	public Command stop() {

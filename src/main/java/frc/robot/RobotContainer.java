@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotController;
@@ -44,6 +45,8 @@ public class RobotContainer {
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
+		NamedCommands.registerCommand("deploy climber", climber.teleopDeploy());
+		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
 		NamedCommands.registerCommand("Aim", 
@@ -63,7 +66,7 @@ public class RobotContainer {
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
-		NamedCommands.registerCommand("Agitate", intake.agitate());
+		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
 
         configureBindings();
 
@@ -71,7 +74,9 @@ public class RobotContainer {
 
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+        CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());        
+		CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
+
     }
 
     private void configureBindings() {
@@ -118,7 +123,7 @@ public class RobotContainer {
 		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
 
 		//Climber Pole Preset: Step 1 of Climb
-		operator.a().whileTrue(
+		operator.a().onTrue(
     	Commands.either(
 			Commands.parallel(
 				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
@@ -129,14 +134,14 @@ public class RobotContainer {
 		));
 
 		//Trench Preset: Step 2 of Climb
-		operator.b().whileTrue(
+		operator.b().onTrue(
     	Commands.either(
 		climber.stow(), 
 		shooter.PresetTrench(),
         RobotState::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
-		operator.y().whileTrue(
+		operator.y().onTrue(
     	Commands.either(
 		climber.teleopDeploy(), 
 		shooter.PresetBatter(),
@@ -148,10 +153,9 @@ public class RobotContainer {
 				shooter.mShooterKraken.stop();
 				intake.mIntakeKraken.stop();
 				indexer.m_IndexKraken.stop();
+				climber.m_ClimbKraken.stop();
 			}).ignoringDisable(true)
 		);
-
-		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(.25)).ignoringDisable(true));
 
 		//Climber Controls
 		climber.setDefaultCommand(climber
