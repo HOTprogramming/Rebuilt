@@ -202,9 +202,7 @@ public Command driveToPoleCoordinate_autoflip() {
         double currentAngleRad = currentPose.getRotation().getRadians();
         double angleErrorRad = targetRotation.getRadians() - currentAngleRad;
         
-		boolean useCamDistOverride = SmartDashboard.getBoolean("climb/Use Cam Dist", true);
-		
-			TARGET_DISTANCE = MathUtil.clamp(poleDistanceSub.get(), 0.5, 1.0);
+		TARGET_DISTANCE = MathUtil.clamp(poleDistanceSub.get(), 0.5, 1.0);
 		
 
         // rotationXOffset (in meters) accounts for the chassis rotation impact on camera offset

@@ -30,13 +30,13 @@ public class ShooterKraken {
 			stop();
 			return;
 		}
-		// m_krakenFXLeftTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
-		// m_krakenFXLeftBottom.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
-		// m_krakenFXRightTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+		m_krakenFXLeftTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+		m_krakenFXLeftBottom.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+		m_krakenFXRightTop.setVelocity(desiredRotationsPerSecond, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
 	}
 
 	public void runPosition(double desiredRotations) {
-		// m_krakenFXHood.setPosition(desiredRotations, Kraken.PositionControlType.PositionVoltage, 0);
+		m_krakenFXHood.setPosition(desiredRotations, Kraken.PositionControlType.PositionVoltage, 0);
 	}
 
 	public void stop() {

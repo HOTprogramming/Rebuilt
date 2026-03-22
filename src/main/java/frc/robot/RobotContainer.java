@@ -157,8 +157,6 @@ public class RobotContainer {
 			}).ignoringDisable(true)
 		);
 
-		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(.25)).ignoringDisable(true));
-
 		//Climber Controls
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
