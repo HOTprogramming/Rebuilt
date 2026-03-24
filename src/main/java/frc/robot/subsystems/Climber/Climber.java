@@ -159,7 +159,7 @@ public class Climber extends SubsystemBase {
 	public Command teleopDeploy() {
 		return run(() -> {
 			setElbowPosition(ClimberConstants.deployedPos);
-			// setWristPosition(ClimberConstants.wristZeroOffset);
+			setWristPosition(ClimberConstants.wristZeroOffset);
 		}).until(isDeployed());
 	}	
 
