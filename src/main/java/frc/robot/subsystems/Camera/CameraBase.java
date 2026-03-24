@@ -51,6 +51,7 @@ public class CameraBase {
 			long numTags = subTable.getEntry("num_tags").getInteger(0);
 			tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
 			avgDist = 0;
+			Number ambg = subTable.getEntry("ambiguity").getNumber(0);
 
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
@@ -80,6 +81,10 @@ public class CameraBase {
 			}
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
+
+			if(ambg.doubleValue() > .2){
+				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			}
 
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
 				if (drivetrain.iAmDockingLeaveMeAlone) {
