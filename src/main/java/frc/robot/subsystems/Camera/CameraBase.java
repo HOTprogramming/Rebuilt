@@ -24,7 +24,7 @@ public class CameraBase {
 	AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(4.5, 4.5, 8);
-	Vector<N3> multiTagStdDevs = VecBuilder.fill(.6, .6, 1.5);
+	Vector<N3> multiTagStdDevs = VecBuilder.fill(.55, .55, 1.5);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -73,12 +73,12 @@ public class CameraBase {
 			} 
 			else if (numTags == 3) {
 				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 6.5) estStdDevs = multiTagStdDevs.times(2);
+				else if (avgDist > 6.5) estStdDevs = multiTagStdDevs.times(1.5);
 				else estStdDevs = multiTagStdDevs; // GAP FIXED: Handle low distance
 			} 
 			else if (numTags > 3) {
 				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 7.5) estStdDevs = multiTagStdDevs.times(2);
+				else if (avgDist > 7.5) estStdDevs = multiTagStdDevs.times(1.5);
 				else estStdDevs = multiTagStdDevs; // GAP FIXED: Handle low distance
 			}
 
