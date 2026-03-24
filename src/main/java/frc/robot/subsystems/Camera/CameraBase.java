@@ -90,7 +90,7 @@ public class CameraBase {
 				if (drivetrain.iAmDockingLeaveMeAlone) {
 					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				}
-				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.075, estStdDevs);
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.05, estStdDevs);
 			}
 		}
     }
