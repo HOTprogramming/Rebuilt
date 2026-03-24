@@ -11,7 +11,6 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -29,8 +28,8 @@ public class ShooterConstants {
 	public static double kIdleSpeed = (20.0);
 	public static double kShooterSpeed = (48.0);
 	public static double kTargetShootSpeed = kShooterSpeed;
-	public static double kShooterError = 2;
-	public static double kShooterHoodError = .1;
+	public static double kShooterError = 4;
+	public static double kShooterHoodError = .25;
 
 	public static Translation2d redHub = new Translation2d(11.926, 4.048);
 	public static Translation2d blueHub = new Translation2d(4.614, 4.048);

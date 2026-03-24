@@ -9,11 +9,9 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import frc.robot.Constants;
 import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
@@ -23,9 +21,14 @@ public class IntakeConstants {
 	public static double kShortDeployedPosition = 0.65;
 
 	public static double kRetractPosition = 0.02;
-	public static double kRetractPositionAgitate = 0.236;
+	public static double kRetractPositionAgitate = 0.05;
 	public static double kExtendTolerance = 0.02;
 	public static double kRetractTolerance = 0.02;
+
+	public static double agitateCurrentThreshold = 25;
+	public static double agitateCurrentTime = 0.10;
+
+
 
 	public static double kExpelSpeed = -100.0;
 	public static double kIntakeSpeed = 90.0;

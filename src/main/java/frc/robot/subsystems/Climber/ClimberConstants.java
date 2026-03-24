@@ -11,7 +11,6 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -29,7 +28,7 @@ public class ClimberConstants {
 	public static double wristGearRatio = 634.8;
 	public static double elbowGearRatio = 602.18;
 
-	public static double wristZeroOffset = (0.0/360.0) * wristGearRatio;
+	public static double wristZeroOffset = (3.0/360.0) * wristGearRatio;
 
 
 	public static double startElbowAdjustmentPos = 0.15;
