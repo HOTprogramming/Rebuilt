@@ -48,25 +48,25 @@ public class RobotContainer {
 		NamedCommands.registerCommand("deploy climber", climber.teleopDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
-		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 				 Commands.run(() -> 
 				 drivetrain.aim(0,0)), 
-				 shooter.autoAim()).withTimeout(.5));
+				 shooter.autoAim()));
 		NamedCommands.registerCommand("auto climb", climber.autoClimb());
 		
 		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
 				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle))));
 		NamedCommands.registerCommand("Stop Shooting", 
 			Commands.parallel(
-				Commands.runOnce(() -> PPHolonomicDriveController.clearRotationFeedbackOverride()),
 				indexer.indexOffCommand(),
-				shooter.hoodDown()
+				shooter.hoodDown()	
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
 		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
+		NamedCommands.registerCommand("Run Shoot", Commands.parallel(NamedCommands.getCommand("Aim"), NamedCommands.getCommand("Shoot")));
 
         configureBindings();
 
