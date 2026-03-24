@@ -48,25 +48,25 @@ public class RobotContainer {
 		NamedCommands.registerCommand("deploy climber", climber.teleopDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
-		NamedCommands.registerCommand("Shoot", indexer.indexOnCommand());
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 				 Commands.run(() -> 
 				 drivetrain.aim(0,0)), 
-				 shooter.autoAim()).withTimeout(.5));
+				 shooter.autoAim()));
 		NamedCommands.registerCommand("auto climb", climber.autoClimb());
 		
 		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
 				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle))));
 		NamedCommands.registerCommand("Stop Shooting", 
 			Commands.parallel(
-				Commands.runOnce(() -> PPHolonomicDriveController.clearRotationFeedbackOverride()),
 				indexer.indexOffCommand(),
-				shooter.hoodDown()
+				shooter.hoodDown()	
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
 		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
+		NamedCommands.registerCommand("Run Shoot", Commands.parallel(NamedCommands.getCommand("Aim"), NamedCommands.getCommand("Shoot")));
 
         configureBindings();
 
@@ -90,12 +90,14 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
+		driver.rightTrigger().whileTrue(shooter.autoAim())
 		.whileTrue(
 			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).andThen(Commands.parallel(
 				indexer.indexOnCommand(),
 				intake.packingAgitate())
 		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
+
+		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
 		
