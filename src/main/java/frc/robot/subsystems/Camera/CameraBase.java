@@ -61,20 +61,25 @@ public class CameraBase {
 				avgDist = avgDist / (double) numTags;
 			}
 
-			estStdDevs = singleTagStdDevs;
+			estStdDevs = (numTags > 1) ? multiTagStdDevs : singleTagStdDevs;
 
-			if (numTags == 1){
+			if (numTags == 1) {
 				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
-			} else if (numTags == 2){
-				if(avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			} 
+			else if (numTags == 2) {
+				if (avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = multiTagStdDevs;
-			} else if (numTags == 3){
+			} 
+			else if (numTags == 3) {
 				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else if (avgDist > 6.5) estStdDevs = multiTagStdDevs.times(2);
-			} else if (numTags > 3){
+				else estStdDevs = multiTagStdDevs; // GAP FIXED: Handle low distance
+			} 
+			else if (numTags > 3) {
 				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else if (avgDist > 7.5) estStdDevs = multiTagStdDevs.times(2);
+				else estStdDevs = multiTagStdDevs; // GAP FIXED: Handle low distance
 			}
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
