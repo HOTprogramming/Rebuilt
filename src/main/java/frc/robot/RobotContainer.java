@@ -90,12 +90,14 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
+		driver.rightTrigger().whileTrue(shooter.autoAim())
 		.whileTrue(
 			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).andThen(Commands.parallel(
 				indexer.indexOnCommand(),
 				intake.packingAgitate())
 		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
+
+		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
 		
