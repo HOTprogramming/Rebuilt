@@ -47,6 +47,7 @@ public class CameraBase {
 
 	public void periodic() {
 		if(subTable.getEntry("has_pose").getBoolean(false)){
+			double latency = subTable.getEntry("latency").getNumber(0).floatValue() / 1000.0;
 			poseArray = subscriber.get();
 			long numTags = subTable.getEntry("num_tags").getInteger(0);
 			tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
@@ -86,12 +87,20 @@ public class CameraBase {
 				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 			}
 
+			if(prevPose.getTranslation().getDistance(poseArray.getTranslation()) > 1 && prevPose.getX() != 0){
+				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			}
+
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
 				if (drivetrain.iAmDockingLeaveMeAlone) {
 					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				}
-				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.05, estStdDevs);
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-latency, estStdDevs);
 			}
+
+			prevPose = poseArray;
+		} else {
+			prevPose = new Pose2d();
 		}
     }
 }
