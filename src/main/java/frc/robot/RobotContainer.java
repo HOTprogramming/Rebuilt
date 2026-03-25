@@ -122,7 +122,7 @@ public class RobotContainer {
 			)); 
 
 		// Deploy Climber
-		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
+		operator.x().and(RobotState::isClimbMode).onTrue(climber.zeroSpinner());
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
