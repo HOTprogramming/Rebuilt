@@ -148,13 +148,17 @@ public class Intake extends SubsystemBase {
 			agitateRetract(),
 			run(() -> {}).until(currentTrippedDebounced()),
 			reExtend()
-		).until(isAgitateRetracted());
+		).until(doneAgitating());
 	}
 
 	private Trigger currentTrippedDebounced() {
 		return new Trigger(
 			() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() > IntakeConstants.agitateCurrentThreshold
 		).debounce(IntakeConstants.agitateCurrentTime);
+	}
+
+	private Trigger doneAgitating() {
+		return new Trigger(isAgitateRetracted()).and(() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() < IntakeConstants.agitateCurrentThreshold);
 	}
 	
 	double targetreextendpos = 0.9;

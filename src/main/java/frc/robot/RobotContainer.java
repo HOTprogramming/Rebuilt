@@ -95,16 +95,16 @@ public class RobotContainer {
 		.whileTrue(
 			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).andThen(Commands.parallel(
 				indexer.indexOnCommand(),
-				intake.agitate().unless(driver.leftTrigger()))
+				intake.packingAgitate().unless(driver.leftTrigger()))
 		)).onFalse(indexer.indexOffCommand())
 		.onFalse(intake.completeStop());
 
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.agitate().onlyIf(driver.rightTrigger()));
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
-				
+	
 		operator.leftBumper().onTrue(intake.teleopRetract());
-		operator.rightBumper().onTrue(intake.agitate());
+		operator.rightBumper().onTrue(intake.packingAgitate());
 		//Temp button to trigger the L1 climb sequence
 		operator.leftTrigger().onTrue(climber.autoClimb());
 		// Undock from the pole after climbing
