@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -144,11 +145,14 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Command packingAgitate() {
-		return Commands.repeatingSequence(
+		return Commands.sequence(Commands.repeatingSequence(
 			agitateRetract(),
 			run(() -> {}).until(currentTrippedDebounced()),
-			reExtend()
-		).until(doneAgitating());
+			reExtend(),
+			run(() -> {}).until(isReExetended())
+		).until(doneAgitating()),
+		runOnce(() -> SmartDashboard.putBoolean("done agitating", true)));
+
 	}
 
 	private Trigger currentTrippedDebounced() {
@@ -158,20 +162,19 @@ public class Intake extends SubsystemBase {
 	}
 
 	private Trigger doneAgitating() {
-		return new Trigger(isAgitateRetracted()).and(() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() < IntakeConstants.agitateCurrentThreshold);
+		return new Trigger(isAgitateRetracted()).and(() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() < IntakeConstants.agitateCurrentThreshold)
+		.and(() -> mIntakeKraken.m_ExtendKraken.motor.getClosedLoopReference().getValueAsDouble() == IntakeConstants.kRetractPositionAgitate);
 	}
 	
 	double targetreextendpos = 0.9;
-	double reextendoffset = 0.2;
+	double reextendoffset = 0.3;
 
 	private Command reExtend() {
-		return Commands.sequence(
-			runOnce(() -> {
-				targetreextendpos = MathUtil.clamp(mIntakeKraken.getExtendPosition() + reextendoffset, 0.1, IntakeConstants.kDeployedPosition);
-				mIntakeKraken.runAgitatePosition(targetreextendpos);
-			}),
-			run(() -> {}).until(isReExetended())
-		);
+		return 
+		runOnce(() -> {
+			targetreextendpos = MathUtil.clamp(mIntakeKraken.getExtendPosition() + reextendoffset, 0.1, IntakeConstants.kDeployedPosition);
+			mIntakeKraken.runAgitatePosition(targetreextendpos);
+		});
 	}
 
 	private BooleanSupplier isReExetended() {

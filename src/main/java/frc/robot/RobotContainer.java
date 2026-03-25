@@ -97,7 +97,7 @@ public class RobotContainer {
 				indexer.indexOnCommand(),
 				intake.packingAgitate().unless(driver.leftTrigger()))
 		)).onFalse(indexer.indexOffCommand())
-		.onFalse(intake.completeStop());
+		.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
