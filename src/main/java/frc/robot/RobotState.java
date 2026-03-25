@@ -70,7 +70,7 @@ public class RobotState {
 		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 		findZone();
 		Translation2d target = new Translation2d(0.0, 0.0);
-		if (shooterZone == Zone.ALLIANCE) {
+		if (shooterZone == Zone.ALLIANCE || shooterZone == Zone.TRENCH) {
 			if (color == Alliance.Red) {
 				target = ShooterConstants.redHub;
 			} else {

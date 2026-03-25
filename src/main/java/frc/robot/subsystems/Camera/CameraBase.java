@@ -24,7 +24,7 @@ public class CameraBase {
 	AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(4.5, 4.5, 8);
-	Vector<N3> multiTagStdDevs = VecBuilder.fill(.6, .6, 1.5);
+	Vector<N3> multiTagStdDevs = VecBuilder.fill(.55, .55, 1.5);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -47,10 +47,12 @@ public class CameraBase {
 
 	public void periodic() {
 		if(subTable.getEntry("has_pose").getBoolean(false)){
+			double latency = subTable.getEntry("latency").getNumber(0).floatValue() / 1000.0;
 			poseArray = subscriber.get();
 			long numTags = subTable.getEntry("num_tags").getInteger(0);
 			tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
 			avgDist = 0;
+			Number ambg = subTable.getEntry("ambiguity").getNumber(0);
 
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
@@ -61,30 +63,44 @@ public class CameraBase {
 				avgDist = avgDist / (double) numTags;
 			}
 
-			estStdDevs = singleTagStdDevs;
+			estStdDevs = (numTags > 1) ? multiTagStdDevs : singleTagStdDevs;
 
-			if (numTags == 1){
+			if (numTags == 1) {
 				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
-			} else if (numTags == 2){
-				if(avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			} else if (numTags == 2) {
+				if (avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = multiTagStdDevs;
-			} else if (numTags == 3){
+			} else if (numTags == 3) {
 				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 6.5) estStdDevs = multiTagStdDevs.times(2);
-			} else if (numTags > 3){
+				else if (avgDist > 6.5) estStdDevs = multiTagStdDevs.times(1.5);
+				else estStdDevs = multiTagStdDevs;
+			} else if (numTags > 3) {
 				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 7.5) estStdDevs = multiTagStdDevs.times(2);
+				else if (avgDist > 7.5) estStdDevs = multiTagStdDevs.times(1.5);
+				else estStdDevs = multiTagStdDevs;
 			}
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
+
+			if(ambg.doubleValue() > .2){
+				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			}
+
+			if(prevPose.getTranslation().getDistance(poseArray.getTranslation()) > 1 && prevPose.getX() != 0){
+				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			}
 
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
 				if (drivetrain.iAmDockingLeaveMeAlone) {
 					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				}
-				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-.075, estStdDevs);
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-latency, estStdDevs);
 			}
+
+			prevPose = poseArray;
+		} else {
+			prevPose = new Pose2d();
 		}
     }
 }
