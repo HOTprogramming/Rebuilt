@@ -16,6 +16,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -55,11 +56,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     private final SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+            .withDeadband(MaxSpeed * 0.025).withRotationalDeadband(MaxAngularRate * 0.025)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
 	private final SwerveRequest.FieldCentricFacingAngle FIELD_CENTRIC_FACING_ANGLE = new SwerveRequest.FieldCentricFacingAngle()
-			.withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+			.withDeadband(MaxSpeed * 0.025).withRotationalDeadband(MaxAngularRate * 0.025)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
 			.withHeadingPID(7, 0, 0);
 
@@ -143,8 +144,6 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
                         ? Rotation2d.k180deg
                         : Rotation2d.kZero);
         }
-
-        tipped = Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2 || Math.abs(getPigeon2().getPitch().getValueAsDouble()) > 2;
 
 		RobotState.pose = getState().Pose;
 		RobotState.speeds = getState().Speeds;
