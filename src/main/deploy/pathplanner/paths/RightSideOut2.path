@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6647817565815064,
-        "y": 0.7291726105563483
+        "x": 1.9300570613409411,
+        "y": 0.4962767475035661
       },
       "isLocked": false,
       "linkedName": "New Shoot"
@@ -88,7 +88,7 @@
     },
     {
       "name": "Intake Out",
-      "waypointRelativePos": 0.5990510083036823,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

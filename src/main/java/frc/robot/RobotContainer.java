@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
-import frc.robot.subsystems.Drivetrain.DrivetrainTelemetry;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;

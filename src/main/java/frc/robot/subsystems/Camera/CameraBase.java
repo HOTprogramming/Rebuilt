@@ -24,7 +24,9 @@ public class CameraBase {
 	AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(4.5, 4.5, 8);
-	Vector<N3> multiTagStdDevs = VecBuilder.fill(.55, .55, 1.5);
+	Vector<N3> twoTagStDevs = VecBuilder.fill(.7, .7, 1);
+	Vector<N3> threeTagStDevs = VecBuilder.fill(.6, .6, 1);
+	Vector<N3> fourTagStdDevs = VecBuilder.fill(.5, .5, 1.5);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -63,22 +65,22 @@ public class CameraBase {
 				avgDist = avgDist / (double) numTags;
 			}
 
-			estStdDevs = (numTags > 1) ? multiTagStdDevs : singleTagStdDevs;
+			estStdDevs = (numTags > 1) ? twoTagStDevs : singleTagStdDevs;
 
 			if (numTags == 1) {
 				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (numTags == 2) {
 				if (avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else estStdDevs = multiTagStdDevs;
+				else estStdDevs = twoTagStDevs;
 			} else if (numTags == 3) {
 				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 6.5) estStdDevs = multiTagStdDevs.times(1.5);
-				else estStdDevs = multiTagStdDevs;
+				else if (avgDist > 6.5) estStdDevs = threeTagStDevs.times(1.5);
+				else estStdDevs = threeTagStDevs;
 			} else if (numTags > 3) {
 				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 7.5) estStdDevs = multiTagStdDevs.times(1.5);
-				else estStdDevs = multiTagStdDevs;
+				else if (avgDist > 7.5) estStdDevs = fourTagStdDevs.times(1.5);
+				else estStdDevs = fourTagStdDevs;
 			}
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
