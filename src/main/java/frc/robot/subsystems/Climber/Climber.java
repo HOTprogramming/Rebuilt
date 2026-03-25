@@ -111,46 +111,38 @@ public class Climber extends SubsystemBase {
 			spintoBeambreak(),
 			spinOutBeambreak(),
 			spinOutSlow(), runOnce(() -> {finLeftEdgePos = m_ClimbKraken.getWristPos(); 
-											SmartDashboard.putNumber("spin out position", finLeftEdgePos);
+											SmartDashboard.putNumber("climber/spin out position", finLeftEdgePos);
 										}),
 			spinBackSlow(), runOnce(() -> {finRightEdgePos = m_ClimbKraken.getWristPos();
-											SmartDashboard.putNumber("spin back position", finRightEdgePos);
+											SmartDashboard.putNumber("climber/spin back position", finRightEdgePos);
 										}),
 			runOnce(() -> {m_ClimbKraken.setWristPosition(((finLeftEdgePos + finRightEdgePos) / 2) + ClimberConstants.wristZeroOffset);
-											SmartDashboard.putString("go to new zero", "true");
+											SmartDashboard.putString("climber/go to new zero", "true");
 										}),
-			Commands.waitSeconds(3.0),
+			Commands.waitSeconds(1.0),
 			reset(),
-			runOnce(() -> SmartDashboard.putString("go to new zero", "false"))
+			runOnce(() -> SmartDashboard.putString("climber/go to new zero", "false"))
 		);
 	}
 
 	public Command spinToZero() {
-		return run(() -> {
-				setWristPosition(0.0);
-			}).until(isZeroed()); 
+		return run(() -> {setWristPosition(0.0);}).until(isZeroed()); 
 	}
 	
 	private Command spintoBeambreak() {
-		return run(() -> {
-			setWristVelocity(20);
-		}).until(isBeamBreakTripped()); 
+		return run(() -> {setWristVelocity(125);}).until(isBeamBreakTripped()).withTimeout(7.0); 
 	}
-
+	//Run for short time to get past the far edge of thebeambreak
 	private Command spinOutBeambreak() {
-		return run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped());
+		return run(() -> setWristVelocity(40)).withTimeout(0.5);
 	}
-
+	//Rotate slowly back toward beambreak until it trips to get first edge or times out
 	private Command spinOutSlow() {
-		return Commands.sequence(
-			run(() -> setWristVelocity(-20)).withDeadline(Commands.waitSeconds(0.5)), 
-			run(() -> setWristVelocity(-20)).onlyWhile(isBeamBreakTripped()));
+		return Commands.run(() -> setWristVelocity(-20)).until(isBeamBreakTripped()).withTimeout(2.0);
 	}
-	
+	//Continue rotating slowly in the same direction until it trips again to get second edge or times out
 	private Command spinBackSlow() {
-		return Commands.sequence(
-			run(() -> setWristVelocity(20)).withDeadline(Commands.waitSeconds(0.5)), 
-			run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped()));
+		return Commands.run(() -> setWristVelocity(-20)).onlyWhile(isBeamBreakTripped()).withTimeout(1.0);
 	}
 
 	public Command fullDeploy() {
