@@ -109,12 +109,19 @@ public class Climber extends SubsystemBase {
 	public Command zeroSpinner() {
 		return Commands.sequence(
 			spintoBeambreak(),
-			spinOutBeambreak(), 
-			spinOutSlow(), runOnce(() -> finLeftEdgePos = m_ClimbKraken.getWristPos()),
-			spinBackSlow(), runOnce(() -> finRightEdgePos = m_ClimbKraken.getWristPos()),
-			runOnce(() -> m_ClimbKraken.setWristPosition(((finLeftEdgePos + finRightEdgePos) / 2) + ClimberConstants.wristZeroOffset)),
-			Commands.waitSeconds(0.5),
-			reset()
+			spinOutBeambreak(),
+			spinOutSlow(), runOnce(() -> {finLeftEdgePos = m_ClimbKraken.getWristPos(); 
+											SmartDashboard.putNumber("spin out position", finLeftEdgePos);
+										}),
+			spinBackSlow(), runOnce(() -> {finRightEdgePos = m_ClimbKraken.getWristPos();
+											SmartDashboard.putNumber("spin back position", finRightEdgePos);
+										}),
+			runOnce(() -> {m_ClimbKraken.setWristPosition(((finLeftEdgePos + finRightEdgePos) / 2) + ClimberConstants.wristZeroOffset);
+											SmartDashboard.putString("go to new zero", "true");
+										}),
+			Commands.waitSeconds(3.0),
+			reset(),
+			runOnce(() -> SmartDashboard.putString("go to new zero", "false"))
 		);
 	}
 
@@ -126,12 +133,12 @@ public class Climber extends SubsystemBase {
 	
 	private Command spintoBeambreak() {
 		return run(() -> {
-			setWristVelocity(100);
+			setWristVelocity(20);
 		}).until(isBeamBreakTripped()); 
 	}
 
 	private Command spinOutBeambreak() {
-		return run(() -> setWristVelocity(100)).onlyWhile(isBeamBreakTripped());
+		return run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped());
 	}
 
 	private Command spinOutSlow() {
