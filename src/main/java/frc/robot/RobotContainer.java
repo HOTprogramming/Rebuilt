@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DrivetrainTelemetry;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
@@ -48,7 +49,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("deploy climber", climber.teleopDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.agitate()));
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 				 Commands.run(() -> 
@@ -65,7 +66,7 @@ public class RobotContainer {
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
-		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
+		NamedCommands.registerCommand("Agitate", intake.agitate());
 		NamedCommands.registerCommand("Run Shoot", Commands.parallel(NamedCommands.getCommand("Aim"), NamedCommands.getCommand("Shoot")));
 
         configureBindings();
@@ -90,21 +91,20 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.rightTrigger().whileTrue(shooter.autoAim())
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
 		.whileTrue(
 			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).andThen(Commands.parallel(
 				indexer.indexOnCommand(),
-				intake.packingAgitate())
-		)).onFalse(indexer.indexOffCommand()).onFalse(intake.completeStop());
+				intake.agitate().unless(driver.leftTrigger()))
+		)).onFalse(indexer.indexOffCommand())
+		.onFalse(intake.completeStop());
 
-		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
-
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.agitate().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 				
 		operator.leftBumper().onTrue(intake.teleopRetract());
-		operator.rightBumper().onTrue(intake.packingAgitate());
+		operator.rightBumper().onTrue(intake.agitate());
 		//Temp button to trigger the L1 climb sequence
 		operator.leftTrigger().onTrue(climber.autoClimb());
 		// Undock from the pole after climbing
@@ -163,6 +163,8 @@ public class RobotContainer {
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
 			.onlyIf(RobotState::isClimbMode));
+
+		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
     }
 
     public Command getAutonomousCommand() {
