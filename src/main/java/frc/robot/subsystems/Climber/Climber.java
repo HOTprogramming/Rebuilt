@@ -35,19 +35,17 @@ public class Climber extends SubsystemBase {
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
 		if(this.getCurrentCommand() != null){
 			SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
+    }
 
-    double distance = m_ClimbKraken.canRange.getDistance().getValueAsDouble();
+	    double distance = m_ClimbKraken.canRange.getDistance().getValueAsDouble();
     boolean isDetected = m_ClimbKraken.canRange.getIsDetected().getValue();
     boolean isAligned = isDetected && (distance <= kAlignmentThreshold);
 
     SmartDashboard.putNumber("Climber/Range Distance", distance);
     SmartDashboard.putBoolean("Climber/Object Detected", isDetected);
     SmartDashboard.putBoolean("Climber/ALIGNED", isAligned);
-
-    }
 }
 		
-
 
 	private void setElbowPosition(double targetPos) {
 		m_ClimbKraken.setElbowPosition(targetPos);
@@ -181,9 +179,10 @@ public BooleanSupplier isCanRangeAligned() {
 	public Command stow() {
 		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
-
-	public Command autoClimb() {
-		return run(() -> setElbowPosition(ClimberConstants.autoClimbPos)).until(isAutoClimbed());
+public Command autoClimb() {
+    return run(() -> setElbowPosition(ClimberConstants.autoClimbPos))
+        .until(isAutoClimbed())           // Stop moving when elbow reaches target
+        .onlyIf(isCanRangeAligned());
 	}
 
 	public Command stageThreeClimb() {

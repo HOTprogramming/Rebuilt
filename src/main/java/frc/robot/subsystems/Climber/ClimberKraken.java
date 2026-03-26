@@ -43,7 +43,9 @@ public class ClimberKraken {
 		config.ProximityParams.MinSignalStrengthForValidMeasurement = 2000;
 	
 		config.ProximityParams.ProximityThreshold = 0.1; // If CANrange detects an object within 0.1 meters, it will trigger the "isDetected" signal.
-	
+	 
+		config.ProximityParams.ProximityHysteresis = 0.02;
+
 		config.ToFParams = new ToFParamsConfigs()
 			.withUpdateMode(UpdateModeValue.ShortRangeUserFreq)
 			.withUpdateFrequency(200.0);
