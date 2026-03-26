@@ -27,7 +27,7 @@ public class ClimberKraken {
 
 	private final CANBus kCANBus = CANBus.roboRIO();
 
-	public CANrange canRange = new CANrange(50, kCANBus);	
+	public CANrange canRange = new CANrange(61, kCANBus);	
 
 	private static final double PRINT_PERIOD = 0.5; // Update every 500 ms
 	

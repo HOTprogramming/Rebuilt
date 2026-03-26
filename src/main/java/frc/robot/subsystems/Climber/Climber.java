@@ -14,6 +14,7 @@ public class Climber extends SubsystemBase {
 
 	private double finLeftEdgePos;
 	private double finRightEdgePos;
+	private final double kAlignmentThreshold = 0.15; // 0.15 meters
 
 	private BooleanPublisher beambreakPub;
 	
@@ -34,8 +35,19 @@ public class Climber extends SubsystemBase {
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
 		if(this.getCurrentCommand() != null){
 			SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
-		}
-	}
+
+    double distance = m_ClimbKraken.canRange.getDistance().getValueAsDouble();
+    boolean isDetected = m_ClimbKraken.canRange.getIsDetected().getValue();
+    boolean isAligned = isDetected && (distance <= kAlignmentThreshold);
+
+    SmartDashboard.putNumber("Climber/Range Distance", distance);
+    SmartDashboard.putBoolean("Climber/Object Detected", isDetected);
+    SmartDashboard.putBoolean("Climber/ALIGNED", isAligned);
+
+    }
+}
+		
+
 
 	private void setElbowPosition(double targetPos) {
 		m_ClimbKraken.setElbowPosition(targetPos);
@@ -92,7 +104,10 @@ public class Climber extends SubsystemBase {
 	}
 
 
-
+public BooleanSupplier isCanRangeAligned() {
+    return () -> m_ClimbKraken.canRange.getIsDetected().getValue() && 
+                 (m_ClimbKraken.canRange.getDistance().getValueAsDouble() <= kAlignmentThreshold);
+}
 	
 	private BooleanSupplier isPartWristClimbed() {
 		return () -> Math.abs((m_ClimbKraken.getWristPos() / ClimberConstants.wristGearRatio) - ClimberConstants.startElbowAdjustmentPos) < 0.05;
