@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.networktables.StructTopic;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotState;
@@ -26,9 +27,7 @@ public class CameraBase {
 	AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(4, 4, 8);
-	Vector<N3> twoTagStDevs = VecBuilder.fill(.6, .6, 1);
-	Vector<N3> threeTagStDevs = VecBuilder.fill(.55, .55, 1);
-	Vector<N3> fourTagStdDevs = VecBuilder.fill(.5, .5, 1);
+	Vector<N3> multiTagStDevs = VecBuilder.fill(.625, .625, 1);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -86,22 +85,22 @@ public class CameraBase {
 				avgDist = avgDist / (double) numTags;
 			}
 
-			estStdDevs = (numTags > 1) ? twoTagStDevs : singleTagStdDevs;
+			estStdDevs = (numTags > 1) ? multiTagStDevs : singleTagStdDevs;
 
 			if (numTags == 1) {
 				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (numTags == 2) {
 				if (avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else estStdDevs = twoTagStDevs;
+				else estStdDevs = multiTagStDevs;
 			} else if (numTags == 3) {
-				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 6.5) estStdDevs = threeTagStDevs.times(1.25);
-				else estStdDevs = threeTagStDevs;
+				if (avgDist > 7) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else if (avgDist > 6) estStdDevs = multiTagStDevs.times(1.5);
+				else estStdDevs = multiTagStDevs;
 			} else if (numTags > 3) {
-				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 7.5) estStdDevs = fourTagStdDevs.times(1.25);
-				else estStdDevs = fourTagStdDevs;
+				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else if (avgDist > 7) estStdDevs = multiTagStDevs.times(1.5);
+				else estStdDevs = multiTagStDevs;
 			}
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
@@ -114,7 +113,7 @@ public class CameraBase {
 				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 			}
 
-			if(targeting && avgDist < 4){
+			if(targeting && avgDist < 4 && !DriverStation.isAutonomous()){
 				estStdDevs = estStdDevs.div(3 * (1 + (poseArray.getTranslation().getDistance(drivetrain.getState().Pose.getTranslation()))));
 			}
 

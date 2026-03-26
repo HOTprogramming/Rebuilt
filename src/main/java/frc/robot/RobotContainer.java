@@ -48,6 +48,10 @@ public class RobotContainer {
 		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
+		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
+
+		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
+
 		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(

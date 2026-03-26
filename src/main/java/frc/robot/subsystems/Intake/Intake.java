@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
 		return Commands.sequence(runOnce(() -> {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
-					.withMotionMagicAcceleration(8)
+					.withMotionMagicAcceleration(12)
 					.withMotionMagicCruiseVelocity(80));
 		}), new WaitCommand(.02), runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
@@ -167,7 +167,7 @@ public class Intake extends SubsystemBase {
 
 	private Trigger doneAgitating() {
 		return new Trigger(isAgitateRetracted()).and(() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() < IntakeConstants.agitateCurrentThreshold)
-		.and(() -> mIntakeKraken.m_ExtendKraken.motor.getClosedLoopReference().getValueAsDouble() == IntakeConstants.kRetractPositionAgitate);
+		.and(() -> Math.abs(mIntakeKraken.m_ExtendKraken.motor.getClosedLoopReference().getValueAsDouble() - IntakeConstants.kRetractPositionAgitate) < 0.01);
 	}
 	
 	double targetreextendpos = 0.9;
