@@ -13,6 +13,7 @@ import frc.robot.subsystems.Shooter.ShooterConstants;
 public class RobotState {
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 	public static ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
+	public static Translation2d target = new Translation2d(0.0, 0.0);
 
 	public enum Mode {
 			normal,
@@ -30,7 +31,7 @@ public class RobotState {
 		TRENCH
 	}
 
-	public static boolean allowedToShoot = true;
+	public static boolean isShooting = false;
 
 	private static ShootOnTheFly shootOnTheFly = new ShootOnTheFly();
 	public static double lookAheadDistance = 0;
@@ -69,7 +70,6 @@ public class RobotState {
 	public static void update() {
 		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 		findZone();
-		Translation2d target = new Translation2d(0.0, 0.0);
 		if (shooterZone == Zone.ALLIANCE || shooterZone == Zone.TRENCH) {
 			if (color == Alliance.Red) {
 				target = ShooterConstants.redHub;
@@ -91,18 +91,7 @@ public class RobotState {
 				}
 			}
 		}
-
-		if(shooterZone == Zone.TRENCH) {
-			allowedToShoot = false;
-		} else {
-			allowedToShoot = true;
-		}
-
-		SmartDashboard.putBoolean("Allowed to Shoot", allowedToShoot);
-
-		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
-		SmartDashboard.putString("Robot Mode", mode.name());
-		SmartDashboard.putString("Zone", shooterZone.name());		
+	
 		shootOnTheFly.update(pose, speeds, target, color);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
