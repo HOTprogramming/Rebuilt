@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.03710413694722,
-        "y": 3.2263338088445086
+        "x": 7.998288159771754,
+        "y": 3.148701854493581
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.829091563362759,
-        "y": 3.0876587597882
+        "x": 7.790275586187294,
+        "y": 3.0100268054372727
       },
       "isLocked": false,
       "linkedName": "Intake Point"
@@ -85,10 +85,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 40.746
+    "rotation": 33.29709851977864
   },
   "reversed": false,
-  "folder": null,
+  "folder": "2 Pass",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 180.0
