@@ -46,7 +46,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
-		NamedCommands.registerCommand("deploy climber", climber.teleopDeploy());
+		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.agitate()));

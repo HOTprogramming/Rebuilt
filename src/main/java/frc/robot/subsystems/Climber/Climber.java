@@ -162,6 +162,10 @@ public class Climber extends SubsystemBase {
 		}).until(isDeployed());
 	}	
 
+	public Command autonDeploy() {
+		return runOnce(() -> setElbowPosition(ClimberConstants.deployedPos));
+	}	
+
 	public Command stop() {
 		return runOnce(() -> {});
 	}
