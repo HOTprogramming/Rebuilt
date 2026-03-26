@@ -70,6 +70,8 @@ public class RobotContainer {
 		Autos.addOption("ohno", "ohno");
 		Autos.addOption("FunkyCheck", "FunkyCheck");
 		Autos.addOption("funkycheck", "funkycheck");
+		Autos.addOption("outandbackr", "outandbackr");
+
 
 		SmartDashboard.putData("Autos", Autos);
 
