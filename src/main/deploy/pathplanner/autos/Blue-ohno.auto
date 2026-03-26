@@ -110,6 +110,6 @@
     }
   },
   "resetOdom": false,
-  "folder": null,
+  "folder": "Old Auto",
   "choreoAuto": false
 }

@@ -84,7 +84,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "2 Pass",
+  "folder": "Right 2 Pass",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
