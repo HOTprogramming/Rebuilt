@@ -104,12 +104,16 @@ public class Intake extends SubsystemBase {
 		});
 	}
 
+	public void completeStopMethod(){
+		mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
+		mIntakeKraken.m_RollerKrakenFollower.motor.setVoltage(0);
+		mIntakeKraken.m_RollerKrakenLeader.motor.setVoltage(0);
+		mIntakeKraken.m_KickerKraken.motor.setVoltage(0);
+	}
+
 	public Command completeStop() {
 		return runOnce(() -> {
-			mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
-			mIntakeKraken.m_RollerKrakenFollower.motor.setVoltage(0);
-			mIntakeKraken.m_RollerKrakenLeader.motor.setVoltage(0);
-			mIntakeKraken.m_KickerKraken.motor.setVoltage(0);
+			completeStopMethod();
 		});
 	}
 

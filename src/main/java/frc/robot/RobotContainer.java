@@ -151,8 +151,9 @@ public class RobotContainer {
 		RobotModeTriggers.disabled().onTrue(
 			Commands.runOnce(() -> {
 				shooter.targetSpeed = 0;
+				RobotState.isShooting = false;
 				shooter.mShooterKraken.stop();
-				intake.mIntakeKraken.stop();
+				intake.completeStopMethod();
 				indexer.m_IndexKraken.stop();
 				climber.m_ClimbKraken.stop();
 			}).ignoringDisable(true)
@@ -164,6 +165,8 @@ public class RobotContainer {
 			.onlyIf(RobotState::isClimbMode));
 
 		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
+
+		drivetrain.registerTelemetry(drivetrain.logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {

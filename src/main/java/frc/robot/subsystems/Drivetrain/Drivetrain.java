@@ -64,7 +64,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
 
-    private final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
+    public final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
 	
 	private DoubleSubscriber poleAlignmentSub;
 	private DoubleSubscriber poleDistanceSub;
@@ -78,8 +78,6 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
         }
         configureAutoBuilder();
 
-		registerTelemetry(logger::telemeterize);
-		
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
 		NetworkTable objectDetection = inst.getTable("HOTVision/LEFT/object_detection");
 		poleAlignmentSub = objectDetection.getDoubleTopic("pipe_alignment").subscribe(0.0);

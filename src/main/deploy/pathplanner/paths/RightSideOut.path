@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 7.855962910128387,
+        "x": 8.03710413694722,
         "y": 3.2263338088445086
       },
       "prevControl": {
-        "x": 7.765392296718973,
-        "y": 0.6127246790299572
+        "x": 7.9853495007132675,
+        "y": 0.8973751783166901
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,10 +33,23 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.43712930011862416,
+      "maxWaypointRelativePos": 0.2403781228899373,
       "constraints": {
         "maxVelocity": 4.5,
-        "maxAcceleration": 4.0,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.6076975016880463,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -56,17 +69,6 @@
           "name": "Intake Out"
         }
       }
-    },
-    {
-      "name": "Intake Stop",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Intake Stop"
-        }
-      }
     }
   ],
   "globalConstraints": {
@@ -78,7 +80,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.25,
+    "velocity": 0.5,
     "rotation": 180.0
   },
   "reversed": false,

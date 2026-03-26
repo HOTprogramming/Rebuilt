@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
@@ -52,6 +53,7 @@ public class Shooter extends SubsystemBase {
 
 	public Command hoodDown(){
 		return run(() -> {
+			RobotState.isShooting = false;
 			if(RobotState.isManualMode()){
 				RobotState.setNormalMode();
 			}
@@ -69,8 +71,15 @@ public class Shooter extends SubsystemBase {
 
 	public Command autoAim() {
 		return run(() -> {
-			targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
-			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+			RobotState.isShooting = true;
+			if(DriverStation.isAutonomous()){
+				double distance = RobotState.pose.getTranslation().getDistance(RobotState.target);
+				targetHood = hoodAngleMap.get(distance);
+				targetSpeed = shooterSpeedMap.get(distance);
+			} else {
+				targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
+				targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+			}
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});

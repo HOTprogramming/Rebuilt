@@ -110,6 +110,6 @@
     }
   },
   "resetOdom": false,
-  "folder": "Blue Autos",
+  "folder": null,
   "choreoAuto": false
 }
