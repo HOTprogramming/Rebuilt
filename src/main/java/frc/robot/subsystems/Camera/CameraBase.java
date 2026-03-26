@@ -1,7 +1,11 @@
 
 package frc.robot.subsystems.Camera;
 
+<<<<<<< HEAD
 import java.util.Optional;
+=======
+import java.util.Arrays;
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 
 import com.ctre.phoenix6.Utils;
 
@@ -17,6 +21,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.networktables.StructTopic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+<<<<<<< HEAD
+=======
+import frc.robot.RobotState;
+import frc.robot.subsystems.Drivetrain.Drivetrain;
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.Drivetrain.Drive;
 import edu.wpi.first.math.Vector;
@@ -30,8 +39,15 @@ public class CameraBase {
 	StructSubscriber<Pose2d> subscriber;
 	AprilTagFieldLayout layout =  AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+<<<<<<< HEAD
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(5, 5, 7.5);
 	Vector<N3> multiTagStdDevs = VecBuilder.fill(.5, .5, 2);
+=======
+	Vector<N3> singleTagStdDevs = VecBuilder.fill(4, 4, 8);
+	Vector<N3> twoTagStDevs = VecBuilder.fill(.6, .6, 1);
+	Vector<N3> threeTagStDevs = VecBuilder.fill(.55, .55, 1);
+	Vector<N3> fourTagStdDevs = VecBuilder.fill(.5, .5, 1);
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -52,26 +68,47 @@ public class CameraBase {
 		subscriber = pose2dTopic.subscribe(new Pose2d());
 	}
 
+	public int[] targetTags = {27, 18, 25, 26, 24, 21, 29, 30};
+
 	public void periodic() {
 		if(subTable.getEntry("has_pose").getBoolean(false)){
+			double latency = subTable.getEntry("latency").getNumber(0).floatValue() / 1000.0;
 			poseArray = subscriber.get();
 			
 			avgDist = 0;
+<<<<<<< HEAD
 
 			tagIds = subTable.getEntry("tag_ids").getNumberArray(new Number[0]);
+=======
+			Number ambg = subTable.getEntry("ambiguity").getNumber(0);
+			boolean targeting = false;
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
 					getDistance(poseArray.getTranslation());
+
+				if(RobotState.isShooting){
+					for(int targetId : targetTags){
+						if(targetId == id.intValue()){
+							targeting = true;
+						}
+					}
+				}
 			}
 
 			avgDist = avgDist / (double) subTable.getEntry("num_tags").getInteger(0);
 
+<<<<<<< HEAD
 			SmartDashboard.putNumber(name + " Avg dist", avgDist);
+=======
+			estStdDevs = (numTags > 1) ? twoTagStDevs : singleTagStdDevs;
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 
 			if(subTable.getEntry("num_tags").getInteger(0) == 1){
 				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
+<<<<<<< HEAD
 			} else if (subTable.getEntry("num_tags").getInteger(0) > 1){
 				if (subTable.getEntry("num_tags").getInteger(0) > 2){
 					if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
@@ -109,6 +146,45 @@ public class CameraBase {
 			prevPose = poseArray;
 		} else {
 			prevPose = new Pose2d(100, 100, new Rotation2d());
+=======
+			} else if (numTags == 2) {
+				if (avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else estStdDevs = twoTagStDevs;
+			} else if (numTags == 3) {
+				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else if (avgDist > 6.5) estStdDevs = threeTagStDevs.times(1.25);
+				else estStdDevs = threeTagStDevs;
+			} else if (numTags > 3) {
+				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else if (avgDist > 7.5) estStdDevs = fourTagStdDevs.times(1.25);
+				else estStdDevs = fourTagStdDevs;
+			}
+
+			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
+
+			if(ambg.doubleValue() > .2){
+				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			}
+
+			if(prevPose.getTranslation().getDistance(poseArray.getTranslation()) > 1 && prevPose.getX() != 0){
+				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+			}
+
+			if(targeting && avgDist < 4){
+				estStdDevs = estStdDevs.div(3 * (1 + (poseArray.getTranslation().getDistance(drivetrain.getState().Pose.getTranslation()))));
+			}
+
+			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
+				if (drivetrain.iAmDockingLeaveMeAlone) {
+					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				}
+				drivetrain.addVisionMeasurement(poseArray, Utils.getCurrentTimeSeconds()-latency, estStdDevs);
+			}
+
+			prevPose = poseArray;
+		} else {
+			prevPose = new Pose2d();
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 		}
     }
 }

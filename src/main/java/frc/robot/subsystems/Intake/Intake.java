@@ -5,6 +5,12 @@ import java.util.function.BooleanSupplier;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
+<<<<<<< HEAD
+=======
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -132,6 +138,7 @@ public class Intake extends SubsystemBase {
 		});
 	}
 
+<<<<<<< HEAD
 	public Command completeStop(){
 		return runOnce(() -> {
 				mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
@@ -140,6 +147,19 @@ public class Intake extends SubsystemBase {
 				mIntakeKraken.m_KickerKraken.motor.setVoltage(0);
 			}
 		);
+=======
+	public void completeStopMethod(){
+		mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
+		mIntakeKraken.m_RollerKrakenFollower.motor.setVoltage(0);
+		mIntakeKraken.m_RollerKrakenLeader.motor.setVoltage(0);
+		mIntakeKraken.m_KickerKraken.motor.setVoltage(0);
+	}
+
+	public Command completeStop() {
+		return runOnce(() -> {
+			completeStopMethod();
+		});
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 	}
 
 	public BooleanSupplier isExtended() {
@@ -164,5 +184,55 @@ public class Intake extends SubsystemBase {
 		return Math.abs(mIntakeKraken.getExtendPosition() - IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance;
 	}
 
+<<<<<<< HEAD
+=======
+	public Command agitate(){
+		return Commands.sequence(
+			DriverStation.isAutonomous() ? new WaitCommand(0) : new WaitCommand(.5),
+			agitateRetract(),
+			new WaitCommand(.5),
+			extend(),
+			new WaitCommand(.5),
+			agitateRetract()
+		);
+	}
+
+	public Command packingAgitate() {
+		return Commands.sequence(Commands.repeatingSequence(
+			agitateRetract(),
+			run(() -> {}).until(currentTrippedDebounced()),
+			reExtend(),
+			run(() -> {}).until(isReExetended())
+		).until(doneAgitating()),
+		runOnce(() -> SmartDashboard.putBoolean("done agitating", true)));
+
+	}
+
+	private Trigger currentTrippedDebounced() {
+		return new Trigger(
+			() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() > IntakeConstants.agitateCurrentThreshold
+		).debounce(IntakeConstants.agitateCurrentTime);
+	}
+
+	private Trigger doneAgitating() {
+		return new Trigger(isAgitateRetracted()).and(() -> mIntakeKraken.m_ExtendKraken.motor.getStatorCurrent().getValueAsDouble() < IntakeConstants.agitateCurrentThreshold)
+		.and(() -> mIntakeKraken.m_ExtendKraken.motor.getClosedLoopReference().getValueAsDouble() == IntakeConstants.kRetractPositionAgitate);
+	}
+	
+	double targetreextendpos = 0.9;
+	double reextendoffset = 0.3;
+
+	private Command reExtend() {
+		return 
+		runOnce(() -> {
+			targetreextendpos = MathUtil.clamp(mIntakeKraken.getExtendPosition() + reextendoffset, 0.1, IntakeConstants.kDeployedPosition);
+			mIntakeKraken.runAgitatePosition(targetreextendpos);
+		});
+	}
+
+	private BooleanSupplier isReExetended() {
+		return () -> Math.abs(mIntakeKraken.getExtendPosition() - targetreextendpos) < IntakeConstants.kExtendTolerance;
+	}
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 }
 

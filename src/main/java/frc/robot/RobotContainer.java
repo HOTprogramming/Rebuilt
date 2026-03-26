@@ -57,66 +57,16 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
-
-
-		// IMPORTANT: When adding autons, they must have their name start with either
-		// "Blue-" or "Red-". When adding them to the chooser, do not include the
-		// "Blue-" or "Red-"
-		// in the name. Example: an auton called "Red-Shoot Left" should be added with a
-		// blue version called "Blue-Shoot Left", and type "Autos.addOption("Shoot
-		// Left","Shoot Left");"
-		Autos.setDefaultOption("Path", "Path");
-
-		Autos.addOption("ohno", "ohno");
-		Autos.addOption("FunkyCheck", "FunkyCheck");
-		Autos.addOption("funkycheck", "funkycheck");
-		Autos.addOption("outandbackr", "outandbackr");
-
-
-		SmartDashboard.putData("Autos", Autos);
-
-		drivetrain = new Drive(new DriveKraken());
-		camera = new Camera(drivetrain);
-		indexer = new Index();
-		climber = new Climber();
-		manager = new RobotState();
-		intake = new Intake();
-
-		NamedCommands.registerCommand("AlignPole", drivetrain.alignToPole());
-		NamedCommands.registerCommand("OTF", drivetrain.runPathFinding(new Pose2d(8, 4, Rotation2d.fromDegrees(0))));
-		NamedCommands.registerCommand("intake", intake.extend());
-		NamedCommands.registerCommand("intake off", intake.teleopRetract());
-		NamedCommands.registerCommand("intake agitate", intake.agitate());
-
-		//Start autoaim at start of auton
-		// NamedCommands.registerCommand("auto aim", manager.autoAim());
-		NamedCommands.registerCommand("shoot", indexer.indexOnCommand());
-		NamedCommands.registerCommand("shoot off", indexer.indexOffCommand());
-		NamedCommands.registerCommand("autoclimb",climber.autoClimb());
-		NamedCommands.registerCommand("hood up", manager.shooter.setHoodAngle(5) );
-		NamedCommands.registerCommand("hood down", Commands.sequence(manager.shooter.setHoodAngle(0), Commands.runOnce(() -> manager.shooter.mShooterKraken.runVelocity(47))));
-		NamedCommands.registerCommand("shooter on",manager.shooter.autoAim());
-		NamedCommands.registerCommand("auton spin", manager.shooter.AutonSpin());
-
-
-		NamedCommands.registerCommand("Auto Aim", 			
-			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(0,0)),
-					manager.shooter.autoAim(),
-					Commands.sequence(
-						Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && drivetrain.isAtTargetAngleAuton()),
-						indexer.indexOnCommand(),
-						
-					Commands.repeatingSequence(
-						intake.agitateRetract(),
-						new WaitCommand(.35),
-						intake.extend(),
-						new WaitCommand(.35)
-					)
-				)
-			));
-
-		NamedCommands.registerCommand("Auto Aim test", 			
+		theta.enableContinuousInput(-Math.PI, Math.PI);
+		
+		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
+		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
+		NamedCommands.registerCommand("Intake Out", intake.extend());
+		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
+		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
+		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
+		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 					manager.shooter.autoAim(),
 					Commands.sequence(
@@ -140,102 +90,40 @@ public class RobotContainer {
 					)
 			));
 
-		configureBindings();
-	}
+        configureBindings();
 
-	
-	private void configureBindings() {
+		autoChooser = AutoBuilder.buildAutoChooser();
 
-		//DRIVER CONTROLS
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 
-		// Drivetrain Controls
-		drivetrain.setDefaultCommand(drivetrain
-			.run(() -> drivetrain.teleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+        CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());        
+		CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
 
-		//Robot Centric Drive
-		driver.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.robotCentricTeleopDrive(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
-	
-		//Slow Mode
-		driver.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.teleopDriveSlow(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX())));
+    }
 
-		// Aim
-		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())));
+    private void configureBindings() {
+        drivetrain.setDefaultCommand(
+            drivetrain.run(() -> drivetrain.teleopDrive(
+                -driver.getLeftY(),
+                -driver.getLeftX(),
+                -driver.getRightX()
+            ))
+        );
 
-		// Rotate for Bump
-		driver.b().whileTrue(drivetrain.run(() -> {
-			double rot = drivetrain.getPose().getRotation().getDegrees();
-			double fact;
-			fact = Math.abs(rot) > 90 ? 3 : 1;
-			if (rot < 0)
-				fact *= -1;
+		shooter.setDefaultCommand(shooter.hoodDown());
 
-			drivetrain.lockRotation(Math.abs(driver.getLeftY()) >= 0.0 ? -driver.getLeftY()
-				: 0, Math.abs(driver.getLeftX()) >= 0.0 ? -driver.getLeftX() : 0, new Rotation2d(Math.PI / 4 * fact));
-		}));
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
+		.whileTrue(
+			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).andThen(Commands.parallel(
+				indexer.indexOnCommand(),
+				intake.packingAgitate().unless(driver.leftTrigger()))
+		)).onFalse(indexer.indexOffCommand())
+		.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 
-		// X the Wheels
-		driver.x().whileTrue(drivetrain.xLockCommand());
-
-		// Align to trench (Hood will go down)
-		driver.y().whileTrue(drivetrain.driveToTrenchY(() -> -driver.getLeftY()));	
-
-		// Indexer Controls (aka shoot)
-		// driver.rightTrigger().whileTrue(indexer.indexOnCommand()).whileFalse(indexer.indexOffCommand());
-		driver.rightTrigger().whileTrue(
-			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(manager::isManualMode),
-				Commands.either(
-					manager.shooter.autoAim(),
-					manager.shooter.holdTarget(),
-					manager::isNormalMode),
-				Commands.sequence(
-					Commands.run(() -> {}).until(() -> manager.shooter.readyToShoot() && (drivetrain.isAtTargetAngle() || manager.isManualMode())),
-					indexer.indexOnCommand(),
-					Commands.repeatingSequence(
-						intake.agitateRetract(),
-						new WaitCommand(.25),
-						intake.extendShort(),
-						new WaitCommand(.25)
-					).until(() -> driver.leftTrigger().getAsBoolean())
-				)	
-			)
-		).onFalse(
-			Commands.parallel(
-				Commands.sequence(
-					indexer.indexOffCommand(),
-					manager.shooter.dodgeTrench()
-				)
-			)
-		).onFalse(intake.stop());
-
-		//Shooter
-		// manager.shooter.setDefaultCommand(manager.idleCommands());
-		operator.rightBumper().onTrue(manager.shooter.idle());
-
-		//Intake
-		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
-
-		driver.leftTrigger().onTrue(
-			Commands.runOnce(() -> intake.shouldStop = false)
-		).whileTrue(
-			Commands.repeatingSequence(
-				Commands.runOnce(() -> {
-					if(intake.IsIntakeExtended() || intake.mIntakeKraken.m_ExtendKraken.motor.getSupplyCurrent().getValueAsDouble() > 80.0){
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
-						intake.shouldStop = true;
-					}
-				}),
-				Commands.either(intake.stopButSpin(), intake.extend(), () -> intake.shouldStop)
-			)
-		).whileFalse(intake.completeStop())
-		.onFalse(
-			Commands.repeatingSequence(
-				intake.agitateRetract(),
-				new WaitCommand(.25),
-				intake.extendShort(),
-				new WaitCommand(.25)
-			).onlyIf(() -> driver.rightTrigger().getAsBoolean()));
-
+		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
+	
 		operator.leftBumper().onTrue(intake.teleopRetract());
 
 		//Climb Mode
@@ -246,16 +134,8 @@ public class RobotContainer {
 				manager.shooter.shooterOff()
 			)); 
 
-		//Normal Mode
-		operator.back().onTrue(Commands.runOnce(() -> manager.setNormalMode())); 
-
-		//Shot Map: Deploy Climber
-		operator.x().onTrue(
-    	Commands.either(
-		climber.fullDeploy(), 
-		Commands.runOnce(() -> manager.setNormalMode()),
-		//manager.idleCommands(),
-        manager::isClimbMode));
+		// Deploy Climber
+		operator.x().and(RobotState::isClimbMode).onTrue(climber.zeroSpinner());
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
@@ -282,59 +162,26 @@ public class RobotContainer {
 		Commands.sequence(Commands.runOnce(() -> manager.setManualMode()), manager.shooter.PresetBatter()),
         manager::isClimbMode));
 
-		//Agitate
-		operator.rightTrigger().whileTrue(intake.agitate());
-
-		//Intake Roller Stop
-		operator.leftTrigger().whileTrue(intake.rollerStop());
-
-		operator.povUp().onTrue(Commands.runOnce(() -> {
-			manager.shooter.shotMapOffset += 0.1524;
-		}));
-
-		operator.povDown().onTrue(Commands.runOnce(() -> {
-			manager.shooter.shotMapOffset -= 0.1524;
-		}));
-
+		RobotModeTriggers.disabled().onTrue(
+			Commands.runOnce(() -> {
+				shooter.targetSpeed = 0;
+				RobotState.isShooting = false;
+				shooter.mShooterKraken.stop();
+				intake.completeStopMethod();
+				indexer.m_IndexKraken.stop();
+				climber.m_ClimbKraken.stop();
+			}).ignoringDisable(true)
+		);
 
 		//Climber Controls
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
-			.onlyIf(manager::isClimbMode));
-	}
+			.onlyIf(RobotState::isClimbMode));
 
+		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
 
-	public void updateAutonCommand() {
-		Ally = DriverStation.getAlliance();
-
-		if (!Ally.isPresent()) {
-			colorSelect = "Red-";
-		} else {
-			if (Ally.get() == Alliance.Red) {
-				colorSelect = "Red-";
-			} else {
-				colorSelect = "Blue-";
-			}
-		}
-
-		autoSelect = colorSelect + Autos.getSelected();
-
-		if (!autoSelect.equals(prevAuto)) {
-			autoCommand = new PathPlannerAuto(autoSelect);
-
-			try {
-				PathPlannerAuto.getPathGroupFromAutoFile(autoSelect);
-			} catch (IOException e) {
-				System.err.println("No Auto File: " + e.toString());
-			} catch (ParseException e) {
-				System.err.println("idk good luck: " + e.toString());
-			} catch (IndexOutOfBoundsException e) {
-				System.err.println("no auto Paths: " + e.toString());
-			}
-		}
-
-		prevAuto = autoSelect;
-	}
+		drivetrain.registerTelemetry(drivetrain.logger::telemeterize);
+    }
 
 	public Command getAutonomousCommand() {
 		return autoCommand;

@@ -23,10 +23,22 @@ public class IntakeConstants {
 	public static double kShortDeployedPosition = 0.65;
 
 	public static double kRetractPosition = 0.02;
+<<<<<<< HEAD
 	public static double kRetractPositionAgitate = 0.236;
 	public static double kExtendTolerance = 0.02;
 	public static double kRetractTolerance = 0.02;
 
+=======
+	public static double kRetractPositionAgitate = 0.05;
+	public static double kExtendTolerance = 0.01;
+	public static double kRetractTolerance = 0.01;
+
+	public static double agitateCurrentThreshold = 20;
+	public static double agitateCurrentTime = 0.10;
+
+
+
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 	public static double kExpelSpeed = -100.0;
 	public static double kIntakeSpeed = 90.0;
 	public static double kKickerSpeed = 65.0;

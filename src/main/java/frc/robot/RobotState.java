@@ -21,6 +21,7 @@ public class RobotState {
 
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 	public static ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
+	public static Translation2d target = new Translation2d(0.0, 0.0);
 
 	public enum Mode {
 			normal,
@@ -39,6 +40,11 @@ public class RobotState {
 		TRENCH
 	}
 
+<<<<<<< HEAD
+=======
+	public static boolean isShooting = false;
+
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 	private static ShootOnTheFly shootOnTheFly = new ShootOnTheFly();
 	public static double lookAheadDistance = 0;
 	public static double turretAngle = 0;
@@ -93,8 +99,12 @@ public class RobotState {
 	public static void update() {
 		color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
 		findZone();
+<<<<<<< HEAD
 		Translation2d target = new Translation2d(0.0, 0.0);
 		if (shooterZone == Zone.ALLIANCE) {
+=======
+		if (shooterZone == Zone.ALLIANCE || shooterZone == Zone.TRENCH) {
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 			if (color == Alliance.Red) {
 				target = ShooterConstants.redHub;
 			} else {
@@ -115,11 +125,15 @@ public class RobotState {
 				}
 			}
 		}
+<<<<<<< HEAD
 
 		
 		SmartDashboard.putNumber("Distance to Goal", target.getDistance(pose.getTranslation()));
 		SmartDashboard.putNumberArray("TargetLocation", new Double[] {target.getX(), target.getY()});
 		SmartDashboard.putString("Robot Mode", mode.name());
+=======
+	
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 		shootOnTheFly.update(pose, speeds, target, color);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();

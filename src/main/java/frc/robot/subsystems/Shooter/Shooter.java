@@ -5,8 +5,11 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+=======
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
@@ -65,16 +68,45 @@ public class Shooter extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+<<<<<<< HEAD
 		mShooterKraken.updateStats();
 		double distance = RobotState.pose.getTranslation().getDistance(RobotState.color == Alliance.Blue ? ShooterConstants.blueHub : ShooterConstants.redHub);
 		SmartDashboard.putNumber("distance to hub", distance);
 		SmartDashboard.putBoolean("Shooter Reached Point", readyToShoot());
+=======
+		mShooterKraken.update();
+	}
+
+	public Command hoodDown(){
+		return run(() -> {
+			RobotState.isShooting = false;
+			if(RobotState.isManualMode()){
+				RobotState.setNormalMode();
+			}
+			targetHood = 0;
+			mShooterKraken.runPosition(targetHood);
+			if(targetSpeed != 0){
+				if(RobotState.getZone() == Zone.ALLIANCE) targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+				else targetSpeed = ShooterConstants.kIdleSpeed;
+				mShooterKraken.runVelocity(targetSpeed);
+			} else {
+				mShooterKraken.runVelocity(targetSpeed);
+			}
+		});
+>>>>>>> a721243b7ca975bde9cfcef03f69f24138f110a9
 	}
 
 	public Command autoAim() {
 		return run(() -> {
-			targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
-			targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+			RobotState.isShooting = true;
+			if(DriverStation.isAutonomous()){
+				double distance = RobotState.pose.getTranslation().getDistance(RobotState.target);
+				targetHood = hoodAngleMap.get(distance);
+				targetSpeed = shooterSpeedMap.get(distance);
+			} else {
+				targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
+				targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+			}
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});
