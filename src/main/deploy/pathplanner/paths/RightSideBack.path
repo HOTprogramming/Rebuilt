@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.855962910128387,
+        "x": 8.03710413694722,
         "y": 3.2263338088445086
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.647950336543927,
+        "x": 7.829091563362759,
         "y": 3.0876587597882
       },
       "isLocked": false,
@@ -24,7 +24,7 @@
         "y": 2.6052781740370903
       },
       "nextControl": {
-        "x": 5.613409415121257,
+        "x": 5.613409415121255,
         "y": 2.6052781740370903
       },
       "isLocked": false,
@@ -32,11 +32,11 @@
     },
     {
       "anchor": {
-        "x": 2.9392724679029953,
+        "x": 2.4217261055634807,
         "y": 2.6052781740370903
       },
       "prevControl": {
-        "x": 3.4050641940085584,
+        "x": 2.8875178316690437,
         "y": 2.592339514978602
       },
       "nextControl": null,
@@ -50,7 +50,7 @@
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.7578087457952924,
+      "waypointRelativePos": 1.6204690831556519,
       "rotationDegrees": 90.0
     }
   ],
@@ -67,11 +67,17 @@
           "name": "Go To Shoot"
         }
       }
+    },
+    {
+      "name": "Intake Stop",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

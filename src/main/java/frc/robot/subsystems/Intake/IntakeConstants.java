@@ -22,10 +22,10 @@ public class IntakeConstants {
 
 	public static double kRetractPosition = 0.02;
 	public static double kRetractPositionAgitate = 0.05;
-	public static double kExtendTolerance = 0.02;
-	public static double kRetractTolerance = 0.02;
+	public static double kExtendTolerance = 0.01;
+	public static double kRetractTolerance = 0.01;
 
-	public static double agitateCurrentThreshold = 25;
+	public static double agitateCurrentThreshold = 20;
 	public static double agitateCurrentTime = 0.10;
 
 
