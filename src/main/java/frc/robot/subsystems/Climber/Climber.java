@@ -110,18 +110,11 @@ public class Climber extends SubsystemBase {
 		return Commands.sequence(
 			spintoBeambreak(),
 			spinOutBeambreak(),
-			spinOutSlow(), runOnce(() -> {finLeftEdgePos = m_ClimbKraken.getWristPos(); 
-											SmartDashboard.putNumber("climber/spin out position", finLeftEdgePos);
-										}),
-			spinBackSlow(), runOnce(() -> {finRightEdgePos = m_ClimbKraken.getWristPos();
-											SmartDashboard.putNumber("climber/spin back position", finRightEdgePos);
-										}),
-			runOnce(() -> {m_ClimbKraken.setWristPosition(((finLeftEdgePos + finRightEdgePos) / 2) + ClimberConstants.wristZeroOffset);
-											SmartDashboard.putString("climber/go to new zero", "true");
-										}),
+			spinOutSlow(), runOnce(() -> finLeftEdgePos = m_ClimbKraken.getWristPos()),
+			spinBackSlow(), runOnce(() -> finRightEdgePos = m_ClimbKraken.getWristPos()),
+			runOnce(() -> m_ClimbKraken.setWristPosition(((finLeftEdgePos + finRightEdgePos) / 2) + ClimberConstants.wristZeroOffset)),
 			Commands.waitSeconds(1.0),
-			reset(),
-			runOnce(() -> SmartDashboard.putString("climber/go to new zero", "false"))
+			reset()
 		);
 	}
 
