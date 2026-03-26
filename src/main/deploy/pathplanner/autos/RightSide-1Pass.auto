@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideOut1Pass"
+            "pathName": "RightSideOut-1Pass"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideBack1Pass"
+            "pathName": "RightSideBack-1Pass"
           }
         },
         {
@@ -57,19 +57,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideOut2"
+            "pathName": "RightSideOut2-1Pass"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideBack2"
+            "pathName": "RightSideBack2-1Pass"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

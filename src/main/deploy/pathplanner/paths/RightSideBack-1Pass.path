@@ -12,7 +12,7 @@
         "y": 3.307615963782494
       },
       "isLocked": false,
-      "linkedName": "Intake Point 1 Pass"
+      "linkedName": "IntakePoint-1Pass"
     },
     {
       "anchor": {
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "New Shoot"
+      "linkedName": "Shoot"
     }
   ],
   "rotationTargets": [
@@ -88,7 +88,7 @@
     "rotation": 33.29709851977864
   },
   "reversed": false,
-  "folder": null,
+  "folder": "1 Pass",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 180.0

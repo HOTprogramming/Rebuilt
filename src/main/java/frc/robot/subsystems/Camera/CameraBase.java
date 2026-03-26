@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Camera;
 
-import java.util.Arrays;
-
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -12,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.networktables.StructTopic;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotState;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -50,7 +49,9 @@ public class CameraBase {
 		SmartDashboard.putBoolean("climb/Use Cam Whl Dock", false);
 	}
 
-	public int[] targetTags = {27, 18, 25, 26, 24, 21, 29, 30};
+	public int[] blueTargetTags = {27, 18, 25, 26, 24, 21, 29, 30, 31, 32};
+	public int[] redTargetTags = {9, 10, 8, 5, 11, 2, 16, 15, 14, 13};
+	public int[] targetTags = {};
 
 	public void periodic() {
 		if(subTable.getEntry("has_pose").getBoolean(false)){
@@ -62,10 +63,16 @@ public class CameraBase {
 			Number ambg = subTable.getEntry("ambiguity").getNumber(0);
 			boolean targeting = false;
 
+			if(RobotState.color == Alliance.Red){
+				targetTags = redTargetTags;
+			} else {
+				targetTags = blueTargetTags;
+			}
+
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
 					getDistance(poseArray.getTranslation());
-
+				
 				if(RobotState.isShooting){
 					for(int targetId : targetTags){
 						if(targetId == id.intValue()){
