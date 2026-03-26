@@ -124,41 +124,33 @@ public BooleanSupplier isCanRangeAligned() {
 	public Command zeroSpinner() {
 		return Commands.sequence(
 			spintoBeambreak(),
-			spinOutBeambreak(), 
+			spinOutBeambreak(),
 			spinOutSlow(), runOnce(() -> finLeftEdgePos = m_ClimbKraken.getWristPos()),
 			spinBackSlow(), runOnce(() -> finRightEdgePos = m_ClimbKraken.getWristPos()),
 			runOnce(() -> m_ClimbKraken.setWristPosition(((finLeftEdgePos + finRightEdgePos) / 2) + ClimberConstants.wristZeroOffset)),
-			Commands.waitSeconds(0.5),
+			Commands.waitSeconds(1.0),
 			reset()
 		);
 	}
 
 	public Command spinToZero() {
-		return run(() -> {
-				setWristPosition(0.0);
-			}).until(isZeroed()); 
+		return run(() -> {setWristPosition(0.0);}).until(isZeroed()); 
 	}
 	
 	private Command spintoBeambreak() {
-		return run(() -> {
-			setWristVelocity(100);
-		}).until(isBeamBreakTripped()); 
+		return run(() -> {setWristVelocity(125);}).until(isBeamBreakTripped()).withTimeout(7.0); 
 	}
-
+	//Run for short time to get past the far edge of thebeambreak
 	private Command spinOutBeambreak() {
-		return run(() -> setWristVelocity(100)).onlyWhile(isBeamBreakTripped());
+		return run(() -> setWristVelocity(40)).withTimeout(0.5);
 	}
-
+	//Rotate slowly back toward beambreak until it trips to get first edge or times out
 	private Command spinOutSlow() {
-		return Commands.sequence(
-			run(() -> setWristVelocity(-20)).withDeadline(Commands.waitSeconds(0.5)), 
-			run(() -> setWristVelocity(-20)).onlyWhile(isBeamBreakTripped()));
+		return Commands.run(() -> setWristVelocity(-20)).until(isBeamBreakTripped()).withTimeout(2.0);
 	}
-	
+	//Continue rotating slowly in the same direction until it trips again to get second edge or times out
 	private Command spinBackSlow() {
-		return Commands.sequence(
-			run(() -> setWristVelocity(20)).withDeadline(Commands.waitSeconds(0.5)), 
-			run(() -> setWristVelocity(20)).onlyWhile(isBeamBreakTripped()));
+		return Commands.run(() -> setWristVelocity(-20)).onlyWhile(isBeamBreakTripped()).withTimeout(1.0);
 	}
 
 	public Command fullDeploy() {
@@ -176,6 +168,10 @@ public BooleanSupplier isCanRangeAligned() {
 			setElbowPosition(ClimberConstants.deployedPos);
 			setWristPosition(ClimberConstants.wristZeroOffset);
 		}).until(isDeployed());
+	}	
+
+	public Command autonDeploy() {
+		return runOnce(() -> setElbowPosition(ClimberConstants.deployedPos));
 	}	
 
 	public Command stop() {

@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
-import frc.robot.subsystems.Drivetrain.DrivetrainTelemetry;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.Indexer.Index;
 import frc.robot.subsystems.Intake.Intake;
@@ -46,10 +45,10 @@ public class RobotContainer {
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
-		NamedCommands.registerCommand("deploy climber", climber.teleopDeploy());
+		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.agitate()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 				 Commands.run(() -> 
@@ -66,7 +65,7 @@ public class RobotContainer {
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
-		NamedCommands.registerCommand("Agitate", intake.agitate());
+		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
 		NamedCommands.registerCommand("Run Shoot", Commands.parallel(NamedCommands.getCommand("Aim"), NamedCommands.getCommand("Shoot")));
 
         configureBindings();
@@ -97,7 +96,7 @@ public class RobotContainer {
 				indexer.indexOnCommand(),
 				intake.packingAgitate().unless(driver.leftTrigger()))
 		)).onFalse(indexer.indexOffCommand())
-		.onFalse(intake.completeStop());
+		.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
@@ -122,7 +121,7 @@ public class RobotContainer {
 			)); 
 
 		// Deploy Climber
-		operator.x().and(RobotState::isClimbMode).onTrue(climber.fullDeploy());
+		operator.x().and(RobotState::isClimbMode).onTrue(climber.zeroSpinner());
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(
@@ -152,8 +151,9 @@ public class RobotContainer {
 		RobotModeTriggers.disabled().onTrue(
 			Commands.runOnce(() -> {
 				shooter.targetSpeed = 0;
+				RobotState.isShooting = false;
 				shooter.mShooterKraken.stop();
-				intake.mIntakeKraken.stop();
+				intake.completeStopMethod();
 				indexer.m_IndexKraken.stop();
 				climber.m_ClimbKraken.stop();
 			}).ignoringDisable(true)
@@ -165,6 +165,8 @@ public class RobotContainer {
 			.onlyIf(RobotState::isClimbMode));
 
 		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
+
+		drivetrain.registerTelemetry(drivetrain.logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
