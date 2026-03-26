@@ -186,7 +186,7 @@ public Command driveToPoleCoordinate_autoflip() {
         
 		double baseApproachAngle = 0.0;
         // Desired Chassis Rotation
-		if (DriverStation.getAlliance().get() == Alliance.Red) {
+		if (DriverStation.getAlliance().get() == Alliance.Blue) {
        		baseApproachAngle = (aboveYMidpoint ? -90.0 + left_blue_ladder_angle_deg : 90.0 + right_blue_ladder_angle_deg);
 		} else {
 			baseApproachAngle = (aboveYMidpoint ? -90.0 + right_red_ladder_angle_deg : 90.0 + left_red_ladder_angle_deg);
@@ -234,7 +234,7 @@ public Command driveToPoleCoordinate_autoflip() {
                 .withRotationalRate(rotationWiggle)
                 .withCenterOfRotation(new Translation2d(-0.3175, 0)) // Meters
             );
-        }, this).withTimeout(1.5);
+        }, this).withTimeout(2.25);
 
 		Command drive = Commands.run(() -> {
             setControl(ROBOT_CENTRIC
