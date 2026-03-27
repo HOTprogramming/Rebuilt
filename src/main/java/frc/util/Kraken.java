@@ -106,8 +106,8 @@ public class Kraken {
 	}
 
 	public void updateTelemetry(){
-		// positionPublisher.set(motor.getPosition().getValueAsDouble());
-		// velocityPublisher.set(motor.getVelocity().getValueAsDouble());
+		positionPublisher.set(motor.getPosition().getValueAsDouble());
+		velocityPublisher.set(motor.getVelocity().getValueAsDouble());
 	}
 
 	public void stop() {

@@ -94,13 +94,14 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))).whileTrue(shooter.autoAim())
-		.whileTrue(
-			Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(1).andThen(Commands.parallel(
-				indexer.indexOnCommand(),
-				intake.packingAgitate().unless(driver.leftTrigger()))
-		)).onFalse(indexer.indexOffCommand())
-		.onFalse(intake.completeStop().unless(driver.leftTrigger()));
+		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(RobotState::isManualMode)).
+			whileTrue(shooter.autoAim())
+			.whileTrue(
+				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(1).andThen(Commands.parallel(
+					indexer.indexOnCommand(),
+					intake.packingAgitate().unless(driver.leftTrigger()))
+			)).onFalse(indexer.indexOffCommand())
+			.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
@@ -125,7 +126,11 @@ public class RobotContainer {
 			)); 
 
 		// Deploy Climber
-		operator.x().and(RobotState::isClimbMode).onTrue(climber.zeroSpinner());
+		operator.x().onTrue(
+    	Commands.either(
+		climber.zeroSpinner(), 
+		Commands.runOnce(() -> RobotState.setNormalMode()),
+        RobotState::isClimbMode));
 
 		//Climber Pole Preset: Step 1 of Climb
 		operator.a().onTrue(

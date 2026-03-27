@@ -54,14 +54,18 @@ public class Shooter extends SubsystemBase {
 	public Command hoodDown(){
 		return run(() -> {
 			RobotState.isShooting = false;
-			if(RobotState.isManualMode()){
-				RobotState.setNormalMode();
+			if(!RobotState.isManualMode()){
+				targetHood = 0;
+				mShooterKraken.runPosition(targetHood);
+			} else {
+				mShooterKraken.runPosition(0);
 			}
-			targetHood = 0;
-			mShooterKraken.runPosition(targetHood);
+
 			if(targetSpeed != 0){
-				if(RobotState.getZone() == Zone.ALLIANCE) targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
-				else targetSpeed = ShooterConstants.kIdleSpeed;
+				if(!RobotState.isManualMode()){
+					if(RobotState.getZone() == Zone.ALLIANCE) targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+					else targetSpeed = ShooterConstants.kIdleSpeed;
+				}
 				mShooterKraken.runVelocity(targetSpeed);
 			} else {
 				mShooterKraken.runVelocity(targetSpeed);
@@ -72,13 +76,15 @@ public class Shooter extends SubsystemBase {
 	public Command autoAim() {
 		return run(() -> {
 			RobotState.isShooting = true;
-			if(DriverStation.isAutonomous()){
-				double distance = RobotState.pose.getTranslation().getDistance(RobotState.target);
-				targetHood = hoodAngleMap.get(distance);
-				targetSpeed = shooterSpeedMap.get(distance);
-			} else {
-				targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
-				targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+			if(!RobotState.isManualMode()){
+				if(DriverStation.isAutonomous()){
+					double distance = RobotState.pose.getTranslation().getDistance(RobotState.target);
+					targetHood = hoodAngleMap.get(distance);
+					targetSpeed = shooterSpeedMap.get(distance);
+				} else {
+					targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
+					targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+				}
 			}
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
@@ -86,7 +92,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command PresetBatter() {
-		return run(() -> {
+		return runOnce(() -> {
 			RobotState.setManualMode();
 			targetHood = 2.8;			
 			targetSpeed = 41.0;
@@ -96,7 +102,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command PresetTrench() {
-		return run(() -> {
+		return runOnce(() -> {
 			RobotState.setManualMode();
 			targetHood = hoodAngleMap.get(3.6);
 			targetSpeed = shooterSpeedMap.get(3.6);
@@ -106,7 +112,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Command PresetClimberPole() {
-		return run(() -> {
+		return runOnce(() -> {
 			RobotState.setManualMode();
 			targetHood = 6.0;
 			targetSpeed = 45.0;

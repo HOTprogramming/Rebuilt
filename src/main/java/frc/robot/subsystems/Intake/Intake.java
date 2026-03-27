@@ -100,6 +100,7 @@ public class Intake extends SubsystemBase {
 	public Command stopButSpin() {
 		return runOnce(() -> {
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+			mIntakeKraken.runKickerVelocity(IntakeConstants.kKickerSpeed);
 			mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
 		});
 	}
