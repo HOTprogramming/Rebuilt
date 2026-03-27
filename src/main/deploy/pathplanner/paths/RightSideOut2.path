@@ -8,23 +8,23 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2054921540656205,
-        "y": 0.4445221112696154
+        "x": 1.9171184022824534,
+        "y": 1.1302710413694728
       },
       "isLocked": false,
       "linkedName": "Shoot"
     },
     {
       "anchor": {
-        "x": 4.595420827389443,
+        "x": 3.4050641940085593,
         "y": 0.6386019971469341
       },
       "prevControl": {
-        "x": 2.8098389987340235,
-        "y": 0.6386019971469343
+        "x": 2.5089277731339794,
+        "y": 0.6386019971469342
       },
       "nextControl": {
-        "x": 6.109243937232525,
+        "x": 6.406833095577745,
         "y": 0.6386019971469341
       },
       "isLocked": false,
@@ -46,15 +46,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6198942815953865,
+      "waypointRelativePos": 0.3070362473347624,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.046612205670346,
+      "waypointRelativePos": 1.223880597014926,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.565593464680437,
+      "waypointRelativePos": 1.6162046908315588,
       "rotationDegrees": 180.0
     }
   ],
@@ -65,7 +65,7 @@
       "maxWaypointRelativePos": 0.85,
       "constraints": {
         "maxVelocity": 4.5,
-        "maxAcceleration": 4.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
