@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideOut"
+            "pathName": "LeftSideOut-1Pass"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideBack"
+            "pathName": "LeftSideBack-1Pass"
           }
         },
         {
@@ -23,7 +23,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.75
+                  "waitTime": 4.0
                 }
               },
               {
@@ -39,7 +39,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.2
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -57,45 +57,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideOut2"
+            "pathName": "LeftSideOut2-1Pass"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RightSideBack2"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Aim"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.2
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Shoot"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "LeftSideBack2-1Pass"
           }
         }
       ]

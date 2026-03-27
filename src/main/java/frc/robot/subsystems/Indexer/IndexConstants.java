@@ -25,7 +25,7 @@ public class IndexConstants {
 			.withStatorCurrentLimitEnable(true)
 			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerLimit(60)
 			.withSupplyCurrentLowerTime(2))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
 			.withPeakForwardTorqueCurrent(80)

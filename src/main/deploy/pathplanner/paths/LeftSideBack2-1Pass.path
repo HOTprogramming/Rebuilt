@@ -1,0 +1,86 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.8892867332382295,
+        "y": 4.688402282453637
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.273723252496433,
+        "y": 4.636647646219685
+      },
+      "isLocked": false,
+      "linkedName": "LeftIntake2"
+    },
+    {
+      "anchor": {
+        "x": 6.820870185449357,
+        "y": 5.5811697574893016
+      },
+      "prevControl": {
+        "x": 7.8689015691868756,
+        "y": 5.5811697574893016
+      },
+      "nextControl": {
+        "x": 6.570870185449357,
+        "y": 5.5811697574893016
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.175891583452211,
+        "y": 5.5811697574893016
+      },
+      "prevControl": {
+        "x": 2.641683309557774,
+        "y": 5.568231098430813
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "LeftShoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8121095627102344,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1.6617011052378596,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Stop",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -32.471192290848506
+  },
+  "reversed": false,
+  "folder": "Left 1 Pass",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": false
+}
