@@ -94,7 +94,7 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.a().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(RobotState::isManualMode)).
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(RobotState::isManualMode)).
 			whileTrue(shooter.autoAim())
 			.whileTrue(
 				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(1).andThen(Commands.parallel(
