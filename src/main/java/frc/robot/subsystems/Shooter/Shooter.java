@@ -16,7 +16,7 @@ public class Shooter extends SubsystemBase {
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
-	public double shotMapOffset = 0;
+	public double shotMapOffset = -0.15;
 
 	public Shooter() {
 		hoodAngleMap.put(1.0, 2.7); 
