@@ -815,10 +815,10 @@
         "containers": [
           {
             "title": "Auto Chooser",
-            "x": 512.0,
-            "y": 128.0,
-            "width": 512.0,
-            "height": 128.0,
+            "x": 0.0,
+            "y": 0.0,
+            "width": 1152.0,
+            "height": 640.0,
             "type": "ComboBox Chooser",
             "properties": {
               "topic": "/SmartDashboard/Auto Chooser",
