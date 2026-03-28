@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4217261055634807,
-        "y": 2.6052781740370903
+        "x": 2.369971469329529,
+        "y": 2.4111982881597713
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9171184022824534,
-        "y": 1.1302710413694728
+        "x": 1.8653637660485018,
+        "y": 0.9361911554921538
       },
       "isLocked": false,
       "linkedName": "Shoot"
@@ -127,7 +127,7 @@
   "folder": "Right 2 Pass",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 33.29709851977864
+    "rotation": 36.22494425552034
   },
   "useDefaultConstraints": true
 }

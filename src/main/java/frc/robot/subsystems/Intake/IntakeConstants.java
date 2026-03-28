@@ -28,7 +28,7 @@ public class IntakeConstants {
 	public static double kRetractTolerance = 0.01;
 
 	public static double agitateCurrentThreshold = 20;
-	public static double agitateCurrentTime = 0.10;
+	public static double agitateCurrentTime = 0.2;
 
 
 
@@ -46,15 +46,15 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(100)
+			.withStatorCurrentLimit(80)    //was 100 
 			.withStatorCurrentLimitEnable(true)
 			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(80)
-			.withSupplyCurrentLowerTime(2.0))
+			.withSupplyCurrentLowerLimit(60) //80
+			.withSupplyCurrentLowerTime(1.50))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(100)
-			.withPeakReverseTorqueCurrent(-100))
+			.withPeakForwardTorqueCurrent(80) //was 100
+			.withPeakReverseTorqueCurrent(-80)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
