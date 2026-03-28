@@ -31,7 +31,7 @@ public class ShooterConstants {
 	public static double kShooterError = 4;
 	public static double kShooterHoodError = .25;
 
-	public static Translation2d redHub = new Translation2d(11.926, 3.896); // moved 6in left for saline
+	public static Translation2d redHub = new Translation2d(11.926, 4.048); // not moved 6in left for saline
 	public static Translation2d blueHub = new Translation2d(4.614, 4.048);
 
 	private static Translation2d topBlueTrench = new Translation2d();
