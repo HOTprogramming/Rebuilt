@@ -115,7 +115,14 @@ public class RobotContainer {
 		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
 		// Stow climber after undocking
 		operator.rightBumper().onTrue(climber.stow());
-
+		//add distande to shot map offset
+		operator.povUp().onTrue(Commands.runOnce(() -> {
+			shooter.shotMapOffset += 0.1524;
+		}));
+		//subtract distance from shot map offset
+		operator.povDown().onTrue(Commands.runOnce(() -> {
+			shooter.shotMapOffset -= 0.1524;
+		}));
 		operator.back().onTrue(Commands.runOnce(() -> RobotState.setNormalMode())); 
 
 		operator.start().onTrue(
