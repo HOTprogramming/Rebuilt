@@ -94,7 +94,7 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(RobotState::isManualMode)).
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
 			whileTrue(shooter.autoAim())
 			.whileTrue(
 				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.4).andThen(Commands.parallel(
@@ -172,6 +172,7 @@ public class RobotContainer {
 				intake.completeStopMethod();
 				indexer.m_IndexKraken.stop();
 				climber.m_ClimbKraken.stop();
+				drivetrain.iAmDockingLeaveMeAlone = false;
 			}).ignoringDisable(true)
 		);
 

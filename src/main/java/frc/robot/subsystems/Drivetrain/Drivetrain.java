@@ -143,6 +143,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 		RobotState.pose = getState().Pose;
 		RobotState.speeds = getState().Speeds;
+
+		SmartDashboard.putBoolean("iAmDockingLeaveMeAlone", iAmDockingLeaveMeAlone);
 	}
 
     private void startSimThread() {

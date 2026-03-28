@@ -5,15 +5,35 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "RightSideOut"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightSideBack"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "zero wrist"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RightSideOut"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "RightSideBack"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
