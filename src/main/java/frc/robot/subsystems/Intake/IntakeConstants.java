@@ -30,8 +30,6 @@ public class IntakeConstants {
 	public static double agitateCurrentThreshold = 20;
 	public static double agitateCurrentTime = 0.2;
 
-
-
 	public static double kExpelSpeed = -100.0;
 	public static double kIntakeSpeed = 90.0;
 	public static double kKickerSpeed = 65.0;

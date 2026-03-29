@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(2.0, 42.0);
 		shooterSpeedMap.put(3.0, 45.0);
 		shooterSpeedMap.put(4.0, 47.5);
-		shooterSpeedMap.put(5.3, 53.0);
+		shooterSpeedMap.put(5.3, 53.5);
 		//Passing
 		shooterSpeedMap.put(5.35, 46.0);
 		shooterSpeedMap.put(17.0, 90.0);
