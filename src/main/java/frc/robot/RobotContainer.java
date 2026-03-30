@@ -94,10 +94,10 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(RobotState::isManualMode)).
+		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
 			whileTrue(shooter.autoAim())
 			.whileTrue(
-				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(1).andThen(Commands.parallel(
+				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.2).andThen(Commands.parallel(
 					indexer.indexOnCommand(),
 					intake.packingAgitate().unless(driver.leftTrigger()))
 			)).onFalse(indexer.indexOffCommand())
@@ -108,14 +108,21 @@ public class RobotContainer {
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 	
 		operator.leftBumper().onTrue(intake.teleopRetract());
-		operator.rightBumper().onTrue(intake.packingAgitate());
+		// operator.rightBumper().onTrue(intake.packingAgitate());
 		//Temp button to trigger the L1 climb sequence
 		operator.leftTrigger().onTrue(climber.autoClimb());
 		// Undock from the pole after climbing
 		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
 		// Stow climber after undocking
 		operator.rightBumper().onTrue(climber.stow());
-
+		//add distande to shot map offset
+		operator.povUp().onTrue(Commands.runOnce(() -> {
+			shooter.shotMapOffset += 0.1524;
+		}));
+		//subtract distance from shot map offset
+		operator.povDown().onTrue(Commands.runOnce(() -> {
+			shooter.shotMapOffset -= 0.1524;
+		}));
 		operator.back().onTrue(Commands.runOnce(() -> RobotState.setNormalMode())); 
 
 		operator.start().onTrue(
@@ -165,6 +172,7 @@ public class RobotContainer {
 				intake.completeStopMethod();
 				indexer.m_IndexKraken.stop();
 				climber.m_ClimbKraken.stop();
+				drivetrain.iAmDockingLeaveMeAlone = false;
 			}).ignoringDisable(true)
 		);
 

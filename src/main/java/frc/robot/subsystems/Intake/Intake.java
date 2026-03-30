@@ -172,7 +172,7 @@ public class Intake extends SubsystemBase {
 	}
 	
 	double targetreextendpos = 0.9;
-	double reextendoffset = 0.3;
+	double reextendoffset = 0.4;
 
 	private Command reExtend() {
 		return 

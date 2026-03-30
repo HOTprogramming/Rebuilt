@@ -113,10 +113,6 @@ public class CameraBase {
 				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 			}
 
-			if(targeting && avgDist < 4 && !DriverStation.isAutonomous()){
-				estStdDevs = estStdDevs.div(3 * (1 + (poseArray.getTranslation().getDistance(drivetrain.getState().Pose.getTranslation()))));
-			}
-
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){
 				if (drivetrain.iAmDockingLeaveMeAlone) {
 					estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);

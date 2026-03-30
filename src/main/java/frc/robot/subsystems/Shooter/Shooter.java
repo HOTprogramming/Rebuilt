@@ -16,7 +16,7 @@ public class Shooter extends SubsystemBase {
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
-	public double shotMapOffset = 0;
+	public double shotMapOffset = -0.15;
 
 	public Shooter() {
 		hoodAngleMap.put(1.0, 2.7); 
@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(2.0, 42.0);
 		shooterSpeedMap.put(3.0, 45.0);
 		shooterSpeedMap.put(4.0, 47.5);
-		shooterSpeedMap.put(5.3, 53.0);
+		shooterSpeedMap.put(5.3, 53.5);
 		//Passing
 		shooterSpeedMap.put(5.35, 46.0);
 		shooterSpeedMap.put(17.0, 90.0);
@@ -94,7 +94,7 @@ public class Shooter extends SubsystemBase {
 	public Command PresetBatter() {
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = 2.8;			
+			targetHood = 2.2; // 2.8			
 			targetSpeed = 41.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
@@ -114,7 +114,7 @@ public class Shooter extends SubsystemBase {
 	public Command PresetClimberPole() {
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = 6.0;
+			targetHood = 5.7; // 6.0
 			targetSpeed = 45.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 

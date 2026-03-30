@@ -12,6 +12,8 @@ import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
@@ -26,9 +28,7 @@ public class IntakeConstants {
 	public static double kRetractTolerance = 0.01;
 
 	public static double agitateCurrentThreshold = 20;
-	public static double agitateCurrentTime = 0.10;
-
-
+	public static double agitateCurrentTime = 0.2;
 
 	public static double kExpelSpeed = -100.0;
 	public static double kIntakeSpeed = 90.0;
@@ -44,15 +44,15 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(100)
+			.withStatorCurrentLimit(80)    //was 100 
 			.withStatorCurrentLimitEnable(true)
 			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(80)
-			.withSupplyCurrentLowerTime(2.0))
+			.withSupplyCurrentLowerLimit(60) //80
+			.withSupplyCurrentLowerTime(1.50))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(100)
-			.withPeakReverseTorqueCurrent(-100))
+			.withPeakForwardTorqueCurrent(80) //was 100
+			.withPeakReverseTorqueCurrent(-80)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -65,15 +65,15 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration KickerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(70)
+			.withStatorCurrentLimit(65)
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(50)
+			.withSupplyCurrentLimit(45)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(40)
-			.withSupplyCurrentLowerTime(1.5))
+			.withSupplyCurrentLowerLimit(35)
+			.withSupplyCurrentLowerTime(1.25))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(70)
-			.withPeakReverseTorqueCurrent(-70))
+			.withPeakForwardTorqueCurrent(65)
+			.withPeakReverseTorqueCurrent(-65))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
