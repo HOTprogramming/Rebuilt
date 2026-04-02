@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 2.178670454545454,
+        "x": 2.6416833095577745,
         "y": 2.462952924393724
       },
       "prevControl": {
-        "x": 3.4466590422772665,
+        "x": 3.909671897289587,
         "y": 2.42413694721826
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot Point"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -104,10 +104,23 @@
     {
       "name": "Ramp",
       "minWaypointRelativePos": 1.9551166965888678,
-      "maxWaypointRelativePos": 2.763016157989224,
+      "maxWaypointRelativePos": 2.6819716407832686,
       "constraints": {
         "maxVelocity": 2.5,
         "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.6576637407157357,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -117,6 +130,17 @@
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
+    {
+      "name": "zero wrist",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "zero wrist"
+        }
+      }
+    },
     {
       "name": "Intake Out",
       "waypointRelativePos": 0.23026025584473364,
@@ -161,10 +185,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 37.02572927810758
+    "rotation": 38.2409188730295
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Climb",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
