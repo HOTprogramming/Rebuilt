@@ -98,8 +98,8 @@ public class RobotContainer {
 			whileTrue(shooter.autoAim())
 			.whileTrue(
 				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.2).andThen(Commands.parallel(
-					indexer.indexOnCommand()/* ,
-					intake.packingAgitate().unless(driver.leftTrigger())*/)
+					indexer.indexOnCommand(),
+					intake.retractSlow().unless(driver.leftTrigger()))
 			)).onFalse(indexer.indexOffCommand())
 			.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 

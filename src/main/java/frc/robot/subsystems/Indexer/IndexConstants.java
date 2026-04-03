@@ -34,11 +34,11 @@ public class IndexConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs() //Wheels torque
-			.withKP(120)
+			.withKP(2)
 			.withKI(0.0)
 			.withKD(0)
-			.withKS(3)
-			.withKV(2))
+			.withKS(5.1)
+			.withKV(0.0663))
 		.withSlot1(new Slot1Configs() //Roller Floor torque
 			.withKP(20)
 			.withKI(0.0)

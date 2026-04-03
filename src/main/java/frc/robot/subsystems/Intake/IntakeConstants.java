@@ -21,11 +21,11 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.05;
+	public static double kDeployedPosition = 0.15;
 	public static double kShortDeployedPosition = 0.25;
 
-	public static double kRetractPosition = 0.5;
-	public static double kRetractPositionAgitate = 0.05;
+	public static double kRetractPosition = 0.55;
+	public static double kRetractPositionAgitate = 0.50;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
 
@@ -58,11 +58,11 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(10.0)
+			.withKP(5)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0.3)
-			.withKV(1.0));
+			.withKS(4)
+			.withKV(0.105));
 
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
@@ -80,17 +80,14 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withSlot0(new Slot0Configs()
-			.withKP(0)
+			.withKP(128)
 			.withKI(0)
 			.withKD(0)
-			.withKS(0)
-			.withKV(0)
-			.withKG(0)
-			.withGravityType(GravityTypeValue.Arm_Cosine)
-			.withGravityArmPositionOffset(-0.2))
+			.withKS(0.45)
+			.withKV(0))
 		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(150.0)
-			.withMotionMagicAcceleration(125.0))
+			.withMotionMagicCruiseVelocity(16.0)
+			.withMotionMagicAcceleration(32.0))
 		.withFeedback(new FeedbackConfigs()	
 			.withFeedbackRemoteSensorID(kIntakeEncoderID)
 			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
