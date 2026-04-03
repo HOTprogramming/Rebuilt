@@ -23,7 +23,7 @@ public class ShootOnTheFly {
 
     static {
         TOF_CONVERGENCE_THRESHOLD = 0.025;
-		TURRET_ROTATION_OFFSET = 0.0; // was Math.PI in v2 robot
+		TURRET_ROTATION_OFFSET = Math.PI; // v3 robot shoots backwards
 
         timeOfFlightMap.put(1.0, 1.0);
         timeOfFlightMap.put(2.0, 1.1);
@@ -70,9 +70,9 @@ public class ShootOnTheFly {
         // Aim from the CURRENT position to the VIRTUAL target
         Rotation2d turretRotation = goalTranslate2d.minus(lookaheadPos).getAngle();
         if (Alliance.Red == alliance) {
-            turretAngle = turretRotation.getRadians() + TURRET_ROTATION_OFFSET; // v3 robot shoots backwards
+            turretAngle = turretRotation.getRadians() + Math.PI - TURRET_ROTATION_OFFSET; // v3 robot shoots backwards
         } else {
-            turretAngle = turretRotation.getRadians();
+            turretAngle = turretRotation.getRadians() - TURRET_ROTATION_OFFSET;
         }
 
         SmartDashboard.putNumber("lookAheadDistance	", lookaheadToTargetDistance);
