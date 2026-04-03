@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShootOnTheFly {
     private static double TOF_CONVERGENCE_THRESHOLD;
+    private static double TURRET_ROTATION_OFFSET;
 
     private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
 
@@ -22,6 +23,7 @@ public class ShootOnTheFly {
 
     static {
         TOF_CONVERGENCE_THRESHOLD = 0.025;
+		TURRET_ROTATION_OFFSET = 0.0; // was Math.PI in v2 robot
 
         timeOfFlightMap.put(1.0, 1.0);
         timeOfFlightMap.put(2.0, 1.1);
@@ -68,7 +70,7 @@ public class ShootOnTheFly {
         // Aim from the CURRENT position to the VIRTUAL target
         Rotation2d turretRotation = goalTranslate2d.minus(lookaheadPos).getAngle();
         if (Alliance.Red == alliance) {
-            turretAngle = turretRotation.getRadians() + Math.PI; // Backwards compensation
+            turretAngle = turretRotation.getRadians() + TURRET_ROTATION_OFFSET; // v3 robot shoots backwards
         } else {
             turretAngle = turretRotation.getRadians();
         }
