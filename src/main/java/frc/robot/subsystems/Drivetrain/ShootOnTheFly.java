@@ -69,11 +69,11 @@ public class ShootOnTheFly {
 
         // Aim from the CURRENT position to the VIRTUAL target
         Rotation2d turretRotation = goalTranslate2d.minus(lookaheadPos).getAngle();
-        if (Alliance.Red == alliance) {
-            turretAngle = turretRotation.getRadians() + Math.PI - TURRET_ROTATION_OFFSET; // v3 robot shoots backwards
-        } else {
-            turretAngle = turretRotation.getRadians() - TURRET_ROTATION_OFFSET;
-        }
+        // if (Alliance.Red == alliance) {
+        //     turretAngle = turretRotation.getRadians() + Math.PI + TURRET_ROTATION_OFFSET; // v3 robot shoots backwards
+        // } else {
+            turretAngle = turretRotation.getRadians() + TURRET_ROTATION_OFFSET;
+        // }
 
         SmartDashboard.putNumber("lookAheadDistance	", lookaheadToTargetDistance);
     }
