@@ -40,11 +40,11 @@ public class IndexConstants {
 			.withKS(3)
 			.withKV(2))
 		.withSlot1(new Slot1Configs() //Roller Floor torque
-			.withKP(240)
+			.withKP(20)
 			.withKI(0.0)
 			.withKD(0)
-			.withKS(12)
-			.withKV(1.6));
+			.withKS(11.5)
+			.withKV(0.04));
 
 
 	public static final IndexConfigs IndexConfigs = switch (Constants.getRobot()) {
