@@ -21,7 +21,6 @@ import frc.robot.Constants.RobotType;
 public class ClimberConstants {
 	public static int kClimbermotorID = Constants.getRobot() == RobotType.COMPBOT ? 20 : 16;
 	public static int kClimberspinnerID = Constants.getRobot() == RobotType.COMPBOT ? 21 : 17;
-	public static int kClimbEncoder = 47;
 
 	public static String kBusName = Constants.canName;
 
@@ -52,12 +51,6 @@ public class ClimberConstants {
 
 	public static double liftSpeed = 0.06 * elbowGearRatio;
 
-
-	public static final CANcoderConfiguration encoderConfigs = new CANcoderConfiguration()
-		.withMagnetSensor(new MagnetSensorConfigs()
-			.withAbsoluteSensorDiscontinuityPoint(0.5)
-			.withMagnetOffset(-0.413)
-			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()

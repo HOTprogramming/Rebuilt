@@ -31,7 +31,7 @@ public class RobotContainer {
 	public final Camera camera = new Camera(drivetrain);
 	public final Index indexer = new Index();
 	public final Climber climber = new Climber();
-	// public final Intake intake = new Intake();
+	public final Intake intake = new Intake();
 	public final Shooter shooter = new Shooter();
 
 	PIDController theta = new PIDController(5, 0, 0);
@@ -69,7 +69,7 @@ public class RobotContainer {
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
-		// NamedCommands.registerCommand("Agitate", intake.packingAgitate());
+		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
 		NamedCommands.registerCommand("Run Shoot", Commands.parallel(NamedCommands.getCommand("Aim"), NamedCommands.getCommand("Shoot")));
 
         configureBindings();
@@ -101,15 +101,14 @@ public class RobotContainer {
 					indexer.indexOnCommand()/* ,
 					intake.packingAgitate().unless(driver.leftTrigger())*/)
 			)).onFalse(indexer.indexOffCommand())
-			// .onFalse(intake.completeStop().unless(driver.leftTrigger()))
-			;
+			.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 
-		// driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+		// .onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 	
-		// operator.leftBumper().onTrue(intake.teleopRetract());
-		// operator.rightBumper().onTrue(intake.packingAgitate());
+		operator.leftBumper().onTrue(intake.fullRetract());
 		//Temp button to trigger the L1 climb sequence
 		operator.leftTrigger().onTrue(climber.autoClimb());
 		// Undock from the pole after climbing
@@ -129,7 +128,7 @@ public class RobotContainer {
 		operator.start().onTrue(
 			Commands.parallel(
 				Commands.runOnce(() -> RobotState.setClimbMode()),
-				// intake.fullRetract(),
+				intake.fullRetract(),
 				shooter.stop()
 			)); 
 

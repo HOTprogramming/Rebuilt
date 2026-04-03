@@ -9,6 +9,8 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -19,10 +21,10 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.95;
-	public static double kShortDeployedPosition = 0.65;
+	public static double kDeployedPosition = 0.05;
+	public static double kShortDeployedPosition = 0.25;
 
-	public static double kRetractPosition = 0.02;
+	public static double kRetractPosition = 0.5;
 	public static double kRetractPositionAgitate = 0.05;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
@@ -34,12 +36,11 @@ public class IntakeConstants {
 	public static double kIntakeSpeed = 90.0;
 	public static double kKickerSpeed = 65.0;
 
-	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 44 : 0;
+	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 47 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
-	public static int kIntakeMotorIDKicker = Constants.getRobot() == RobotType.COMPBOT ? 14 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.24 : 0.0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.542 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
@@ -63,26 +64,6 @@ public class IntakeConstants {
 			.withKS(0.3)
 			.withKV(1.0));
 
-	public static final TalonFXConfiguration KickerConfigs = new TalonFXConfiguration()
-		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(65)
-			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(45)
-			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(35)
-			.withSupplyCurrentLowerTime(1.25))
-		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(65)
-			.withPeakReverseTorqueCurrent(-65))
-		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.Clockwise_Positive)
-			.withNeutralMode(NeutralModeValue.Coast))
-		.withSlot0(new Slot0Configs()
-			.withKP(10)
-			.withKI(0)
-			.withKD(0)
-			.withKS(0.2)
-			.withKV(0.1));
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -97,29 +78,37 @@ public class IntakeConstants {
 			.withPeakReverseTorqueCurrent(-120))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
-			.withNeutralMode(NeutralModeValue.Coast))
+			.withNeutralMode(NeutralModeValue.Brake))
 		.withSlot0(new Slot0Configs()
-			.withKP(128)
+			.withKP(0)
 			.withKI(0)
-			.withKD(0))
+			.withKD(0)
+			.withKS(0)
+			.withKV(0)
+			.withKG(0)
+			.withGravityType(GravityTypeValue.Arm_Cosine)
+			.withGravityArmPositionOffset(-0.2))
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(150.0)
 			.withMotionMagicAcceleration(125.0))
-		.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(50));
+		.withFeedback(new FeedbackConfigs()	
+			.withFeedbackRemoteSensorID(kIntakeEncoderID)
+			.withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)
+			.withSensorToMechanismRatio(1));
 
 	public static final CANcoderConfiguration IntakeEncoderConfigs = new CANcoderConfiguration()
 		.withMagnetSensor(new MagnetSensorConfigs().withMagnetOffset(!Robot.isSimulation() ? kEncoderOffset : 0.0)
 			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive).withAbsoluteSensorDiscontinuityPoint(1));
 
 	public static final IntakeConfigs IntakeConfigs = switch (Constants.getRobot()) {
-		case COMPBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs, KickerConfigs);
-		case CAMERABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs, KickerConfigs);
-		case COMP24 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs, KickerConfigs);
-		case COMP25 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs, KickerConfigs);
-		case MINIBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs, KickerConfigs);
-		case ALPHABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs, KickerConfigs);
+		case COMPBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs);
+		case CAMERABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs);
+		case COMP24 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs);
+		case COMP25 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs);
+		case MINIBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs);
+		case ALPHABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, IntakeEncoderConfigs);
 	};
 
 	public record IntakeConfigs(TalonFXConfiguration RollerConfigs, TalonFXConfiguration IntakeExtendConfigs,
-		CANcoderConfiguration IntakeEncoderConfigs, TalonFXConfiguration KickerConfigs) {}
+		CANcoderConfiguration IntakeEncoderConfigs) {}
 }
