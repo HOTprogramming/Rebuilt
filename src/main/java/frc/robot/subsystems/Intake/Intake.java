@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Intake;
 
 import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
 import edu.wpi.first.math.MathUtil;
@@ -195,5 +196,11 @@ public class Intake extends SubsystemBase {
 
 	private BooleanSupplier isReExetended() {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition() - targetreextendpos) < IntakeConstants.kExtendTolerance;
+	}
+
+	public Command Expel() {
+		return runOnce(() -> {
+			mIntakeKraken.runVelocity(IntakeConstants.kExpelSpeed);
+		});
 	}
 }
