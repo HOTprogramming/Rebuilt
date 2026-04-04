@@ -19,9 +19,32 @@ public class IndexConstants {
 	public static double kickerSpeed = 120;
 	public static double floorSpeed = 90;
 
-	public static final TalonFXConfiguration indexWheelConfigs = new TalonFXConfiguration()
+	public static final TalonFXConfiguration kickerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(90)
+			.withStatorCurrentLimit(150
+			)
+			.withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(150)
+			.withSupplyCurrentLimitEnable(true)
+			.withSupplyCurrentLowerLimit(120)
+			.withSupplyCurrentLowerTime(1.5))
+		.withTorqueCurrent(new TorqueCurrentConfigs()
+			.withPeakForwardTorqueCurrent(150)
+			.withPeakReverseTorqueCurrent(-150))
+		.withMotorOutput(new MotorOutputConfigs()
+			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withNeutralMode(NeutralModeValue.Coast))
+		.withSlot0(new Slot0Configs() //Wheels torque
+			.withKP(5)
+			.withKI(0.0)
+			.withKD(0)
+			.withKS(5.1)
+			.withKV(1)); // 0.0663
+
+		public static final TalonFXConfiguration floorConfigs = new TalonFXConfiguration()
+		.withCurrentLimits(new CurrentLimitsConfigs()
+			.withStatorCurrentLimit(90
+			)
 			.withStatorCurrentLimitEnable(true)
 			.withSupplyCurrentLimit(90)
 			.withSupplyCurrentLimitEnable(true)
@@ -33,12 +56,6 @@ public class IndexConstants {
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
-		.withSlot0(new Slot0Configs() //Wheels torque
-			.withKP(2)
-			.withKI(0.0)
-			.withKD(0)
-			.withKS(5.1)
-			.withKV(0.5)) // 0.0663
 		.withSlot1(new Slot1Configs() //Roller Floor torque
 			.withKP(20)
 			.withKI(0.0)
@@ -48,15 +65,15 @@ public class IndexConstants {
 
 
 	public static final IndexConfigs IndexConfigs = switch (Constants.getRobot()) {
-		case COMPBOT -> new IndexConfigs(indexWheelConfigs);
-		case CAMERABOT -> new IndexConfigs(indexWheelConfigs);
-		case COMP24 -> new IndexConfigs(indexWheelConfigs);
-		case COMP25 -> new IndexConfigs(indexWheelConfigs);
-		case MINIBOT -> new IndexConfigs(indexWheelConfigs);
-		case ALPHABOT -> new IndexConfigs(indexWheelConfigs);
+		case COMPBOT -> new IndexConfigs(kickerConfigs, floorConfigs);
+		case CAMERABOT -> new IndexConfigs(kickerConfigs, floorConfigs);
+		case COMP24 -> new IndexConfigs(kickerConfigs, floorConfigs);
+		case COMP25 -> new IndexConfigs(kickerConfigs, floorConfigs);
+		case MINIBOT -> new IndexConfigs(kickerConfigs, floorConfigs);
+		case ALPHABOT -> new IndexConfigs(kickerConfigs, floorConfigs);
 	};
 
 	public record IndexConfigs(
-		TalonFXConfiguration indexWheelConfigs) {}
+		TalonFXConfiguration kickerConfigs, TalonFXConfiguration floorConfigs) {}
 
 }

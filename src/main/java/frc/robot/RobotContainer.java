@@ -117,7 +117,9 @@ public class RobotContainer {
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 	
-		operator.leftBumper().onTrue(intake.fullRetract());
+		// operator.leftBumper().onTrue(intake.fullRetract());
+		operator.leftBumper().onTrue(climber.zeroSpinner());
+
 		//Temp button to trigger the L1 climb sequence
 		operator.leftTrigger().whileTrue(climber.autoClimb());
 		// Undock from the pole after climbing
@@ -145,7 +147,7 @@ public class RobotContainer {
 		// Deploy Climber
 		operator.x().onTrue(
     	Commands.either(
-		climber.finalElbowExtend(), 
+		climber.zeroSpinner(), 
 		Commands.runOnce(() -> RobotState.setNormalMode()),
         RobotState::isClimbMode));
 
@@ -154,7 +156,7 @@ public class RobotContainer {
     	Commands.either(
 			Commands.parallel(
 				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
-				Commands.sequence(Commands.waitSeconds(0.5), climber.lift())
+				Commands.sequence(Commands.waitSeconds(0.2), climber.stageThreeClimb())
 			),
 			shooter.PresetClimberPole(),
 			RobotState::isClimbMode
@@ -163,7 +165,7 @@ public class RobotContainer {
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
-		climber.wristClimb(), 
+		climber.stow(), 
 		shooter.PresetTrench(),
         RobotState::isClimbMode));
 

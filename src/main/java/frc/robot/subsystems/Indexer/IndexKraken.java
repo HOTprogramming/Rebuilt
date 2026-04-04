@@ -5,11 +5,11 @@ import frc.util.Kraken;
 
 public class IndexKraken {
 	public Kraken m_leftKickKraken = new Kraken(IndexConstants.kLeftKickID, IndexConstants.IndexConfigs
-		.indexWheelConfigs(), InvertedValue.Clockwise_Positive, "Indexer", "LeftKick");
+		.kickerConfigs(), InvertedValue.Clockwise_Positive, "Indexer", "LeftKick");
 	public Kraken m_rightKickKraken = new Kraken(IndexConstants.kRightKickID, IndexConstants.IndexConfigs
-		.indexWheelConfigs(), InvertedValue.Clockwise_Positive, "Indexer", "RightKick");
+		.kickerConfigs(), InvertedValue.Clockwise_Positive, "Indexer", "RightKick");
 	public Kraken m_floorKraken = new Kraken(IndexConstants.kFloorID, IndexConstants.IndexConfigs
-		.indexWheelConfigs(), InvertedValue.CounterClockwise_Positive, "Indexer", "Floor");
+		.floorConfigs(), InvertedValue.CounterClockwise_Positive, "Indexer", "Floor");
 
 	public IndexKraken() {
 		m_floorKraken.setup();
