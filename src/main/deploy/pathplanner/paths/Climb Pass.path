@@ -57,7 +57,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot Point"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -188,7 +188,7 @@
     "rotation": 38.2409188730295
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Climb",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

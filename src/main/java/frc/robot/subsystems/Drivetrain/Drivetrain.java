@@ -143,6 +143,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 		RobotState.pose = getState().Pose;
 		RobotState.speeds = getState().Speeds;
+
+		SmartDashboard.putBoolean("iAmDockingLeaveMeAlone", iAmDockingLeaveMeAlone);
 	}
 
     private void startSimThread() {
@@ -234,7 +236,7 @@ public Command driveToPoleCoordinate_autoflip() {
                 .withRotationalRate(rotationWiggle)
                 .withCenterOfRotation(new Translation2d(-0.3175, 0)) // Meters
             );
-        }, this).withTimeout(2.25);
+        }, this).withTimeout(1.75);
 
 		Command drive = Commands.run(() -> {
             setControl(ROBOT_CENTRIC

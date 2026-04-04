@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Camera;
 
-import java.util.Arrays;
-
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -12,6 +10,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructSubscriber;
 import edu.wpi.first.networktables.StructTopic;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotState;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -27,9 +27,7 @@ public class CameraBase {
 	AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 	Vector<N3> estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 	Vector<N3> singleTagStdDevs = VecBuilder.fill(4, 4, 8);
-	Vector<N3> twoTagStDevs = VecBuilder.fill(.6, .6, 1);
-	Vector<N3> threeTagStDevs = VecBuilder.fill(.55, .55, 1);
-	Vector<N3> fourTagStdDevs = VecBuilder.fill(.5, .5, 1);
+	Vector<N3> multiTagStDevs = VecBuilder.fill(.625, .625, 1);
 	Pose2d poseArray;
 	double avgDist;
 	Number[] tagIds;
@@ -50,7 +48,9 @@ public class CameraBase {
 		SmartDashboard.putBoolean("climb/Use Cam Whl Dock", false);
 	}
 
-	public int[] targetTags = {27, 18, 25, 26, 24, 21, 29, 30};
+	public int[] blueTargetTags = {27, 18, 25, 26, 24, 21, 29, 30, 31, 32};
+	public int[] redTargetTags = {9, 10, 8, 5, 11, 2, 16, 15, 14, 13};
+	public int[] targetTags = {};
 
 	public void periodic() {
 		if(subTable.getEntry("has_pose").getBoolean(false)){
@@ -62,10 +62,16 @@ public class CameraBase {
 			Number ambg = subTable.getEntry("ambiguity").getNumber(0);
 			boolean targeting = false;
 
+			if(RobotState.color == Alliance.Red){
+				targetTags = redTargetTags;
+			} else {
+				targetTags = blueTargetTags;
+			}
+
 			for(Number id : tagIds){
 				avgDist += layout.getTagPose(id.intValue()).get().getTranslation().toTranslation2d().
 					getDistance(poseArray.getTranslation());
-
+				
 				if(RobotState.isShooting){
 					for(int targetId : targetTags){
 						if(targetId == id.intValue()){
@@ -79,22 +85,22 @@ public class CameraBase {
 				avgDist = avgDist / (double) numTags;
 			}
 
-			estStdDevs = (numTags > 1) ? twoTagStDevs : singleTagStdDevs;
+			estStdDevs = (numTags > 1) ? multiTagStDevs : singleTagStdDevs;
 
 			if (numTags == 1) {
 				if (avgDist > 2.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 				else estStdDevs = singleTagStdDevs;
 			} else if (numTags == 2) {
 				if (avgDist > 5.5) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else estStdDevs = twoTagStDevs;
+				else estStdDevs = multiTagStDevs;
 			} else if (numTags == 3) {
-				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 6.5) estStdDevs = threeTagStDevs.times(1.25);
-				else estStdDevs = threeTagStDevs;
+				if (avgDist > 7) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else if (avgDist > 6) estStdDevs = multiTagStDevs.times(1.5);
+				else estStdDevs = multiTagStDevs;
 			} else if (numTags > 3) {
-				if (avgDist > 10) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-				else if (avgDist > 7.5) estStdDevs = fourTagStdDevs.times(1.25);
-				else estStdDevs = fourTagStdDevs;
+				if (avgDist > 8) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+				else if (avgDist > 7) estStdDevs = multiTagStDevs.times(1.5);
+				else estStdDevs = multiTagStDevs;
 			}
 
 			estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist / 30.0)));
@@ -105,10 +111,6 @@ public class CameraBase {
 
 			if(prevPose.getTranslation().getDistance(poseArray.getTranslation()) > 1 && prevPose.getX() != 0){
 				estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-			}
-
-			if(targeting && avgDist < 4){
-				estStdDevs = estStdDevs.div(3 * (1 + (poseArray.getTranslation().getDistance(drivetrain.getState().Pose.getTranslation()))));
 			}
 
 			if(poseArray.getX() < 20 && poseArray.getX() > 0 && poseArray.getY() < 20 && poseArray.getY() > 0 && numTags > 0){

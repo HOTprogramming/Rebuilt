@@ -3,28 +3,28 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4217261055634807,
-        "y": 2.6052781740370903
+        "x": 2.369971469329529,
+        "y": 2.4111982881597713
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2054921540656205,
-        "y": 0.4445221112696154
+        "x": 1.8653637660485018,
+        "y": 0.9361911554921538
       },
       "isLocked": false,
-      "linkedName": "New Shoot"
+      "linkedName": "Shoot"
     },
     {
       "anchor": {
-        "x": 4.595420827389443,
+        "x": 3.4050641940085593,
         "y": 0.6386019971469341
       },
       "prevControl": {
-        "x": 2.8098389987340235,
-        "y": 0.6386019971469343
+        "x": 2.5089277731339794,
+        "y": 0.6386019971469342
       },
       "nextControl": {
-        "x": 6.109243937232525,
+        "x": 6.406833095577745,
         "y": 0.6386019971469341
       },
       "isLocked": false,
@@ -41,20 +41,20 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Intake Point 2"
+      "linkedName": "Intake Point 2nd Pass"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6198942815953865,
+      "waypointRelativePos": 0.3070362473347624,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.046612205670346,
+      "waypointRelativePos": 1.223880597014926,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.565593464680437,
+      "waypointRelativePos": 1.6162046908315588,
       "rotationDegrees": 180.0
     }
   ],
@@ -65,7 +65,7 @@
       "maxWaypointRelativePos": 0.85,
       "constraints": {
         "maxVelocity": 4.5,
-        "maxAcceleration": 4.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -113,7 +113,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -124,10 +124,10 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right 2 Pass",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 40.74616356388081
+    "rotation": 36.22494425552034
   },
   "useDefaultConstraints": true
 }

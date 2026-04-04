@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.03710413694722,
-        "y": 3.2263338088445086
+        "x": 7.97241084165478,
+        "y": 2.864051355206848
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.829091563362759,
-        "y": 3.0876587597882
+        "x": 7.76439826807032,
+        "y": 2.7253763061505394
       },
       "isLocked": false,
       "linkedName": "Intake Point"
     },
     {
       "anchor": {
-        "x": 5.863409415121255,
-        "y": 2.6052781740370903
+        "x": 5.8892867332382295,
+        "y": 2.4111982881597713
       },
       "prevControl": {
-        "x": 6.911440798858774,
-        "y": 2.6052781740370903
+        "x": 6.9373181169757485,
+        "y": 2.4111982881597713
       },
       "nextControl": {
-        "x": 5.613409415121255,
-        "y": 2.6052781740370903
+        "x": 5.6392867332382295,
+        "y": 2.4111982881597713
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.4217261055634807,
-        "y": 2.6052781740370903
+        "x": 2.369971469329529,
+        "y": 2.4111982881597713
       },
       "prevControl": {
-        "x": 2.8875178316690437,
-        "y": 2.592339514978602
+        "x": 2.835763195435092,
+        "y": 2.398259629101283
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "New Shoot"
+      "linkedName": "Shoot"
     }
   ],
   "rotationTargets": [
@@ -85,10 +85,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 40.746
+    "rotation": 36.22494425552034
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right 2 Pass",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 180.0

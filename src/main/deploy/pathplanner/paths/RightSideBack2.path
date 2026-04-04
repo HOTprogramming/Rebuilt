@@ -12,7 +12,7 @@
         "y": 2.849060203329033
       },
       "isLocked": false,
-      "linkedName": "Intake Point 2"
+      "linkedName": "Intake Point 2nd Pass"
     },
     {
       "anchor": {
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 2.4217261055634807,
-        "y": 2.6052781740370903
+        "x": 2.369971469329529,
+        "y": 2.4111982881597713
       },
       "prevControl": {
-        "x": 2.8875178316690437,
-        "y": 2.592339514978602
+        "x": 2.835763195435092,
+        "y": 2.398259629101283
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "New Shoot"
+      "linkedName": "Shoot"
     }
   ],
   "rotationTargets": [
@@ -85,10 +85,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 40.746
+    "rotation": 36.22494425552034
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right 2 Pass",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 180.0
