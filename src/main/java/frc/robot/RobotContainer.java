@@ -44,15 +44,15 @@ public class RobotContainer {
 		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
-		NamedCommands.registerCommand("Intake Out", intake.extend());
+		// NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
-		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
-		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
+		// NamedCommands.registerCommand("Intake Stop", intake.completeStop());
+		// NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
 		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
+		// NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 				 Commands.run(() -> 
@@ -99,16 +99,16 @@ public class RobotContainer {
 			.whileTrue(
 				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.2).andThen(Commands.parallel(
 					indexer.indexOnCommand(),
-					intake.packingAgitate().unless(driver.leftTrigger()))
+					intake.retractSlow().unless(driver.leftTrigger()))
 			)).onFalse(indexer.indexOffCommand())
 			.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop()).onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
+		// .onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 	
-		operator.leftBumper().onTrue(intake.teleopRetract());
-		// operator.rightBumper().onTrue(intake.packingAgitate());
+		operator.leftBumper().onTrue(intake.fullRetract());
 		//Temp button to trigger the L1 climb sequence
 		operator.leftTrigger().onTrue(climber.autoClimb());
 		// Undock from the pole after climbing
@@ -169,7 +169,7 @@ public class RobotContainer {
 				shooter.targetSpeed = 0;
 				RobotState.isShooting = false;
 				shooter.mShooterKraken.stop();
-				intake.completeStopMethod();
+				// intake.completeStopMethod();
 				indexer.m_IndexKraken.stop();
 				climber.m_ClimbKraken.stop();
 				drivetrain.iAmDockingLeaveMeAlone = false;
@@ -181,7 +181,7 @@ public class RobotContainer {
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
 			.onlyIf(RobotState::isClimbMode));
 
-		driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
+		// driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
 
 		drivetrain.registerTelemetry(drivetrain.logger::telemeterize);
     }

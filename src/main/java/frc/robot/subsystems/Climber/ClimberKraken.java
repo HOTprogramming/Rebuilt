@@ -10,8 +10,8 @@ public class ClimberKraken {
 	public DigitalInput beambreak;
 
 
-	public Kraken m_climberKraken = new KrakenWithCancoder(ClimberConstants.kClimbermotorID, ClimberConstants.kClimbEncoder, ClimberConstants.ClimberConfigs
-		.elbowConfigs(), ClimberConstants.encoderConfigs, "Climber", "ClimberMotor");
+	public Kraken m_climberKraken = new Kraken(ClimberConstants.kClimbermotorID, ClimberConstants.ClimberConfigs
+		.elbowConfigs(), "Climber", "ClimberMotor");
 	public Kraken m_spinnerKraken = new Kraken(ClimberConstants.kClimberspinnerID, ClimberConstants.ClimberConfigs
 		.wristConfigs(), "Climber", "SpinnerMotor");
 
