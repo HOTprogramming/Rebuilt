@@ -31,7 +31,7 @@ public class ClimberConstants {
 
 
 	public static double startElbowAdjustmentPos = 0.15;
-	public static double wristClimbPos = 0.52;
+	public static double wristClimbPos = 0.515;
 
 	public static double wristPastClimbPos = 0.508;
 	public static double wristFinalAdjustPos = 0.492;
