@@ -95,8 +95,8 @@ public class Shooter extends SubsystemBase {
 	public Command PresetBatter() {
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = 2.2; // 2.8			
-			targetSpeed = 41.0;
+			targetHood = 1.5; // 2.8			
+			targetSpeed = 41;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed); 
 		});

@@ -25,7 +25,7 @@ public class ClimberConstants {
 	public static String kBusName = Constants.canName;
 
 	public static double wristGearRatio = 634.8;
-	public static double elbowGearRatio = 602.18;
+	public static double elbowGearRatio = 370.57;
 
 	public static double wristZeroOffset = (0.0/360.0) * wristGearRatio;
 
@@ -38,7 +38,7 @@ public class ClimberConstants {
 
 
 	public static double storedPos = 0;
-	public static double deployedPos = -283.7 / elbowGearRatio;
+	public static double deployedPos = -0.471;
 	public static double initalElbowClimbPos = -0.675;
 	public static double adjustedElbowClimbPos = -0.74;
 	public static double l3ElbowPos = -0.477;
@@ -54,15 +54,15 @@ public class ClimberConstants {
 
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)
+			.withStatorCurrentLimit(160)
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(60)
+			.withSupplyCurrentLimit(160)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerLimit(120)
 			.withSupplyCurrentLowerTime(1))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(40)
-			.withPeakReverseTorqueCurrent(-40))
+			.withPeakForwardTorqueCurrent(160)
+			.withPeakReverseTorqueCurrent(-160))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
@@ -71,12 +71,12 @@ public class ClimberConstants {
 			.withMotionMagicAcceleration(10.0))
 		.withFeedback(
 			new FeedbackConfigs()
-				.withSensorToMechanismRatio(602.18))
+				.withSensorToMechanismRatio(elbowGearRatio))
 		.withSlot0(new Slot0Configs()
-			.withKP(500)
+			.withKP(1600)
 			.withKI(0.0)
 			.withKD(0.0)
-			.withKS(0.27)
+			.withKS(0.4)
 			.withKV(1))
 		.withSlot1(new Slot1Configs()
 			.withKP(300)
@@ -85,8 +85,8 @@ public class ClimberConstants {
 			.withKS(0.27)
 			.withKV(0.2))
 		.withMotionMagic(new MotionMagicConfigs()
-			.withMotionMagicCruiseVelocity(0.3)
-			.withMotionMagicAcceleration(0.6)
+			.withMotionMagicCruiseVelocity(2)
+			.withMotionMagicAcceleration(1)
 			.withMotionMagicJerk(6)
 		);
 
