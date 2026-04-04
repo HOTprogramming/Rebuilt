@@ -104,33 +104,34 @@ public class Shooter extends SubsystemBase {
 		});
 	}
 
-	public Command PresetBatter() {
+	public Command PresetBatter() { // 1m
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = 1.5; // 2.8			
-			targetSpeed = 41;
-			mShooterKraken.runPosition(targetHood);
-			mShooterKraken.runVelocity(targetSpeed); 
+			targetHood = hoodAngleMap.get(1.0); // 2.8			
+			targetSpeed = shooterSpeedMap.get(1.0);
+			mShooterKraken.runPosition(hoodAngleMap.get(1.0));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(1.0)); 
 		});
 	}
 
-	public Command PresetTrench() {
+	public Command PresetTrench() { // 3.6m
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = 3.2;
-			targetSpeed = 43.0;
-			mShooterKraken.runPosition(targetHood);
-			mShooterKraken.runVelocity(targetSpeed);
+			targetHood = hoodAngleMap.get(3.5);
+			targetSpeed = shooterSpeedMap.get(3.5);
+			mShooterKraken.runPosition(hoodAngleMap.get(3.5));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(3.5));
 		});
 	}
 
-	public Command PresetClimberPole() {
+
+	public Command PresetClimberPole() { // 2.8m
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = 5.7; // 6.0
-			targetSpeed = 45.0;
-			mShooterKraken.runPosition(targetHood);
-			mShooterKraken.runVelocity(targetSpeed); 
+			targetHood = hoodAngleMap.get(2.8); // 6.0
+			targetSpeed = shooterSpeedMap.get(2.8);
+			mShooterKraken.runPosition(hoodAngleMap.get(2.8));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(2.8)); 
 		});
 	}
 

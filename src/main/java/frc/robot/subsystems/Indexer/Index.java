@@ -17,11 +17,17 @@ public class Index extends SubsystemBase {
 	}
 
 	public Command indexOnCommand() {
-		return runOnce(() -> m_IndexKraken.startIndex());
+		return Commands.sequence(
+			runOnce(() -> m_IndexKraken.startKicker()),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> m_IndexKraken.startFloor()));
 	}
 
 	public Command indexOffCommand() {
-		return runOnce(() -> m_IndexKraken.stop());
+		return Commands.sequence(
+			runOnce(() -> m_IndexKraken.stopFloor()),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> m_IndexKraken.stopKicker()));
 	}
 
 	public Command turnOnKicker() {

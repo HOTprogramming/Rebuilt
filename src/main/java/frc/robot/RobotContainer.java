@@ -110,7 +110,8 @@ public class RobotContainer {
 					indexer.indexOnCommand(),
 					intake.retractSlow().unless(driver.leftTrigger()))
 			)).onFalse(indexer.indexOffCommand())
-			.onFalse(intake.completeStop().unless(driver.leftTrigger()));
+			.onFalse(intake.completeStop().unless(driver.leftTrigger()))
+			.onFalse(Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))); // delay hoodDown
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
 		// .onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));

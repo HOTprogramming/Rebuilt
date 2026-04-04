@@ -16,7 +16,7 @@ public class IndexConstants {
 	public static int kRightKickID = Constants.getRobot() == RobotType.COMPBOT ? 19 : 15;
 	public static int kFloorID = Constants.getRobot() == RobotType.COMPBOT ? 13 : 13;
 	public static String kBusName = Constants.canName;
-	public static double kickerSpeed = 120;
+	public static double kickerSpeed = 110;
 	public static double floorSpeed = 90;
 
 	public static final TalonFXConfiguration kickerConfigs = new TalonFXConfiguration()
@@ -35,11 +35,11 @@ public class IndexConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs() //Wheels torque
-			.withKP(5)
+			.withKP(480)
 			.withKI(0.0)
 			.withKD(0)
 			.withKS(5.1)
-			.withKV(1)); // 0.0663
+			.withKV(2)); // 0.0663
 
 		public static final TalonFXConfiguration floorConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -51,17 +51,17 @@ public class IndexConstants {
 			.withSupplyCurrentLowerLimit(70)
 			.withSupplyCurrentLowerTime(1.5))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(90)
-			.withPeakReverseTorqueCurrent(-90))
+			.withPeakForwardTorqueCurrent(150)
+			.withPeakReverseTorqueCurrent(-150))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot1(new Slot1Configs() //Roller Floor torque
-			.withKP(20)
+			.withKP(360)
 			.withKI(0.0)
 			.withKD(0)
 			.withKS(11.5)
-			.withKV(0.04));
+			.withKV(2));
 
 
 	public static final IndexConfigs IndexConfigs = switch (Constants.getRobot()) {
