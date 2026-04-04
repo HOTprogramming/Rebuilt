@@ -66,4 +66,8 @@ public class ClimberKraken {
 		m_climberKraken.stop();
 		m_spinnerKraken.stop();
 	}
+
+		public double getTotalCurrent(){
+		return m_climberKraken.getSupplyCurrent() + m_spinnerKraken.getSupplyCurrent();
+	}
 }

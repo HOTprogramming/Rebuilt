@@ -164,4 +164,8 @@ public class Kraken {
 	public void setFollower(int leaderID, MotorAlignmentValue alignment) {
 		motor.setControl(new Follower(leaderID, alignment));
 	}
+
+	public double getSupplyCurrent(){
+		return motor.getSupplyCurrent().getValueAsDouble();
+	}
 }

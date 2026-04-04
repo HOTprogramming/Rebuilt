@@ -44,4 +44,7 @@ public class IndexKraken {
 		m_rightKickKraken.stop(); 
  
 	}
+		public double getTotalCurrent(){
+		return m_floorKraken.getSupplyCurrent() + m_leftKickKraken.getSupplyCurrent() + m_rightKickKraken.getSupplyCurrent();
+	}
 }
