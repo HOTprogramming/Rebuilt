@@ -94,6 +94,15 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
+		// shotmap tuning
+		driver.povUp().onTrue(shooter.runOnce(() -> shooter.targetSpeed += 0.25));
+		driver.povDown().onTrue(shooter.runOnce(() -> shooter.targetSpeed -= 0.25));
+		driver.povRight().onTrue(shooter.runOnce(() -> shooter.targetHood += 0.25));
+		driver.povLeft().onTrue(shooter.runOnce(() -> shooter.targetHood -= 0.25));
+
+		driver.back().onTrue(shooter.shotmapTuning());
+
+
 		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
 			whileTrue(shooter.autoAim())
 			.whileTrue(

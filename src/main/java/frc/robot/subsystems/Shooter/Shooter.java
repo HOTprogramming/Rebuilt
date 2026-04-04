@@ -2,6 +2,7 @@ package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
@@ -50,6 +51,9 @@ public class Shooter extends SubsystemBase {
 	@Override
 	public void periodic() {
 		mShooterKraken.update();
+		SmartDashboard.putNumber("target hood", targetHood);		
+		SmartDashboard.putNumber("target speed", targetSpeed);
+
 	}
 
 	public Command hoodDown(){
@@ -73,6 +77,14 @@ public class Shooter extends SubsystemBase {
 			}
 		});
 	}
+
+	public Command shotmapTuning() {
+		return run(() -> {
+			mShooterKraken.runPosition(targetHood);
+			mShooterKraken.runVelocity(targetSpeed);
+		});
+	}
+
 
 	public Command autoAim() {
 		return run(() -> {
@@ -105,8 +117,8 @@ public class Shooter extends SubsystemBase {
 	public Command PresetTrench() {
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = hoodAngleMap.get(3.6);
-			targetSpeed = shooterSpeedMap.get(3.6);
+			targetHood = 3.2;
+			targetSpeed = 43.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});
