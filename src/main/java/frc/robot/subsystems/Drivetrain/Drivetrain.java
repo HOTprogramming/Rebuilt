@@ -168,11 +168,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	}
 
 	public boolean isAtTargetAngle(){
-		// if (RobotState.color == Alliance.Red) {
-		// 	return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
-		// } else {			
+		if (RobotState.color == Alliance.Red) {
+			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
+		} else {			
 			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
-		// }
+		}
 	}
 
 final double CLIMBER_CHASSIS_OFFSET = 90.0; 	// Climber on front
