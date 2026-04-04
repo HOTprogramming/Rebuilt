@@ -61,7 +61,7 @@ public class ShooterConstants {
 			.withPeakForwardTorqueCurrent(80)
 			.withPeakReverseTorqueCurrent(-80))
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.Clockwise_Positive)
+			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 
 		//SHOOTER PID
@@ -90,7 +90,7 @@ public class ShooterConstants {
 			.withPeakForwardTorqueCurrent(120)
 			.withPeakReverseTorqueCurrent(-120))
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.Clockwise_Positive)
+			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
 			.withForwardSoftLimitThreshold(15)

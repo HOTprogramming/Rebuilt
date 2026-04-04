@@ -10,8 +10,8 @@ public class ClimberKraken {
 	public DigitalInput beambreak;
 
 
-	public Kraken m_climberKraken = new KrakenWithCancoder(ClimberConstants.kClimbermotorID, ClimberConstants.kClimbEncoder, ClimberConstants.ClimberConfigs
-		.elbowConfigs(), ClimberConstants.encoderConfigs, "Climber", "ClimberMotor");
+	public Kraken m_climberKraken = new Kraken(ClimberConstants.kClimbermotorID, ClimberConstants.ClimberConfigs
+		.elbowConfigs(), "Climber", "ClimberMotor");
 	public Kraken m_spinnerKraken = new Kraken(ClimberConstants.kClimberspinnerID, ClimberConstants.ClimberConfigs
 		.wristConfigs(), "Climber", "SpinnerMotor");
 
@@ -41,8 +41,8 @@ public class ClimberKraken {
 	}
 
 	public void runManual(double percentOutputElbow, double percentOutputWrist) {
-		m_climberKraken.motor.setControl(new DutyCycleOut(percentOutputElbow * 0.3));
-		m_spinnerKraken.motor.setControl(new DutyCycleOut(percentOutputWrist * 0.3));
+		m_climberKraken.motor.setControl(new DutyCycleOut(percentOutputElbow * 0.7));
+		m_spinnerKraken.motor.setControl(new DutyCycleOut(percentOutputWrist * 0.7));
 	}
 
 	public void setElbowPosition(double desiredRotations) {
