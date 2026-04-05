@@ -5,23 +5,20 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 
 public class Camera extends SubsystemBase {
 
-	CameraBase back;
+	CameraBase backLeft;
+	CameraBase backRight;
 	CameraBase left;
-	CameraBase front;
-	// CameraBase right;
 
 	public Camera(Drivetrain drive) {
-		back = new CameraBase(drive, "BACK");
+		backLeft = new CameraBase(drive, "BACK_LEFT");
+		backRight = new CameraBase(drive, "BACK_RIGHT");
 		left = new CameraBase(drive, "LEFT");
-		front = new CameraBase(drive, "FRONT");
-		// right = new CameraBase(drive, "RIGHT");
 	}
 
 	@Override
 	public void periodic() {
-		back.periodic();
+		backLeft.periodic();
+		backRight.periodic();
 		left.periodic();
-		front.periodic();
-		// right.periodic();
     }
 }

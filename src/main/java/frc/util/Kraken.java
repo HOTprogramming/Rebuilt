@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -29,7 +30,8 @@ public class Kraken {
 		PositionTorqueCurrentFOC,
 		MotionMagicVoltage,
 		MotionMagicExpoVoltage,
-		MotionMagicExpoTorqueCurrentFOC
+		MotionMagicExpoTorqueCurrentFOC,
+		MotionMagicTorqueCurrentFOC
 	}
 
 	public static enum VelocityControlType{
@@ -44,6 +46,7 @@ public class Kraken {
 	private final MotionMagicExpoTorqueCurrentFOC mmExpoTorque = new MotionMagicExpoTorqueCurrentFOC(0.0);
 	private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
 	private final VelocityTorqueCurrentFOC velocityTorque = new VelocityTorqueCurrentFOC(0);
+	private final MotionMagicTorqueCurrentFOC mmTorque = new MotionMagicTorqueCurrentFOC(0);
 	private final NeutralOut stop = new NeutralOut();
 
 	public DoublePublisher positionPublisher;
@@ -142,6 +145,9 @@ public class Kraken {
 				break;
 			case MotionMagicExpoTorqueCurrentFOC:
 				motor.setControl(mmExpoTorque.withPosition(desiredRotations).withSlot(slot));
+				break;
+			case MotionMagicTorqueCurrentFOC:
+				motor.setControl(mmTorque.withPosition(desiredRotations).withSlot(slot));
 				break;
 		}
 	}
