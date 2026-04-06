@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
@@ -19,18 +20,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.RobotState;
-
+import frc.util.HubTracker;
+import edu.wpi.first.wpilibj.DriverStation;
 import com.ctre.phoenix6.BaseStatusSignal;
 import edu.wpi.first.units.measure.Current;
 
 
 public class DrivetrainTelemetry {
     private final double MaxSpeed;
-//@SuppressWarnings("unchecked")
-private final StatusSignal<Current>[] driveCurrentSignals = new StatusSignal[4];
-//@SuppressWarnings("unchecked")
-private final StatusSignal<Current>[] steerCurrentSignals = new StatusSignal[4];
-private final DoublePublisher driveTotalCurrent;
+	
+	private final StatusSignal<Current>[] driveCurrentSignals = new StatusSignal[4];
+	
+	private final StatusSignal<Current>[] steerCurrentSignals = new StatusSignal[4];
+	private final DoublePublisher driveTotalCurrent;
+	private DoublePublisher hubTimeRemaining;
+	private BooleanPublisher hubActive;
+	private DoublePublisher matchTime;
     /**
      * Construct a telemetry object, with the specified max speed of the robot
      * 
@@ -87,5 +92,9 @@ private final DoublePublisher driveTotalCurrent;
         }
 		driveTotalCurrent.set(totalCurrent);
 		RobotState.driveCurrent = totalCurrent;
+		//hub time remaining and active status
+		hubTimeRemaining.set(HubTracker.timeRemainingInCurrentShift().map(t -> t.in(edu.wpi.first.units.Units.Seconds)).orElse(0.0));
+		hubActive.set(HubTracker.isActive());
+		matchTime.set(DriverStation.getMatchTime());
     }
 }
