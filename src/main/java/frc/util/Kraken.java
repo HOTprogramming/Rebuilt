@@ -52,7 +52,6 @@ public class Kraken {
 	public DoublePublisher positionPublisher;
 	public DoublePublisher velocityPublisher;
 	public DoublePublisher supplyCurrentPublisher;
-	public DoublePublisher motorVoltagePublisher;
 
 	public final TalonFX motor;
 
@@ -109,15 +108,13 @@ public class Kraken {
         positionPublisher = table.getDoubleTopic(subsystem + deviceName + "Position").publish();
 		velocityPublisher = table.getDoubleTopic(subsystem + deviceName + "Velocity").publish();
 		supplyCurrentPublisher = table.getDoubleTopic(subsystem + deviceName + "Supply Current").publish();
-		motorVoltagePublisher = table.getDoubleTopic(subsystem + deviceName + "Motor Voltage").publish();
-
+	
 	}
 
 	public void updateTelemetry(){
 		positionPublisher.set(motor.getPosition().getValueAsDouble());
 		velocityPublisher.set(motor.getVelocity().getValueAsDouble());
 		supplyCurrentPublisher.set(motor.getSupplyCurrent().getValueAsDouble());
-		motorVoltagePublisher.set(motor.getMotorVoltage().getValueAsDouble());
 
 	}
 
