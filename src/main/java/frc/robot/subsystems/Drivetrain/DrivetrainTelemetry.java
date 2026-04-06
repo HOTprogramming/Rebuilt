@@ -33,9 +33,7 @@ public class DrivetrainTelemetry {
 	
 	private final StatusSignal<Current>[] steerCurrentSignals = new StatusSignal[4];
 	private final DoublePublisher driveTotalCurrent;
-	private DoublePublisher hubTimeRemaining;
-	private BooleanPublisher hubActive;
-	private DoublePublisher matchTime;
+
     /**
      * Construct a telemetry object, with the specified max speed of the robot
      * 
@@ -44,6 +42,7 @@ public class DrivetrainTelemetry {
     public DrivetrainTelemetry(double maxSpeed, SwerveDrivetrain drivetrain) {
         MaxSpeed = maxSpeed;
 		driveTotalCurrent = driveStateTable.getDoubleTopic("TotalCurrent").publish();
+
         SignalLogger.start();
 
         /* Set up the module state Mechanism2d telemetry */
@@ -67,6 +66,9 @@ public class DrivetrainTelemetry {
     private final DoublePublisher driveTimestamp = driveStateTable.getDoubleTopic("Timestamp").publish();
     private final DoublePublisher driveOdometryFrequency = driveStateTable.getDoubleTopic("OdometryFrequency").publish();
 	public final StructPublisher<Pose2d> dockingTargetPub = driveStateTable.getStructTopic("Docking Target", Pose2d.struct).publish();
+	public final DoublePublisher hubTimeRemaining = driveStateTable.getDoubleTopic("Hub Time Remaining").publish(); 
+	public final BooleanPublisher hubActive = driveStateTable.getBooleanTopic("Hub Active").publish();
+	public final DoublePublisher matchTime = driveStateTable.getDoubleTopic("Match Time").publish();
 
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
