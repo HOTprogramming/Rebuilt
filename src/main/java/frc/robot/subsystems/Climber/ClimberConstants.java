@@ -73,7 +73,7 @@ public class ClimberConstants {
 			new FeedbackConfigs()
 				.withSensorToMechanismRatio(elbowGearRatio))
 		.withSlot0(new Slot0Configs()
-			.withKP(10656)
+			.withKP(1000)
 			.withKI(0.0)
 			.withKD(6)
 			.withKS(4)
