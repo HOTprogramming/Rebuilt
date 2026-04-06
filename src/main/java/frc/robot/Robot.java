@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
         }
 
 		SmartDashboard.putBoolean("Teleop", true);
+		
     }
 
     @Override

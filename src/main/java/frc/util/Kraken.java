@@ -79,6 +79,14 @@ public class Kraken {
 		}
 	}
 
+
+	public void applyNewConfigs(TalonFXConfiguration config) {
+		StatusCode statusCode = motor.getConfigurator().apply(config);
+
+		if (!statusCode.isOK()) {
+			System.out.println("Configuration Failed on motor " + subsystem + " " + deviceName);
+		}
+	}
 	public void setup(){
 		setupSim();
 
