@@ -44,4 +44,7 @@ public class ShooterKraken {
 		m_krakenFXLeftBottom.stop();
 		m_krakenFXRightTop.stop();
 	}
+	public double getTotalCurrent(){
+		return m_krakenFXHood.getSupplyCurrent() + m_krakenFXLeftBottom.getSupplyCurrent() + m_krakenFXLeftTop.getSupplyCurrent() + m_krakenFXRightTop.getSupplyCurrent();
+	}
 }

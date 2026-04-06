@@ -64,7 +64,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
 
-    public final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed);
+    public final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed, this);
 	
 	private DoubleSubscriber poleAlignmentSub;
 	private DoubleSubscriber poleDistanceSub;
