@@ -216,19 +216,6 @@
             }
           },
           {
-            "title": "Autos",
-            "x": 256.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/SmartDashboard/Autos",
-              "period": 0.06,
-              "sort_options": false
-            }
-          },
-          {
             "title": "FMSInfo",
             "x": 896.0,
             "y": 384.0,
@@ -256,6 +243,19 @@
               "divisions": 5,
               "inverted": false,
               "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Auto Chooser",
+            "x": 256.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Auto Chooser",
+              "period": 0.06,
+              "sort_options": false
             }
           }
         ]
@@ -288,19 +288,6 @@
             }
           },
           {
-            "title": "Autos",
-            "x": 640.0,
-            "y": 384.0,
-            "width": 384.0,
-            "height": 128.0,
-            "type": "ComboBox Chooser",
-            "properties": {
-              "topic": "/SmartDashboard/Autos",
-              "period": 0.06,
-              "sort_options": false
-            }
-          },
-          {
             "title": "Match time",
             "x": 384.0,
             "y": 0.0,
@@ -308,7 +295,7 @@
             "height": 384.0,
             "type": "Match Time",
             "properties": {
-              "topic": "/Shuffleboard/tab/Match time",
+              "topic": "/HOT/Drive/Match Time",
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
@@ -340,8 +327,8 @@
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 15,
-              "yellow_start_time": 30
+              "red_start_time": 5,
+              "yellow_start_time": 10
             }
           },
           {
@@ -375,6 +362,37 @@
               "min_value": -1.0,
               "max_value": 1.0,
               "divisions": 5,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          },
+          {
+            "title": "Auto Chooser",
+            "x": 640.0,
+            "y": 384.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Auto Chooser",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "TotalCurrent",
+            "x": 0.0,
+            "y": 512.0,
+            "width": 1024.0,
+            "height": 128.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/HOT/Robot/TotalCurrent",
+              "period": 0.1,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 500.0,
+              "divisions": 6,
               "inverted": false,
               "orientation": "horizontal"
             }

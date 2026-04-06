@@ -66,4 +66,7 @@ public class IntakeKraken {
 	public void stopExtend() {
 		m_ExtendKraken.stop();
 	}
+	public double getTotalCurrent(){
+		return m_RollerKrakenFollower.getSupplyCurrent() + m_RollerKrakenLeader.getSupplyCurrent() + m_ExtendKraken.getSupplyCurrent();
+	}
 }
