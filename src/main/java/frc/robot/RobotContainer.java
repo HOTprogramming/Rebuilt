@@ -44,15 +44,16 @@ public class RobotContainer {
 		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
 		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
-		// NamedCommands.registerCommand("Intake Out", intake.extend());
+		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
 		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
-		// NamedCommands.registerCommand("Intake Stop", intake.completeStop());
-		// NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
+		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
+		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
 		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.retractSlow()));
+
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 				 Commands.run(() -> 
@@ -188,6 +189,8 @@ public class RobotContainer {
 				drivetrain.iAmDockingLeaveMeAlone = false;
 			}).ignoringDisable(true)
 		);
+
+		RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.applyTeleopConfigs(), intake));
 
 		//Climber Controls
 		climber.setDefaultCommand(climber

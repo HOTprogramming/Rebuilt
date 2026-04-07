@@ -67,8 +67,9 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
-
+		
 		SmartDashboard.putBoolean("Teleop", true);
+
     }
 
     @Override

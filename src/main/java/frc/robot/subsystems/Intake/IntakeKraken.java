@@ -9,9 +9,9 @@ public class IntakeKraken {
 	public KrakenWithCancoder m_ExtendKraken = new KrakenWithCancoder(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.kIntakeEncoderID, IntakeConstants.IntakeConfigs
 		.IntakeExtendConfigs(), IntakeConstants.IntakeConfigs.IntakeEncoderConfigs(), "Intake", "Extend");
 	public Kraken m_RollerKrakenLeader = new Kraken(IntakeConstants.kIntakeMotorIDRollerLeader, "rio", IntakeConstants.IntakeConfigs
-		.RollerConfigs(), "Intake", "Roller");
+		.autonRollerConfigs(), "Intake", "Roller");
 	public Kraken m_RollerKrakenFollower = new Kraken(IntakeConstants.kIntakeMotorIDRollerFollower, "rio", IntakeConstants.IntakeConfigs
-		.RollerConfigs(), "Intake", "Roller");
+		.autonRollerConfigs(), "Intake", "Roller");
 
 	private static IntakeKraken instance = null;
 
@@ -25,6 +25,13 @@ public class IntakeKraken {
 			.withMotionMagicCruiseVelocity(64));
 
 		m_ExtendKraken.motor.setPosition(0);
+	}
+
+
+	public void applyTeleopConfigs() {
+		m_RollerKrakenLeader.applyNewConfigs(IntakeConstants.RollerConfigs);
+		m_RollerKrakenFollower.applyNewConfigs(IntakeConstants.RollerConfigs);
+
 	}
 
 	public static IntakeKraken getInstance() {
