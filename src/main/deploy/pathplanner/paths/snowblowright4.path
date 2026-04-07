@@ -3,6 +3,7 @@
   "waypoints": [
     {
       "anchor": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/snowblowright4.path
         "x": 7.933594864479314,
         "y": 3.8862054208273893
       },
@@ -22,13 +23,43 @@
       "prevControl": {
         "x": 7.933594864479314,
         "y": 0.8109700427960058
+========
+        "x": 6.885563480741797,
+        "y": 2.8122967189728967
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.637092547073392,
+        "y": 2.7846888374541834
+      },
+      "isLocked": false,
+      "linkedName": "end2"
+    },
+    {
+      "anchor": {
+        "x": 2.7969472182596284,
+        "y": 2.8122967189728967
+      },
+      "prevControl": {
+        "x": 2.989002538158973,
+        "y": 2.6522506190567774
+>>>>>>>> d9a1f9be1291c29221aa70d63f7afcd879051cc3:src/main/deploy/pathplanner/paths/back2.path
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.32835820895522183,
+      "rotationDegrees": -178.33179117711865
+    },
+    {
+      "waypointRelativePos": 0.7462686567164079,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +73,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -140.2676971280442
   },
   "reversed": false,
   "folder": "snowblowright",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 91.14576283817527
   },
   "useDefaultConstraints": true
 }

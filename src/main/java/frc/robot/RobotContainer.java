@@ -94,6 +94,15 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
+		// shotmap tuning
+		driver.povUp().onTrue(shooter.runOnce(() -> shooter.targetSpeed += 0.25));
+		driver.povDown().onTrue(shooter.runOnce(() -> shooter.targetSpeed -= 0.25));
+		driver.povRight().onTrue(shooter.runOnce(() -> shooter.targetHood += 0.25));
+		driver.povLeft().onTrue(shooter.runOnce(() -> shooter.targetHood -= 0.25));
+
+		driver.back().onTrue(shooter.shotmapTuning());
+
+
 		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
 			whileTrue(shooter.autoAim())
 			.whileTrue(
@@ -101,16 +110,19 @@ public class RobotContainer {
 					indexer.indexOnCommand(),
 					intake.retractSlow().unless(driver.leftTrigger()))
 			)).onFalse(indexer.indexOffCommand())
-			.onFalse(intake.completeStop().unless(driver.leftTrigger()));
+			.onFalse(intake.completeStop().unless(driver.leftTrigger()))
+			.onFalse(Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))); // delay hoodDown
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
 		// .onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 	
-		operator.leftBumper().onTrue(intake.fullRetract());
+		// operator.leftBumper().onTrue(intake.fullRetract());
+		operator.leftBumper().onTrue(climber.zeroSpinner());
+
 		//Temp button to trigger the L1 climb sequence
-		operator.leftTrigger().onTrue(climber.autoClimb());
+		operator.leftTrigger().whileTrue(climber.autoClimb());
 		// Undock from the pole after climbing
 		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
 		// Stow climber after undocking
@@ -130,6 +142,7 @@ public class RobotContainer {
 				Commands.runOnce(() -> RobotState.setClimbMode()),
 				intake.fullRetract(),
 				shooter.stop()
+
 			)); 
 
 		// Deploy Climber
@@ -144,7 +157,7 @@ public class RobotContainer {
     	Commands.either(
 			Commands.parallel(
 				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
-				Commands.sequence(Commands.waitSeconds(0.5), climber.stageThreeClimb())
+				Commands.sequence(Commands.waitSeconds(0.2), climber.stageThreeClimb())
 			),
 			shooter.PresetClimberPole(),
 			RobotState::isClimbMode

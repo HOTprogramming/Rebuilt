@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import frc.util.Kraken;
 import frc.util.KrakenWithCancoder;
 
+
 public class IntakeKraken {
 	public KrakenWithCancoder m_ExtendKraken = new KrakenWithCancoder(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.kIntakeEncoderID, IntakeConstants.IntakeConfigs
 		.IntakeExtendConfigs(), IntakeConstants.IntakeConfigs.IntakeEncoderConfigs(), "Intake", "Extend");
@@ -64,5 +65,8 @@ public class IntakeKraken {
 
 	public void stopExtend() {
 		m_ExtendKraken.stop();
+	}
+	public double getTotalCurrent(){
+		return m_RollerKrakenFollower.getSupplyCurrent() + m_RollerKrakenLeader.getSupplyCurrent() + m_ExtendKraken.getSupplyCurrent();
 	}
 }
