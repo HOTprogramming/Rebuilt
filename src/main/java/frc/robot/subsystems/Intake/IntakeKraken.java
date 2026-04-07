@@ -29,7 +29,9 @@ public class IntakeKraken {
 
 
 	public void applyTeleopConfigs() {
-		
+		m_RollerKrakenLeader.applyNewConfigs(IntakeConstants.RollerConfigs);
+		m_RollerKrakenFollower.applyNewConfigs(IntakeConstants.RollerConfigs);
+
 	}
 
 	public static IntakeKraken getInstance() {

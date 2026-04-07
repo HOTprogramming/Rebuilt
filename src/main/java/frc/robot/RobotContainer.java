@@ -190,6 +190,8 @@ public class RobotContainer {
 			}).ignoringDisable(true)
 		);
 
+		RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.applyTeleopConfigs(), intake));
+
 		//Climber Controls
 		climber.setDefaultCommand(climber
 			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))

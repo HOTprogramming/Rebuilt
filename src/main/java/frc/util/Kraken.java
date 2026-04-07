@@ -87,6 +87,7 @@ public class Kraken {
 			System.out.println("Configuration Failed on motor " + subsystem + " " + deviceName);
 		}
 	}
+	
 	public void setup(){
 		setupSim();
 
