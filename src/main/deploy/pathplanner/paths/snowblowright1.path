@@ -64,11 +64,38 @@
     {
       "waypointRelativePos": 0.9637526652452012,
       "rotationDegrees": 0.3589102194159865
+    },
+    {
+      "waypointRelativePos": 1.5543710021322088,
+      "rotationDegrees": 90.16177199317454
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Go To Shoot",
+      "waypointRelativePos": 0.45374746792707576,
+      "endWaypointRelativePos": 3.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Go To Shoot"
+        }
+      }
+    },
+    {
+      "name": "Intake Out",
+      "waypointRelativePos": 0.46185010128292603,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Out"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 2.5,
@@ -79,7 +106,7 @@
   },
   "goalEndState": {
     "velocity": 3.0,
-    "rotation": 0.0
+    "rotation": 90.55428780235574
   },
   "reversed": false,
   "folder": "snowblowright",

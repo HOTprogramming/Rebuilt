@@ -3,35 +3,52 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.933594864479314,
-        "y": 3.8862054208273893
+        "x": 8.748730385164052,
+        "y": 3.510984308131241
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.9584707942345645,
-        "y": 3.6374461232748923
+        "x": 8.773606314919302,
+        "y": 3.262225010578744
       },
       "isLocked": false,
       "linkedName": "lastshoot"
     },
     {
       "anchor": {
-        "x": 7.933594864479314,
-        "y": 0.5609700427960058
+        "x": 8.748730385164052,
+        "y": 2.035977175463623
       },
       "prevControl": {
-        "x": 7.933594864479314,
-        "y": 0.8109700427960058
+        "x": 8.748730385164052,
+        "y": 2.285977175463623
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5927505330490325,
+      "rotationDegrees": -90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Go To Shoot",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Go To Shoot"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 2.5,
@@ -48,7 +65,7 @@
   "folder": "snowblowright",
   "idealStartingState": {
     "velocity": 3.0,
-    "rotation": 0.0
+    "rotation": -91.2730300200569
   },
   "useDefaultConstraints": true
 }

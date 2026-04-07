@@ -28,10 +28,27 @@
       "linkedName": "goback"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5330490405117261,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Go To Shoot",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Go To Shoot"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 2.5,
@@ -48,7 +65,7 @@
   "folder": "snowblowright",
   "idealStartingState": {
     "velocity": 3.0,
-    "rotation": 0.0
+    "rotation": 90.55428780235574
   },
   "useDefaultConstraints": true
 }

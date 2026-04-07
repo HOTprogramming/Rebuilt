@@ -28,9 +28,41 @@
                 }
               },
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "Shoot"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 3.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Aim"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.2
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Shoot"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -44,12 +76,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "snowblowright3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop Shooting"
                 }
               }
             ]
@@ -66,9 +92,35 @@
                 }
               },
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "Shoot"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Aim"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Shoot"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -77,7 +129,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }
