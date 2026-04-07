@@ -28,7 +28,7 @@ public class ShooterConstants {
 	public static double kIdleSpeed = (20.0);
 	public static double kShooterSpeed = (48.0);
 	public static double kTargetShootSpeed = kShooterSpeed;
-	public static double kShooterError = 4;
+	public static double kShooterError = 2;
 	public static double kShooterHoodError = .25;
 
 	public static Translation2d redHub = new Translation2d(11.926, 4.048);

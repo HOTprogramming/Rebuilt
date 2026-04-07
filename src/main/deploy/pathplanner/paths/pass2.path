@@ -127,7 +127,7 @@
     },
     {
       "waypointRelativePos": 3.4541577825159955,
-      "rotationDegrees": 3.049361290120002
+      "rotationDegrees": 3.0493612901200025
     },
     {
       "waypointRelativePos": 4.020746887966803,
@@ -185,7 +185,7 @@
     },
     {
       "name": "Intake Out",
-      "waypointRelativePos": 1.2153950033760972,
+      "waypointRelativePos": 0.6806212018906388,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -202,7 +202,7 @@
     },
     {
       "name": "Intake Stop",
-      "waypointRelativePos": 4.96079404466497,
+      "waypointRelativePos": 5.412559081701524,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
