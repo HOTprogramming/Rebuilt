@@ -52,7 +52,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
 
-		// NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
 				 Commands.run(() -> 

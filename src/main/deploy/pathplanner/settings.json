@@ -5,10 +5,11 @@
   "pathFolders": [
     "Climb",
     "Left 1 Pass",
-    "Right 3 Pass",
+    "snowblowright",
     "Oh No",
     "Right 1 Pass",
-    "Right 2 Pass"
+    "Right 2 Pass",
+    "Right 3 Pass"
   ],
   "autoFolders": [
     "Old Auto"
