@@ -209,7 +209,7 @@ public Command driveToPoleCoordinate_autoflip() {
         double targetY = currentPose.getY() + (TARGET_DISTANCE * approachDirection);
         
 		// targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
-		double camOffset = 0.11; // Default camera offset in meters
+		double camOffset = -0.11; // Default camera offset in meters
 
         double targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3) + camOffset + rotationXOffset) * approachDirection;
 
