@@ -103,15 +103,42 @@ public class RobotContainer {
 		driver.back().onTrue(shooter.shotmapTuning());
 
 
-		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
-			whileTrue(shooter.autoAim())
-			.whileTrue(
-				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.2).andThen(Commands.parallel(
-					indexer.indexOnCommand(),
-					intake.retractSlow().unless(driver.leftTrigger()))
-			)).onFalse(indexer.indexOffCommand())
-			.onFalse(intake.completeStop().unless(driver.leftTrigger()))
-			.onFalse(Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))); // delay hoodDown
+		// driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
+		// 	whileTrue(shooter.autoAim())
+		// 	.whileTrue(
+		// 		Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.2).andThen(Commands.parallel(
+		// 			indexer.indexOnCommand(),
+		// 			intake.retractSlow().unless(driver.leftTrigger()))
+		// 	)).onFalse(indexer.indexOffCommand())
+		// 	.onFalse(intake.completeStop().unless(driver.leftTrigger()))
+		// 	.onFalse(Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))); // delay hoodDown
+
+		driver.rightTrigger().whileTrue(
+			Commands.parallel(
+				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))
+						.unless(() -> RobotState.isManualMode()),
+				shooter.autoAim(),
+
+				Commands.sequence(
+					// This race will finish as soon as shooter is  ready OR 0.2s passes
+					Commands.race(
+						Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
+						Commands.waitSeconds(0.2)
+					),
+					// Once the race ends (Ready OR Timed Out), run the motors
+					Commands.parallel(
+						indexer.indexOnCommand(),
+						intake.retractSlow().unless(driver.leftTrigger())
+					)
+				)
+			)
+		).onFalse(
+			Commands.parallel(
+				indexer.indexOffCommand(),
+				intake.completeStop().unless(driver.leftTrigger()),
+				Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))
+			)
+		);
 
 		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
 		// .onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
