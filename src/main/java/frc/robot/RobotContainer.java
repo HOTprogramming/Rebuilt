@@ -147,8 +147,7 @@ public class RobotContainer {
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 		
 	
-		// operator.leftBumper().onTrue(intake.fullRetract());
-		operator.leftBumper().onTrue(climber.zeroSpinner());
+		operator.leftBumper().onTrue(intake.fullRetract());
 
 		//Temp button to trigger the L1 climb sequence
 		operator.leftTrigger().whileTrue(climber.autoClimb());
