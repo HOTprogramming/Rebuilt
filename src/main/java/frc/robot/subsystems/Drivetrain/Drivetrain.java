@@ -9,6 +9,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.SwerveDriveBrake;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -49,6 +50,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	private final SlewRateLimiter xLimiter = new SlewRateLimiter(3.5);
 	private final SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
 	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
+
+	private final SwerveDriveBrake brakeRequest = new SwerveDriveBrake();
 
 	private double MaxSpeed = 1.0 * DrivetrainConstants.kSpeedAt12Volts.in(MetersPerSecond);
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
@@ -290,5 +293,9 @@ public Command driveToPoleCoordinate_autoflip() {
 
 	public Command runPathFinding(Pose2d target) {
 		return AutoBuilder.pathfindToPose(target, alignToLadderConstraints);
+	}
+
+	public Command xLockCommand() {
+		return this.run(() -> this.setControl(brakeRequest));
 	}
 }

@@ -146,6 +146,8 @@ public class RobotContainer {
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 		
+		// X the Wheels
+		driver.x().whileTrue(drivetrain.xLockCommand());
 	
 		operator.leftBumper().onTrue(intake.fullRetract());
 
