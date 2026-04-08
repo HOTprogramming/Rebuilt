@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.Drivetrain.ShootOnTheFly;
 import frc.robot.subsystems.Shooter.ShooterConstants;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class RobotState {
 	public static Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -43,6 +45,13 @@ public class RobotState {
 	private static double bluezonex = 4.33;
 	private static double redzonex = 12.21;
 
+	public static double driveCurrent = 0;
+	public static double climberCurrent = 0;
+	public static double intakeCurrent = 0;
+	public static double totalRobotCurrent = 0;
+	public static double indexerCurrent = 0;
+	public static double shooterCurrent = 0;
+
 	private static Translation2d topBlueTrench = new Translation2d(4.614, 7.472);
 	private static Translation2d topRedTrench = new Translation2d(11.926, 7.472);
 	private static Translation2d bottomBlueTrench = new Translation2d(4.614, 0.637);
@@ -53,6 +62,9 @@ public class RobotState {
 
 	public static Zone shooterZone = Zone.ALLIANCE;
 	public static Alliance color = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Red;
+
+	private static final DoublePublisher totalCurrentPub = 
+	NetworkTableInstance.getDefault().getTable("HOT/Robot").getDoubleTopic("TotalCurrent").publish();
 
 	public RobotState() {
 		mode = Mode.normal; 
@@ -94,6 +106,9 @@ public class RobotState {
 		shootOnTheFly.update(pose, speeds, target, color);
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
+
+		totalRobotCurrent = driveCurrent + climberCurrent + intakeCurrent + indexerCurrent + shooterCurrent;
+		totalCurrentPub.set(totalRobotCurrent);
 	}
 
 	private static void findZone() {

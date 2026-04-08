@@ -31,16 +31,16 @@ public class ClimberConstants {
 
 
 	public static double startElbowAdjustmentPos = 0.15;
-	public static double wristClimbPos = 0.50;
+	public static double wristClimbPos = 0.515;
 
-	public static double wristPastClimbPos = .508;
+	public static double wristPastClimbPos = 0.508;
 	public static double wristFinalAdjustPos = 0.492;
 
 
 	public static double storedPos = 0;
 	public static double deployedPos = -0.471;
-	public static double initalElbowClimbPos = -0.675;
-	public static double adjustedElbowClimbPos = -0.74;
+	public static double initalElbowClimbPos = -0.705; // 0.675
+	public static double adjustedElbowClimbPos = -0.72;
 	public static double l3ElbowPos = -0.477;
 	public static double autoClimbPos = -0.625; 
 
@@ -55,14 +55,14 @@ public class ClimberConstants {
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
 			.withStatorCurrentLimit(160)
-			.withStatorCurrentLimitEnable(true)
+			.withStatorCurrentLimitEnable(false)
 			.withSupplyCurrentLimit(160)
-			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(120)
+			.withSupplyCurrentLimitEnable(false)
+			.withSupplyCurrentLowerLimit(140)
 			.withSupplyCurrentLowerTime(1))
-		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(160)
-			.withPeakReverseTorqueCurrent(-160))
+		// .withTorqueCurrent(new TorqueCurrentConfigs()
+		// 	.withPeakForwardTorqueCurrent(160)
+		// 	.withPeakReverseTorqueCurrent(-160))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
@@ -73,11 +73,11 @@ public class ClimberConstants {
 			new FeedbackConfigs()
 				.withSensorToMechanismRatio(elbowGearRatio))
 		.withSlot0(new Slot0Configs()
-			.withKP(1600)
+			.withKP(10656)
 			.withKI(0.0)
-			.withKD(0.0)
-			.withKS(0.4)
-			.withKV(1))
+			.withKD(6)
+			.withKS(4)
+			.withKV(0.1))
 		.withSlot1(new Slot1Configs()
 			.withKP(300)
 			.withKI(0.0)
@@ -86,7 +86,7 @@ public class ClimberConstants {
 			.withKV(0.2))
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(2)
-			.withMotionMagicAcceleration(1)
+			.withMotionMagicAcceleration(2)
 			.withMotionMagicJerk(6)
 		);
 
