@@ -22,6 +22,10 @@ public class Index extends SubsystemBase {
 		m_IndexKraken.startFloor();});
 	}
 
+	public Command reverseIndexCommand() {
+		return runOnce(() -> m_IndexKraken.reverseIndex());
+	}
+
 	public Command indexOffCommand() {
 		return Commands.sequence(
 			runOnce(() -> m_IndexKraken.stopFloor()),

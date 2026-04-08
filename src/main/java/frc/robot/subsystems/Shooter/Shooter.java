@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		hoodAngleMap.put(1.0, 1.0); 
 		hoodAngleMap.put(1.5, 2.5);
-		hoodAngleMap.put(2.0, 2.85);
+		hoodAngleMap.put(2.0, 2.75);
 		hoodAngleMap.put(3.0, 4.0);
 		hoodAngleMap.put(4.0, 5.0);
 		hoodAngleMap.put(5.3, 7.0);
@@ -33,8 +33,9 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(1.0, 41.0);
 		shooterSpeedMap.put(2.0, 42.0);
 		shooterSpeedMap.put(3.0, 43.5);
-		shooterSpeedMap.put(4.0, 45.0);
-		shooterSpeedMap.put(5.3, 47.5);
+		shooterSpeedMap.put(4.0, 45.5);
+		shooterSpeedMap.put(4.0, 48.0);
+		shooterSpeedMap.put(5.3, 48.5);
 		//Passing
 		shooterSpeedMap.put(5.35, 41.0);
 		shooterSpeedMap.put(17.0, 95.0);
@@ -51,8 +52,8 @@ public class Shooter extends SubsystemBase {
 	@Override
 	public void periodic() {
 		mShooterKraken.update();
-		//SmartDashboard.putNumber("target hood", targetHood);		
-		//SmartDashboard.putNumber("target speed", targetSpeed);
+		SmartDashboard.putNumber("target hood", targetHood);		
+		SmartDashboard.putNumber("target speed", targetSpeed);
 
 	}
 
@@ -101,7 +102,7 @@ public class Shooter extends SubsystemBase {
 			}
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
-		});
+		}).withName("auto aim");
 	}
 
 	public Command PresetBatter() { // 1m

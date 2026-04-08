@@ -38,6 +38,12 @@ public class IndexKraken {
 		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 	}
 
+	public void reverseIndex() {
+		m_rightKickKraken.setVelocity(-IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_leftKickKraken.setVelocity(-IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_floorKraken.setVelocity(-IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+	}
+
 	public void stopFloor() {
 		m_floorKraken.stop();
 	}	

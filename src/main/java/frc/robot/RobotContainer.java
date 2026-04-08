@@ -93,15 +93,15 @@ public class RobotContainer {
             ))
         );
 
-		shooter.setDefaultCommand(shooter.hoodDown());
+		// shooter.setDefaultCommand(shooter.hoodDown());
 
 		// shotmap tuning
-		driver.povUp().onTrue(shooter.runOnce(() -> shooter.targetSpeed += 0.25));
-		driver.povDown().onTrue(shooter.runOnce(() -> shooter.targetSpeed -= 0.25));
-		driver.povRight().onTrue(shooter.runOnce(() -> shooter.targetHood += 0.25));
-		driver.povLeft().onTrue(shooter.runOnce(() -> shooter.targetHood -= 0.25));
+		driver.povUp().onTrue(climber.runOnce(() -> shooter.targetSpeed += 0.25));
+		driver.povDown().onTrue(climber.runOnce(() -> shooter.targetSpeed -= 0.25));
+		driver.povRight().onTrue(climber.runOnce(() -> shooter.targetHood += 0.25));
+		driver.povLeft().onTrue(climber.runOnce(() -> shooter.targetHood -= 0.25));
 
-		driver.back().onTrue(shooter.shotmapTuning());
+		driver.back().onTrue(shooter.runOnce(() -> {shooter.targetSpeed = 43; shooter.targetHood = 4;})).onTrue(shooter.shotmapTuning());
 
 
 		// driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
@@ -132,12 +132,12 @@ public class RobotContainer {
 						intake.retractSlow().unless(driver.leftTrigger())
 					)
 				)
-			)
+			).withName("shooting")
 		).onFalse(
 			Commands.parallel(
 				indexer.indexOffCommand(),
-				intake.completeStop().unless(driver.leftTrigger()),
-				Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))
+				intake.completeStop().unless(driver.leftTrigger())
+				// Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))
 			)
 		);
 
@@ -150,7 +150,7 @@ public class RobotContainer {
 		operator.leftBumper().onTrue(intake.fullRetract());
 
 		//Temp button to trigger the L1 climb sequence
-		operator.leftTrigger().whileTrue(climber.autoClimb());
+		operator.leftTrigger().onTrue(indexer.reverseIndexCommand()).onFalse(indexer.indexOffCommand());
 		// Undock from the pole after climbing
 		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
 		// Stow climber after undocking

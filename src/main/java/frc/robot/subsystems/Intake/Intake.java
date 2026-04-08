@@ -73,7 +73,7 @@ public class Intake extends SubsystemBase {
 		}), new WaitCommand(.02), runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
 			mIntakeKraken.stopRollers();
-		}));
+		})).withName("agitate");
 	}
 
 
