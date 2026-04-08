@@ -107,17 +107,20 @@ public class RobotContainer {
 		driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
 			whileTrue(shooter.autoAim())
 			.whileTrue(
-				Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.3).andThen(Commands.parallel(
-					indexer.indexOnCommand(),
-					intake.retractSlow().unless(driver.leftTrigger()))
+				Commands.sequence(
+				Commands.run(() -> {}).until(() -> (shooter.readyToShoot() && drivetrain.isAtTargetAngle())),
+					Commands.parallel(
+						indexer.indexOnCommand(),
+						intake.retractSlow().unless(driver.leftTrigger()))
 			)).onFalse(indexer.indexOffCommand())
 			.onFalse(intake.completeStop().unless(driver.leftTrigger()));
 			// .onFalse(Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))); // delay hoodDown
 
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
-		// .onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop())
+		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
+		
 	
 		// operator.leftBumper().onTrue(intake.fullRetract());
 		operator.leftBumper().onTrue(climber.zeroSpinner());

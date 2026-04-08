@@ -53,6 +53,7 @@ public class Shooter extends SubsystemBase {
 		mShooterKraken.update();
 		SmartDashboard.putNumber("target hood", targetHood);		
 		SmartDashboard.putNumber("target speed", targetSpeed);
+		SmartDashboard.putBoolean("test/readytoshoot",readyToShoot());
 
 	}
 
@@ -143,8 +144,10 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public boolean readyToShoot() {
+		
 		return (
 			Math.abs(getShooterSpeed() - targetSpeed) <= ShooterConstants.kShooterError &&
 			Math.abs(getHoodAngle() - targetHood) <= ShooterConstants.kShooterHoodError);
+
 	}
 }

@@ -145,6 +145,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		RobotState.speeds = getState().Speeds;
 
 		SmartDashboard.putBoolean("iAmDockingLeaveMeAlone", iAmDockingLeaveMeAlone);
+		SmartDashboard.putBoolean("test/isAtTargetAngle", isAtTargetAngle());
+// 			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle))) < 15;
+
+		SmartDashboard.putNumber("test/robot angle", getState().Pose.getRotation().getDegrees());
+		SmartDashboard.putNumber("test/target angle", (Rotation2d.fromRadians(RobotState.turretAngle).getDegrees()));
 	}
 
     private void startSimThread() {
@@ -169,9 +174,9 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	public boolean isAtTargetAngle(){
 		if (RobotState.color == Alliance.Red) {
-			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
+			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 3;
 		} else {			
-			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
+			return Math.abs(getState().Pose.getRotation().getDegrees() - (Rotation2d.fromRadians(RobotState.turretAngle).getDegrees())) < 3;
 		}
 	}
 
