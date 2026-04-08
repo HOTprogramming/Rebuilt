@@ -33,7 +33,7 @@ public class IntakeConstants {
 	public static double agitateCurrentTime = 0.2;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 90.0;
+	public static double kIntakeSpeed = 110.0;
 	public static double kKickerSpeed = 65.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 47 : 0;
@@ -58,11 +58,11 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(5)
+			.withKP(3)
 			.withKI(0)
 			.withKD(0)
 			.withKS(4)
-			.withKV(0.105));
+			.withKV(0.2)); // 0.105
 
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()

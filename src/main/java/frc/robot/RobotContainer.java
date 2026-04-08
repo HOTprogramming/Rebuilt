@@ -140,8 +140,8 @@ public class RobotContainer {
 			)
 		);
 
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop());
-		// .onFalse(intake.packingAgitate().onlyIf(driver.rightTrigger()));
+		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop())
+		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 	
