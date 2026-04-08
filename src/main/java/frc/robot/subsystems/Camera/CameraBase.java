@@ -45,7 +45,7 @@ public class CameraBase {
 		subTable = hotVisionTable.getSubTable(name + "/apriltag");
 		pose2dTopic = subTable.getStructTopic("robot_pose2d", Pose2d.struct);
 		subscriber = pose2dTopic.subscribe(new Pose2d());
-		SmartDashboard.putBoolean("climb/Use Cam Whl Dock", false);
+		//SmartDashboard.putBoolean("climb/Use Cam Whl Dock", false);
 	}
 
 	public int[] blueTargetTags = {27, 18, 25, 26, 24, 21, 29, 30, 31, 32};

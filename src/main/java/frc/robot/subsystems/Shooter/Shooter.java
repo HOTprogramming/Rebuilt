@@ -51,9 +51,8 @@ public class Shooter extends SubsystemBase {
 	@Override
 	public void periodic() {
 		mShooterKraken.update();
-		SmartDashboard.putNumber("target hood", targetHood);		
-		SmartDashboard.putNumber("target speed", targetSpeed);
-		SmartDashboard.putBoolean("test/readytoshoot",readyToShoot());
+		//SmartDashboard.putNumber("target hood", targetHood);		
+		//SmartDashboard.putNumber("target speed", targetSpeed);
 
 	}
 

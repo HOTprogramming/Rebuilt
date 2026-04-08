@@ -25,6 +25,7 @@ public class Index extends SubsystemBase {
 	public Command indexOffCommand() {
 		return Commands.sequence(
 			runOnce(() -> m_IndexKraken.stopFloor()),
+			Commands.waitSeconds(0.1),
 			runOnce(() -> m_IndexKraken.stopKicker()));
 	}
 
