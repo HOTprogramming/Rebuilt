@@ -83,7 +83,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		poleAlignmentSub = objectDetection.getDoubleTopic("pipe_alignment").subscribe(0.0);
 		poleDistanceSub = objectDetection.getDoubleTopic("pipe_distance").subscribe(0.0);
 
-		SmartDashboard.putBoolean("climb/Use Cam Dist", false);
+		//SmartDashboard.putBoolean("climb/Use Cam Dist", false);
     }
 
     private void configureAutoBuilder() {
