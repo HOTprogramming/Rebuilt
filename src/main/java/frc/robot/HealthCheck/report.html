@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>HealthCheck Report</title>
+
+    <style> 
+        /* Modern way to center text */
+        h1 {
+            text-align: center; /* Centers text horizontally */
+        }
+        h3 {
+            text-align: center; /* Centers text horizontally */
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin-left: auto;  /* Center horizontally */
+            margin-right: auto; /* Center horizontally */
+        }
+        th, td {
+            text-align: center; /* Horizontal centering */
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        tr:nth-child(even) {
+            background-color: #D6EEEE;
+        }
+        .checkmark {
+            color: green;
+            font-weight: bold;
+            font-size: 24px;
+        }
+         /* Style for the red X column */
+        .red-x {
+            color: darkred;
+            font-weight: bold;
+            font-size: 28px;
+        }    
+    </style>
+  </head>
+ <body>
+    <H1>HOT Robot Health Check Results </H1>
+    <h3>As of 04/02/2026 14:41</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Test ID</th>
+                <th>Motor ID</th>
+                <th>Motor Name</th>
+                <th>Test Type</th>
+                <th>Target</th>
+                <th>Tolerance</th>
+                <th>Actual</th>
+                <th>Passed</th>
+            </tr>
+        </thead>
+        <tbody> 
+            <tr>
+                <td>1</td>
+                <td>010</td>
+                <td>Left Swerve Drive</td>
+                <td>Velocity</td>
+                <td>10.0</td>
+                <td>12.0</td>
+                <td>12.0</td>
+                <td class="checkmark">&#10003;</td> <!-- Unicode check mark -->
+            </tr>
+             <tr>
+                <td>2</td>
+                <td>011</td>
+                <td>Right Swerve Drive</td>
+                <td>Velocity</td>
+                <td>10.0</td>
+                <td>12.0</td>
+                <td>12.0</td>
+                <td class="red-x">&times;</td>
+            </tr>
+        </tbody>
+    </table>
+</body>

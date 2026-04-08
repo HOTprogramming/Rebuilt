@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Shooter;
 
+import frc.robot.subsystems.Intake.IntakeKraken;
 import frc.util.Kraken;
 
 public class ShooterKraken {
@@ -8,6 +9,8 @@ public class ShooterKraken {
 	public Kraken m_krakenFXRightTop = new Kraken(ShooterConstants.kMotorIDRightTop, ShooterConstants.ShooterConfigs.shooterMotorConfigs(), "Shooter", "Right Top");
 	public Kraken m_krakenFXHood = new Kraken(ShooterConstants.kHoodMotorID, ShooterConstants.ShooterConfigs.hoodMotorConfigs(), 
 	"Shooter", "Hood");
+
+	private static ShooterKraken instance = null;
 
 	public ShooterKraken() {
 		m_krakenFXLeftTop.setup();
@@ -18,6 +21,9 @@ public class ShooterKraken {
 		m_krakenFXHood.motor.setPosition(0);
 	}
 
+	public static ShooterKraken getInstance() {
+		return instance = instance == null ? new ShooterKraken() : instance;
+	}
 	public void update() {
 		m_krakenFXLeftTop.update();
 		m_krakenFXLeftBottom.update();

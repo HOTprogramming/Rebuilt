@@ -8,7 +8,7 @@ import frc.robot.RobotState;
 import frc.robot.RobotState.Zone;
 
 public class Shooter extends SubsystemBase {
-	public final ShooterKraken mShooterKraken = new ShooterKraken();
+	public final ShooterKraken mShooterKraken = ShooterKraken.getInstance();
 
 	private InterpolatingDoubleTreeMap hoodAngleMap = new InterpolatingDoubleTreeMap();
 	private InterpolatingDoubleTreeMap shooterSpeedMap =  new InterpolatingDoubleTreeMap();

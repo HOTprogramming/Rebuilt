@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Intake extends SubsystemBase {
-	public final IntakeKraken mIntakeKraken = new IntakeKraken();
+	public final IntakeKraken mIntakeKraken = IntakeKraken.getInstance();
 
 	public boolean shouldStop = false;
 
@@ -185,4 +185,5 @@ public class Intake extends SubsystemBase {
 	private BooleanSupplier isReExetended() {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition() - targetreextendpos) < IntakeConstants.kExtendTolerance;
 	}
+	
 }
