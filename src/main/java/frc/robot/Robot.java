@@ -25,6 +25,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+		RobotState.climberCurrent = m_robotContainer.climber.m_ClimbKraken.getTotalCurrent();
+		RobotState.intakeCurrent = m_robotContainer.intake.mIntakeKraken.getTotalCurrent();
+		RobotState.indexerCurrent = m_robotContainer.indexer.m_IndexKraken.getTotalCurrent();
+		RobotState.shooterCurrent = m_robotContainer.shooter.mShooterKraken.getTotalCurrent();
 		RobotState.update();
         CommandScheduler.getInstance().run();
     }

@@ -31,7 +31,7 @@ public class ShooterConstants {
 	public static double kShooterError = 4;
 	public static double kShooterHoodError = .25;
 
-	public static Translation2d redHub = new Translation2d(11.926, 4.048 - 0.1524); // moved 6in left for saline
+	public static Translation2d redHub = new Translation2d(11.926, 4.048);
 	public static Translation2d blueHub = new Translation2d(4.614, 4.048);
 
 	private static Translation2d topBlueTrench = new Translation2d();
@@ -61,7 +61,7 @@ public class ShooterConstants {
 			.withPeakForwardTorqueCurrent(80)
 			.withPeakReverseTorqueCurrent(-80))
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.Clockwise_Positive)
+			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 
 		//SHOOTER PID
@@ -90,7 +90,7 @@ public class ShooterConstants {
 			.withPeakForwardTorqueCurrent(120)
 			.withPeakReverseTorqueCurrent(-120))
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.Clockwise_Positive)
+			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
 			.withForwardSoftLimitThreshold(15)

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Index extends SubsystemBase {
@@ -16,10 +17,28 @@ public class Index extends SubsystemBase {
 	}
 
 	public Command indexOnCommand() {
-		return runOnce(() -> m_IndexKraken.startIndex());
+		return Commands.sequence(
+			runOnce(() -> m_IndexKraken.startKicker()),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> m_IndexKraken.startFloor()));
 	}
 
 	public Command indexOffCommand() {
-		return runOnce(() -> m_IndexKraken.stop());
+		return Commands.sequence(
+			runOnce(() -> m_IndexKraken.stopFloor()),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> m_IndexKraken.stopKicker()));
+	}
+
+	public Command turnOnKicker() {
+		return runOnce(() -> m_IndexKraken.startKicker());
+	}	
+	
+	public Command turnOnFloor() {
+		return runOnce(() -> m_IndexKraken.startFloor());
+	}
+
+	public Command index() {
+		return Commands.sequence();
 	}
 }

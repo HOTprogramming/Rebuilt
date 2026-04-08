@@ -2,22 +2,21 @@ package frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import frc.util.Kraken;
+import frc.util.KrakenWithCancoder;
+
 
 public class IntakeKraken {
-	public Kraken m_ExtendKraken = new Kraken(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.IntakeConfigs
-		.IntakeExtendConfigs(), "Intake", "Extend");
+	public KrakenWithCancoder m_ExtendKraken = new KrakenWithCancoder(IntakeConstants.kIntakeMotorIDExtend, IntakeConstants.kIntakeEncoderID, IntakeConstants.IntakeConfigs
+		.IntakeExtendConfigs(), IntakeConstants.IntakeConfigs.IntakeEncoderConfigs(), "Intake", "Extend");
 	public Kraken m_RollerKrakenLeader = new Kraken(IntakeConstants.kIntakeMotorIDRollerLeader, "rio", IntakeConstants.IntakeConfigs
 		.RollerConfigs(), "Intake", "Roller");
 	public Kraken m_RollerKrakenFollower = new Kraken(IntakeConstants.kIntakeMotorIDRollerFollower, "rio", IntakeConstants.IntakeConfigs
 		.RollerConfigs(), "Intake", "Roller");
-	public Kraken m_KickerKraken = new Kraken(IntakeConstants.kIntakeMotorIDKicker, "RF", IntakeConstants.IntakeConfigs
-		.KickerConfigs(), "Intake", "IntakeKicker");
 
 	private static IntakeKraken instance = null;
 
 	public IntakeKraken() {
 		m_ExtendKraken.setup();
-		m_KickerKraken.setup();
 		m_RollerKrakenLeader.setup();
 		m_RollerKrakenFollower.setup();
 		m_ExtendKraken.motor.getConfigurator().apply(IntakeConstants.IntakeExtendConfigs.MotionMagic);
@@ -34,7 +33,6 @@ public class IntakeKraken {
 
 	public void updateStats() {
 		m_ExtendKraken.update();
-		m_KickerKraken.update();
 		m_RollerKrakenLeader.update();
 		m_RollerKrakenFollower.update();
 	}
@@ -45,10 +43,6 @@ public class IntakeKraken {
 
 	public double getRetractPosition() {
 		return m_ExtendKraken.motor.getPosition().getValueAsDouble();
-	}
-
-	public double getKickerVelocity() {
-		return m_KickerKraken.motor.getVelocity().getValueAsDouble();
 	}
 
 	public void runPosition(double desiredRotations) {
@@ -64,17 +58,15 @@ public class IntakeKraken {
 		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 	}
 
-	public void runKickerVelocity(double desiredVelocity) {
-		m_KickerKraken.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
-	}
-
-	public void stop() {
+	public void stopRollers() {
 		m_RollerKrakenLeader.stop();
 		m_RollerKrakenFollower.stop();
-		m_KickerKraken.stop();
 	}
 
 	public void stopExtend() {
 		m_ExtendKraken.stop();
+	}
+	public double getTotalCurrent(){
+		return m_RollerKrakenFollower.getSupplyCurrent() + m_RollerKrakenLeader.getSupplyCurrent() + m_ExtendKraken.getSupplyCurrent();
 	}
 }

@@ -168,7 +168,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	public Command autoClimb() {
-		return run(() -> setElbowPosition(ClimberConstants.autoClimbPos)).until(isAutoClimbed());
+		return run(() -> setElbowPosition(ClimberConstants.autoClimbPos));
 	}
 
 	public Command stageThreeClimb() {

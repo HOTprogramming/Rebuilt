@@ -10,8 +10,8 @@ public class ClimberKraken {
 	public DigitalInput beambreak;
 
 
-	public Kraken m_climberKraken = new KrakenWithCancoder(ClimberConstants.kClimbermotorID, ClimberConstants.kClimbEncoder, ClimberConstants.ClimberConfigs
-		.elbowConfigs(), ClimberConstants.encoderConfigs, "Climber", "ClimberMotor");
+	public Kraken m_climberKraken = new Kraken(ClimberConstants.kClimbermotorID, ClimberConstants.ClimberConfigs
+		.elbowConfigs(), "Climber", "ClimberMotor");
 	public Kraken m_spinnerKraken = new Kraken(ClimberConstants.kClimberspinnerID, ClimberConstants.ClimberConfigs
 		.wristConfigs(), "Climber", "SpinnerMotor");
 
@@ -46,7 +46,7 @@ public class ClimberKraken {
 	}
 
 	public void setElbowPosition(double desiredRotations) {
-		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 0);
+		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicTorqueCurrentFOC, 0);
 	}
 	public void setElbowVelocity(double desiredRotations) {
 		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 1);
@@ -65,5 +65,9 @@ public class ClimberKraken {
 	public void stop(){
 		m_climberKraken.stop();
 		m_spinnerKraken.stop();
+	}
+
+		public double getTotalCurrent(){
+		return m_climberKraken.getSupplyCurrent() + m_spinnerKraken.getSupplyCurrent();
 	}
 }
