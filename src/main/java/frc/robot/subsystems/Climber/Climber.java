@@ -23,7 +23,7 @@ public class Climber extends SubsystemBase {
 		NetworkTable table = inst.getTable("HOT/Climber");
 
 		beambreakPub = table.getBooleanTopic("Beambreak").publish();
-		SmartDashboard.putBoolean("elbowclimber", Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
+		//SmartDashboard.putBoolean("elbowclimber", Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
 		
 		m_ClimbKraken.m_climberKraken.motor.setPosition(0);
 	}
@@ -32,9 +32,9 @@ public class Climber extends SubsystemBase {
 	public void periodic() {
 		m_ClimbKraken.updateStats();
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
-		if(this.getCurrentCommand() != null){
-			SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
-		}
+		// if(this.getCurrentCommand() != null){
+		// 	SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
+		// }
 	}
 
 	private void setElbowPosition(double targetPos) {
@@ -67,7 +67,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	private BooleanSupplier isDeployed() {
-		System.out.println("is deployed");
+		//System.out.println("is deployed");
 		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.deployedPos) < 0.01;
 	}
 
