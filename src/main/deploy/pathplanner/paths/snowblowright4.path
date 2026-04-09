@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.748730385164052,
-        "y": 3.510984308131241
+        "x": 8.528773181169758,
+        "y": 4.300242510699002
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.773606314919302,
-        "y": 3.262225010578744
+        "x": 8.553649110925008,
+        "y": 4.051483213146505
       },
       "isLocked": false,
       "linkedName": "lastshoot"
     },
     {
       "anchor": {
-        "x": 8.748730385164052,
-        "y": 2.035977175463623
+        "x": 8.528773181169758,
+        "y": 1.0954457831325295
       },
       "prevControl": {
-        "x": 8.748730385164052,
-        "y": 2.285977175463623
+        "x": 8.528773181169758,
+        "y": 1.3454457831325295
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,6 +29,10 @@
     }
   ],
   "rotationTargets": [
+    {
+      "waypointRelativePos": 0.27136929460581904,
+      "rotationDegrees": -90.0
+    },
     {
       "waypointRelativePos": 0.5927505330490325,
       "rotationDegrees": -90.0
@@ -45,6 +49,17 @@
         "type": "named",
         "data": {
           "name": "Go To Shoot"
+        }
+      }
+    },
+    {
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting"
         }
       }
     }
@@ -65,7 +80,7 @@
   "folder": "snowblowright",
   "idealStartingState": {
     "velocity": 3.0,
-    "rotation": -91.2730300200569
+    "rotation": -19.358994175694786
   },
   "useDefaultConstraints": true
 }
