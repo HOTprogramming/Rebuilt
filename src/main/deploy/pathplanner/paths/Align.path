@@ -60,7 +60,7 @@
   "folder": "Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 36.22494425552034
+    "rotation": -147.05078488340965
   },
   "useDefaultConstraints": false
 }

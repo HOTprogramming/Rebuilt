@@ -113,7 +113,6 @@ public class RobotContainer {
 		// 	)).onFalse(indexer.indexOffCommand())
 		// 	.onFalse(intake.completeStop().unless(driver.leftTrigger()))
 		// 	.onFalse(Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))); // delay hoodDown
-
 		driver.rightTrigger().whileTrue(
 			Commands.parallel(
 				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))
@@ -127,13 +126,12 @@ public class RobotContainer {
 						Commands.waitSeconds(0.2)
 					),
 					// Once the race ends (Ready OR Timed Out), run the motors
-					Commands.parallel(
-						indexer.indexOnCommand(),
-						intake.retractSlow().unless(driver.leftTrigger())
-					)
+					indexer.indexOnCommand()
+					// intake.retractSlow().unless(driver.leftTrigger())
 				)
-			).withName("shooting")
+			)
 		).onFalse(
+
 			Commands.parallel(
 				indexer.indexOffCommand(),
 				intake.completeStop().unless(driver.leftTrigger())

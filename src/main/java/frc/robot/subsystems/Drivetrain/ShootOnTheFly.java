@@ -15,8 +15,8 @@ public class ShootOnTheFly {
 
     private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
 
-    LinearFilter vxfilt = LinearFilter.movingAverage(8);
-    LinearFilter vyfilt = LinearFilter.movingAverage(8);
+    LinearFilter vxfilt = LinearFilter.movingAverage(4);
+    LinearFilter vyfilt = LinearFilter.movingAverage(4);
 
     private double turretAngle = 0;
     private double lookaheadToTargetDistance = 0;
@@ -71,6 +71,7 @@ public class ShootOnTheFly {
 		
         // Rotation2d turretRotation = goalTranslate2d.minus(lookaheadPos).getAngle();
 		Rotation2d turretRotation = goalTranslate2d.minus(RobotPos.getTranslation()).getAngle();
+		SmartDashboard.putNumber("distance to goal", goalTranslate2d.getDistance(RobotPos.getTranslation()));
 
         if (Alliance.Red == alliance) {
             turretAngle = turretRotation.getRadians() + Math.PI + TURRET_ROTATION_OFFSET; // v3 robot shoots backwards

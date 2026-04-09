@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
@@ -28,21 +29,23 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		hoodAngleMap.put(1.0, 1.0); 
 
-		hoodAngleMap.put(1.5, 2.5);
-		hoodAngleMap.put(2.0, 2.75);
-		hoodAngleMap.put(3.0, 3.85);
-		hoodAngleMap.put(4.0, 4.80);
-		hoodAngleMap.put(5.3, 7.0);
+		hoodAngleMap.put(2.0, 3.7);
+		hoodAngleMap.put(3.0, 5.1);
+		hoodAngleMap.put(4.0, 7.2);
+		hoodAngleMap.put(5.0, 8.5);
+		hoodAngleMap.put(5.3, 8.7);
 		// Passing
 		hoodAngleMap.put(5.35, 7.5); 
 		hoodAngleMap.put(17.0, 11.0);
 
-		shooterSpeedMap.put(1.0, 41.0);
-		shooterSpeedMap.put(2.0, 42.0);
-		shooterSpeedMap.put(3.0, 43.5);
-		shooterSpeedMap.put(4.0, 45.5);
-		shooterSpeedMap.put(4.0, 48.0);
-		shooterSpeedMap.put(5.3, 48.5);
+		shooterSpeedMap.put(1.0, 38.0);
+
+		shooterSpeedMap.put(2.0, 39.0);
+		shooterSpeedMap.put(3.0, 41.6);
+		shooterSpeedMap.put(4.0, 44.1);
+		shooterSpeedMap.put(5.0, 45.8);
+
+		shooterSpeedMap.put(5.3, 50.5);
 		//Passing
 		shooterSpeedMap.put(5.35, 41.0);
 		shooterSpeedMap.put(17.0, 95.0);
@@ -78,8 +81,8 @@ public class Shooter extends SubsystemBase {
 	@Override
 	public void periodic() {
 		mShooterKraken.update();
-		SmartDashboard.putNumber("target hood", targetHood);		
-		SmartDashboard.putNumber("target speed", targetSpeed);
+		// SmartDashboard.putNumber("target hood", targetHood);		
+		// SmartDashboard.putNumber("target speed", targetSpeed);
 
 	}
 
@@ -96,7 +99,7 @@ public class Shooter extends SubsystemBase {
 			if(targetSpeed != 0){
 				if(!RobotState.isManualMode()){
 					if(RobotState.getZone() == Zone.ALLIANCE) targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
-					else targetSpeed = ShooterConstants.kIdleSpeed;
+					else targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset) * ShooterConstants.kIdleSpeed;
 				}
 				mShooterKraken.runVelocity(targetSpeed);
 			} else {

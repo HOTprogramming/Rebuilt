@@ -25,7 +25,7 @@ public class ShooterConstants {
 	public static int kMotorIDLeftBottom = Constants.getRobot() == RobotType.COMPBOT ? 10 : 0;
 	public static int kMotorIDRightTop = Constants.getRobot() == RobotType.COMPBOT ? 11 : 0;
 	public static double kShootReduction = (1.0 / 1.0);
-	public static double kIdleSpeed = (20.0);
+	public static double kIdleSpeed = (0.4); // percent of target speed
 	public static double kShooterSpeed = (48.0);
 	public static double kTargetShootSpeed = kShooterSpeed;
 	public static double kShooterError = 2;

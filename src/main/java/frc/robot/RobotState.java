@@ -126,10 +126,10 @@ public class RobotState {
 
 		double totalSpeed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) / 5.0;
 
-		if (isInZoneRadius(trenches[0].getX(), trenches[0].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[1].getX(), trenches[1].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
-		else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		// if (isInZoneRadius(trenches[0].getX(), trenches[0].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		// else if (isInZoneRadius(trenches[1].getX(), trenches[1].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		// else if (isInZoneRadius(trenches[2].getX(), trenches[2].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
+		// else if (isInZoneRadius(trenches[3].getX(), trenches[3].getY(), trenchdodgeradius + totalSpeed)) shooterZone = Zone.TRENCH;
 	}
 
 	public static Zone getZone() {
