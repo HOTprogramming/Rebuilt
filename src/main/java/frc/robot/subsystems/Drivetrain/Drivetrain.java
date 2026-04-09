@@ -175,14 +175,6 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		}).finallyDo(() -> setControl(ROBOT_CENTRIC.withVelocityY(0)));
 	}
 
-	// public boolean isAtTargetAngle(){
-	// 	if (RobotState.color == Alliance.Red) {
-	// 		return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
-	// 	} else {			
-	// 		return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
-	// 	}
-	// }
-
 	public boolean isAtTargetAngle() {
 		Rotation2d currentRotation = getState().Pose.getRotation();
 		Rotation2d targetRotation = Rotation2d.fromRadians(RobotState.turretAngle);
