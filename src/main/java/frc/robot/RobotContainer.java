@@ -93,18 +93,18 @@ public class RobotContainer {
             ))
         );
 
-		// shooter.setDefaultCommand(shooter.hoodDown());
+		shooter.setDefaultCommand(shooter.hoodDown());
 
 		// shotmap tuning
-		driver.povUp().onTrue(climber.runOnce(() -> shooter.targetSpeed += 0.25));
-		driver.povDown().onTrue(climber.runOnce(() -> shooter.targetSpeed -= 0.25));
-		driver.povRight().onTrue(climber.runOnce(() -> shooter.targetHood += 0.25));
-		driver.povLeft().onTrue(climber.runOnce(() -> shooter.targetHood -= 0.25));
+		// driver.povUp().onTrue(climber.runOnce(() -> shooter.targetSpeed += 0.25));
+		// driver.povDown().onTrue(climber.runOnce(() -> shooter.targetSpeed -= 0.25));
+		// driver.povRight().onTrue(climber.runOnce(() -> shooter.targetHood += 0.25));
+		// driver.povLeft().onTrue(climber.runOnce(() -> shooter.targetHood -= 0.25));
 
-		driver.back().onTrue(shooter.runOnce(() -> {shooter.targetSpeed = 43; shooter.targetHood = 4;})).onTrue(shooter.shotmapTuning());
+		// driver.back().onTrue(shooter.runOnce(() -> {shooter.targetSpeed = 43; shooter.targetHood = 4;})).onTrue(shooter.shotmapTuning());
 
 
-		// driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
+		// // driver.rightTrigger().whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode())).
 		// 	whileTrue(shooter.autoAim())
 		// 	.whileTrue(
 		// 		Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()).withTimeout(.2).andThen(Commands.parallel(
