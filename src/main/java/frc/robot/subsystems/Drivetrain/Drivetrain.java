@@ -83,7 +83,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		poleAlignmentSub = objectDetection.getDoubleTopic("pipe_alignment").subscribe(0.0);
 		poleDistanceSub = objectDetection.getDoubleTopic("pipe_distance").subscribe(0.0);
 
-		SmartDashboard.putBoolean("climb/Use Cam Dist", false);
+		//SmartDashboard.putBoolean("climb/Use Cam Dist", false);
     }
 
     private void configureAutoBuilder() {
@@ -167,12 +167,27 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		}).finallyDo(() -> setControl(ROBOT_CENTRIC.withVelocityY(0)));
 	}
 
-	public boolean isAtTargetAngle(){
+	// public boolean isAtTargetAngle(){
+	// 	if (RobotState.color == Alliance.Red) {
+	// 		return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
+	// 	} else {			
+	// 		return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
+	// 	}
+	// }
+
+	public boolean isAtTargetAngle() {
+		Rotation2d currentRotation = getState().Pose.getRotation();
+		Rotation2d targetRotation = Rotation2d.fromRadians(RobotState.turretAngle);
+
+		// If Red Alliance, need to flip the target 180 degrees
 		if (RobotState.color == Alliance.Red) {
-			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
-		} else {			
-			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
+			targetRotation = targetRotation.plus(Rotation2d.fromDegrees(180));
 		}
+
+		// this calculates the shortest distance between angles
+		double angleError = Math.abs(currentRotation.minus(targetRotation).getDegrees());
+
+		return angleError < 5.0; // 5 degree tolerance
 	}
 
 final double CLIMBER_CHASSIS_OFFSET = 90.0; 	// Climber on front
