@@ -79,7 +79,7 @@
   "eventMarkers": [
     {
       "name": "Intake Out",
-      "waypointRelativePos": 0.05671843349087657,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -101,7 +101,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.5,
+    "maxVelocity": 6.0,
     "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -118,5 +118,5 @@
     "velocity": 0,
     "rotation": 88.40885972880542
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

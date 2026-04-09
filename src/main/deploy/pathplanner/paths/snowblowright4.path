@@ -42,6 +42,17 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Stop Shooting",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting"
+        }
+      }
+    },
+    {
       "name": "Go To Shoot",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": 1.0,
@@ -53,19 +64,19 @@
       }
     },
     {
-      "name": "Stop Shooting",
+      "name": "Intake Out",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Stop Shooting"
+          "name": "Intake Out"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.5,
+    "maxVelocity": 6.0,
     "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -82,5 +93,5 @@
     "velocity": 3.0,
     "rotation": -19.358994175694786
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
