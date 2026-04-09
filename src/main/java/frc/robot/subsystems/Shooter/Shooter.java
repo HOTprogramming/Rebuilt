@@ -1,8 +1,10 @@
 package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
@@ -18,6 +20,10 @@ public class Shooter extends SubsystemBase {
 	public double targetHood = 0;
 
 	public double shotMapOffset = -0.15;
+
+	private NetworkTableEntry entryTuningMode;
+	private NetworkTableEntry entryHoodAngle;
+	private NetworkTableEntry entryWheelSpeed; 
 
 	public Shooter() {
 		hoodAngleMap.put(1.0, 1.0); 
@@ -38,6 +44,25 @@ public class Shooter extends SubsystemBase {
 		//Passing
 		shooterSpeedMap.put(5.35, 41.0);
 		shooterSpeedMap.put(17.0, 95.0);
+
+		// Mods to support shotmap tuning using Advantage Scope 
+		//Get the default instance of Network table 
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+		//Next get Shooter Table 
+		NetworkTable table = inst.getTable("HOT/Shooter/Shotmap");
+        
+		//Setup fields for update from Advantage Scope 
+		entryTuningMode = table.getEntry("Shotmap Tuning Mode");
+		entryHoodAngle = table.getEntry("Hood Rotations");
+		entryWheelSpeed = table.getEntry("Wheel Speed");
+		
+		// Write initial values
+        entryHoodAngle.setDouble(0.00);
+        entryWheelSpeed.setDouble(0.00); 
+		entryTuningMode.setBoolean(false);
+		//****End of Shotmap Mods  */
+
 	}
 
 	public double getShooterSpeed() {
@@ -99,6 +124,20 @@ public class Shooter extends SubsystemBase {
 					targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
 				}
 			}
+
+			//Mods to support shotmap tuning within Advantage Scope
+			boolean boolTuningMode = entryTuningMode.getBoolean(false);
+			//If user has turned on tuning mode by setting Advantage Scope boolean to true 
+			if(boolTuningMode) {
+				//get the values from Advantage Scope
+				targetHood = entryHoodAngle.getDouble(0.0);
+				targetSpeed = entryWheelSpeed.getDouble(0.0);
+
+				System.out.println("--- Changing Hood value to: "+targetHood);
+				System.out.println("--- Changing Wheel Speed to: "+targetSpeed);
+			}
+			//End of Shotmap Mods 
+
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
 		});
