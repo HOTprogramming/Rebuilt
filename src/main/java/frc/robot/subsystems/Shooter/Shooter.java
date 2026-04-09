@@ -108,14 +108,6 @@ public class Shooter extends SubsystemBase {
 		});
 	}
 
-	public Command shotmapTuning() {
-		return run(() -> {
-			mShooterKraken.runPosition(targetHood);
-			mShooterKraken.runVelocity(targetSpeed);
-		});
-	}
-
-
 	public Command autoAim() {
 		return run(() -> {
 			RobotState.isShooting = true;

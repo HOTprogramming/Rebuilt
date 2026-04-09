@@ -78,9 +78,6 @@ public class ShootOnTheFly {
         } else {
             turretAngle = turretRotation.getRadians() + TURRET_ROTATION_OFFSET;
         }
-		if (turretAngle > Math.PI) {
-			turretAngle -= 2 * Math.PI;
-		}
 
         SmartDashboard.putNumber("lookAheadDistance	", lookaheadToTargetDistance);
     }
