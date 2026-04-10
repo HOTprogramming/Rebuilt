@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.011226818830243,
-        "y": 2.8122967189728967
+        "x": 7.299600570613409,
+        "y": 2.825235378031384
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.803214245245783,
-        "y": 2.6736216699165882
+        "x": 7.091587997028949,
+        "y": 2.6865603289750757
       },
       "isLocked": false,
       "linkedName": "IntakePoint-1Pass"
@@ -46,12 +46,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8121095627102344,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.9509594882729206,
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 1.7569296375266454,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [

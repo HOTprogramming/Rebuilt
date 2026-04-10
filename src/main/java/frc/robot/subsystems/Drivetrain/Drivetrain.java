@@ -226,14 +226,14 @@ public Command driveToPoleCoordinate_autoflip() {
 		// targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
 		double camOffset = -0.11; // Default camera offset in meters
 
-        double targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3) + camOffset + rotationXOffset) * approachDirection;
+        double targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get() + camOffset, -0.6, 0.6) + rotationXOffset) * approachDirection;
 
         Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
 		
 		SmartDashboard.putNumber("climb/cmd_rotationXOffset", rotationXOffset);
 		SmartDashboard.putNumber("climb/cmd_camOffset", camOffset);
 		SmartDashboard.putNumber("climb/cmd_currPoseX", currentPose.getX());
-		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3)) );
+		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.6, 0.6)) );
 		SmartDashboard.putNumber("climb/cmd_TargetDistance", TARGET_DISTANCE);
         
 		// Telemetry & Vision off while docking
@@ -268,7 +268,7 @@ public Command driveToPoleCoordinate_autoflip() {
                 wiggle,
 				drive,
                 runOnce(() -> iAmDockingLeaveMeAlone = false))
-			.onlyIf(() -> Math.abs(poleAlignmentSub.get()) < 0.3 && poleDistanceSub.get() > 0.5 && poleDistanceSub.get() < 1.0);
+			.onlyIf(() -> Math.abs(poleAlignmentSub.get()) < 0.6 && poleDistanceSub.get() > 0.5 && poleDistanceSub.get() < 1.0);
                 
     }, Set.of(this));
 }
