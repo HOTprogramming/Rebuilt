@@ -32,11 +32,13 @@ public class Intake extends SubsystemBase {
 				.apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(64)
 					.withMotionMagicCruiseVelocity(64));
-		}), new WaitCommand(.02), runOnce(() -> {
-			mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition);
-			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
-		}));
+		}), new WaitCommand(0.2), 
+		runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition)),
+		run(() -> {}).until(isExtended()),  //added ????
+		runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed))
+		);
 	}
+
 
 	public Command extendShort() {
 		return Commands.sequence(runOnce(() -> {
