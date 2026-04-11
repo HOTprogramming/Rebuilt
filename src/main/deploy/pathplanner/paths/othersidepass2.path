@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.603,
-        "y": 5.597
+        "x": 2.5438795180722895,
+        "y": 5.521168674698795
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5512453637660477,
-        "y": 5.959282453637661
+        "x": 2.492124881838337,
+        "y": 5.883451128336455
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "fullpass end"
     },
     {
       "anchor": {
@@ -241,7 +241,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 144.16234704572176
+    "rotation": 143.33
   },
   "useDefaultConstraints": true
 }

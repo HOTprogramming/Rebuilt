@@ -21,11 +21,11 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.155;
-	public static double kShortDeployedPosition = 0.25;
+	public static double kDeployedPosition = 0.251;
+	public static double kShortDeployedPosition = 0.25; // not used
 
-	public static double kRetractPosition = 0.67; // 6 7 !!!
-	public static double kRetractPositionAgitate = 0.59;
+	public static double kRetractPosition = 0.744;
+	public static double kRetractPositionAgitate = 0.625;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
 
@@ -33,7 +33,7 @@ public class IntakeConstants {
 	public static double agitateCurrentTime = 0.2;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 110.0;
+	public static double kIntakeSpeed = 90.0;
 	public static double kKickerSpeed = 65.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 47 : 0;
@@ -58,32 +58,32 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(3)
+			.withKP(5)
 			.withKI(0)
 			.withKD(0)
 			.withKS(4)
-			.withKV(0.105));
+			.withKV(0.1));
 
 		public static final TalonFXConfiguration autoRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(120)
+			.withStatorCurrentLimit(100)
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(120)
+			.withSupplyCurrentLimit(100)
 			.withSupplyCurrentLimitEnable(true)
 			.withSupplyCurrentLowerLimit(80)
 			.withSupplyCurrentLowerTime(1.50))    
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(120) 
-			.withPeakReverseTorqueCurrent(-120))
+			.withPeakForwardTorqueCurrent(100) 
+			.withPeakReverseTorqueCurrent(-100))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(3)
+			.withKP(5)
 			.withKI(0)
 			.withKD(0)
 			.withKS(4)
-			.withKV(0.2)); // 0.105
+			.withKV(0.1)); // 0.105
 
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
