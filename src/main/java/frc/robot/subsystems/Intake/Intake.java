@@ -68,14 +68,18 @@ public class Intake extends SubsystemBase {
 		return Commands.sequence(
 			Commands.waitSeconds(0.0),
 			runOnce(() -> {
-			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
-					.withMotionMagicAcceleration(3)
-					.withMotionMagicCruiseVelocity(4));
-		}), new WaitCommand(.02), runOnce(() -> {
-			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
-			mIntakeKraken.stopRollers();
-		})).withName("agitate");
+				.withMotionMagicAcceleration(3)
+				.withMotionMagicCruiseVelocity(4));
+			}), 
+			new WaitCommand(.02), 
+			runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate)),
+			run(() -> {}).until(isAgitateRetracted()),
+			runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> mIntakeKraken.stopRollers())
+		);
 	}
 
 
