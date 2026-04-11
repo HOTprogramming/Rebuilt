@@ -117,7 +117,7 @@ public class RobotContainer {
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
 				),
-				Commands.waitSeconds(0.5),
+				Commands.waitSeconds(0.25),
 				intake.retractSlow().unless(driver.leftTrigger())
 			)
 		).onFalse(

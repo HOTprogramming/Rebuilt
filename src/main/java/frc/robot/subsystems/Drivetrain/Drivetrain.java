@@ -130,8 +130,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	public void aim(double driveX, double driveY) {
 		setControl(FIELD_CENTRIC_FACING_ANGLE
-			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * .25)
-			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * .25)
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * .5)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * .5)
 			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 	}
 

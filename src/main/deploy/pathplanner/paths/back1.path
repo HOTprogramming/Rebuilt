@@ -46,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8230277185501061,
+      "waypointRelativePos": 0.5202558635394456,
       "rotationDegrees": 180.0
     },
     {
@@ -79,17 +79,6 @@
         "type": "named",
         "data": {
           "name": "Go To Shoot"
-        }
-      }
-    },
-    {
-      "name": "Intake Stop",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Intake Stop"
         }
       }
     }

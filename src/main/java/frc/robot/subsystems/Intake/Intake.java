@@ -66,7 +66,6 @@ public class Intake extends SubsystemBase {
 
 	public Command retractSlow() {
 		return Commands.sequence(
-			Commands.waitSeconds(0.0),
 			runOnce(() -> {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
@@ -75,7 +74,7 @@ public class Intake extends SubsystemBase {
 			}), 
 			new WaitCommand(.02), 
 			runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate)),
-			run(() -> {}).until(isAgitateRetracted()),
+			run(() -> {}).until(pulseRollers()).withTimeout(1.0),
 			runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)),
 			Commands.waitSeconds(0.25),
 			runOnce(() -> mIntakeKraken.stopRollers())
@@ -140,8 +139,7 @@ public class Intake extends SubsystemBase {
 	}
 
 	public BooleanSupplier turnOnRollers() {
-		return () -> Math.abs(mIntakeKraken.getExtendPosition()
-			- IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance * 10;
+		return () -> mIntakeKraken.getExtendPosition() < 0.28;
 	}
 
 	public BooleanSupplier isRetracted() {
@@ -153,6 +151,11 @@ public class Intake extends SubsystemBase {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition()
 			- IntakeConstants.kRetractPositionAgitate) < IntakeConstants.kRetractTolerance;
 	}
+
+	public BooleanSupplier pulseRollers() {
+		return () -> mIntakeKraken.getExtendPosition() > 0.5;
+	}
+
 
 	public Boolean IsIntakeExtended() {
 		return Math.abs(mIntakeKraken.getExtendPosition()
