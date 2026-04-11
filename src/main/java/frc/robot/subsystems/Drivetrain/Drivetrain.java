@@ -67,6 +67,9 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
 
+	private final SwerveRequest.Idle IDLE = new SwerveRequest.Idle();
+
+
     public final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed, this);
 	
 	private DoubleSubscriber poleAlignmentSub;
@@ -267,7 +270,9 @@ public Command driveToPoleCoordinate_autoflip() {
 			runPathFinding(finalTarget),
                 wiggle,
 				drive,
+				idleDrive(),
                 runOnce(() -> iAmDockingLeaveMeAlone = false))
+			.withName("auto dock")
 			.onlyIf(() -> Math.abs(poleAlignmentSub.get()) < 0.6 && poleDistanceSub.get() > 0.5 && poleDistanceSub.get() < 1.0);
                 
     }, Set.of(this));
@@ -281,6 +286,10 @@ public Command driveToPoleCoordinate_autoflip() {
                 .withRotationalRate(0)
             );
         }, this).withTimeout(0.4);
+	}
+
+	public Command idleDrive() {
+		return runOnce(() -> setControl(IDLE));
 	}
 
 	public Command runPathFinding(Pose2d target) {

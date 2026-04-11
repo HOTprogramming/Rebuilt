@@ -66,7 +66,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Stop Shooting", 
 			Commands.parallel(
 				indexer.indexOffCommand(),
-				shooter.hoodDown()	
+				shooter.hoodDown()
 			)
 		);
 		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
@@ -182,14 +182,14 @@ public class RobotContainer {
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
-		climber.stow(), 
+		climber.autoClimb(), 
 		shooter.PresetTrench(),
         RobotState::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
 		operator.y().onTrue(
     	Commands.either(
-		climber.teleopDeploy(), 
+		climber.deploy(), 
 		shooter.PresetBatter(),
         RobotState::isClimbMode));
 

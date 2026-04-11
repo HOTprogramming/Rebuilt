@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
 					.withMotionMagicCruiseVelocity(64));
 		}), new WaitCommand(0.2), 
 		runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition)),
-		run(() -> {}).until(isExtended()),  //added ????
+		run(() -> {}).until(turnOnRollers()),  //added ????
 		runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed))
 		);
 	}
@@ -133,6 +133,11 @@ public class Intake extends SubsystemBase {
 	public BooleanSupplier isExtended() {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition()
 			- IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance;
+	}
+
+	public BooleanSupplier turnOnRollers() {
+		return () -> Math.abs(mIntakeKraken.getExtendPosition()
+			- IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance * 5;
 	}
 
 	public BooleanSupplier isRetracted() {

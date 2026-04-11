@@ -24,7 +24,7 @@ public class IntakeConstants {
 	public static double kDeployedPosition = 0.155;
 	public static double kShortDeployedPosition = 0.25;
 
-	public static double kRetractPosition = 0.66;
+	public static double kRetractPosition = 0.67; // 6 7 !!!
 	public static double kRetractPositionAgitate = 0.59;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
