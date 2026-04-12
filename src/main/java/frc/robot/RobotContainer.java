@@ -125,9 +125,10 @@ public class RobotContainer {
 						Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						Commands.waitSeconds(0.2)
 					),
-					// Once the race ends (Ready OR Timed Out), run the motors
+					// Shot timer starts just before kicker so hood offset tracks
+					// from the moment kicker wheels spin up under load.
+					shooter.startShotTimer(),
 					Commands.parallel(
-						shooter.startShotTimer(),
 						indexer.indexOnCommand(),
 						intake.retractSlow().unless(driver.leftTrigger())
 					)
