@@ -3,11 +3,14 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Right 1 Pass",
-    "Right 2 Pass",
+    "3 Pass",
     "Climb",
     "Left 1 Pass",
-    "Oh No"
+    "left 3 pass",
+    "Oh No",
+    "Right 1 Pass",
+    "Right 2 Pass",
+    "Snowblow"
   ],
   "autoFolders": [
     "Old Auto"
