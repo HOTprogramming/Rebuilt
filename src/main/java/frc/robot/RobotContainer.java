@@ -32,7 +32,7 @@ public class RobotContainer {
 	public final Index indexer = new Index();
 	public final Climber climber = new Climber();
 	public final Intake intake = new Intake();
-	public final Shooter shooter = new Shooter();
+	public final Shooter shooter = new Shooter(indexer);
 
 	PIDController theta = new PIDController(5, 0, 0);
 
