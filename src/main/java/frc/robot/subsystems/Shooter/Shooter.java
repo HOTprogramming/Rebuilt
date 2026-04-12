@@ -2,6 +2,7 @@ package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,6 +31,13 @@ public class Shooter extends SubsystemBase {
 
 	// Reference to the indexer so we can read kicker wheel speed for hood offset
 	private Index indexer;
+
+	// Tracks kicker speed between loop cycles to compute rate of change (rps/sec).
+	// Used by the anticipation term in the hood offset — if kicker is decelerating
+	// (e.g. balls entering hopper), we increase the offset before the speed actually
+	// drops below threshold. If kicker is accelerating (recovering), we back off early.
+	private double prevKickerSpeed = 0;
+	private double prevKickerTimestamp = 0;
 
 	public Shooter(Index indexer) {
 		this.indexer = indexer;
@@ -78,6 +86,10 @@ public class Shooter extends SubsystemBase {
 	public Command hoodDown(){
 		return run(() -> {
 			RobotState.isShooting = false;
+			// Reset kicker tracking so the anticipation term doesn't carry stale
+			// data into the next shot (e.g. a big speed delta from the previous release)
+			prevKickerSpeed = 0;
+			prevKickerTimestamp = 0;
 			if(!RobotState.isManualMode()){
 				targetHood = 0;
 				mShooterKraken.runPosition(targetHood);
@@ -121,16 +133,49 @@ public class Shooter extends SubsystemBase {
 
 				// Kicker-speed hood offset: when kicker wheels are slower than expected
 				// (full hopper pressure, shoot-on-the-move ball loading), raise the hood
-				// to compensate for the lower ball exit velocity. The offset is proportional
-				// to how far below the threshold the kicker speed has dropped, scaled by
-				// distance (far shots need more compensation) and the overall gain knob.
-				// See ShooterConstants for tuning guide.
+				// to compensate for the lower ball exit velocity. The offset has two parts:
+				//
+				// 1. Proportional term (deficit): based on how far below threshold the
+				//    kicker speed is RIGHT NOW. Larger deficit = more hood offset.
+				//
+				// 2. Anticipation term (derivative): based on the rate of change of kicker
+				//    speed. If the kicker is decelerating (speed dropping, e.g. balls pressing
+				//    in), we add hood offset BEFORE the speed actually drops below threshold.
+				//    If the kicker is accelerating (recovering), we reduce the offset early
+				//    so the hood is already coming back down as the kicker catches up.
+				//    This prevents the hood from always lagging behind the kicker state.
+				//
+				// Both terms are scaled by distance (far shots need more compensation)
+				// and their respective gain constants. See ShooterConstants for tuning guide.
 				if (ShooterConstants.kHoodOffsetEnabled) {
-					double kickerRatio = indexer.getAverageKickerSpeed() / ShooterConstants.kKickerNominalSpeed;
+					double kickerSpeed = indexer.getAverageKickerSpeed();
+					double kickerRatio = kickerSpeed / ShooterConstants.kKickerNominalSpeed;
+					double maxOffset = hoodKickerOffsetMap.get(distance);
+					double hoodOffset = 0;
+
+					// Proportional term: offset based on current kicker speed deficit
 					if (kickerRatio < ShooterConstants.kKickerSpeedThreshold) {
 						double deficit = (ShooterConstants.kKickerSpeedThreshold - kickerRatio) / ShooterConstants.kKickerSpeedThreshold;
-						targetHood += hoodKickerOffsetMap.get(distance) * deficit * ShooterConstants.kHoodOffsetScale;
+						hoodOffset += maxOffset * deficit * ShooterConstants.kHoodOffsetScale;
 					}
+
+					// Anticipation term: offset based on kicker acceleration (rps/sec).
+					// Negative acceleration (decelerating) adds hood; positive (recovering) subtracts.
+					double now = Timer.getFPGATimestamp();
+					double dt = now - prevKickerTimestamp;
+					if (dt > 0 && prevKickerTimestamp > 0) {
+						double kickerAccel = (kickerSpeed - prevKickerSpeed) / dt;
+						// Normalize acceleration by nominal speed so the gain constant
+						// is independent of the actual kicker speed value
+						double normalizedAccel = kickerAccel / ShooterConstants.kKickerNominalSpeed;
+						// Negative accel (decelerating) → positive offset (more hood)
+						hoodOffset += -normalizedAccel * maxOffset * ShooterConstants.kKickerAnticipationGain;
+					}
+					prevKickerSpeed = kickerSpeed;
+					prevKickerTimestamp = now;
+
+					// Clamp: never subtract hood below the base map value, and cap at max offset
+					targetHood += Math.max(0, Math.min(hoodOffset, maxOffset));
 				}
 			}
 			mShooterKraken.runPosition(targetHood);
