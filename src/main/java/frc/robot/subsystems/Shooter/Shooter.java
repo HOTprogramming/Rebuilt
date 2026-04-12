@@ -7,19 +7,32 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.Zone;
+import frc.robot.subsystems.Indexer.Index;
 
 public class Shooter extends SubsystemBase {
 	public final ShooterKraken mShooterKraken = new ShooterKraken();
 
 	private InterpolatingDoubleTreeMap hoodAngleMap = new InterpolatingDoubleTreeMap();
 	private InterpolatingDoubleTreeMap shooterSpeedMap =  new InterpolatingDoubleTreeMap();
+	// Per-distance max hood offset (degrees) when kicker wheels are bogged down.
+	// Close shots barely need compensation; far shots are much more sensitive
+	// to reduced ball feed speed because exit velocity matters more at range.
+	// These values represent the MAX offset at full deficit — the actual offset
+	// is scaled by how far below threshold the kicker speed has dropped.
+	// Tune these at the field by watching shot accuracy at each distance
+	// with a full vs. empty hopper.
+	private InterpolatingDoubleTreeMap hoodKickerOffsetMap = new InterpolatingDoubleTreeMap();
 
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
 	public double shotMapOffset = -0.15;
 
-	public Shooter() {
+	// Reference to the indexer so we can read kicker wheel speed for hood offset
+	private Index indexer;
+
+	public Shooter(Index indexer) {
+		this.indexer = indexer;
 		hoodAngleMap.put(1.0, 1.0); 
 		hoodAngleMap.put(1.5, 2.5);
 		hoodAngleMap.put(2.0, 2.85);
@@ -38,6 +51,12 @@ public class Shooter extends SubsystemBase {
 		//Passing
 		shooterSpeedMap.put(5.35, 41.0);
 		shooterSpeedMap.put(17.0, 95.0);
+
+		hoodKickerOffsetMap.put(1.0, 0.0);
+		hoodKickerOffsetMap.put(2.0, 0.25);
+		hoodKickerOffsetMap.put(3.0, 0.5);
+		hoodKickerOffsetMap.put(4.0, 0.75);
+		hoodKickerOffsetMap.put(5.3, 1.0);
 	}
 
 	public double getShooterSpeed() {
@@ -90,13 +109,28 @@ public class Shooter extends SubsystemBase {
 		return run(() -> {
 			RobotState.isShooting = true;
 			if(!RobotState.isManualMode()){
+				double distance;
 				if(DriverStation.isAutonomous()){
-					double distance = RobotState.pose.getTranslation().getDistance(RobotState.target);
-					targetHood = hoodAngleMap.get(distance);
-					targetSpeed = shooterSpeedMap.get(distance);
+					distance = RobotState.pose.getTranslation().getDistance(RobotState.target);
 				} else {
-					targetHood = hoodAngleMap.get(RobotState.lookAheadDistance + shotMapOffset);
-					targetSpeed = shooterSpeedMap.get(RobotState.lookAheadDistance + shotMapOffset);
+					distance = RobotState.lookAheadDistance + shotMapOffset;
+				}
+
+				targetHood = hoodAngleMap.get(distance);
+				targetSpeed = shooterSpeedMap.get(distance);
+
+				// Kicker-speed hood offset: when kicker wheels are slower than expected
+				// (full hopper pressure, shoot-on-the-move ball loading), raise the hood
+				// to compensate for the lower ball exit velocity. The offset is proportional
+				// to how far below the threshold the kicker speed has dropped, scaled by
+				// distance (far shots need more compensation) and the overall gain knob.
+				// See ShooterConstants for tuning guide.
+				if (ShooterConstants.kHoodOffsetEnabled) {
+					double kickerRatio = indexer.getAverageKickerSpeed() / ShooterConstants.kKickerNominalSpeed;
+					if (kickerRatio < ShooterConstants.kKickerSpeedThreshold) {
+						double deficit = (ShooterConstants.kKickerSpeedThreshold - kickerRatio) / ShooterConstants.kKickerSpeedThreshold;
+						targetHood += hoodKickerOffsetMap.get(distance) * deficit * ShooterConstants.kHoodOffsetScale;
+					}
 				}
 			}
 			mShooterKraken.runPosition(targetHood);

@@ -41,4 +41,12 @@ public class Index extends SubsystemBase {
 	public Command index() {
 		return Commands.sequence();
 	}
+
+	/**
+	 * Returns the average kicker wheel speed (rps). Used by the shooter's
+	 * kicker-speed-based hood offset to detect when balls are loading slowly.
+	 */
+	public double getAverageKickerSpeed() {
+		return m_IndexKraken.getAverageKickerSpeed();
+	}
 }

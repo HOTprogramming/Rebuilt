@@ -47,6 +47,36 @@ public class ShooterConstants {
 	public static double kHoodEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? .414 : 0.0;
 	public static double kHoodReduction = (1.0 / 1.0);
 
+	// --- Kicker-Speed Hood Offset ---
+	// Dynamically raises the hood angle when kicker wheels are bogged down.
+	// When the hopper is full, ball pressure slows the kicker wheels, reducing
+	// the speed at which balls reach the flywheel. Slower ball feed means lower
+	// exit velocity, so shots fall short. This also happens during shoot-on-the-move
+	// when varying numbers of balls are being pulled through the indexer.
+	//
+	// How it works:
+	//   1. Read average kicker speed and compute kickerRatio = actual / kKickerNominalSpeed
+	//   2. If kickerRatio < kKickerSpeedThreshold, compute a "deficit" fraction:
+	//        deficit = (kKickerSpeedThreshold - kickerRatio) / kKickerSpeedThreshold
+	//      This is 0.0 at threshold and approaches 1.0 as kicker speed drops to zero.
+	//   3. Look up the distance-based max offset from hoodStartOffsetMap (in Shooter.java)
+	//   4. Final offset = hoodStartOffsetMap.get(distance) * deficit * kHoodOffsetScale
+	//
+	// Tuning guide:
+	//   - kKickerNominalSpeed: expected kicker speed at full performance (rps).
+	//     Start with the kicker command speed and lower if the wheels never actually reach it.
+	//   - kKickerSpeedThreshold: ratio (0–1) below which offset activates.
+	//     0.95 means offset starts when kicker drops below 95% of nominal.
+	//     Lower = less sensitive, higher = activates sooner.
+	//   - kHoodOffsetScale: overall gain multiplier on the offset.
+	//     1.0 = use the map values directly at full deficit. Increase if shots still fall short.
+	//   - hoodStartOffsetMap (in Shooter.java): per-distance max offset values.
+	//     Close shots need little offset; far shots need more.
+	public static boolean kHoodOffsetEnabled = false;
+	public static double kKickerNominalSpeed = 110.0; // rps — matches IndexConstants.kickerSpeed
+	public static double kKickerSpeedThreshold = 0.95; // ratio — offset activates below this
+	public static double kHoodOffsetScale = 1.0; // multiplier on the final hood offset
+
 	public static CANBus canbus = new CANBus(Constants.canName);
 
 	public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()

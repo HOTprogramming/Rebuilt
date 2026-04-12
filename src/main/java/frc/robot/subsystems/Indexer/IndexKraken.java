@@ -56,4 +56,15 @@ public class IndexKraken {
 		public double getTotalCurrent(){
 		return m_floorKraken.getSupplyCurrent() + m_leftKickKraken.getSupplyCurrent() + m_rightKickKraken.getSupplyCurrent();
 	}
+
+	/**
+	 * Returns the average velocity (rps) of the left and right kicker wheels.
+	 * Used by the shooter's hood offset logic to detect when kicker wheels are
+	 * bogged down (e.g. full hopper pressure, shoot-on-the-move) and compensate
+	 * by raising the hood angle.
+	 */
+	public double getAverageKickerSpeed() {
+		return (m_leftKickKraken.motor.getVelocity().getValueAsDouble()
+			+ m_rightKickKraken.motor.getVelocity().getValueAsDouble()) / 2.0;
+	}
 }
