@@ -70,8 +70,8 @@ public class ShootOnTheFly {
             lookaheadPos = releasePos.plus(new Translation2d(offsetX, offsetY));
 			//gets shot distance from the virtual shooting point to the target
 			//this updated distance gets fed back into the beginning of the loop to estimate new ToF
-            // lookaheadToTargetDistance = goalTranslate2d.getDistance(lookaheadPos);
-			lookaheadToTargetDistance = goalTranslate2d.getDistance(RobotPos.getTranslation());
+            lookaheadToTargetDistance = goalTranslate2d.getDistance(lookaheadPos);
+			// lookaheadToTargetDistance = goalTranslate2d.getDistance(RobotPos.getTranslation());
         }
 
         // Aim from the VIRTUAL shooting position to the ACTUAL target
