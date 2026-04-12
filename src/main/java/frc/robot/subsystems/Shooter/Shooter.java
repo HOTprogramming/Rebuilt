@@ -91,14 +91,12 @@ public class Shooter extends SubsystemBase {
 	}
 
 	/**
-	 * Call when the indexer starts feeding. Starts the shot-start timer so the
-	 * initial hood bump activates for kShotStartDuration seconds.
+	 * Direct method to start the shot timer — called from indexOnCommand() in the
+	 * same runOnce as the kicker start so they fire on the exact same loop cycle.
 	 */
-	public Command startShotTimer() {
-		return runOnce(() -> {
-			shotStartTimer.restart();
-			shotStartActive = true;
-		});
+	public void startShotTimerNow() {
+		shotStartTimer.restart();
+		shotStartActive = true;
 	}
 
 	public Command hoodDown(){

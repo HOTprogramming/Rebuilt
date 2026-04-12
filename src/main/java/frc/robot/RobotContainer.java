@@ -125,11 +125,8 @@ public class RobotContainer {
 						Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						Commands.waitSeconds(0.2)
 					),
-					// Shot timer starts just before kicker so hood offset tracks
-					// from the moment kicker wheels spin up under load.
-					shooter.startShotTimer(),
 					Commands.parallel(
-						indexer.indexOnCommand(),
+						indexer.indexOnCommand(shooter),
 						intake.retractSlow().unless(driver.leftTrigger())
 					)
 				)
