@@ -203,6 +203,7 @@ public class Shooter extends SubsystemBase {
 					targetHood += Math.max(0, Math.min(hoodOffset, maxOffset));
 				}
 			}
+			
 
 			//Mods to support shotmap tuning within Advantage Scope
 			boolean boolTuningMode = entryTuningMode.getBoolean(false);
