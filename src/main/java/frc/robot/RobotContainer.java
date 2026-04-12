@@ -107,7 +107,11 @@ public class RobotContainer {
 						Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						Commands.waitSeconds(0.2)
 					),
-					indexer.indexOnCommand()
+					// Once the race ends (Ready OR Timed Out), run the motors
+					Commands.parallel(
+						shooter.startShotTimer(),
+						indexer.indexOnCommand()
+					)
 				)
 			)
 		).whileTrue( // keep agitate seperate so left trigger doesnt interrupt the shoot command

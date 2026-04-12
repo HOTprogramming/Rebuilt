@@ -95,6 +95,15 @@ public class ShooterConstants {
 	public static double kHoodOffsetScale = 1.0; // gain on the proportional (deficit) term
 	public static double kKickerAnticipationGain = 0.5; // gain on the derivative (anticipation) term
 
+	// --- Shot Start Bump ---
+	// A small fixed hood boost applied for the first kShotStartDuration seconds
+	// after the indexer starts feeding. The very first ball always arrives at the
+	// flywheel slower than steady-state because the kicker is just spinning up
+	// under load. This happens too fast for the kicker speed reading to catch,
+	// so we apply a brief fixed bump to cover it.
+	public static double kShotStartDuration = 0.1; // seconds — how long the bump lasts
+	public static double kShotStartHoodBump = 0.25; // hood angle units — extra hood during bump
+
 	public static CANBus canbus = new CANBus(Constants.canName);
 
 	public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()
