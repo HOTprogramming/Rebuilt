@@ -185,6 +185,7 @@ public class RobotContainer {
 			RobotState::isClimbMode
 		));
 
+		
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(

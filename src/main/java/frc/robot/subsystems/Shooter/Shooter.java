@@ -59,11 +59,11 @@ public class Shooter extends SubsystemBase {
 
 		hoodAngleMap.put(1.0, 1.0); 
 
-		hoodAngleMap.put(2.0, 3.95); //3.7
-		hoodAngleMap.put(3.0, 5.75); //5.5
-		hoodAngleMap.put(4.0, 7.35); //7.1
-		hoodAngleMap.put(5.0, 8.65); //8.4
-		hoodAngleMap.put(5.3, 8.95); //8.7
+		hoodAngleMap.put(2.0, 3.7); //3.7
+		hoodAngleMap.put(3.0, 5.5); //5.5
+		hoodAngleMap.put(4.0, 7.1); //7.1
+		hoodAngleMap.put(5.0, 8.4); //8.4
+		hoodAngleMap.put(5.3, 8.7); //8.7
 		// Passing
 		hoodAngleMap.put(5.35, 7.5); 
 		hoodAngleMap.put(17.0, 15.0); //11.0

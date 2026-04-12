@@ -101,8 +101,8 @@ public class ShooterConstants {
 	// flywheel slower than steady-state because the kicker is just spinning up
 	// under load. This happens too fast for the kicker speed reading to catch,
 	// so we apply a brief fixed bump to cover it.
-	public static double kShotStartDuration = 0.2; // seconds — how long the bump lasts
-	public static double kShotStartHoodBump = 0.25; // hood angle units — extra hood during bump
+	public static double kShotStartDuration = 0.5; // seconds — how long the bump lasts
+	public static double kShotStartHoodBump = 2; // hood angle units — extra hood during bump
 
 	public static CANBus canbus = new CANBus(Constants.canName);
 

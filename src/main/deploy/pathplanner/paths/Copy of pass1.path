@@ -82,7 +82,7 @@
   "eventMarkers": [
     {
       "name": "Intake Out",
-      "waypointRelativePos": 0.4159351789331485,
+      "waypointRelativePos": 0.29578163771712684,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -108,7 +108,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 75.0
+    "rotation": 88.5287552698411
   },
   "useDefaultConstraints": true
 }
