@@ -50,7 +50,7 @@ public class RobotContainer {
 		// NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		// NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
-		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
+		NamedCommands.registerCommand("index on", indexer.indexOnCommand(shooter));
 
 		// NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.packingAgitate()));
 		NamedCommands.registerCommand("Aim", 

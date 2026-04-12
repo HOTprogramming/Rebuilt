@@ -17,17 +17,11 @@ public class Index extends SubsystemBase {
 		m_IndexKraken.updateStats();
 	}
 
-	public Command indexOnCommand() {
-		return Commands.sequence(
-			runOnce(() -> m_IndexKraken.startKicker()),
-			Commands.waitSeconds(0.1),
-			runOnce(() -> m_IndexKraken.startFloor()));
-	}
-
 	/**
-	 * Starts the indexer and the shooter's shot timer at the same moment the
-	 * kicker wheels turn on. This ensures the hood offset system begins tracking
-	 * from the instant the kicker spins up under load.
+	 * Starts the indexer and the shooter's shot timer when the floor begins
+	 * feeding. Sequence: kicker on → 100ms spin-up → floor on + shot timer.
+	 * The shot timer ensures the hood offset system begins tracking from the
+	 * instant balls start feeding into the kicker.
 	 */
 	public Command indexOnCommand(Shooter shooter) {
 		return Commands.sequence(
