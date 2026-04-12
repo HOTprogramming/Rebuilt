@@ -33,6 +33,12 @@ public class Index extends SubsystemBase {
 			}));
 	}
 
+	
+	public Command reverseIndexCommand() {
+		return runOnce(() -> m_IndexKraken.reverseIndex());
+	}
+
+
 	public Command indexOffCommand() {
 		return runOnce(() -> 
 		{m_IndexKraken.stopKicker();
