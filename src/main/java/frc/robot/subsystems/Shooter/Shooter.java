@@ -198,9 +198,23 @@ public class Shooter extends SubsystemBase {
 				// Shot-start bump: a small fixed hood addition for the first few ms after
 				// the indexer fires. Covers the very first ball which always arrives slow
 				// because the kicker hasn't reached steady-state yet — too fast for the
-				// kicker speed reading to catch. Duration and amount are tunable.
-				if (shotStartActive && !shotStartTimer.hasElapsed(ShooterConstants.kShotStartDuration)) {
-					targetHood += ShooterConstants.kShotStartHoodBump;
+				// kicker speed reading to catch.
+				//
+				// After kShotStartDuration expires, the bump ramps down linearly over
+				// kShotStartRampDown seconds instead of cutting off abruptly. This
+				// gives the kicker-speed proportional term time to take over without
+				// the hood dropping too fast and missing shots in between.
+				if (shotStartActive) {
+					double elapsed = shotStartTimer.get();
+					double totalDuration = ShooterConstants.kShotStartDuration + ShooterConstants.kShotStartRampDown;
+					if (elapsed < ShooterConstants.kShotStartDuration) {
+						// Full bump during the initial window
+						targetHood += ShooterConstants.kShotStartHoodBump;
+					} else if (elapsed < totalDuration) {
+						// Linear ramp-down: 1.0 at start of ramp, 0.0 at end
+						double rampProgress = (elapsed - ShooterConstants.kShotStartDuration) / ShooterConstants.kShotStartRampDown;
+						targetHood += ShooterConstants.kShotStartHoodBump * (1.0 - rampProgress);
+					}
 				}
 			}
 			mShooterKraken.runPosition(targetHood);
