@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.868968839695443,
-        "y": 6.814847515597339
+        "x": 7.046096385542168,
+        "y": 6.898060240963855
       },
       "isLocked": false,
       "linkedName": "hi"
     },
     {
       "anchor": {
-        "x": 8.528773181169758,
-        "y": 4.300242510699002
+        "x": 7.417638554216868,
+        "y": 4.9638554216867465
       },
       "prevControl": {
-        "x": 8.489957203994294,
-        "y": 4.688402282453638
+        "x": 7.378822577041404,
+        "y": 5.352015193441383
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +61,7 @@
     },
     {
       "name": "Intake Out",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
