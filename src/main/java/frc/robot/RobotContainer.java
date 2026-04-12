@@ -108,10 +108,10 @@ public class RobotContainer {
 						Commands.waitSeconds(0.2)
 					),
 					// Once the race ends (Ready OR Timed Out), run the motors
-					Commands.parallel(
-						shooter.startShotTimer(),
-						indexer.indexOnCommand()
-					)
+					
+					//shooter.startShotTimer(),
+					indexer.indexOnCommand()
+					
 				)
 			)
 		).whileTrue( // keep agitate seperate so left trigger doesnt interrupt the shoot command
