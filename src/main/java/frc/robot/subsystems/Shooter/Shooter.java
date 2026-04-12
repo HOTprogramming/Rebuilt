@@ -92,11 +92,12 @@ public class Shooter extends SubsystemBase {
 		//****End of Shotmap Mods  */
 
 
-		hoodKickerOffsetMap.put(1.0, 0.0);
-		hoodKickerOffsetMap.put(2.0, 0.25);
-		hoodKickerOffsetMap.put(3.0, 0.5);
-		hoodKickerOffsetMap.put(4.0, 0.75);
-		hoodKickerOffsetMap.put(5.3, 1.0);
+		hoodKickerOffsetMap.put(1.0, 0.0); 
+		hoodKickerOffsetMap.put(2.0, 0.25); 
+		hoodKickerOffsetMap.put(3.0, 0.5); 
+
+		hoodKickerOffsetMap.put(4.0, 0.75); 
+		hoodKickerOffsetMap.put(5.3, 0.1); 
 	}
 
 	public double getShooterSpeed() {
