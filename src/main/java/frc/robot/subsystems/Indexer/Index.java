@@ -3,6 +3,7 @@ package frc.robot.subsystems.Indexer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Shooter.Shooter;
 
 public class Index extends SubsystemBase {
 	public final IndexKraken m_IndexKraken = new IndexKraken();
@@ -16,15 +17,27 @@ public class Index extends SubsystemBase {
 		m_IndexKraken.updateStats();
 	}
 
-	public Command indexOnCommand() {
-		return runOnce(() -> 
-		{m_IndexKraken.startKicker();
-		m_IndexKraken.startFloor();});
+	/**
+	 * Starts the indexer and the shooter's shot timer when the floor begins
+	 * feeding. Sequence: kicker on → 100ms spin-up → floor on + shot timer.
+	 * The shot timer ensures the hood offset system begins tracking from the
+	 * instant balls start feeding into the kicker.
+	 */
+	public Command indexOnCommand(Shooter shooter) {
+		return Commands.sequence(
+			runOnce(() -> m_IndexKraken.startKicker()),
+			Commands.waitSeconds(0.1),
+			runOnce(() -> {
+				m_IndexKraken.startFloor();
+				shooter.startShotTimerNow();
+			}));
 	}
 
+	
 	public Command reverseIndexCommand() {
 		return runOnce(() -> m_IndexKraken.reverseIndex());
 	}
+
 
 	public Command indexOffCommand() {
 		return runOnce(() -> 
@@ -42,5 +55,13 @@ public class Index extends SubsystemBase {
 
 	public Command index() {
 		return Commands.sequence();
+	}
+
+	/**
+	 * Returns the average kicker wheel speed (rps). Used by the shooter's
+	 * kicker-speed-based hood offset to detect when balls are loading slowly.
+	 */
+	public double getAverageKickerSpeed() {
+		return m_IndexKraken.getAverageKickerSpeed();
 	}
 }

@@ -45,15 +45,15 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)    //was 100 
+			.withStatorCurrentLimit(85)    //was 100 
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(80)
+			.withSupplyCurrentLimit(85)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(60) //80
+			.withSupplyCurrentLowerLimit(65) //80
 			.withSupplyCurrentLowerTime(1.50))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(80) //was 100
-			.withPeakReverseTorqueCurrent(-80)) //was 100
+			.withPeakForwardTorqueCurrent(85) //was 100
+			.withPeakReverseTorqueCurrent(-85)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))

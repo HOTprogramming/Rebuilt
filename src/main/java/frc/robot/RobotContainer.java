@@ -32,7 +32,7 @@ public class RobotContainer {
 	public final Index indexer = new Index();
 	public final Climber climber = new Climber();
 	public final Intake intake = new Intake();
-	public final Shooter shooter = new Shooter();
+	public final Shooter shooter = new Shooter(indexer);
 
 	PIDController theta = new PIDController(5, 0, 0);
 
@@ -50,9 +50,9 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
-		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
+		NamedCommands.registerCommand("index on", indexer.indexOnCommand(shooter));
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.retractSlow()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(shooter), intake.retractSlow()));
 
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
@@ -107,7 +107,12 @@ public class RobotContainer {
 						Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 						Commands.waitSeconds(0.2)
 					),
-					indexer.indexOnCommand()
+					// Once the race ends (Ready OR Timed Out), run the motors
+					
+					//shooter.startShotTimer(),
+					indexer.indexOnCommand(shooter)
+					
+
 				)
 			)
 		).whileTrue( // keep agitate seperate so left trigger doesnt interrupt the shoot command
@@ -180,6 +185,7 @@ public class RobotContainer {
 			RobotState::isClimbMode
 		));
 
+		
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(

@@ -47,6 +47,63 @@ public class ShooterConstants {
 	public static double kHoodEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? .414 : 0.0;
 	public static double kHoodReduction = (1.0 / 1.0);
 
+	// --- Kicker-Speed Hood Offset ---
+	// Dynamically raises the hood angle when kicker wheels are bogged down.
+	// When the hopper is full, ball pressure slows the kicker wheels, reducing
+	// the speed at which balls reach the flywheel. Slower ball feed means lower
+	// exit velocity, so shots fall short. This also happens during shoot-on-the-move
+	// when varying numbers of balls are being pulled through the indexer.
+	//
+	// The offset has two components:
+	//
+	// 1. PROPORTIONAL (deficit-based):
+	//    Reacts to the current kicker speed relative to nominal.
+	//    kickerRatio = actualSpeed / kKickerNominalSpeed
+	//    If kickerRatio < kKickerSpeedThreshold, compute:
+	//      deficit = (kKickerSpeedThreshold - kickerRatio) / kKickerSpeedThreshold
+	//    Offset contribution = hoodKickerOffsetMap(distance) * deficit * kHoodOffsetScale
+	//
+	// 2. ANTICIPATION (derivative-based):
+	//    Looks at the rate of change of kicker speed (acceleration in rps/sec).
+	//    If the kicker is decelerating (balls pressing in, hopper loading), the hood
+	//    starts rising BEFORE the speed actually drops below threshold.
+	//    If the kicker is accelerating (recovering after balls clear), the hood starts
+	//    coming back down early instead of waiting for the speed to fully recover.
+	//    This prevents the hood from always lagging behind the kicker state.
+	//    Offset contribution = -normalizedAccel * hoodKickerOffsetMap(distance) * kKickerAnticipationGain
+	//
+	// The final offset is clamped between 0 and the max offset for the current distance,
+	// so it never subtracts from the base hood angle or exceeds the map maximum.
+	//
+	// Tuning guide:
+	//   - kKickerNominalSpeed: expected kicker speed at full performance (rps).
+	//     Start with the kicker command speed and lower if the wheels never actually reach it.
+	//   - kKickerSpeedThreshold: ratio (0–1) below which the proportional term activates.
+	//     0.95 means it kicks in when kicker drops below 95% of nominal.
+	//     Lower = less sensitive, higher = activates sooner.
+	//   - kHoodOffsetScale: gain on the proportional (deficit) term.
+	//     1.0 = use the map values directly at full deficit. Increase if shots still fall short.
+	//   - kKickerAnticipationGain: gain on the derivative (anticipation) term.
+	//     Higher values = more aggressive anticipation. Start low (0.5) and increase
+	//     if the hood is still lagging behind kicker speed changes. Too high will cause
+	//     overshoot — the hood will overreact to brief speed fluctuations.
+	//   - hoodKickerOffsetMap (in Shooter.java): per-distance max offset values.
+	//     Close shots need little offset; far shots need more.
+	public static boolean kHoodOffsetEnabled = true;
+	public static double kKickerNominalSpeed = 110.0; // rps — matches IndexConstants.kickerSpeed
+	public static double kKickerSpeedThreshold = 0.95; // ratio — proportional term activates below this
+	public static double kHoodOffsetScale = 1.0; // gain on the proportional (deficit) term
+	public static double kKickerAnticipationGain = 0.5; // gain on the derivative (anticipation) term
+
+	// --- Shot Start Bump ---
+	// A small fixed hood boost applied for the first kShotStartDuration seconds
+	// after the indexer starts feeding. The very first ball always arrives at the
+	// flywheel slower than steady-state because the kicker is just spinning up
+	// under load. This happens too fast for the kicker speed reading to catch,
+	// so we apply a brief fixed bump to cover it.
+	public static double kShotStartDuration = 0.5; // seconds — how long the bump lasts
+	public static double kShotStartHoodBump = 2; // hood angle units — extra hood during bump
+
 	public static CANBus canbus = new CANBus(Constants.canName);
 
 	public static final TalonFXConfiguration shooterMotorConfigs = new TalonFXConfiguration()
