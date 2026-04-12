@@ -127,6 +127,7 @@ public class RobotContainer {
 					),
 					// Once the race ends (Ready OR Timed Out), run the motors
 					Commands.parallel(
+						shooter.startShotTimer(),
 						indexer.indexOnCommand(),
 						intake.retractSlow().unless(driver.leftTrigger())
 					)

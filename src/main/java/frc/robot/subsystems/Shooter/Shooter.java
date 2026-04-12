@@ -39,6 +39,13 @@ public class Shooter extends SubsystemBase {
 	private double prevKickerSpeed = 0;
 	private double prevKickerTimestamp = 0;
 
+	// Timer for the initial shot burst — adds a small fixed hood bump for the first
+	// kShotStartDuration seconds after the indexer fires. The very first ball always
+	// arrives slower because the kicker hasn't reached steady-state feeding yet,
+	// and the kicker speed reading won't reflect this fast enough.
+	private Timer shotStartTimer = new Timer();
+	private boolean shotStartActive = false;
+
 	public Shooter(Index indexer) {
 		this.indexer = indexer;
 		hoodAngleMap.put(1.0, 1.0); 
@@ -83,6 +90,17 @@ public class Shooter extends SubsystemBase {
 
 	}
 
+	/**
+	 * Call when the indexer starts feeding. Starts the shot-start timer so the
+	 * initial hood bump activates for kShotStartDuration seconds.
+	 */
+	public Command startShotTimer() {
+		return runOnce(() -> {
+			shotStartTimer.restart();
+			shotStartActive = true;
+		});
+	}
+
 	public Command hoodDown(){
 		return run(() -> {
 			RobotState.isShooting = false;
@@ -90,6 +108,7 @@ public class Shooter extends SubsystemBase {
 			// data into the next shot (e.g. a big speed delta from the previous release)
 			prevKickerSpeed = 0;
 			prevKickerTimestamp = 0;
+			shotStartActive = false;
 			if(!RobotState.isManualMode()){
 				targetHood = 0;
 				mShooterKraken.runPosition(targetHood);
@@ -176,6 +195,14 @@ public class Shooter extends SubsystemBase {
 
 					// Clamp: never subtract hood below the base map value, and cap at max offset
 					targetHood += Math.max(0, Math.min(hoodOffset, maxOffset));
+				}
+
+				// Shot-start bump: a small fixed hood addition for the first few ms after
+				// the indexer fires. Covers the very first ball which always arrives slow
+				// because the kicker hasn't reached steady-state yet — too fast for the
+				// kicker speed reading to catch. Duration and amount are tunable.
+				if (shotStartActive && !shotStartTimer.hasElapsed(ShooterConstants.kShotStartDuration)) {
+					targetHood += ShooterConstants.kShotStartHoodBump;
 				}
 			}
 			mShooterKraken.runPosition(targetHood);
