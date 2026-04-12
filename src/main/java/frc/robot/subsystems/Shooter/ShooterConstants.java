@@ -89,7 +89,7 @@ public class ShooterConstants {
 	//     overshoot — the hood will overreact to brief speed fluctuations.
 	//   - hoodKickerOffsetMap (in Shooter.java): per-distance max offset values.
 	//     Close shots need little offset; far shots need more.
-	public static boolean kHoodOffsetEnabled = true;
+	public static boolean kHoodOffsetEnabled = false;
 	public static double kKickerNominalSpeed = 110.0; // rps — matches IndexConstants.kickerSpeed
 	public static double kKickerSpeedThreshold = 0.95; // ratio — proportional term activates below this
 	public static double kHoodOffsetScale = 1.0; // gain on the proportional (deficit) term
