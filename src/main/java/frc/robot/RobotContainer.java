@@ -50,9 +50,9 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
-		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
+		NamedCommands.registerCommand("index on", indexer.indexOnCommand(shooter));
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.retractSlow()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(shooter), intake.retractSlow()));
 
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
@@ -110,8 +110,9 @@ public class RobotContainer {
 					// Once the race ends (Ready OR Timed Out), run the motors
 					
 					//shooter.startShotTimer(),
-					indexer.indexOnCommand()
+					indexer.indexOnCommand(shooter)
 					
+
 				)
 			)
 		).whileTrue( // keep agitate seperate so left trigger doesnt interrupt the shoot command
