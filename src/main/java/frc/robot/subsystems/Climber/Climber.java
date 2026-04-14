@@ -40,6 +40,10 @@ public class Climber extends SubsystemBase {
 	private void setElbowPosition(double targetPos) {
 		m_ClimbKraken.setElbowPosition(targetPos);
 	}
+
+	private void setUnloadedElbowPosition(double targetPos) {
+		m_ClimbKraken.setUnloadedElbowPosition(targetPos);
+	}
 	
 	private void setElbowVelocity(double targetVel) {
 		m_ClimbKraken.setElbowVelocity(targetVel);
@@ -140,23 +144,16 @@ public class Climber extends SubsystemBase {
 
 	public Command fullDeploy() {
 		return Commands.sequence(
-			runOnce(() -> setElbowPosition(ClimberConstants.deployedPos)),
+			runOnce(() -> setUnloadedElbowPosition(ClimberConstants.deployedPos)),
 			zeroSpinner(), 
 			deploy());
 	}	
 	public Command deploy() {
-		return run(() -> setElbowPosition(ClimberConstants.deployedPos)).until(isDeployed());
+		return run(() -> setUnloadedElbowPosition(ClimberConstants.deployedPos)).until(isDeployed());
 	}
-	
-	public Command teleopDeploy() {
-		return run(() -> {
-			setElbowPosition(ClimberConstants.deployedPos);
-			setWristPosition(ClimberConstants.wristZeroOffset);
-		}).until(isDeployed());
-	}	
 
 	public Command autonDeploy() {
-		return runOnce(() -> setElbowPosition(ClimberConstants.deployedPos));
+		return runOnce(() -> setUnloadedElbowPosition(ClimberConstants.deployedPos));
 	}	
 
 	public Command stop() {
@@ -164,7 +161,7 @@ public class Climber extends SubsystemBase {
 	}
 	
 	public Command stow() {
-		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
+		return run(() -> setUnloadedElbowPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
 
 	public Command autoClimb() {

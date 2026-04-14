@@ -14,17 +14,17 @@ public class ShootOnTheFly {
     private static double TURRET_ROTATION_OFFSET;
 
     private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
-
-    LinearFilter vxfilt = LinearFilter.movingAverage(8);
-    LinearFilter vyfilt = LinearFilter.movingAverage(8);
+	// filters for vx and vy speeds to smooth sotf target movement
+    LinearFilter vxfilt = LinearFilter.movingAverage(3);
+    LinearFilter vyfilt = LinearFilter.movingAverage(3);
 
     private double turretAngle = 0;
-    private double lookaheadToTargetDistance = 0;
+    private double virtualShotToTargetDistance = 0;
 
     static {
         TOF_CONVERGENCE_THRESHOLD = 0.025;
 		TURRET_ROTATION_OFFSET = Math.PI; // v3 robot shoots backwards
-
+		//empirically derived time of flight based on distance from target
         timeOfFlightMap.put(1.0, 1.0);
         timeOfFlightMap.put(2.0, 1.1);
         timeOfFlightMap.put(3.0, 1.1);
@@ -35,47 +35,57 @@ public class ShootOnTheFly {
         timeOfFlightMap.put(17.0, 2.0);
     }
 
-    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, Translation2d goalTranslate2d, Alliance alliance) {
+    public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, Translation2d shotTarget, Alliance alliance) {
         double latency = 0.1;
         ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
+		// filters for vx and vy speeds to smooth sotf target movement
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond);
         double vy_filt = vyfilt.calculate(fieldSpeeds.vyMetersPerSecond);
-
-        Translation2d releasePos = RobotPos.getTranslation().plus(
+		//pose where the shot is released from the robot, speed times shot latency
+        Translation2d delayedShotPosition = RobotPos.getTranslation().plus(
                 new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond).times(latency));
-
-        Translation2d targetVec = goalTranslate2d.minus(releasePos);
+		//target vector, target minus the shot release position, also determines preliminary shot distance
+        Translation2d targetVec = shotTarget.minus(delayedShotPosition);
         double dist = targetVec.getNorm();
 
         int i;
         double timeOfFlight = 0;
         double lastTimeOfFlight = 0;
-        Translation2d lookaheadPos = releasePos;
-        lookaheadToTargetDistance = dist;
-
+        Translation2d virtualShotPosition = delayedShotPosition;
+        virtualShotToTargetDistance = dist;
+		//iterative loop that calculates actual shot distance based on virtual target
+		//checks for convergence of time of flight estimate
         for (i = 0; i < 10; i++) {
-            timeOfFlight = timeOfFlightMap.get(lookaheadToTargetDistance);
-
+			//time of flight based on distance using lookup table
+            timeOfFlight = timeOfFlightMap.get(virtualShotToTargetDistance);
+			//checks to see if ToF estimate has converged, means target is good
             if (Math.abs(timeOfFlight - lastTimeOfFlight) < TOF_CONVERGENCE_THRESHOLD)
                 break;
             lastTimeOfFlight = timeOfFlight;
-
+			//creates an X and Y offset based on current filtered speed and estimated ToF
             double offsetX = vx_filt * timeOfFlight;
             double offsetY = vy_filt * timeOfFlight;
-            lookaheadPos = releasePos.plus(new Translation2d(offsetX, offsetY));
-
-            lookaheadToTargetDistance = goalTranslate2d.getDistance(lookaheadPos);
+			//adds X and Y offsets to the shot release position
+			//this is the point where the robot is virtually shooting from if it were stationary when considering the offsets
+            virtualShotPosition = delayedShotPosition.plus(new Translation2d(offsetX, offsetY));
+			//gets shot distance from the virtual shooting point to the target
+			//this updated distance gets fed back into the beginning of the loop to estimate new ToF
+            virtualShotToTargetDistance = shotTarget.getDistance(virtualShotPosition);
+			//virtualShotToTargetDistance = shotTarget.getDistance(RobotPos.getTranslation());
         }
 
-        // Aim from the CURRENT position to the VIRTUAL target
-        Rotation2d turretRotation = goalTranslate2d.minus(lookaheadPos).getAngle();
+        // Aim from the VIRTUAL shooting position to the ACTUAL target
+		//This appears to be incorrect? It is just feeding the current robot position and is not using the virtual shooting location?
+		
+		Rotation2d turretRotation = shotTarget.minus(virtualShotPosition).getAngle();
+		
         if (Alliance.Red == alliance) {
             turretAngle = turretRotation.getRadians() + Math.PI + TURRET_ROTATION_OFFSET; // v3 robot shoots backwards
         } else {
             turretAngle = turretRotation.getRadians() + TURRET_ROTATION_OFFSET;
         }
 
-        SmartDashboard.putNumber("lookAheadDistance	", lookaheadToTargetDistance);
+        SmartDashboard.putNumber("distance to target	", virtualShotToTargetDistance);
     }
 
     public double getTurretAngle() {
@@ -83,6 +93,6 @@ public class ShootOnTheFly {
     }
 
     public double getLookAheadDistance() {
-        return lookaheadToTargetDistance;
+        return virtualShotToTargetDistance;
     }
 }

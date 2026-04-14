@@ -29,50 +29,50 @@
                       "data": {
                         "pathName": "RightSideBack-1Pass"
                       }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Aim"
-                }
-              },
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
+                    },
                     {
-                      "type": "sequential",
+                      "type": "race",
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
+                            "type": "named",
                             "data": {
-                              "waitTime": 0.2
+                              "name": "Aim"
                             }
                           },
                           {
-                            "type": "named",
+                            "type": "parallel",
                             "data": {
-                              "name": "Shoot"
+                              "commands": [
+                                {
+                                  "type": "sequential",
+                                  "data": {
+                                    "commands": [
+                                      {
+                                        "type": "wait",
+                                        "data": {
+                                          "waitTime": 0.5
+                                        }
+                                      },
+                                      {
+                                        "type": "named",
+                                        "data": {
+                                          "name": "Shoot"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "wait",
+                                  "data": {
+                                    "waitTime": 4.0
+                                  }
+                                }
+                              ]
                             }
                           }
                         ]
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 4.0
                       }
                     }
                   ]

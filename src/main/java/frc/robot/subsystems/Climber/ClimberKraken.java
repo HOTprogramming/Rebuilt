@@ -46,7 +46,11 @@ public class ClimberKraken {
 	}
 
 	public void setElbowPosition(double desiredRotations) {
-		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicTorqueCurrentFOC, 0);
+		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.PositionTorqueCurrentFOC, 0);
+	}
+	
+	public void setUnloadedElbowPosition(double desiredRotations) {
+		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicTorqueCurrentFOC, 1);
 	}
 	public void setElbowVelocity(double desiredRotations) {
 		m_climberKraken.setPosition(desiredRotations, Kraken.PositionControlType.MotionMagicVoltage, 1);

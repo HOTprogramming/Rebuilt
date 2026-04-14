@@ -32,10 +32,22 @@ public class IndexKraken {
 	public void startFloor() {
 		m_floorKraken.setVelocity(IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
 	}	
+
+	
+	public void startFloorSlow() {
+		m_floorKraken.setVelocity(IndexConstants.floorSpeed * -0.1, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+	}	
+	
 	
 	public void startKicker() {
 		m_rightKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+	}
+
+	public void reverseIndex() {
+		m_rightKickKraken.setVelocity(-IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_leftKickKraken.setVelocity(-IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_floorKraken.setVelocity(-IndexConstants.floorSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
 	}
 
 	public void stopFloor() {
@@ -55,5 +67,16 @@ public class IndexKraken {
 	}
 		public double getTotalCurrent(){
 		return m_floorKraken.getSupplyCurrent() + m_leftKickKraken.getSupplyCurrent() + m_rightKickKraken.getSupplyCurrent();
+	}
+
+	/**
+	 * Returns the average velocity (rps) of the left and right kicker wheels.
+	 * Used by the shooter's hood offset logic to detect when kicker wheels are
+	 * bogged down (e.g. full hopper pressure, shoot-on-the-move) and compensate
+	 * by raising the hood angle.
+	 */
+	public double getAverageKickerSpeed() {
+		return (m_leftKickKraken.motor.getVelocity().getValueAsDouble()
+			+ m_rightKickKraken.motor.getVelocity().getValueAsDouble()) / 2.0;
 	}
 }
