@@ -218,7 +218,7 @@ public class Shooter extends SubsystemBase {
 
 					// Clamp: never subtract hood below the base map value, and cap at max offset
 					targetHood += Math.max(0, Math.min(hoodOffset, maxOffset));
-				}
+				
 
 				// Shot-start bump: a small fixed hood addition for the first few ms after
 				// the indexer fires. Covers the very first ball which always arrives slow
@@ -229,16 +229,17 @@ public class Shooter extends SubsystemBase {
 				// kShotStartRampDown seconds instead of cutting off abruptly. This
 				// gives the kicker-speed proportional term time to take over without
 				// the hood dropping too fast and missing shots in between.
-				if (shotStartActive) {
-					double elapsed = shotStartTimer.get();
-					double totalDuration = ShooterConstants.kShotStartDuration + ShooterConstants.kShotStartRampDown;
-					if (elapsed < ShooterConstants.kShotStartDuration) {
-						// Full bump during the initial window
-						targetHood += ShooterConstants.kShotStartHoodBump;
-					} else if (elapsed < totalDuration) {
-						// Linear ramp-down: 1.0 at start of ramp, 0.0 at end
-						double rampProgress = (elapsed - ShooterConstants.kShotStartDuration) / ShooterConstants.kShotStartRampDown;
-						targetHood += ShooterConstants.kShotStartHoodBump * (1.0 - rampProgress);
+					if (shotStartActive) {
+						double elapsed = shotStartTimer.get();
+						double totalDuration = ShooterConstants.kShotStartDuration + ShooterConstants.kShotStartRampDown;
+						if (elapsed < ShooterConstants.kShotStartDuration) {
+							// Full bump during the initial window
+							targetHood += ShooterConstants.kShotStartHoodBump;
+						} else if (elapsed < totalDuration) {
+							// Linear ramp-down: 1.0 at start of ramp, 0.0 at end
+							double rampProgress = (elapsed - ShooterConstants.kShotStartDuration) / ShooterConstants.kShotStartRampDown;
+							targetHood += ShooterConstants.kShotStartHoodBump * (1.0 - rampProgress);
+						}
 					}
 				}
 			}
