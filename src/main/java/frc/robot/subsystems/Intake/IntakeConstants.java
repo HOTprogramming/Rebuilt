@@ -21,11 +21,11 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.251;
+	public static double kDeployedPosition = 0.162;
 	public static double kShortDeployedPosition = 0.25; // not used
 
-	public static double kRetractPosition = 0.744;
-	public static double kRetractPositionAgitate = 0.625;
+	public static double kRetractPosition = 0.671;
+	public static double kRetractPositionAgitate = 0.573;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
 
@@ -33,7 +33,7 @@ public class IntakeConstants {
 	public static double agitateCurrentTime = 0.2;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 90.0;
+	public static double kIntakeSpeed = 100.0;
 	public static double kKickerSpeed = 65.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 47 : 0;
@@ -45,20 +45,20 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(85)    //was 100 
+			.withStatorCurrentLimit(100)    //was 100 
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(85)
+			.withSupplyCurrentLimit(100)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(65) //80
+			.withSupplyCurrentLowerLimit(80) //80
 			.withSupplyCurrentLowerTime(1.50))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(85) //was 100
-			.withPeakReverseTorqueCurrent(-85)) //was 100
+			.withPeakForwardTorqueCurrent(100) //was 100
+			.withPeakReverseTorqueCurrent(-100)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(5)
+			.withKP(8)
 			.withKI(0)
 			.withKD(0)
 			.withKS(4)
@@ -76,10 +76,10 @@ public class IntakeConstants {
 			.withPeakForwardTorqueCurrent(100) 
 			.withPeakReverseTorqueCurrent(-100))
 		.withMotorOutput(new MotorOutputConfigs()
-			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(5)
+			.withKP(8)
 			.withKI(0)
 			.withKD(0)
 			.withKS(4)
