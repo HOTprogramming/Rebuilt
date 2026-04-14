@@ -33,6 +33,10 @@ public class Index extends SubsystemBase {
 			}));
 	}
 
+	public Command runFloorSlow() {
+		return runOnce(() -> m_IndexKraken.startFloorSlow());
+	}
+
 	
 	public Command reverseIndexCommand() {
 		return runOnce(() -> m_IndexKraken.reverseIndex());

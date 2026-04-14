@@ -133,7 +133,12 @@ public class RobotContainer {
 			)
 		);
 
-		driver.leftTrigger().whileTrue(intake.extend()).onFalse(intake.completeStop())
+		driver.leftTrigger().whileTrue(
+			Commands.parallel(
+				intake.extend(),
+				indexer.runFloorSlow()
+			))	
+		.onFalse(intake.completeStop())
 		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
@@ -185,7 +190,7 @@ public class RobotContainer {
 			RobotState::isClimbMode
 		));
 
-		
+
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
