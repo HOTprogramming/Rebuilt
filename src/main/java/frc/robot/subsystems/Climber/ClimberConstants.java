@@ -38,9 +38,9 @@ public class ClimberConstants {
 
 
 	public static double storedPos = 0;
-	public static double deployedPos = -283.7 / elbowGearRatio; //was -0.471
+	public static double deployedPos =  -0.471;
 	public static double initalElbowClimbPos = -0.705; // 0.675
-	public static double adjustedElbowClimbPos = -0.72;
+	public static double adjustedElbowClimbPos = -0.732;
 	public static double l3ElbowPos = -0.477;
 	public static double autoClimbPos = -0.625; 
 
@@ -54,15 +54,15 @@ public class ClimberConstants {
 
 	public static final TalonFXConfiguration elbowConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)
+			.withStatorCurrentLimit(100)
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(60)
+			.withSupplyCurrentLimit(100)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerLimit(80)
 			.withSupplyCurrentLowerTime(1))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(40)
-			.withPeakReverseTorqueCurrent(-40))
+			.withPeakForwardTorqueCurrent(100)
+			.withPeakReverseTorqueCurrent(-100))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
@@ -73,11 +73,11 @@ public class ClimberConstants {
 			new FeedbackConfigs()
 				.withSensorToMechanismRatio(elbowGearRatio)) //was elbowGearRatio, didn't change
 		.withSlot0(new Slot0Configs()
-			.withKP(500)
+			.withKP(4000)
 			.withKI(0.0)
 			.withKD(0.0)
-			.withKS(0.27)
-			.withKV(1.0))
+			.withKS(15)
+			.withKV(5.0))
 		.withSlot1(new Slot1Configs()
 			.withKP(300)
 			.withKI(0.0)
