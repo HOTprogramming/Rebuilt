@@ -21,7 +21,7 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.172;
+	public static double kDeployedPosition = 0.163;
 	public static double kShortDeployedPosition = 0.25; // not used
 
 	public static double kRetractPosition = 0.661;
@@ -34,7 +34,6 @@ public class IntakeConstants {
 
 	public static double kExpelSpeed = -100.0;
 	public static double kIntakeSpeed = 100.0;
-	public static double kKickerSpeed = 65.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 47 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;

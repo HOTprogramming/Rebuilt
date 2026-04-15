@@ -210,4 +210,25 @@ public class Intake extends SubsystemBase {
 	private BooleanSupplier isReExetended() {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition() - targetreextendpos) < IntakeConstants.kExtendTolerance;
 	}
+
+
+	private double agitatePos1 = IntakeConstants.kRetractPositionAgitate;
+	private double agitatePos2 =  0.447; // IntakeConstants.kRetractPositionAgitate - 0.2;
+	private double agitatePos3 = IntakeConstants.kRetractPositionAgitate;
+
+
+	public Command newAgitate() {
+		return Commands.sequence(
+			runOnce(() -> {
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
+				.apply(new MotionMagicConfigs()
+				.withMotionMagicAcceleration(3)
+				.withMotionMagicCruiseVelocity(4));
+			}), 
+			new WaitCommand(.02), 
+			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.1),
+			run(() -> mIntakeKraken.runPosition(agitatePos2)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos2) < 0.1),
+			run(() -> mIntakeKraken.runPosition(agitatePos3)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos3) < 0.1)
+		);
+	}
 }

@@ -123,7 +123,7 @@ public class RobotContainer {
 					Commands.waitSeconds(0.2)
 				),
 				Commands.waitSeconds(0.25),
-				intake.retractSlow().unless(driver.leftTrigger())
+				intake.newAgitate().unless(driver.leftTrigger())
 			)
 		).onFalse(
 			Commands.parallel(
@@ -211,7 +211,7 @@ public class RobotContainer {
 				shooter.targetSpeed = 0;
 				RobotState.isShooting = false;
 				shooter.mShooterKraken.stop();
-				// intake.completeStopMethod();
+				intake.completeStopMethod();
 				indexer.m_IndexKraken.stop();
 				climber.m_ClimbKraken.stop();
 				drivetrain.iAmDockingLeaveMeAlone = false;
