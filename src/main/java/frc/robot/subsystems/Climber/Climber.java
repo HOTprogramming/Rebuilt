@@ -32,10 +32,7 @@ public class Climber extends SubsystemBase {
 	public void periodic() {
 		m_ClimbKraken.updateStats();
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
-		SmartDashboard.putBoolean("stage 1 end", isLifted().getAsBoolean());
-		SmartDashboard.putNumber("elbow pos", m_ClimbKraken.getElbowPos());
-		SmartDashboard.putNumber("elbow error",  Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.initalElbowClimbPos));
-
+		
 		// if(this.getCurrentCommand() != null){
 		// 	SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
 		// }
