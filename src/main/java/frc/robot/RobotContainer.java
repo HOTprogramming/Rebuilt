@@ -133,12 +133,13 @@ public class RobotContainer {
 			)
 		);
 
-		driver.leftTrigger().whileTrue(
-			Commands.parallel(
-				intake.extend(),
-				indexer.runFloorSlow()
-			))	
+		driver.leftTrigger()
+		.whileTrue(Commands.parallel(
+			intake.extend(),
+			indexer.runFloorSlow()
+		))	
 		.onFalse(intake.completeStop())
+		.onFalse(indexer.indexOffCommand())
 		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
