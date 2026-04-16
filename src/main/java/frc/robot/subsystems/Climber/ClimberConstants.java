@@ -44,6 +44,8 @@ public class ClimberConstants {
 	public static double l3ElbowPos = -0.477;
 	public static double autoClimbPos = -0.705; 
 
+	public static double idlePos = -0.012;
+
 	public static double wheelsUpPos = 0.2125; // unset
 	public static double l1autonclimbedpos = 0.438; // unset
 	public static double startWristAtPos = -0.605;

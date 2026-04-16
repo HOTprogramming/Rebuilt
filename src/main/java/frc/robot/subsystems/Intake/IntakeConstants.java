@@ -33,7 +33,7 @@ public class IntakeConstants {
 	public static double agitateCurrentTime = 0.2;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 100.0;
+	public static double kIntakeSpeed = 110.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 47 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;

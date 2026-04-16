@@ -46,7 +46,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
 		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
-		NamedCommands.registerCommand("zero wrist", climber.zeroSpinner());
+		NamedCommands.registerCommand("zero wrist", climber.autonStartZero());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
@@ -154,7 +154,7 @@ public class RobotContainer {
 		// Undock from the pole after climbing
 		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
 		// Stow climber after undocking
-		operator.rightBumper().onTrue(climber.stow());
+		operator.rightBumper().onTrue(climber.goToIdle());
 		//add distande to shot map offset
 		operator.povUp().onTrue(Commands.runOnce(() -> {
 			shooter.shotMapOffset += 0.1524;
@@ -195,7 +195,7 @@ public class RobotContainer {
 		//Trench Preset: Step 2 of Climb
 		operator.b().onTrue(
     	Commands.either(
-		climber.autoClimb(), 
+		climber.stow(), 
 		shooter.PresetTrench(),
         RobotState::isClimbMode));
 
