@@ -62,9 +62,9 @@ public class DrivetrainConstants {
     private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(
             new CurrentLimitsConfigs()
-				.withSupplyCurrentLimit(40)
+				.withSupplyCurrentLimit(60)
 				.withSupplyCurrentLimitEnable(true)
-				.withSupplyCurrentLowerLimit(30)
+				.withSupplyCurrentLowerLimit(40)
 				.withSupplyCurrentLowerTime(1)
 		);
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
