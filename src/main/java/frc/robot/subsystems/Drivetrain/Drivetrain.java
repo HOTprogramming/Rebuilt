@@ -9,6 +9,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.SwerveDriveBrake;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -50,6 +51,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	private final SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
 	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
 
+	private final SwerveDriveBrake brakeRequest = new SwerveDriveBrake();
+
 	private double MaxSpeed = 1.0 * DrivetrainConstants.kSpeedAt12Volts.in(MetersPerSecond);
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
@@ -63,6 +66,9 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 			.withHeadingPID(7, 0, 0);
 
 	private final SwerveRequest.RobotCentric ROBOT_CENTRIC = new SwerveRequest.RobotCentric();
+
+	private final SwerveRequest.Idle IDLE = new SwerveRequest.Idle();
+
 
     public final DrivetrainTelemetry logger = new DrivetrainTelemetry(MaxSpeed, this);
 	
@@ -83,7 +89,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		poleAlignmentSub = objectDetection.getDoubleTopic("pipe_alignment").subscribe(0.0);
 		poleDistanceSub = objectDetection.getDoubleTopic("pipe_distance").subscribe(0.0);
 
-		SmartDashboard.putBoolean("climb/Use Cam Dist", false);
+		//SmartDashboard.putBoolean("climb/Use Cam Dist", false);
     }
 
     private void configureAutoBuilder() {
@@ -124,8 +130,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	public void aim(double driveX, double driveY) {
 		setControl(FIELD_CENTRIC_FACING_ANGLE
-			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * .25)
-			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * .25)
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * 0.25)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * 0.25)
 			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 	}
 
@@ -145,6 +151,11 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		RobotState.speeds = getState().Speeds;
 
 		SmartDashboard.putBoolean("iAmDockingLeaveMeAlone", iAmDockingLeaveMeAlone);
+		SmartDashboard.putBoolean("test/isAtTargetAngle", isAtTargetAngle());
+// 			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle))) < 15;
+
+		SmartDashboard.putNumber("test/robot angle", getState().Pose.getRotation().getDegrees());
+		SmartDashboard.putNumber("test/target angle", (Rotation2d.fromRadians(RobotState.turretAngle).getDegrees()));
 	}
 
     private void startSimThread() {
@@ -167,12 +178,19 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		}).finallyDo(() -> setControl(ROBOT_CENTRIC.withVelocityY(0)));
 	}
 
-	public boolean isAtTargetAngle(){
+	public boolean isAtTargetAngle() {
+		Rotation2d currentRotation = getState().Pose.getRotation();
+		Rotation2d targetRotation = Rotation2d.fromRadians(RobotState.turretAngle);
+
+		// If Red Alliance, need to flip the target 180 degrees
 		if (RobotState.color == Alliance.Red) {
-			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle - Math.PI) )) < 5;
-		} else {			
-			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle) )) < 5;
+			targetRotation = targetRotation.plus(Rotation2d.fromDegrees(180));
 		}
+
+		// this calculates the shortest distance between angles
+		double angleError = Math.abs(currentRotation.minus(targetRotation).getDegrees());
+
+		return angleError < 5.0; // 5 degree tolerance
 	}
 
 final double CLIMBER_CHASSIS_OFFSET = 90.0; 	// Climber on front
@@ -209,16 +227,16 @@ public Command driveToPoleCoordinate_autoflip() {
         double targetY = currentPose.getY() + (TARGET_DISTANCE * approachDirection);
         
 		// targetX: Adjust current X based on camera (poleAlignmentSub) and rotation swing
-		double camOffset = 0.11; // Default camera offset in meters
+		double camOffset = -0.11; // Default camera offset in meters
 
-        double targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3) + camOffset + rotationXOffset) * approachDirection;
+        double targetX = currentPose.getX() + (MathUtil.clamp(poleAlignmentSub.get() + camOffset, -0.6, 0.6) + rotationXOffset) * approachDirection;
 
         Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
 		
 		SmartDashboard.putNumber("climb/cmd_rotationXOffset", rotationXOffset);
 		SmartDashboard.putNumber("climb/cmd_camOffset", camOffset);
 		SmartDashboard.putNumber("climb/cmd_currPoseX", currentPose.getX());
-		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.3, 0.3)) );
+		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.6, 0.6)) );
 		SmartDashboard.putNumber("climb/cmd_TargetDistance", TARGET_DISTANCE);
         
 		// Telemetry & Vision off while docking
@@ -252,8 +270,10 @@ public Command driveToPoleCoordinate_autoflip() {
 			runPathFinding(finalTarget),
                 wiggle,
 				drive,
+				idleDrive(),
                 runOnce(() -> iAmDockingLeaveMeAlone = false))
-			.onlyIf(() -> Math.abs(poleAlignmentSub.get()) < 0.3 && poleDistanceSub.get() > 0.5 && poleDistanceSub.get() < 1.0);
+			.withName("auto dock")
+			.onlyIf(() -> Math.abs(poleAlignmentSub.get()) < 0.6 && poleDistanceSub.get() > 0.5 && poleDistanceSub.get() < 1.0);
                 
     }, Set.of(this));
 }
@@ -268,7 +288,15 @@ public Command driveToPoleCoordinate_autoflip() {
         }, this).withTimeout(0.4);
 	}
 
+	public Command idleDrive() {
+		return runOnce(() -> setControl(IDLE));
+	}
+
 	public Command runPathFinding(Pose2d target) {
 		return AutoBuilder.pathfindToPose(target, alignToLadderConstraints);
+	}
+
+	public Command xLockCommand() {
+		return this.run(() -> this.setControl(brakeRequest));
 	}
 }

@@ -17,7 +17,7 @@ public class Robot extends TimedRobot {
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog(), true);
 		DriverStation.silenceJoystickConnectionWarning(true);
-
+		SmartDashboard.putData(CommandScheduler.getInstance());
         m_robotContainer = new RobotContainer();
     }
 
@@ -67,8 +67,9 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
-
+		
 		SmartDashboard.putBoolean("Teleop", true);
+
     }
 
     @Override

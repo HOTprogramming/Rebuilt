@@ -32,11 +32,13 @@ public class Intake extends SubsystemBase {
 				.apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(64)
 					.withMotionMagicCruiseVelocity(64));
-		}), new WaitCommand(.02), runOnce(() -> {
-			mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition);
-			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
-		}));
+		}), new WaitCommand(0.02), 
+		runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition)),
+		run(() -> {}).until(turnOnRollers()),  //added ????
+		runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed))
+		);
 	}
+
 
 	public Command extendShort() {
 		return Commands.sequence(runOnce(() -> {
@@ -64,16 +66,19 @@ public class Intake extends SubsystemBase {
 
 	public Command retractSlow() {
 		return Commands.sequence(
-			Commands.waitSeconds(0.0),
 			runOnce(() -> {
-			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
-					.withMotionMagicAcceleration(1.5)
-					.withMotionMagicCruiseVelocity(2));
-		}), new WaitCommand(.02), runOnce(() -> {
-			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
-			mIntakeKraken.stopRollers();
-		}));
+				.withMotionMagicAcceleration(3)
+				.withMotionMagicCruiseVelocity(4));
+			}), 
+			new WaitCommand(.02), 
+			runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate)),
+			run(() -> {}).until(pulseRollers()).withTimeout(1.0),
+			runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> mIntakeKraken.stopRollers())
+		);
 	}
 
 
@@ -133,6 +138,10 @@ public class Intake extends SubsystemBase {
 			- IntakeConstants.kDeployedPosition) < IntakeConstants.kExtendTolerance;
 	}
 
+	public BooleanSupplier turnOnRollers() {
+		return () -> mIntakeKraken.getExtendPosition() < 0.28;
+	}
+
 	public BooleanSupplier isRetracted() {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition()
 			- IntakeConstants.kRetractPosition) < IntakeConstants.kRetractTolerance;
@@ -142,6 +151,11 @@ public class Intake extends SubsystemBase {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition()
 			- IntakeConstants.kRetractPositionAgitate) < IntakeConstants.kRetractTolerance;
 	}
+
+	public BooleanSupplier pulseRollers() {
+		return () -> mIntakeKraken.getExtendPosition() > 0.5;
+	}
+
 
 	public Boolean IsIntakeExtended() {
 		return Math.abs(mIntakeKraken.getExtendPosition()

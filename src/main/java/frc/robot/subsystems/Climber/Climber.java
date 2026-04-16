@@ -23,7 +23,7 @@ public class Climber extends SubsystemBase {
 		NetworkTable table = inst.getTable("HOT/Climber");
 
 		beambreakPub = table.getBooleanTopic("Beambreak").publish();
-		SmartDashboard.putBoolean("elbowclimber", Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
+		//SmartDashboard.putBoolean("elbowclimber", Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.l3ElbowPos) < 0.002);
 		
 		m_ClimbKraken.m_climberKraken.motor.setPosition(0);
 	}
@@ -32,13 +32,18 @@ public class Climber extends SubsystemBase {
 	public void periodic() {
 		m_ClimbKraken.updateStats();
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
-		if(this.getCurrentCommand() != null){
-			SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
-		}
+		
+		// if(this.getCurrentCommand() != null){
+		// 	SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
+		// }
 	}
 
 	private void setElbowPosition(double targetPos) {
 		m_ClimbKraken.setElbowPosition(targetPos);
+	}
+
+	private void setUnloadedElbowPosition(double targetPos) {
+		m_ClimbKraken.setUnloadedElbowPosition(targetPos);
 	}
 	
 	private void setElbowVelocity(double targetVel) {
@@ -67,7 +72,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	private BooleanSupplier isDeployed() {
-		System.out.println("is deployed");
+		//System.out.println("is deployed");
 		return () -> Math.abs(m_ClimbKraken.getElbowPos() - ClimberConstants.deployedPos) < 0.01;
 	}
 
@@ -140,23 +145,16 @@ public class Climber extends SubsystemBase {
 
 	public Command fullDeploy() {
 		return Commands.sequence(
-			runOnce(() -> setElbowPosition(ClimberConstants.deployedPos)),
+			runOnce(() -> setUnloadedElbowPosition(ClimberConstants.deployedPos)),
 			zeroSpinner(), 
 			deploy());
 	}	
 	public Command deploy() {
-		return run(() -> setElbowPosition(ClimberConstants.deployedPos)).until(isDeployed());
+		return run(() -> setUnloadedElbowPosition(ClimberConstants.deployedPos)).until(isDeployed());
 	}
-	
-	public Command teleopDeploy() {
-		return run(() -> {
-			setElbowPosition(ClimberConstants.deployedPos);
-			setWristPosition(ClimberConstants.wristZeroOffset);
-		}).until(isDeployed());
-	}	
 
 	public Command autonDeploy() {
-		return runOnce(() -> setElbowPosition(ClimberConstants.deployedPos));
+		return runOnce(() -> setUnloadedElbowPosition(ClimberConstants.deployedPos));
 	}	
 
 	public Command stop() {
@@ -164,7 +162,7 @@ public class Climber extends SubsystemBase {
 	}
 	
 	public Command stow() {
-		return run(() -> setElbowPosition(ClimberConstants.storedPos)).until(isStowed());
+		return run(() -> setUnloadedElbowPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
 
 	public Command autoClimb() {
