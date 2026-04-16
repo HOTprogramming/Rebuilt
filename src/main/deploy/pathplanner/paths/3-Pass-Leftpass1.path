@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.608359486454713,
-        "y": 7.434336661905987
+        "x": 3.5082500000000003,
+        "y": 5.525071428571428
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.608359486454712,
-        "y": 7.434336661905987
+        "x": 3.5149012527695085,
+        "y": 5.084446777887058
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.56758915834522,
-        "y": 6.412182596291013
+        "x": 6.5639761904761915,
+        "y": 5.341511904761905
       },
       "prevControl": {
-        "x": 8.551423628895037,
-        "y": 7.483098258941615
-      },
-      "nextControl": {
-        "x": 8.574240411114728,
-        "y": 5.9715579456066425
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.56758915834522,
-        "y": 5.001868758915835
-      },
-      "prevControl": {
-        "x": 8.553721653446836,
-        "y": 5.251483847217591
+        "x": 6.550108685577808,
+        "y": 5.591126993063661
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,15 +30,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.35,
+      "waypointRelativePos": 0.3500000000000001,
       "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.5657568238213233,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.0,
       "constraints": {
         "maxVelocity": 4.5,
         "maxAcceleration": 4.0,
@@ -66,8 +50,8 @@
     },
     {
       "name": "intake",
-      "minWaypointRelativePos": 0.7184334908845413,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 3.25,
         "maxAcceleration": 3.25,
@@ -82,7 +66,7 @@
   "eventMarkers": [
     {
       "name": "Intake Out",
-      "waypointRelativePos": 0.4159351789331485,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
