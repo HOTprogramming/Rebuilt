@@ -212,8 +212,8 @@ public class Intake extends SubsystemBase {
 	}
 
 
-	private double agitatePos1 = IntakeConstants.kRetractPositionAgitate;
-	private double agitatePos2 =  0.447; // IntakeConstants.kRetractPositionAgitate - 0.2;
+	private double agitatePos1 = 0.447;
+	private double agitatePos2 =  0.25;
 	private double agitatePos3 = IntakeConstants.kRetractPositionAgitate;
 
 
