@@ -72,7 +72,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 3.5
                       }
                     }
                   ]
@@ -135,6 +135,6 @@
     }
   },
   "resetOdom": false,
-  "folder": null,
+  "folder": "States Autos",
   "choreoAuto": false
 }

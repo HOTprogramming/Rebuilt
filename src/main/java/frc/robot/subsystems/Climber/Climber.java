@@ -32,7 +32,6 @@ public class Climber extends SubsystemBase {
 	public void periodic() {
 		m_ClimbKraken.updateStats();
 		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
-		
 		// if(this.getCurrentCommand() != null){
 		// 	SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
 		// }
@@ -123,6 +122,10 @@ public class Climber extends SubsystemBase {
 		);
 	}
 
+	public Command autonStartZero() {
+		return Commands.sequence(goToIdle(), zeroSpinner());
+	}
+
 	public Command spinToZero() {
 		return run(() -> {setWristPosition(0.0);}).until(isZeroed()); 
 	}
@@ -164,6 +167,12 @@ public class Climber extends SubsystemBase {
 	public Command stow() {
 		return run(() -> setUnloadedElbowPosition(ClimberConstants.storedPos)).until(isStowed());
 	}
+
+	public Command goToIdle() {
+		return runOnce(() -> setUnloadedElbowPosition(ClimberConstants.idlePos));
+	}
+
+
 
 	public Command autoClimb() {
 		return run(() -> setElbowPosition(ClimberConstants.autoClimbPos));

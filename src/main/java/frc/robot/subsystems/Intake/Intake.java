@@ -1,6 +1,9 @@
 package frc.robot.subsystems.Intake;
 
 import java.util.function.BooleanSupplier;
+
+import javax.print.attribute.standard.MediaName;
+
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
 import edu.wpi.first.math.MathUtil;
@@ -196,8 +199,8 @@ public class Intake extends SubsystemBase {
 		.and(() -> Math.abs(mIntakeKraken.m_ExtendKraken.motor.getClosedLoopReference().getValueAsDouble() - IntakeConstants.kRetractPositionAgitate) < 0.01);
 	}
 	
-	double targetreextendpos = 0.9;
-	double reextendoffset = 0.4;
+	double targetreextendpos = IntakeConstants.kRetractPositionAgitate;
+	double reextendoffset = 0.25;
 
 	private Command reExtend() {
 		return 
@@ -209,5 +212,29 @@ public class Intake extends SubsystemBase {
 
 	private BooleanSupplier isReExetended() {
 		return () -> Math.abs(mIntakeKraken.getExtendPosition() - targetreextendpos) < IntakeConstants.kExtendTolerance;
+	}
+
+
+	private double agitatePos1 = 0.447;
+	private double agitatePos2 =  0.25;
+	private double agitatePos3 = IntakeConstants.kRetractPositionAgitate;
+
+
+	public Command newAgitate() {
+		return Commands.sequence(
+			runOnce(() -> {
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
+				.apply(new MotionMagicConfigs()
+				.withMotionMagicAcceleration(3)
+				.withMotionMagicCruiseVelocity(4));
+			}), 
+			new WaitCommand(.02), 
+			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.1),
+			run(() -> mIntakeKraken.runPosition(agitatePos2)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos2) < 0.1),
+			runOnce(() -> {mIntakeKraken.runPosition(agitatePos3);  mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);}),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> mIntakeKraken.stopRollers()),
+			run(() -> mIntakeKraken.runPosition(agitatePos3)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos3) < 0.1)
+		);
 	}
 }

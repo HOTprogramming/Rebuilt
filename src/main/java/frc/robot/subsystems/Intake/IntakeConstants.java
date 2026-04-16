@@ -21,11 +21,11 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.14167;
+	public static double kDeployedPosition = 0.163;
 	public static double kShortDeployedPosition = 0.25; // not used
 
-	public static double kRetractPosition = 0.671;
-	public static double kRetractPositionAgitate = 0.573;
+	public static double kRetractPosition = 0.661;
+	public static double kRetractPositionAgitate = 0.588;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
 
@@ -33,8 +33,7 @@ public class IntakeConstants {
 	public static double agitateCurrentTime = 0.2;
 
 	public static double kExpelSpeed = -100.0;
-	public static double kIntakeSpeed = 100.0;
-	public static double kKickerSpeed = 65.0;
+	public static double kIntakeSpeed = 110.0;
 
 	public static int kIntakeEncoderID = Constants.getRobot() == RobotType.COMPBOT ? 47 : 0;
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
@@ -58,11 +57,11 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(8)
+			.withKP(3.6)
 			.withKI(0)
 			.withKD(0)
-			.withKS(4)
-			.withKV(0.1));
+			.withKS(2.2)
+			.withKV(0.044));
 
 		public static final TalonFXConfiguration autoRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -79,11 +78,11 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(8)
+			.withKP(3.6)
 			.withKI(0)
 			.withKD(0)
-			.withKS(4)
-			.withKV(0.1)); // 0.105
+			.withKS(2.2)
+			.withKV(0.044)); // 0.105
 
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()

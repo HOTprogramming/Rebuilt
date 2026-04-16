@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.532,
-        "y": 5.426
+        "x": 8.011226818830243,
+        "y": 4.507261055634808
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.32398742641554,
-        "y": 5.564675049056309
+        "x": 7.803214245245783,
+        "y": 4.645936104691116
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "levi"
     },
     {
       "anchor": {
