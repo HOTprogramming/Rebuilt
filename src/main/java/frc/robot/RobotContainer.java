@@ -52,7 +52,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("index on", indexer.indexOnCommand(shooter));
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(shooter), intake.newAgitate()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(shooter), intake.newAgitateAuto()));
 
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
@@ -150,7 +150,8 @@ public class RobotContainer {
 		operator.leftBumper().onTrue(intake.fullRetract());
 
 		//Temp button to trigger the L1 climb sequence
-		operator.leftTrigger().onTrue(indexer.reverseIndexCommand()).onFalse(indexer.indexOffCommand());
+		operator.leftTrigger().onTrue(indexer.reverseIndexCommand()).onFalse(indexer.indexOffCommand())
+		.onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
 		// Undock from the pole after climbing
 		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
 		// Stow climber after undocking

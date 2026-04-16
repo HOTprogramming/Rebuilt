@@ -237,4 +237,22 @@ public class Intake extends SubsystemBase {
 			run(() -> mIntakeKraken.runPosition(agitatePos3)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos3) < 0.1)
 		);
 	}
+
+	public Command newAgitateAuto() {
+		return Commands.sequence(
+			runOnce(() -> {
+				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
+				.apply(new MotionMagicConfigs()
+				.withMotionMagicAcceleration(3)
+				.withMotionMagicCruiseVelocity(3));
+			}), 
+			new WaitCommand(.02), 
+			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.1),
+			run(() -> mIntakeKraken.runPosition(agitatePos2)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos2) < 0.1),
+			runOnce(() -> {mIntakeKraken.runPosition(agitatePos3);  mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);}),
+			Commands.waitSeconds(0.25),
+			runOnce(() -> mIntakeKraken.stopRollers()),
+			run(() -> mIntakeKraken.runPosition(agitatePos3)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos3) < 0.1)
+		);
+	}
 }
