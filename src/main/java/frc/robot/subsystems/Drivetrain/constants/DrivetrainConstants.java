@@ -19,7 +19,7 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class DrivetrainConstants {
     public static final double right_blue_ladder_angle_deg = 0;
-	public static final double left_blue_ladder_angle_deg = 0;
+	public static final double left_blue_ladder_angle_deg = 1;
 	public static final double right_red_ladder_angle_deg = 0;
 	public static final double left_red_ladder_angle_deg = 0;
 	
