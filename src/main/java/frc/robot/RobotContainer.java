@@ -228,6 +228,7 @@ public class RobotContainer {
 
 		// driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
 
+		driver.start().onTrue(drivetrain.resetPoseBatter());
 		drivetrain.registerTelemetry(drivetrain.logger::telemeterize);
     }
 

@@ -117,6 +117,16 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
         }
     }
 
+	public Command resetPoseBatter() {
+		return runOnce(() -> {
+			if (DriverStation.getAlliance().get() == Alliance.Blue) {
+				resetPose(new Pose2d(3.586, 4.016, Rotation2d.fromDegrees(180)));
+			} else {
+				resetPose(new Pose2d(12.993, 4.016, Rotation2d.fromDegrees(0)));
+			}
+		});
+	}
+
 	public void teleopDrive(double driveX, double driveY, double driveTheta) {
 		double rampedX = xLimiter.calculate((driveX * Math.abs(driveX)));
 		double rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));
