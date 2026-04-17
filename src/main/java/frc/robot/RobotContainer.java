@@ -30,7 +30,7 @@ public class RobotContainer {
     public final Drivetrain drivetrain = DrivetrainConstants.createDrivetrain();
 	public final Camera camera = new Camera(drivetrain);
 	public final Index indexer = new Index();
-	public final Climber climber = new Climber();
+	// public final Climber climber = new Climber();
 	public final Intake intake = new Intake();
 	public final Shooter shooter = new Shooter(indexer);
 
@@ -43,10 +43,10 @@ public class RobotContainer {
 		theta.enableContinuousInput(-Math.PI, Math.PI);
 		
 		NamedCommands.registerCommand("align pole autoflip", Commands.sequence(drivetrain.angleSwerveWheels(), drivetrain.driveToPoleCoordinate_autoflip()));
-		NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
+		// NamedCommands.registerCommand("auto undock", Commands.sequence(climber.deploy(),drivetrain.driveTowardsClimberSide(-1.5).withTimeout(0.8)));
 		NamedCommands.registerCommand("Intake Out", intake.extend());
-		NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
-		NamedCommands.registerCommand("zero wrist", climber.autonStartZero());
+		// NamedCommands.registerCommand("deploy climber", climber.autonDeploy());
+		// NamedCommands.registerCommand("zero wrist", climber.autonStartZero());
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
@@ -59,7 +59,7 @@ public class RobotContainer {
 				 Commands.run(() -> 
 				 drivetrain.aim(0,0)), 
 				 shooter.autoAim()));
-		NamedCommands.registerCommand("auto climb", climber.autoClimb());
+		// NamedCommands.registerCommand("auto climb", climber.autoClimb());
 		
 		NamedCommands.registerCommand("Aim Override", Commands.runOnce(() -> PPHolonomicDriveController.overrideRotationFeedback(
 				() -> theta.calculate(drivetrain.getState().Pose.getRotation().getRadians(), RobotState.turretAngle))));
@@ -155,7 +155,7 @@ public class RobotContainer {
 		// Undock from the pole after climbing
 		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
 		// Stow climber after undocking
-		operator.rightBumper().onTrue(climber.goToIdle());
+		// operator.rightBumper().onTrue(climber.goToIdle());
 		//add distande to shot map offset
 		operator.povUp().onTrue(Commands.runOnce(() -> {
 			shooter.shotMapOffset += 0.1524;
@@ -174,38 +174,43 @@ public class RobotContainer {
 
 			)); 
 
+		operator.x().onTrue(Commands.runOnce(() -> RobotState.setNormalMode()));
+		operator.a().onTrue(shooter.PresetClimberPole());
+		operator.b().onTrue(shooter.PresetTrench());
+		operator.y().onTrue(shooter.PresetBatter());
+
 		// Deploy Climber
-		operator.x().onTrue(
-    	Commands.either(
-		climber.zeroSpinner(), 
-		Commands.runOnce(() -> RobotState.setNormalMode()),
-        RobotState::isClimbMode));
+		// operator.x().onTrue(
+    	// Commands.either(
+		// climber.zeroSpinner(), 
+		// Commands.runOnce(() -> RobotState.setNormalMode()),
+        // RobotState::isClimbMode));
 
 		//Climber Pole Preset: Step 1 of Climb
-		operator.a().onTrue(
-    	Commands.either(
-			Commands.parallel(
-				drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
-				Commands.sequence(Commands.waitSeconds(0.2), climber.stageThreeClimb())
-			),
-			shooter.PresetClimberPole(),
-			RobotState::isClimbMode
-		));
+		// operator.a().onTrue(
+    	// Commands.either(
+		// 	Commands.parallel(
+		// 		drivetrain.driveTowardsClimberSide(0.5).withTimeout(1), 
+		// 		Commands.sequence(Commands.waitSeconds(0.2), climber.stageThreeClimb())
+		// 	),
+		// 	shooter.PresetClimberPole(),
+		// 	RobotState::isClimbMode
+		// ));
 
 
 		//Trench Preset: Step 2 of Climb
-		operator.b().onTrue(
-    	Commands.either(
-		climber.stow(), 
-		shooter.PresetTrench(),
-        RobotState::isClimbMode));
+		// operator.b().onTrue(
+    	// Commands.either(
+		// climber.stow(), 
+		// shooter.PresetTrench(),
+        // RobotState::isClimbMode));
 
 		//Batter Shot Preset : Step 3 of Climb
-		operator.y().onTrue(
-    	Commands.either(
-		climber.deploy(), 
-		shooter.PresetBatter(),
-        RobotState::isClimbMode));
+		// operator.y().onTrue(
+    	// Commands.either(
+		// climber.deploy(), 
+		// shooter.PresetBatter(),
+        // RobotState::isClimbMode));
 
 		RobotModeTriggers.disabled().onTrue(
 			Commands.runOnce(() -> {
@@ -214,7 +219,7 @@ public class RobotContainer {
 				shooter.mShooterKraken.stop();
 				intake.completeStopMethod();
 				indexer.m_IndexKraken.stop();
-				climber.m_ClimbKraken.stop();
+				// climber.m_ClimbKraken.stop();
 				drivetrain.iAmDockingLeaveMeAlone = false;
 			}).ignoringDisable(true)
 		);
@@ -222,9 +227,9 @@ public class RobotContainer {
 		RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.applyTeleopConfigs(), intake));
 
 		//Climber Controls
-		climber.setDefaultCommand(climber
-			.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
-			.onlyIf(RobotState::isClimbMode));
+		// climber.setDefaultCommand(climber
+		// 	.run(() -> climber.m_ClimbKraken.runManual(operator.getLeftX(), operator.getRightX()))
+		// 	.onlyIf(RobotState::isClimbMode));
 
 		// driver.start().onTrue(Commands.runOnce(() -> intake.mIntakeKraken.m_ExtendKraken.motor.setPosition(0)).ignoringDisable(true));
 
