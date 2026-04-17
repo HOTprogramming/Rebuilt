@@ -21,7 +21,7 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.163;
+	public static double kDeployedPosition = 0.154;//0.163
 	public static double kShortDeployedPosition = 0.25; // not used
 
 	public static double kRetractPosition = 0.69;

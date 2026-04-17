@@ -16,15 +16,15 @@
     },
     {
       "anchor": {
-        "x": 3.210984308131241,
+        "x": 3.133352353780314,
         "y": 0.6386019971469343
       },
       "prevControl": {
-        "x": 2.8875178316690437,
+        "x": 2.809885877318117,
         "y": 0.8714978601997174
       },
       "nextControl": {
-        "x": 3.4403113985955245,
+        "x": 3.3626794442445975,
         "y": 0.4734864920126487
       },
       "isLocked": false,
@@ -70,7 +70,7 @@
     },
     {
       "name": "Intake Out",
-      "waypointRelativePos": 1.2856178257933832,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
