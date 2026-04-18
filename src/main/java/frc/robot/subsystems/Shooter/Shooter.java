@@ -168,6 +168,7 @@ public class Shooter extends SubsystemBase {
 
 	public Command autoAim() {
 		return run(() -> {
+
 			RobotState.isShooting = true;
 			if (!RobotState.isManualMode()) {
 				double distance;
@@ -267,7 +268,7 @@ public class Shooter extends SubsystemBase {
 
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
-		}).withName("auto aim");
+		}).withName("auto aim teleop");
 	}
 
 	public Command PresetBatter() { // 1m

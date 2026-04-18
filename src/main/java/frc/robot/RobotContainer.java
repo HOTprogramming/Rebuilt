@@ -69,7 +69,7 @@ public class RobotContainer {
 				shooter.hoodDown()
 			)
 		);
-		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim());
+		NamedCommands.registerCommand("Go To Shoot", shooter.autoAim().withName("auto aim auto"));
 		NamedCommands.registerCommand("Agitate", intake.packingAgitate());
 		NamedCommands.registerCommand("Run Shoot", Commands.parallel(NamedCommands.getCommand("Aim"), NamedCommands.getCommand("Shoot")));
 
