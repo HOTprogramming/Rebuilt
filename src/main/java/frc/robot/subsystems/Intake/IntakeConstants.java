@@ -21,7 +21,7 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.154;//0.163
+	public static double kDeployedPosition = 0.17;//0.163
 	public static double kShortDeployedPosition = 0.25; // not used
 
 	public static double kRetractPosition = 0.69;
@@ -39,6 +39,7 @@ public class IntakeConstants {
 	public static int kIntakeMotorIDExtend = Constants.getRobot() == RobotType.COMPBOT ? 16 : 0;
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
+	public static int kIntakeMotorIDRoller3 = Constants.getRobot() == RobotType.COMPBOT ? 20 : 0;
 	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.542 : 0.0;
 	public static String kBusName = Constants.canName;
 
@@ -59,11 +60,11 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(3.6)
+			.withKP(0.75)
 			.withKI(0)
 			.withKD(0)
-			.withKS(2.2)
-			.withKV(0.044));
+			.withKS(0.35)
+			.withKV(0.1));
 
 		public static final TalonFXConfiguration autoRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -80,12 +81,56 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
 		.withSlot0(new Slot0Configs()
-			.withKP(3.6)
+			.withKP(0.75)
 			.withKI(0)
 			.withKD(0)
-			.withKS(2.2)
-			.withKV(0.044)); // 0.105
+			.withKS(0.35)
+			.withKV(0.1)); // 0.105
 
+
+	public static final TalonFXConfiguration invertedRollerConfigs = new TalonFXConfiguration()
+		.withCurrentLimits(new CurrentLimitsConfigs()
+			.withStatorCurrentLimit(120)    //was 100 
+			.withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(120)
+			.withSupplyCurrentLimitEnable(true)
+			.withSupplyCurrentLowerLimit(100) //80
+			.withSupplyCurrentLowerTime(1.50
+			
+			))    //was 2.0
+		.withTorqueCurrent(new TorqueCurrentConfigs()
+			.withPeakForwardTorqueCurrent(120) //was 100
+			.withPeakReverseTorqueCurrent(-120)) //was 100
+		.withMotorOutput(new MotorOutputConfigs()
+			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withNeutralMode(NeutralModeValue.Coast))
+		.withSlot0(new Slot0Configs()
+			.withKP(0.75)
+			.withKI(0)
+			.withKD(0)
+			.withKS(0.35)
+			.withKV(0.1));
+
+		public static final TalonFXConfiguration invertedAutoRollerConfigs = new TalonFXConfiguration()
+		.withCurrentLimits(new CurrentLimitsConfigs()
+			.withStatorCurrentLimit(100)
+			.withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(100)
+			.withSupplyCurrentLimitEnable(true)
+			.withSupplyCurrentLowerLimit(80)
+			.withSupplyCurrentLowerTime(1.50))    
+		.withTorqueCurrent(new TorqueCurrentConfigs()
+			.withPeakForwardTorqueCurrent(100) 
+			.withPeakReverseTorqueCurrent(-100))
+		.withMotorOutput(new MotorOutputConfigs()
+			.withInverted(InvertedValue.CounterClockwise_Positive)
+			.withNeutralMode(NeutralModeValue.Coast))
+		.withSlot0(new Slot0Configs()
+			.withKP(0.75)
+			.withKI(0)
+			.withKD(0)
+			.withKS(0.35)
+			.withKV(0.1)); // 0.105
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
@@ -120,14 +165,14 @@ public class IntakeConstants {
 			.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive).withAbsoluteSensorDiscontinuityPoint(1));
 
 	public static final IntakeConfigs IntakeConfigs = switch (Constants.getRobot()) {
-		case COMPBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, IntakeEncoderConfigs);
-		case CAMERABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, IntakeEncoderConfigs);
-		case COMP24 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, IntakeEncoderConfigs);
-		case COMP25 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, IntakeEncoderConfigs);
-		case MINIBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, IntakeEncoderConfigs);
-		case ALPHABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, IntakeEncoderConfigs);
+		case COMPBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, invertedAutoRollerConfigs, invertedRollerConfigs, IntakeEncoderConfigs);
+		case CAMERABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, invertedAutoRollerConfigs, invertedRollerConfigs, IntakeEncoderConfigs);
+		case COMP24 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, invertedAutoRollerConfigs, invertedRollerConfigs, IntakeEncoderConfigs);
+		case COMP25 -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, invertedAutoRollerConfigs, invertedRollerConfigs, IntakeEncoderConfigs);
+		case MINIBOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, invertedAutoRollerConfigs, invertedRollerConfigs, IntakeEncoderConfigs);
+		case ALPHABOT -> new IntakeConfigs(RollerConfigs, IntakeExtendConfigs, autoRollerConfigs, invertedAutoRollerConfigs, invertedRollerConfigs, IntakeEncoderConfigs);
 	};
 
-	public record IntakeConfigs(TalonFXConfiguration RollerConfigs, TalonFXConfiguration IntakeExtendConfigs, TalonFXConfiguration autonRollerConfigs,
+	public record IntakeConfigs(TalonFXConfiguration RollerConfigs, TalonFXConfiguration IntakeExtendConfigs, TalonFXConfiguration autonRollerConfigs, TalonFXConfiguration invertedAutoRollerConfigs, TalonFXConfiguration invertedRollerConfigs,
 		CANcoderConfiguration IntakeEncoderConfigs) {}
 }
