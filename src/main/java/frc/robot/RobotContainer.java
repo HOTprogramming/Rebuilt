@@ -97,8 +97,6 @@ public class RobotContainer {
 
 		driver.rightTrigger().whileTrue(
 			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))
-						.unless(() -> RobotState.isManualMode()),
 				shooter.autoAim(),
 
 				Commands.sequence(
@@ -108,16 +106,12 @@ public class RobotContainer {
 						Commands.waitSeconds(0.2)
 					),
 					// Once the race ends (Ready OR Timed Out), run the motors
-					
-					//shooter.startShotTimer(),
 					indexer.indexOnCommand(shooter)
-					
-
-				)
+					)
 			)
 		).whileTrue( // keep agitate seperate so left trigger doesnt interrupt the shoot command
 			Commands.sequence(
-			// This race will finish as soon as shooter is  ready OR 0.2s passes
+			// This race will finish as soon as shooter is ready OR 0.2s passes
 				Commands.race(
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
@@ -133,6 +127,12 @@ public class RobotContainer {
 			)
 		);
 
+		// Logic for the Drivetrain only, prevent X brake mode from cancelling the shoot commands
+		driver.rightTrigger().whileTrue(
+			drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))
+					.unless(() -> RobotState.isManualMode())
+		);
+
 		driver.leftTrigger()
 		.whileTrue(Commands.parallel(
 			intake.extend(),
@@ -142,10 +142,11 @@ public class RobotContainer {
 		.onFalse(indexer.indexOffCommand())
 		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
 		
-		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
+		//No more climber :()
+		//driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 		
 		// X the Wheels
-		// driver.x().whileTrue(drivetrain.xLockCommand());
+		driver.x().whileTrue(drivetrain.xLockCommand());
 	
 		operator.leftBumper().onTrue(intake.fullRetract());
 
