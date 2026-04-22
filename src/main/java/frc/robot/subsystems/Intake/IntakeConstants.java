@@ -21,10 +21,10 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.163;
+	public static double kDeployedPosition = 0.154;//0.163
 	public static double kShortDeployedPosition = 0.25; // not used
 
-	public static double kRetractPosition = 0.661;
+	public static double kRetractPosition = 0.69;
 	public static double kRetractPositionAgitate = 0.588;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
@@ -44,15 +44,17 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(100)    //was 100 
+			.withStatorCurrentLimit(120)    //was 100 
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(100)
+			.withSupplyCurrentLimit(120)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(80) //80
-			.withSupplyCurrentLowerTime(1.50))    //was 2.0
+			.withSupplyCurrentLowerLimit(100) //80
+			.withSupplyCurrentLowerTime(1.50
+			
+			))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(100) //was 100
-			.withPeakReverseTorqueCurrent(-100)) //was 100
+			.withPeakForwardTorqueCurrent(120) //was 100
+			.withPeakReverseTorqueCurrent(-120)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))

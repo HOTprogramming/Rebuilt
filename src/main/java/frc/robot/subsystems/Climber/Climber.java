@@ -30,8 +30,8 @@ public class Climber extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		m_ClimbKraken.updateStats();
-		beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
+		// m_ClimbKraken.updateStats();
+		// beambreakPub.set(m_ClimbKraken.getBeambreakStatus());
 		// if(this.getCurrentCommand() != null){
 		// 	SmartDashboard.putString("climber/current command", this.getCurrentCommand().getName());
 		// }

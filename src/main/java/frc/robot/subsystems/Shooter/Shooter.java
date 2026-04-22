@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
 import frc.robot.RobotState.Zone;
@@ -66,7 +67,7 @@ public class Shooter extends SubsystemBase {
 		hoodAngleMap.put(5.3, 8.7); //8.7
 		// Passing
 		hoodAngleMap.put(5.35, 7.5); 
-		hoodAngleMap.put(17.0, 15.0); //11.0
+		hoodAngleMap.put(17.0, 11.0); //11.0
 
 		shooterSpeedMap.put(1.0, 38.0);
 
@@ -122,6 +123,13 @@ public class Shooter extends SubsystemBase {
 
 	}
 
+	public Command reverseShooter() {
+		return Commands.sequence(
+			runOnce(() -> mShooterKraken.runVelocity(0.1)),
+			Commands.waitSeconds(0.5),
+			run(() -> mShooterKraken.runVelocity(-20)));
+	}
+
 	/**
 	 * Direct method to start the shot timer — called from indexOnCommand() in the
 	 * same runOnce as the kicker start so they fire on the exact same loop cycle.
@@ -160,6 +168,7 @@ public class Shooter extends SubsystemBase {
 
 	public Command autoAim() {
 		return run(() -> {
+
 			RobotState.isShooting = true;
 			if (!RobotState.isManualMode()) {
 				double distance;
@@ -259,7 +268,7 @@ public class Shooter extends SubsystemBase {
 
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);
-		}).withName("auto aim");
+		}).withName("auto aim teleop");
 	}
 
 	public Command PresetBatter() { // 1m
