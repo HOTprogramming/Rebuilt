@@ -1,18 +1,5 @@
 package frc.robot.HealthCheck;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.List;
-import java.io.*;
-
-import javax.print.PrintException;
-
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -28,12 +15,6 @@ public class HealthCheck {
 	public final IntakeKraken m_IntakeKraken = IntakeKraken.getInstance();
 	public final ShooterKraken m_ShooterKraken = ShooterKraken.getInstance();
 	
-	private String[] resultData; 
-	private Path filePath = Path.of("/HealthCheck/report.html");
-	private Path resultsfilePath = Path.of("results.html");
-	private String fileContent;
-
-	
 	private double IntakeExtendPosition = 0.0;
 	private double ShooterLeftTop = 0.0;
 	private double ShooterLeftBottom = 0.0;
@@ -43,45 +24,11 @@ public class HealthCheck {
 	public HealthCheck() {
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
 		NetworkTable table = inst.getTable("HOT/HealthCheck");
-
-		readTemplate();
-		writeStats();
 	}
 
 	public void update() {
 
 	}
-
-	private void readTemplate() {
-		  // Reading the file (as a single string)
-        try {
-            fileContent = Files.readString(filePath);
-            System.out.println("\nFile content (read as String):");
-            System.out.println(fileContent);
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
-        }
-    }
-
-
-
-	private void writeStats() {
-		// Writing to a file
-        try {
-            String content = "Hello, Java NIO!\nThis is a text file example.";
-            Files.writeString(
-                resultsfilePath,
-                content,
-                StandardOpenOption.CREATE,      // Create file if it doesn't exist
-                StandardOpenOption.TRUNCATE_EXISTING // Overwrite if exists
-            );
-            System.out.println("File written successfully.");
-        } catch (IOException e) {
-            System.err.println("Error writing file: " + e.getMessage());
-        }
-	}
-
-
 
 	private void validateIntakePosition() {
 		IntakeExtendPosition = m_IntakeKraken.getExtendPosition();

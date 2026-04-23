@@ -1,6 +1,5 @@
 package frc.robot.subsystems.Shooter;
 
-import frc.robot.subsystems.Intake.IntakeKraken;
 import frc.util.Kraken;
 
 public class ShooterKraken {
