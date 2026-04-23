@@ -21,11 +21,11 @@ import frc.robot.Constants.RobotType;
 import frc.robot.Robot;
 
 public class IntakeConstants {
-	public static double kDeployedPosition = 0.17;//0.163
+	public static double kDeployedPosition = 0.07;
 	public static double kShortDeployedPosition = 0.25; // not used
 
-	public static double kRetractPosition = 0.69;
-	public static double kRetractPositionAgitate = 0.588;
+	public static double kRetractPosition = 0.61;
+	public static double kRetractPositionAgitate = 0.55;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
 
@@ -40,22 +40,22 @@ public class IntakeConstants {
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
 	public static int kIntakeMotorIDRoller3 = Constants.getRobot() == RobotType.COMPBOT ? 20 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.542 : 0.0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.042 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(120)    //was 100 
+			.withStatorCurrentLimit(80)    //was 100 
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(120)
+			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(100) //80
+			.withSupplyCurrentLowerLimit(60) //80
 			.withSupplyCurrentLowerTime(1.50
 			
 			))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(120) //was 100
-			.withPeakReverseTorqueCurrent(-120)) //was 100
+			.withPeakForwardTorqueCurrent(80) //was 100
+			.withPeakReverseTorqueCurrent(-80)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -68,15 +68,16 @@ public class IntakeConstants {
 
 		public static final TalonFXConfiguration autoRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(100)
+			.withStatorCurrentLimit(80)    //was 100 
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(100)
+			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(80)
-			.withSupplyCurrentLowerTime(1.50))    
+			.withSupplyCurrentLowerLimit(60) //80
+			.withSupplyCurrentLowerTime(1.50
+			))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(100) 
-			.withPeakReverseTorqueCurrent(-100))
+			.withPeakForwardTorqueCurrent(80) //was 100
+			.withPeakReverseTorqueCurrent(-80)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -90,17 +91,16 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration invertedRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(120)    //was 100 
+			.withStatorCurrentLimit(80)    //was 100 
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(120)
+			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(100) //80
+			.withSupplyCurrentLowerLimit(60) //80
 			.withSupplyCurrentLowerTime(1.50
-			
 			))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(120) //was 100
-			.withPeakReverseTorqueCurrent(-120)) //was 100
+			.withPeakForwardTorqueCurrent(80) //was 100
+			.withPeakReverseTorqueCurrent(-80)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -113,15 +113,16 @@ public class IntakeConstants {
 
 		public static final TalonFXConfiguration invertedAutoRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(100)
+			.withStatorCurrentLimit(80)    //was 100 
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(100)
+			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(80)
-			.withSupplyCurrentLowerTime(1.50))    
+			.withSupplyCurrentLowerLimit(60) //80
+			.withSupplyCurrentLowerTime(1.50
+			))    //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(100) 
-			.withPeakReverseTorqueCurrent(-100))
+			.withPeakForwardTorqueCurrent(80) //was 100
+			.withPeakReverseTorqueCurrent(-80)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -134,20 +135,20 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration IntakeExtendConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(40)
+			.withStatorCurrentLimit(80)
 			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(40)
+			.withSupplyCurrentLimit(80)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30)
+			.withSupplyCurrentLowerLimit(60)
 			.withSupplyCurrentLowerTime(1))
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(120)
-			.withPeakReverseTorqueCurrent(-120))
+			.withPeakForwardTorqueCurrent(80)
+			.withPeakReverseTorqueCurrent(-80))
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withSlot0(new Slot0Configs()
-			.withKP(128)
+			.withKP(256) // 128
 			.withKI(0)
 			.withKD(0)
 			.withKS(0.45)
