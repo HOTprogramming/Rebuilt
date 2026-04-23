@@ -19,8 +19,8 @@ import frc.robot.subsystems.Drivetrain.Drivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class DrivetrainConstants {
     public static final double right_blue_ladder_angle_deg = 0;
-	public static final double left_blue_ladder_angle_deg = 0;
-	public static final double right_red_ladder_angle_deg = 3;
+	public static final double left_blue_ladder_angle_deg = 1;
+	public static final double right_red_ladder_angle_deg = 0;
 	public static final double left_red_ladder_angle_deg = 0;
 	
 	// Both sets of gains need to be tuned to your individual robot.
@@ -62,9 +62,9 @@ public class DrivetrainConstants {
     private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(
             new CurrentLimitsConfigs()
-				.withSupplyCurrentLimit(40)
+				.withSupplyCurrentLimit(60)
 				.withSupplyCurrentLimitEnable(true)
-				.withSupplyCurrentLowerLimit(30)
+				.withSupplyCurrentLowerLimit(40)
 				.withSupplyCurrentLowerTime(1)
 		);
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
@@ -144,7 +144,7 @@ public class DrivetrainConstants {
     private static final int kFrontLeftDriveMotorId = 8;
     private static final int kFrontLeftSteerMotorId = 7;
     private static final int kFrontLeftEncoderId = 41;
-    private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.458740234375);
+    private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.2919);
     private static final boolean kFrontLeftSteerMotorInverted = true;
     private static final boolean kFrontLeftEncoderInverted = false;
 
@@ -193,6 +193,7 @@ public class DrivetrainConstants {
         );
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontRight =
         ConstantCreator.createModuleConstants(
+			
             kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId, kFrontRightEncoderOffset,
             kFrontRightXPos, kFrontRightYPos, kInvertRightSide, kFrontRightSteerMotorInverted, kFrontRightEncoderInverted
         );

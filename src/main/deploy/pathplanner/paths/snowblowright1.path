@@ -1,0 +1,122 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.698930099857346,
+        "y": 0.6256633380884444
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.948479026711586,
+        "y": 0.6106522386650982
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.510409638554217,
+        "y": 0.7785421686746998
+      },
+      "prevControl": {
+        "x": 8.296099375306165,
+        "y": 0.6498133410308884
+      },
+      "nextControl": {
+        "x": 8.733347028728842,
+        "y": 0.912453015687815
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.641542168674698,
+        "y": 2.472337349397591
+      },
+      "prevControl": {
+        "x": 8.615283044859483,
+        "y": 2.078450492169356
+      },
+      "nextControl": {
+        "x": 8.663397590361445,
+        "y": 2.8001686746987957
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.510409638554217,
+        "y": 3.41212048192771
+      },
+      "prevControl": {
+        "x": 8.484532320437241,
+        "y": 3.023960710173073
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "startshooting"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9637526652452012,
+      "rotationDegrees": 89.83625175805894
+    },
+    {
+      "waypointRelativePos": 1.5543710021322088,
+      "rotationDegrees": 90.16177199317454
+    },
+    {
+      "waypointRelativePos": 2.1620469083155567,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Out",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Out"
+        }
+      }
+    },
+    {
+      "name": "Go To Shoot",
+      "waypointRelativePos": 0.45374746792707576,
+      "endWaypointRelativePos": 3.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Go To Shoot"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 6.0,
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": 22.873665190626692
+  },
+  "reversed": false,
+  "folder": "Snowblow",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": false
+}

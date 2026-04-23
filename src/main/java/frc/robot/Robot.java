@@ -19,13 +19,13 @@ public class Robot extends TimedRobot {
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog(), true);
 		DriverStation.silenceJoystickConnectionWarning(true);
-
+		SmartDashboard.putData(CommandScheduler.getInstance());
         m_robotContainer = new RobotContainer();
     }
 
     @Override
     public void robotPeriodic() {
-		RobotState.climberCurrent = m_robotContainer.climber.m_ClimbKraken.getTotalCurrent();
+		// RobotState.climberCurrent = m_robotContainer.climber.m_ClimbKraken.getTotalCurrent();
 		RobotState.intakeCurrent = m_robotContainer.intake.mIntakeKraken.getTotalCurrent();
 		RobotState.indexerCurrent = m_robotContainer.indexer.m_IndexKraken.getTotalCurrent();
 		RobotState.shooterCurrent = m_robotContainer.shooter.mShooterKraken.getTotalCurrent();
@@ -69,8 +69,9 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
-
+		
 		SmartDashboard.putBoolean("Teleop", true);
+
     }
 
     @Override
