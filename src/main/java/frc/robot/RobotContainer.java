@@ -50,9 +50,9 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
-		NamedCommands.registerCommand("index on", indexer.indexOnCommand(shooter));
+		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(shooter), intake.newAgitateAuto()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.newAgitateAuto()));
 
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
@@ -104,7 +104,9 @@ public class RobotContainer {
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
 				),
-				indexer.indexOnCommand(shooter)
+				indexer.reverseIndexCommand(),
+				Commands.waitSeconds(0.2),
+				indexer.indexOnCommand()
 			)
 		).whileTrue( 
 			Commands.sequence(
@@ -141,10 +143,16 @@ public class RobotContainer {
 		operator.leftBumper().onTrue(intake.fullRetract());
 
 		//Temp button to trigger the L1 climb sequence
-		operator.leftTrigger().onTrue(indexer.reverseIndexCommand()).onFalse(indexer.indexOffCommand())
-		.onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
+		driver.leftBumper().onTrue(Commands.sequence(indexer.reverseIndexCommand())).onFalse(indexer.indexOffCommand());
+
+
+		operator.leftTrigger().onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
+
+
 		// Undock from the pole after climbing
-		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
+		operator.rightTrigger()
+			.whileTrue(intake.outtake())
+			.onTrue(indexer.reverseIndexCommand()).onFalse(indexer.indexOffCommand());
 		// Stow climber after undocking
 		// operator.rightBumper().onTrue(climber.goToIdle());
 		//add distande to shot map offset
