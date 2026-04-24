@@ -139,10 +139,14 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	}
 
 	public void aim(double driveX, double driveY) {
-		setControl(FIELD_CENTRIC_FACING_ANGLE
-			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * 0.25)
-			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * 0.25)
-			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
+		if (driveX < 0.05 && driveY < 0.05 && isAtTargetAngle()) {
+			setControl(brakeRequest);
+		} else {
+			setControl(FIELD_CENTRIC_FACING_ANGLE
+				.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * 0.5)
+				.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * 0.5)
+				.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
+		}
 	}
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
