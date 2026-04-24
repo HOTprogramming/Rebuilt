@@ -36,6 +36,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotState;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.TunerSwerveDrivetrain;
+
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.SOTFspeed;
 import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.left_blue_ladder_angle_deg;
 import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.right_blue_ladder_angle_deg;
 import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.left_red_ladder_angle_deg;
@@ -143,10 +145,17 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 			setControl(brakeRequest);
 		} else {
 			setControl(FIELD_CENTRIC_FACING_ANGLE
-				.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * 0.5)
-				.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * 0.5)
+				.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * SOTFspeed)
+				.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * SOTFspeed)
 				.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 		}
+	}
+
+	public void neutralAim(double driveX, double driveY) {
+		setControl(FIELD_CENTRIC_FACING_ANGLE
+			.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed)
+			.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed)
+			.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 	}
 
     public Command applyRequest(Supplier<SwerveRequest> request) {
@@ -204,7 +213,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		// this calculates the shortest distance between angles
 		double angleError = Math.abs(currentRotation.minus(targetRotation).getDegrees());
 
-		return angleError < 5.0; // 5 degree tolerance
+		return angleError < 4.0; // 5 degree tolerance
 	}
 
 final double CLIMBER_CHASSIS_OFFSET = 90.0; 	// Climber on front

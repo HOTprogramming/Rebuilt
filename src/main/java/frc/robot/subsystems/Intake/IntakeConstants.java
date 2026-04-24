@@ -45,17 +45,15 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)    //was 100 
-			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(80)
+			// .withStatorCurrentLimit(50)
+			// .withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(50)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(60) //80
-			.withSupplyCurrentLowerTime(1.50
-			
-			))    //was 2.0
+			.withSupplyCurrentLowerLimit(30) //80
+			.withSupplyCurrentLowerTime(0.5)) //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(80) //was 100
-			.withPeakReverseTorqueCurrent(-80)) //was 100
+			.withPeakForwardTorqueCurrent(50) //was 100
+			.withPeakReverseTorqueCurrent(-50)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -68,16 +66,15 @@ public class IntakeConstants {
 
 		public static final TalonFXConfiguration autoRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)    //was 100 
-			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(80)
+			// .withStatorCurrentLimit(50)
+			// .withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(50)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(60) //80
-			.withSupplyCurrentLowerTime(1.50
-			))    //was 2.0
+			.withSupplyCurrentLowerLimit(30) //80
+			.withSupplyCurrentLowerTime(0.5)) //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(80) //was 100
-			.withPeakReverseTorqueCurrent(-80)) //was 100
+			.withPeakForwardTorqueCurrent(50) //was 100
+			.withPeakReverseTorqueCurrent(-50)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -91,16 +88,15 @@ public class IntakeConstants {
 
 	public static final TalonFXConfiguration invertedRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)    //was 100 
-			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(80)
+			// .withStatorCurrentLimit(50)
+			// .withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(50)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(60) //80
-			.withSupplyCurrentLowerTime(1.50
-			))    //was 2.0
+			.withSupplyCurrentLowerLimit(30) //80
+			.withSupplyCurrentLowerTime(0.5)) //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(80) //was 100
-			.withPeakReverseTorqueCurrent(-80)) //was 100
+			.withPeakForwardTorqueCurrent(50) //was 100
+			.withPeakReverseTorqueCurrent(-50)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -113,16 +109,15 @@ public class IntakeConstants {
 
 		public static final TalonFXConfiguration invertedAutoRollerConfigs = new TalonFXConfiguration()
 		.withCurrentLimits(new CurrentLimitsConfigs()
-			.withStatorCurrentLimit(80)    //was 100 
-			.withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(80)
+			// .withStatorCurrentLimit(50)
+			// .withStatorCurrentLimitEnable(true)
+			.withSupplyCurrentLimit(50)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(60) //80
-			.withSupplyCurrentLowerTime(1.50
-			))    //was 2.0
+			.withSupplyCurrentLowerLimit(30) //80
+			.withSupplyCurrentLowerTime(0.5)) //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(80) //was 100
-			.withPeakReverseTorqueCurrent(-80)) //was 100
+			.withPeakForwardTorqueCurrent(50) //was 100
+			.withPeakReverseTorqueCurrent(-50)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))

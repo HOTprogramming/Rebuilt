@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Drivetrain;
 
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.SOTFspeed;
+
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,6 +10,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 
 public class ShootOnTheFly {
     private static double TOF_CONVERGENCE_THRESHOLD;
@@ -41,10 +44,11 @@ public class ShootOnTheFly {
 		double velx = fieldSpeeds.vxMetersPerSecond;
 		double vely = fieldSpeeds.vyMetersPerSecond;
 
+		double maxSOTFspeed = SOTFspeed * DrivetrainConstants.kSpeedAt12Volts.magnitude(); // ~1.5m/s
+		
 		double speedMag = Math.sqrt(velx * velx + vely * vely);
-		if (speedMag > 1.0) { // if it s moving faster than 1 m/s, normalize to 1 m/s
-			fieldSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(velx / speedMag, vely / speedMag, fieldSpeeds.omegaRadiansPerSecond, RobotPos.getRotation()); 
-
+		if (speedMag > maxSOTFspeed) { // if it s moving faster than 1 m/s, normalize to 1 m/s
+			fieldSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds((velx * maxSOTFspeed) / speedMag, (vely * maxSOTFspeed) / speedMag, fieldSpeeds.omegaRadiansPerSecond, RobotPos.getRotation()); 
 		}
 		// filters for vx and vy speeds to smooth sotf target movement
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond);

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.RobotState.Zone;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -96,7 +97,12 @@ public class RobotContainer {
 		shooter.setDefaultCommand(shooter.hoodDown());
 
 		driver.rightTrigger()
-		.whileTrue(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode()))
+		.whileTrue(
+			Commands.either(
+				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
+				drivetrain.run(() -> drivetrain.neutralAim(-driver.getLeftY(), -driver.getLeftX())),
+				() -> (RobotState.getZone() == Zone.ALLIANCE)
+			).unless(() -> RobotState.isManualMode()))
 		.whileTrue(shooter.autoAim()) // schedule commands separately so they dont end each other
 		.whileTrue(
 			Commands.sequence(
