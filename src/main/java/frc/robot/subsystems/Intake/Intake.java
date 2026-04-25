@@ -29,6 +29,21 @@ public class Intake extends SubsystemBase {
 		mIntakeKraken.updateStats();
 	}
 
+	// public Command extend() {
+	// 	return Commands.sequence(runOnce(() -> {
+	// 		mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
+	// 			.apply(new MotionMagicConfigs()
+	// 				.withMotionMagicAcceleration(64)
+	// 				.withMotionMagicCruiseVelocity(64));
+	// 	}), new WaitCommand(0.02), 
+	// 	runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition)),
+	// 	run(() -> {}).until(turnOnRollers()),  //added ????
+	// 	runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed))
+	// 	);
+	// }
+
+
+	
 	public Command extend() {
 		return Commands.sequence(runOnce(() -> {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
@@ -36,12 +51,13 @@ public class Intake extends SubsystemBase {
 					.withMotionMagicAcceleration(64)
 					.withMotionMagicCruiseVelocity(64));
 		}), new WaitCommand(0.02), 
-		runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition)),
-		run(() -> {}).until(turnOnRollers()),  //added ????
-		runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed))
+		runOnce(() -> 
+		{
+			mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition); 
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+		})
 		);
 	}
-
 
 	public Command extendShort() {
 		return Commands.sequence(runOnce(() -> {

@@ -51,6 +51,9 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	private final SlewRateLimiter xLimiter = new SlewRateLimiter(3.5);
 	private final SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
+
+	private final SlewRateLimiter xSOTFLimiter = new SlewRateLimiter(2.0);
+	private final SlewRateLimiter ySOTFLimiter = new SlewRateLimiter(2.0);
 	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
 
 	private final SwerveDriveBrake brakeRequest = new SwerveDriveBrake();
@@ -141,12 +144,16 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	}
 
 	public void aim(double driveX, double driveY) {
-		if (driveX < 0.05 && driveY < 0.05 && isAtTargetAngle()) {
+
+		double rampedX = xSOTFLimiter.calculate((driveX * Math.abs(driveX)));
+		double rampedY = ySOTFLimiter.calculate((driveY * Math.abs(driveY)));
+
+		if (Math.abs(driveX) < 0.05 && Math.abs(driveY) < 0.05 && isAtTargetAngle()) {
 			setControl(brakeRequest);
 		} else {
 			setControl(FIELD_CENTRIC_FACING_ANGLE
-				.withVelocityX((driveX <= 0 ? -(driveX * driveX) : (driveX * driveX)) * MaxSpeed * SOTFspeed)
-				.withVelocityY((driveY <= 0 ? -(driveY * driveY) : (driveY * driveY)) * MaxSpeed * SOTFspeed)
+				.withVelocityX((rampedX <= 0 ? -(rampedX * rampedX) : (rampedX * rampedX)) * MaxSpeed * SOTFspeed)
+				.withVelocityY((rampedY <= 0 ? -(rampedY * rampedY) : (rampedY * rampedY)) * MaxSpeed * SOTFspeed)
 				.withTargetDirection(Rotation2d.fromRadians(RobotState.turretAngle)));
 		}
 	}

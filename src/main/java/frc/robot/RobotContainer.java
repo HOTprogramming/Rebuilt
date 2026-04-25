@@ -111,7 +111,7 @@ public class RobotContainer {
 					Commands.waitSeconds(0.2)
 				),
 				indexer.reverseIndexCommand(),
-				Commands.waitSeconds(0.2),
+				Commands.waitSeconds(0.4),
 				indexer.indexOnCommand()
 			)
 		).whileTrue( 
@@ -137,7 +137,7 @@ public class RobotContainer {
 			indexer.runFloorSlow()
 		))	
 		.onFalse(intake.completeStop())
-		.onFalse(indexer.indexOffCommand())
+		.onFalse(indexer.indexOffCommand().unless(driver.rightTrigger()))
 		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
