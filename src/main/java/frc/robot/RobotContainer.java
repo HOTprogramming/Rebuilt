@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.RobotState.Zone;
 import frc.robot.subsystems.Camera.Camera;
 import frc.robot.subsystems.Climber.Climber;
 import frc.robot.subsystems.Drivetrain.Drivetrain;
@@ -50,9 +51,9 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Intake Stop", intake.completeStop());
 		NamedCommands.registerCommand("Intake full retract", intake.fullRetract());
 
-		NamedCommands.registerCommand("index on", indexer.indexOnCommand(shooter));
+		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(shooter), intake.newAgitateAuto()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.newAgitate()));
 
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
@@ -95,41 +96,38 @@ public class RobotContainer {
 
 		shooter.setDefaultCommand(shooter.hoodDown());
 
-		driver.rightTrigger().whileTrue(
-			Commands.parallel(
-				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX()))
-						.unless(() -> RobotState.isManualMode()),
-				shooter.autoAim(),
-
-				Commands.sequence(
-					// This race will finish as soon as shooter is  ready OR 0.2s passes
-					Commands.race(
-						Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
-						Commands.waitSeconds(0.2)
-					),
-					// Once the race ends (Ready OR Timed Out), run the motors
-					
-					//shooter.startShotTimer(),
-					indexer.indexOnCommand(shooter)
-					
-
-				)
-			)
-		).whileTrue( // keep agitate seperate so left trigger doesnt interrupt the shoot command
+		driver.rightTrigger()
+		.whileTrue(
+			Commands.either(
+				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
+				drivetrain.run(() -> drivetrain.neutralAim(-driver.getLeftY(), -driver.getLeftX())),
+				() -> (RobotState.getZone() == Zone.ALLIANCE)
+			).unless(() -> RobotState.isManualMode()))
+		.whileTrue(shooter.autoAim()) // schedule commands separately so they dont end each other
+		.whileTrue(
 			Commands.sequence(
-			// This race will finish as soon as shooter is  ready OR 0.2s passes
 				Commands.race(
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
-				),
+				).unless(() -> RobotState.isManualMode()),
+				// indexer.reverseIndexCommand(),
+				// Commands.waitSeconds(0.4),
+				indexer.indexOnCommand()
+			)
+		).whileTrue( 
+			Commands.sequence(
+				Commands.race(
+					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
+					Commands.waitSeconds(0.2)
+				).unless(() -> RobotState.isManualMode()),
 				Commands.waitSeconds(0.25),
 				intake.newAgitate().unless(driver.leftTrigger())
 			)
 		).onFalse(
 			Commands.parallel(
 				indexer.indexOffCommand(),
-				intake.completeStop().unless(driver.leftTrigger())
-				// Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))
+				intake.completeStop().unless(driver.leftTrigger()),
+				Commands.race(shooter.autoAim(), Commands.waitSeconds(0.1))
 			)
 		);
 
@@ -138,22 +136,29 @@ public class RobotContainer {
 			intake.extend(),
 			indexer.runFloorSlow()
 		))	
-		.onFalse(intake.completeStop())
-		.onFalse(indexer.indexOffCommand())
-		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
+		.onFalse(intake.completeStop().unless(driver.rightTrigger()))
+		.onFalse(indexer.indexOffCommand().unless(driver.rightTrigger()))
+		.onFalse(intake.newAgitate().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 		
 		// X the Wheels
-		// driver.x().whileTrue(drivetrain.xLockCommand());
+		driver.x().whileTrue(drivetrain.xLockCommand())
+		.onFalse(drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())).unless(() -> RobotState.isManualMode()).onlyWhile(driver.rightTrigger()));
 	
 		operator.leftBumper().onTrue(intake.fullRetract());
 
 		//Temp button to trigger the L1 climb sequence
-		operator.leftTrigger().onTrue(indexer.reverseIndexCommand()).onFalse(indexer.indexOffCommand())
-		.onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
+		driver.leftBumper().onTrue(Commands.sequence(indexer.reverseIndexCommand())).onFalse(indexer.indexOffCommand());
+
+
+		operator.leftTrigger().onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
+
+
 		// Undock from the pole after climbing
-		operator.rightTrigger().whileTrue(NamedCommands.getCommand("auto undock"));
+		operator.rightTrigger()
+			.whileTrue(intake.outtake())
+			.onTrue(indexer.reverseIndexCommand()).onFalse(indexer.indexOffCommand());
 		// Stow climber after undocking
 		// operator.rightBumper().onTrue(climber.goToIdle());
 		//add distande to shot map offset

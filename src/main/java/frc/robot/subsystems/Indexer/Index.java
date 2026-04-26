@@ -23,18 +23,18 @@ public class Index extends SubsystemBase {
 	 * The shot timer ensures the hood offset system begins tracking from the
 	 * instant balls start feeding into the kicker.
 	 */
-	public Command indexOnCommand(Shooter shooter) {
+	public Command indexOnCommand() {
 		return Commands.sequence(
 			runOnce(() -> m_IndexKraken.startKicker()),
 			Commands.waitSeconds(0.1),
-			runOnce(() -> {
-				m_IndexKraken.startFloor();
-				shooter.startShotTimerNow();
-			}));
+			runOnce(() -> m_IndexKraken.startFloor()));
 	}
 
 	public Command runFloorSlow() {
-		return runOnce(() -> m_IndexKraken.startFloorSlow());
+		return runOnce(() -> {
+			m_IndexKraken.startFloorSlow();
+			m_IndexKraken.startKickerSlow();
+		});
 	}
 
 	

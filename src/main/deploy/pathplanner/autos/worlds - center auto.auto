@@ -9,25 +9,19 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "zero wrist"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "wait",
                       "data": {
-                        "pathName": "RIGHTLEFTCopy of pass1"
+                        "waitTime": 5.0
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RIGHTLEFTCopy of back1"
+                        "pathName": "center1"
                       }
                     },
                     {
@@ -37,7 +31,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 2.0
+                              "waitTime": 4.0
                             }
                           },
                           {
@@ -77,7 +71,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RIGHTLEFTCopy of pass2"
+            "pathName": "center 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "center 3"
           }
         },
         {
@@ -87,7 +87,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.0
+                  "waitTime": 3.0
                 }
               },
               {
@@ -117,17 +117,11 @@
               }
             ]
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RIGHTLEFTa"
-          }
         }
       ]
     }
   },
   "resetOdom": false,
-  "folder": null,
+  "folder": "States Autos",
   "choreoAuto": false
 }

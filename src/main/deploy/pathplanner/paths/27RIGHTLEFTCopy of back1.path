@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.32175463623395,
-        "y": 4.820727532097004
+        "x": 7.843024251069899,
+        "y": 4.597831669044222
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.050042796005703,
-        "y": 4.96305278174594
+        "x": 7.571312410841653,
+        "y": 4.740156918693158
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "rush end 1"
     },
     {
       "anchor": {
-        "x": 5.746961483594864,
-        "y": 5.597047075606277
+        "x": 5.7340228245363765,
+        "y": 5.400028530670471
       },
       "prevControl": {
-        "x": 6.211144252470924,
-        "y": 5.558365178199938
+        "x": 6.198205593412436,
+        "y": 5.361346633264132
       },
       "nextControl": {
-        "x": 5.436433666191155,
-        "y": 5.6229243937232525
+        "x": 5.423495007132667,
+        "y": 5.425905848787447
       },
       "isLocked": false,
       "linkedName": null
@@ -46,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5202558635394456,
+      "waypointRelativePos": 0.5799573560767588,
       "rotationDegrees": -180.0
     },
     {
@@ -99,7 +99,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -91.24536426610395
+    "rotation": -90.0
   },
   "useDefaultConstraints": false
 }

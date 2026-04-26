@@ -1,6 +1,9 @@
 package frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.signals.InvertedValue;
+
 import frc.util.Kraken;
 import frc.util.KrakenWithCancoder;
 
@@ -12,6 +15,8 @@ public class IntakeKraken {
 		.autonRollerConfigs(), "Intake", "Roller");
 	public Kraken m_RollerKrakenFollower = new Kraken(IntakeConstants.kIntakeMotorIDRollerFollower, "rio", IntakeConstants.IntakeConfigs
 		.autonRollerConfigs(), "Intake", "Roller");
+	public Kraken m_RollerKraken3 = new Kraken(IntakeConstants.kIntakeMotorIDRoller3, "rio", IntakeConstants.IntakeConfigs
+		.invertedAutoRollerConfigs(), "Intake", "Roller");
 
 	private static IntakeKraken instance = null;
 
@@ -19,6 +24,7 @@ public class IntakeKraken {
 		m_ExtendKraken.setup();
 		m_RollerKrakenLeader.setup();
 		m_RollerKrakenFollower.setup();
+		m_RollerKraken3.setup();
 		m_ExtendKraken.motor.getConfigurator().apply(IntakeConstants.IntakeExtendConfigs.MotionMagic);
 		m_ExtendKraken.motor.getConfigurator().apply(new MotionMagicConfigs()
 			.withMotionMagicAcceleration(64)
@@ -31,7 +37,7 @@ public class IntakeKraken {
 	public void applyTeleopConfigs() {
 		m_RollerKrakenLeader.applyNewConfigs(IntakeConstants.RollerConfigs);
 		m_RollerKrakenFollower.applyNewConfigs(IntakeConstants.RollerConfigs);
-
+		m_RollerKraken3.applyNewConfigs(IntakeConstants.invertedRollerConfigs);
 	}
 
 	public static IntakeKraken getInstance() {
@@ -63,17 +69,21 @@ public class IntakeKraken {
 	public void runVelocity(double desiredVelocity) {
 		m_RollerKrakenLeader.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 		m_RollerKrakenFollower.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
+		m_RollerKraken3.setVelocity(desiredVelocity, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);
 	}
+
 
 	public void stopRollers() {
 		m_RollerKrakenLeader.stop();
 		m_RollerKrakenFollower.stop();
+		m_RollerKraken3.stop();
 	}
+
 
 	public void stopExtend() {
 		m_ExtendKraken.stop();
 	}
 	public double getTotalCurrent(){
-		return m_RollerKrakenFollower.getSupplyCurrent() + m_RollerKrakenLeader.getSupplyCurrent() + m_ExtendKraken.getSupplyCurrent();
+		return m_RollerKrakenFollower.getSupplyCurrent() + m_RollerKraken3.getSupplyCurrent() + m_RollerKrakenLeader.getSupplyCurrent() + m_ExtendKraken.getSupplyCurrent();
 	}
 }

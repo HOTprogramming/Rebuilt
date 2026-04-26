@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Drivetrain;
 
+import static frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants.SOTFspeed;
+
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,6 +10,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Drivetrain.constants.DrivetrainConstants;
 
 public class ShootOnTheFly {
     private static double TOF_CONVERGENCE_THRESHOLD;
@@ -15,8 +18,8 @@ public class ShootOnTheFly {
 
     private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
 	// filters for vx and vy speeds to smooth sotf target movement
-    LinearFilter vxfilt = LinearFilter.movingAverage(3);
-    LinearFilter vyfilt = LinearFilter.movingAverage(3);
+    LinearFilter vxfilt = LinearFilter.movingAverage(4);
+    LinearFilter vyfilt = LinearFilter.movingAverage(4);
 
     private double turretAngle = 0;
     private double virtualShotToTargetDistance = 0;
@@ -31,13 +34,22 @@ public class ShootOnTheFly {
         timeOfFlightMap.put(4.0, 1.15);
         timeOfFlightMap.put(5.0, 1.15);
 
-        timeOfFlightMap.put(5.1, 1.16);
-        timeOfFlightMap.put(17.0, 2.0);
+        timeOfFlightMap.put(5.1, 1.2);
+        timeOfFlightMap.put(17.0, 1.6);
     }
 
     public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, Translation2d shotTarget, Alliance alliance) {
         double latency = 0.1;
         ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(RobotSpeed, RobotPos.getRotation());
+		double velx = fieldSpeeds.vxMetersPerSecond;
+		double vely = fieldSpeeds.vyMetersPerSecond;
+
+		double maxSOTFspeed = SOTFspeed * DrivetrainConstants.kSpeedAt12Volts.magnitude(); // ~1.5m/s
+		
+		double speedMag = Math.sqrt(velx * velx + vely * vely);
+		if (speedMag > maxSOTFspeed) { // if it s moving faster than 1 m/s, normalize to 1 m/s
+			fieldSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds((velx * maxSOTFspeed) / speedMag, (vely * maxSOTFspeed) / speedMag, fieldSpeeds.omegaRadiansPerSecond, RobotPos.getRotation()); 
+		}
 		// filters for vx and vy speeds to smooth sotf target movement
         double vx_filt = vxfilt.calculate(fieldSpeeds.vxMetersPerSecond);
         double vy_filt = vyfilt.calculate(fieldSpeeds.vyMetersPerSecond);

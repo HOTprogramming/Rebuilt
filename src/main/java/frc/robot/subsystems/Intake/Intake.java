@@ -29,6 +29,21 @@ public class Intake extends SubsystemBase {
 		mIntakeKraken.updateStats();
 	}
 
+	// public Command extend() {
+	// 	return Commands.sequence(runOnce(() -> {
+	// 		mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
+	// 			.apply(new MotionMagicConfigs()
+	// 				.withMotionMagicAcceleration(64)
+	// 				.withMotionMagicCruiseVelocity(64));
+	// 	}), new WaitCommand(0.02), 
+	// 	runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition)),
+	// 	run(() -> {}).until(turnOnRollers()),  //added ????
+	// 	runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed))
+	// 	);
+	// }
+
+
+	
 	public Command extend() {
 		return Commands.sequence(runOnce(() -> {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
@@ -36,12 +51,13 @@ public class Intake extends SubsystemBase {
 					.withMotionMagicAcceleration(64)
 					.withMotionMagicCruiseVelocity(64));
 		}), new WaitCommand(0.02), 
-		runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition)),
-		run(() -> {}).until(turnOnRollers()),  //added ????
-		runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed))
+		runOnce(() -> 
+		{
+			mIntakeKraken.runAgitatePosition(IntakeConstants.kDeployedPosition); 
+			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
+		})
 		);
 	}
-
 
 	public Command extendShort() {
 		return Commands.sequence(runOnce(() -> {
@@ -60,7 +76,7 @@ public class Intake extends SubsystemBase {
 			mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
 					.withMotionMagicAcceleration(12)
-					.withMotionMagicCruiseVelocity(80));
+					.withMotionMagicCruiseVelocity(80)); // 80
 		}), new WaitCommand(.02), runOnce(() -> {
 			mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate);
 			mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);
@@ -72,14 +88,13 @@ public class Intake extends SubsystemBase {
 			runOnce(() -> {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
-				.withMotionMagicAcceleration(3)
-				.withMotionMagicCruiseVelocity(4));
-			}), 
+				.withMotionMagicAcceleration(0.5)
+				.withMotionMagicCruiseVelocity(1));
+				mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed / 2);
+			}),
 			new WaitCommand(.02), 
 			runOnce(() -> mIntakeKraken.runAgitatePosition(IntakeConstants.kRetractPositionAgitate)),
-			run(() -> {}).until(pulseRollers()).withTimeout(1.0),
-			runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed)),
-			Commands.waitSeconds(0.25),
+			run(() -> {}).until(isAgitateRetracted()),
 			runOnce(() -> mIntakeKraken.stopRollers())
 		);
 	}
@@ -96,6 +111,13 @@ public class Intake extends SubsystemBase {
 		return runOnce(() -> {
 			mIntakeKraken.runPosition(IntakeConstants.kRetractPosition);
 			mIntakeKraken.stopRollers();
+		});
+	}
+
+	public Command outtake() {
+		return runOnce(() -> {
+			mIntakeKraken.runPosition(IntakeConstants.kDeployedPosition);
+			mIntakeKraken.runVelocity(IntakeConstants.kExpelSpeed);
 		});
 	}
 
@@ -125,9 +147,10 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void completeStopMethod(){
-		// mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
+		mIntakeKraken.m_ExtendKraken.motor.setVoltage(0);
 		mIntakeKraken.m_RollerKrakenFollower.motor.setVoltage(0);
 		mIntakeKraken.m_RollerKrakenLeader.motor.setVoltage(0);
+		mIntakeKraken.m_RollerKraken3.motor.setVoltage(0);
 	}
 
 	public Command completeStop() {
@@ -215,26 +238,30 @@ public class Intake extends SubsystemBase {
 	}
 
 
-	private double agitatePos1 = 0.447;
+	private double agitatePos1 = 0.10;
 	private double agitatePos2 =  0.25;
-	private double agitatePos3 = IntakeConstants.kRetractPositionAgitate;
+	private double agitatePos3 = 0.4;
+	private double agitatePos4 = IntakeConstants.kRetractPositionAgitate;
 
 
 	public Command newAgitate() {
 		return Commands.sequence(
+			runOnce(() -> mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed / 2.0)),
 			runOnce(() -> {
 				mIntakeKraken.m_ExtendKraken.motor.getConfigurator()
 				.apply(new MotionMagicConfigs()
-				.withMotionMagicAcceleration(3)
-				.withMotionMagicCruiseVelocity(4));
+				.withMotionMagicAcceleration(4)
+				.withMotionMagicCruiseVelocity(6));
 			}), 
-			new WaitCommand(.02), 
-			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.1),
-			run(() -> mIntakeKraken.runPosition(agitatePos2)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos2) < 0.1),
-			runOnce(() -> {mIntakeKraken.runPosition(agitatePos3);  mIntakeKraken.runVelocity(IntakeConstants.kIntakeSpeed);}),
-			Commands.waitSeconds(0.25),
-			runOnce(() -> mIntakeKraken.stopRollers()),
-			run(() -> mIntakeKraken.runPosition(agitatePos3)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos3) < 0.1)
+			new WaitCommand(0.75),
+			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.01),
+			run(() -> mIntakeKraken.runPosition(agitatePos2)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos2) < 0.01),
+			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.01),
+			run(() -> mIntakeKraken.runPosition(agitatePos3)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos3) < 0.01),
+			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.01),
+			run(() -> mIntakeKraken.runPosition(agitatePos4)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos4) < 0.01),
+			runOnce(() -> mIntakeKraken.stopRollers())
+
 		);
 	}
 
@@ -245,7 +272,7 @@ public class Intake extends SubsystemBase {
 				.apply(new MotionMagicConfigs()
 				.withMotionMagicAcceleration(3)
 				.withMotionMagicCruiseVelocity(3));
-			}), 
+			}),
 			new WaitCommand(.02), 
 			run(() -> mIntakeKraken.runPosition(agitatePos1)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos1) < 0.1),
 			run(() -> mIntakeKraken.runPosition(agitatePos2)).until(() -> Math.abs(mIntakeKraken.getExtendPosition() - agitatePos2) < 0.1),

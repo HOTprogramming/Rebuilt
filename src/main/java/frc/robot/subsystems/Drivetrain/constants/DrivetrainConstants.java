@@ -22,6 +22,8 @@ public class DrivetrainConstants {
 	public static final double left_blue_ladder_angle_deg = 1;
 	public static final double right_red_ladder_angle_deg = 0;
 	public static final double left_red_ladder_angle_deg = 0;
+
+	public static final double SOTFspeed = 0.33;
 	
 	// Both sets of gains need to be tuned to your individual robot.
 
@@ -65,15 +67,15 @@ public class DrivetrainConstants {
 				.withSupplyCurrentLimit(60)
 				.withSupplyCurrentLimitEnable(true)
 				.withSupplyCurrentLowerLimit(40)
-				.withSupplyCurrentLowerTime(1)
+				.withSupplyCurrentLowerTime(0.5)
 		);
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
 				.withSupplyCurrentLimit(60)
 				.withSupplyCurrentLimitEnable(true)
-				.withSupplyCurrentLowerLimit(40)
-				.withSupplyCurrentLowerTime(1)
+				.withSupplyCurrentLowerLimit(30)
+				.withSupplyCurrentLowerTime(0.5)
                 // Swerve azimuth does not require much torque output, so we can set a relatively low
                 // stator current limit to help avoid brownouts without impacting performance.
                 .withStatorCurrentLimit(Amps.of(60))
