@@ -37,7 +37,12 @@ public class IndexKraken {
 	public void startFloorSlow() {
 		m_floorKraken.setVelocity(IndexConstants.floorSpeed * -0.1, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
 	}	
-	
+		
+	public void startKickerSlow() {
+		m_rightKickKraken.setVelocity(IndexConstants.kickerSpeed * -0.1, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+		m_leftKickKraken.setVelocity(IndexConstants.kickerSpeed * -0.1, Kraken.VelocityControlType.VelocityTorqueCurrentFOC, 1);
+	}
+
 	
 	public void startKicker() {
 		m_rightKickKraken.setVelocity(IndexConstants.kickerSpeed, Kraken.VelocityControlType.VelocityTorqueCurrentFOC);

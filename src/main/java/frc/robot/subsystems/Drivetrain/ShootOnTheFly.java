@@ -18,8 +18,8 @@ public class ShootOnTheFly {
 
     private static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
 	// filters for vx and vy speeds to smooth sotf target movement
-    LinearFilter vxfilt = LinearFilter.movingAverage(2);
-    LinearFilter vyfilt = LinearFilter.movingAverage(2);
+    LinearFilter vxfilt = LinearFilter.movingAverage(4);
+    LinearFilter vyfilt = LinearFilter.movingAverage(4);
 
     private double turretAngle = 0;
     private double virtualShotToTargetDistance = 0;
@@ -34,8 +34,8 @@ public class ShootOnTheFly {
         timeOfFlightMap.put(4.0, 1.15);
         timeOfFlightMap.put(5.0, 1.15);
 
-        timeOfFlightMap.put(5.1, 1.16);
-        timeOfFlightMap.put(17.0, 2.0);
+        timeOfFlightMap.put(5.1, 1.2);
+        timeOfFlightMap.put(17.0, 1.6);
     }
 
     public void update(Pose2d RobotPos, ChassisSpeeds RobotSpeed, Translation2d shotTarget, Alliance alliance) {

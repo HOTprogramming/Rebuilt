@@ -132,7 +132,7 @@ public class ShooterConstants {
 			.withKS(0.175)
 			.withKV(0.115))
 		.withSlot1(new Slot1Configs()
-			.withKP(8)
+			.withKP(8.0)
 			.withKI(0.0)
 			.withKD(0)
 			.withKS(5.5)

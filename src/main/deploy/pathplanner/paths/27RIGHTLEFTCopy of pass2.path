@@ -198,7 +198,7 @@
     },
     {
       "name": "Intake Out",
-      "waypointRelativePos": 0.1782579338285048,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

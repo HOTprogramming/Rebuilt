@@ -109,9 +109,9 @@ public class RobotContainer {
 				Commands.race(
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
-				),
-				indexer.reverseIndexCommand(),
-				Commands.waitSeconds(0.4),
+				).unless(() -> RobotState.isManualMode()),
+				// indexer.reverseIndexCommand(),
+				// Commands.waitSeconds(0.4),
 				indexer.indexOnCommand()
 			)
 		).whileTrue( 
@@ -119,15 +119,15 @@ public class RobotContainer {
 				Commands.race(
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
-				),
+				).unless(() -> RobotState.isManualMode()),
 				Commands.waitSeconds(0.25),
 				intake.newAgitate().unless(driver.leftTrigger())
 			)
 		).onFalse(
 			Commands.parallel(
 				indexer.indexOffCommand(),
-				intake.completeStop().unless(driver.leftTrigger())
-				// Commands.race(shooter.autoAim(), Commands.waitSeconds(0.25))
+				intake.completeStop().unless(driver.leftTrigger()),
+				Commands.race(shooter.autoAim(), Commands.waitSeconds(0.1))
 			)
 		);
 
@@ -136,9 +136,9 @@ public class RobotContainer {
 			intake.extend(),
 			indexer.runFloorSlow()
 		))	
-		.onFalse(intake.completeStop())
+		.onFalse(intake.completeStop().unless(driver.rightTrigger()))
 		.onFalse(indexer.indexOffCommand().unless(driver.rightTrigger()))
-		.onFalse(intake.retractSlow().onlyIf(driver.rightTrigger()));
+		.onFalse(intake.newAgitate().onlyIf(driver.rightTrigger()));
 		
 		driver.b().onTrue(NamedCommands.getCommand("align pole autoflip"));
 		

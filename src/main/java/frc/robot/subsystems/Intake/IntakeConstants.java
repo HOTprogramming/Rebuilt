@@ -25,7 +25,7 @@ public class IntakeConstants {
 	public static double kShortDeployedPosition = 0.25; // not used
 
 	public static double kRetractPosition = 0.61;
-	public static double kRetractPositionAgitate = 0.55;
+	public static double kRetractPositionAgitate = 0.437;
 	public static double kExtendTolerance = 0.01;
 	public static double kRetractTolerance = 0.01;
 
@@ -68,13 +68,13 @@ public class IntakeConstants {
 		.withCurrentLimits(new CurrentLimitsConfigs()
 			// .withStatorCurrentLimit(50)
 			// .withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(50)
+			.withSupplyCurrentLimit(90)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30) //80
+			.withSupplyCurrentLowerLimit(60) //80
 			.withSupplyCurrentLowerTime(0.5)) //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(50) //was 100
-			.withPeakReverseTorqueCurrent(-50)) //was 100
+			.withPeakForwardTorqueCurrent(90) //was 100
+			.withPeakReverseTorqueCurrent(-90)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.Clockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -111,13 +111,13 @@ public class IntakeConstants {
 		.withCurrentLimits(new CurrentLimitsConfigs()
 			// .withStatorCurrentLimit(50)
 			// .withStatorCurrentLimitEnable(true)
-			.withSupplyCurrentLimit(50)
+			.withSupplyCurrentLimit(90)
 			.withSupplyCurrentLimitEnable(true)
-			.withSupplyCurrentLowerLimit(30) //80
+			.withSupplyCurrentLowerLimit(60) //80
 			.withSupplyCurrentLowerTime(0.5)) //was 2.0
 		.withTorqueCurrent(new TorqueCurrentConfigs()
-			.withPeakForwardTorqueCurrent(50) //was 100
-			.withPeakReverseTorqueCurrent(-50)) //was 100
+			.withPeakForwardTorqueCurrent(90) //was 100
+			.withPeakReverseTorqueCurrent(-90)) //was 100
 		.withMotorOutput(new MotorOutputConfigs()
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Coast))
@@ -143,10 +143,10 @@ public class IntakeConstants {
 			.withInverted(InvertedValue.CounterClockwise_Positive)
 			.withNeutralMode(NeutralModeValue.Brake))
 		.withSlot0(new Slot0Configs()
-			.withKP(256) // 128
+			.withKP(100) // 128
 			.withKI(0)
 			.withKD(0)
-			.withKS(0.45)
+			.withKS(1.5)
 			.withKV(0))
 		.withMotionMagic(new MotionMagicConfigs()
 			.withMotionMagicCruiseVelocity(16.0)

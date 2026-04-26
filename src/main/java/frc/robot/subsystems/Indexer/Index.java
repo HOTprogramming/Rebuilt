@@ -31,7 +31,10 @@ public class Index extends SubsystemBase {
 	}
 
 	public Command runFloorSlow() {
-		return runOnce(() -> m_IndexKraken.startFloorSlow());
+		return runOnce(() -> {
+			m_IndexKraken.startFloorSlow();
+			m_IndexKraken.startKickerSlow();
+		});
 	}
 
 	

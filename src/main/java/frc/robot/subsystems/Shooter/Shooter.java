@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
-	public double shotMapOffset = -0.15;
+	public double shotMapOffset = 0.0;
 
 
 	private NetworkTableEntry entryTuningMode;
@@ -61,8 +61,9 @@ public class Shooter extends SubsystemBase {
 		hoodAngleMap.put(1.0, 1.0); 
 
 		hoodAngleMap.put(2.0, 3.7); //3.7
-		hoodAngleMap.put(3.0, 5.5); //5.5
-		hoodAngleMap.put(4.0, 6.9); //7.1
+		hoodAngleMap.put(2.5, 4.7);
+		hoodAngleMap.put(3.0, 5.2); //5.5
+		hoodAngleMap.put(4.0, 6.9); //6.9
 		hoodAngleMap.put(5.0, 8.2); //8.4
 		hoodAngleMap.put(5.3, 8.7); //8.7
 		// Passing
@@ -72,8 +73,9 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(1.0, 38.0);
 
 		shooterSpeedMap.put(2.0, 39.0);
-		shooterSpeedMap.put(3.0, 41.0); //41.2
-		shooterSpeedMap.put(4.0, 43.7); //43.3
+		shooterSpeedMap.put(2.5, 40.6);
+		shooterSpeedMap.put(3.0, 41.5); //41.0
+		shooterSpeedMap.put(4.0, 44.1); //43.7
 		shooterSpeedMap.put(5.0, 47.0);
 		shooterSpeedMap.put(5.3, 48.5);
 		//Passing
@@ -180,76 +182,6 @@ public class Shooter extends SubsystemBase {
 
 				targetHood = hoodAngleMap.get(distance);
 				targetSpeed = shooterSpeedMap.get(distance);
-
-				// Kicker-speed hood offset: when kicker wheels are slower than expected
-				// (full hopper pressure, shoot-on-the-move ball loading), raise the hood
-				// to compensate for the lower ball exit velocity. The offset has two parts:
-				//
-				// 1. Proportional term (deficit): based on how far below threshold the
-				//    kicker speed is RIGHT NOW. Larger deficit = more hood offset.
-				//
-				// 2. Anticipation term (derivative): based on the rate of change of kicker
-				//    speed. If the kicker is decelerating (speed dropping, e.g. balls pressing
-				//    in), we add hood offset BEFORE the speed actually drops below threshold.
-				//    If the kicker is accelerating (recovering), we reduce the offset early
-				//    so the hood is already coming back down as the kicker catches up.
-				//    This prevents the hood from always lagging behind the kicker state.
-				//
-				// Both terms are scaled by distance (far shots need more compensation)
-				// and their respective gain constants. See ShooterConstants for tuning guide.
-			// 	if (ShooterConstants.kHoodOffsetEnabled) {
-			// 		double kickerSpeed = indexer.getAverageKickerSpeed();
-			// 		double kickerRatio = kickerSpeed / ShooterConstants.kKickerNominalSpeed;
-			// 		double maxOffset = hoodKickerOffsetMap.get(distance);
-			// 		double hoodOffset = 0;
-
-			// 		// Proportional term: offset based on current kicker speed deficit
-			// 		if (kickerRatio < ShooterConstants.kKickerSpeedThreshold) {
-			// 			double deficit = (ShooterConstants.kKickerSpeedThreshold - kickerRatio) / ShooterConstants.kKickerSpeedThreshold;
-			// 			hoodOffset += maxOffset * deficit * ShooterConstants.kHoodOffsetScale;
-			// 		}
-
-			// 		// Anticipation term: offset based on kicker acceleration (rps/sec).
-			// 		// Negative acceleration (decelerating) adds hood; positive (recovering) subtracts.
-			// 		double now = Timer.getFPGATimestamp();
-			// 		double dt = now - prevKickerTimestamp;
-			// 		if (dt > 0 && prevKickerTimestamp > 0) {
-			// 			double kickerAccel = (kickerSpeed - prevKickerSpeed) / dt;
-			// 			// Normalize acceleration by nominal speed so the gain constant
-			// 			// is independent of the actual kicker speed value
-			// 			double normalizedAccel = kickerAccel / ShooterConstants.kKickerNominalSpeed;
-			// 			// Negative accel (decelerating) → positive offset (more hood)
-			// 			hoodOffset += -normalizedAccel * maxOffset * ShooterConstants.kKickerAnticipationGain;
-			// 		}
-			// 		prevKickerSpeed = kickerSpeed;
-			// 		prevKickerTimestamp = now;
-
-			// 		// Clamp: never subtract hood below the base map value, and cap at max offset
-			// 		targetHood += Math.max(0, Math.min(hoodOffset, maxOffset));
-				
-
-			// 	// Shot-start bump: a small fixed hood addition for the first few ms after
-			// 	// the indexer fires. Covers the very first ball which always arrives slow
-			// 	// because the kicker hasn't reached steady-state yet — too fast for the
-			// 	// kicker speed reading to catch.
-			// 	//
-			// 	// After kShotStartDuration expires, the bump ramps down linearly over
-			// 	// kShotStartRampDown seconds instead of cutting off abruptly. This
-			// 	// gives the kicker-speed proportional term time to take over without
-			// 	// the hood dropping too fast and missing shots in between.
-			// 		if (shotStartActive) {
-			// 			double elapsed = shotStartTimer.get();
-			// 			double totalDuration = ShooterConstants.kShotStartDuration + ShooterConstants.kShotStartRampDown;
-			// 			if (elapsed < ShooterConstants.kShotStartDuration) {
-			// 				// Full bump during the initial window
-			// 				targetHood += ShooterConstants.kShotStartHoodBump;
-			// 			} else if (elapsed < totalDuration) {
-			// 				// Linear ramp-down: 1.0 at start of ramp, 0.0 at end
-			// 				double rampProgress = (elapsed - ShooterConstants.kShotStartDuration) / ShooterConstants.kShotStartRampDown;
-			// 				targetHood += ShooterConstants.kShotStartHoodBump * (1.0 - rampProgress);
-			// 			}
-			// 		}
-			// 	}
 			}
 
 
