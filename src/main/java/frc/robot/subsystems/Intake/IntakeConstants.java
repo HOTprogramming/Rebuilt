@@ -40,7 +40,7 @@ public class IntakeConstants {
 	public static int kIntakeMotorIDRollerLeader = Constants.getRobot() == RobotType.COMPBOT ? 17 : 0;
 	public static int kIntakeMotorIDRollerFollower = Constants.getRobot() == RobotType.COMPBOT ? 12 : 0;
 	public static int kIntakeMotorIDRoller3 = Constants.getRobot() == RobotType.COMPBOT ? 20 : 0;
-	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.042 : 0.0;
+	public static double kEncoderOffset = Constants.getRobot() == RobotType.COMPBOT ? -0.046211 : 0.0;
 	public static String kBusName = Constants.canName;
 
 	public static final TalonFXConfiguration RollerConfigs = new TalonFXConfiguration()
