@@ -50,7 +50,7 @@ public class IntakeConstants {
 			.withSupplyCurrentLimit(50)
 			.withSupplyCurrentLimitEnable(true)
 			.withSupplyCurrentLowerLimit(30) //80
-			.withSupplyCurrentLowerTime(0.5)) //was 2.0 //0.5
+			.withSupplyCurrentLowerTime(0.5)) //was 2.0 //0.5 s/b 0.2 
 		.withTorqueCurrent(new TorqueCurrentConfigs()
 			.withPeakForwardTorqueCurrent(50) //was 100
 			.withPeakReverseTorqueCurrent(-50)) //was 100

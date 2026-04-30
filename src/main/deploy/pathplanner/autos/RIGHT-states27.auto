@@ -15,13 +15,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "FDHD27RIGHTLEFTCopy of pass1"
+                        "pathName": "Copy of LEFTLEFTCopy of pass1"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "FDHD27RIGHTLEFTCopy of back1"
+                        "pathName": "Copy of LEFTLEFTCopy of back1"
                       }
                     },
                     {
@@ -71,7 +71,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "FDHD27RIGHTLEFTCopy of pass2"
+            "pathName": "LEFTLEFTCopy of pass2"
           }
         },
         {
@@ -81,7 +81,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 6.0
                 }
               },
               {

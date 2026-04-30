@@ -35,8 +35,8 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
 		CommandScheduler.getInstance().cancelAll();
 
-		SmartDashboard.putBoolean("Auton", false);
-		SmartDashboard.putBoolean("Teleop", false);
+		// SmartDashboard.putBoolean("Auton", false);
+		// SmartDashboard.putBoolean("Teleop", false);
 	}
 
     @Override
@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-		SmartDashboard.putBoolean("Auton", true);
+		// SmartDashboard.putBoolean("Auton", true);
 	}
 
     @Override
@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
 		
-		SmartDashboard.putBoolean("Teleop", true);
+		// SmartDashboard.putBoolean("Teleop", true);
 
     }
 

@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
-	public double shotMapOffset = 0.0;
+	public double shotMapOffset = -0.30;
 
 
 	private NetworkTableEntry entryTuningMode;
@@ -68,6 +68,7 @@ public class Shooter extends SubsystemBase {
 		hoodAngleMap.put(5.3, 8.7); //8.7
 		// Passing
 		hoodAngleMap.put(5.35, 7.5); 
+		hoodAngleMap.put(13.0, 11.0); //11.0
 		hoodAngleMap.put(17.0, 11.0); //11.0
 
 		shooterSpeedMap.put(1.0, 38.0);
@@ -80,7 +81,9 @@ public class Shooter extends SubsystemBase {
 		shooterSpeedMap.put(5.3, 48.5);
 		//Passing
 		shooterSpeedMap.put(5.35, 41.0);
+		shooterSpeedMap.put(13.0, 90.0);
 		shooterSpeedMap.put(17.0, 95.0);
+
 
 		// Mods to support shotmap tuning using Advantage Scope 
 		//Get the default instance of Network table 
@@ -192,9 +195,6 @@ public class Shooter extends SubsystemBase {
 				//get the values from Advantage Scope
 				targetHood = entryHoodAngle.getDouble(0.0);
 				targetSpeed = entryWheelSpeed.getDouble(0.0);
-
-				System.out.println("--- Changing Hood value to: "+targetHood);
-				System.out.println("--- Changing Wheel Speed to: "+targetSpeed);
 			}
 			//End of Shotmap Mods 
 

@@ -180,12 +180,12 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 		RobotState.pose = getState().Pose;
 		RobotState.speeds = getState().Speeds;
 
-		SmartDashboard.putBoolean("iAmDockingLeaveMeAlone", iAmDockingLeaveMeAlone);
-		SmartDashboard.putBoolean("test/isAtTargetAngle", isAtTargetAngle());
-// 			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle))) < 15;
+// 		SmartDashboard.putBoolean("iAmDockingLeaveMeAlone", iAmDockingLeaveMeAlone);
+// 		SmartDashboard.putBoolean("test/isAtTargetAngle", isAtTargetAngle());
+// // 			return Math.abs(getState().Pose.getRotation().getDegrees() - (Math.toDegrees(RobotState.turretAngle))) < 15;
 
-		SmartDashboard.putNumber("test/robot angle", getState().Pose.getRotation().getDegrees());
-		SmartDashboard.putNumber("test/target angle", (Rotation2d.fromRadians(RobotState.turretAngle).getDegrees()));
+// 		SmartDashboard.putNumber("test/robot angle", getState().Pose.getRotation().getDegrees());
+// 		SmartDashboard.putNumber("test/target angle", (Rotation2d.fromRadians(RobotState.turretAngle).getDegrees()));
 	}
 
     private void startSimThread() {
@@ -263,11 +263,11 @@ public Command driveToPoleCoordinate_autoflip() {
 
         Pose2d finalTarget = new Pose2d(targetX, targetY, targetRotation);
 		
-		SmartDashboard.putNumber("climb/cmd_rotationXOffset", rotationXOffset);
-		SmartDashboard.putNumber("climb/cmd_camOffset", camOffset);
-		SmartDashboard.putNumber("climb/cmd_currPoseX", currentPose.getX());
-		SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.6, 0.6)) );
-		SmartDashboard.putNumber("climb/cmd_TargetDistance", TARGET_DISTANCE);
+		// SmartDashboard.putNumber("climb/cmd_rotationXOffset", rotationXOffset);
+		// SmartDashboard.putNumber("climb/cmd_camOffset", camOffset);
+		// SmartDashboard.putNumber("climb/cmd_currPoseX", currentPose.getX());
+		// SmartDashboard.putNumber("climb/cmd_clmpdPoleAlign", (MathUtil.clamp(poleAlignmentSub.get(), -0.6, 0.6)) );
+		// SmartDashboard.putNumber("climb/cmd_TargetDistance", TARGET_DISTANCE);
         
 		// Telemetry & Vision off while docking
         logger.dockingTargetPub.set(finalTarget);

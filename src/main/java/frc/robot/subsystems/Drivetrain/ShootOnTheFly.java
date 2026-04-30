@@ -97,7 +97,7 @@ public class ShootOnTheFly {
             turretAngle = turretRotation.getRadians() + TURRET_ROTATION_OFFSET;
         }
 
-        SmartDashboard.putNumber("distance to target	", virtualShotToTargetDistance);
+        // SmartDashboard.putNumber("distance to target	", virtualShotToTargetDistance);
     }
 
     public double getTurretAngle() {

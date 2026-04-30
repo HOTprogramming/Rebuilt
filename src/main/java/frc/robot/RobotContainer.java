@@ -53,7 +53,7 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("index on", indexer.indexOnCommand());
 
-		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.newAgitate()));
+		NamedCommands.registerCommand("Shoot", Commands.parallel(indexer.indexOnCommand(), intake.newAgitateAuto()));
 
 		NamedCommands.registerCommand("Aim", 
 			Commands.parallel(
@@ -120,8 +120,7 @@ public class RobotContainer {
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
 				).unless(() -> RobotState.isManualMode()),
-				Commands.waitSeconds(0.25),
-				intake.newAgitate().unless(driver.leftTrigger())
+				intake.packingAgitate().unless(driver.leftTrigger())
 			)
 		).onFalse(
 			Commands.parallel(

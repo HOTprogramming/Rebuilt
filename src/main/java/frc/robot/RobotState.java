@@ -107,8 +107,8 @@ public class RobotState {
 		turretAngle = shootOnTheFly.getTurretAngle();
 		lookAheadDistance = shootOnTheFly.getLookAheadDistance();
 
-		totalRobotCurrent = driveCurrent + climberCurrent + intakeCurrent + indexerCurrent + shooterCurrent;
-		totalCurrentPub.set(totalRobotCurrent);
+		// totalRobotCurrent = driveCurrent + climberCurrent + intakeCurrent + indexerCurrent + shooterCurrent;
+		// totalCurrentPub.set(totalRobotCurrent);
 	}
 
 	private static void findZone() {
