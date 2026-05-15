@@ -206,10 +206,20 @@ public class Shooter extends SubsystemBase {
 	public Command PresetBatter() { // 1m
 		return runOnce(() -> {
 			RobotState.setManualMode();
-			targetHood = hoodAngleMap.get(1.0); // 2.8			
-			targetSpeed = shooterSpeedMap.get(1.0);
-			mShooterKraken.runPosition(hoodAngleMap.get(1.0));
-			mShooterKraken.runVelocity(shooterSpeedMap.get(1.0)); 
+			targetHood = hoodAngleMap.get(2.0); // 2.8			
+			targetSpeed = shooterSpeedMap.get(2.0);
+			mShooterKraken.runPosition(hoodAngleMap.get(2.0));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(2.0)); 
+		});
+	}
+
+	public Command PresetPassing() { // 1m
+		return runOnce(() -> {
+			RobotState.setManualMode();
+			targetHood = hoodAngleMap.get(10.0); // 2.8			
+			targetSpeed = shooterSpeedMap.get(10.0);
+			mShooterKraken.runPosition(hoodAngleMap.get(10.0));
+			mShooterKraken.runVelocity(shooterSpeedMap.get(10.0)); 
 		});
 	}
 
@@ -222,7 +232,6 @@ public class Shooter extends SubsystemBase {
 			mShooterKraken.runVelocity(shooterSpeedMap.get(3.5));
 		});
 	}
-
 
 	public Command PresetClimberPole() { // 2.8m
 		return runOnce(() -> {
@@ -243,7 +252,7 @@ public class Shooter extends SubsystemBase {
 
 	public boolean readyToShoot() {
 		
-		return (
+		return (                                                                                             
 			Math.abs(getShooterSpeed() - targetSpeed) <= ShooterConstants.kShooterError &&
 			Math.abs(getHoodAngle() - targetHood) <= ShooterConstants.kShooterHoodError);
 

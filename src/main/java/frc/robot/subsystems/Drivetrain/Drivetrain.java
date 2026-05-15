@@ -124,6 +124,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
 	public Command resetPoseBatter() {
 		return runOnce(() -> {
+			iAmDockingLeaveMeAlone = true;
 			if (DriverStation.getAlliance().get() == Alliance.Blue) {
 				resetPose(new Pose2d(3.586, 4.016, Rotation2d.fromDegrees(180)));
 			} else {

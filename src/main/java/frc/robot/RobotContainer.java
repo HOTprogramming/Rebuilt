@@ -133,7 +133,7 @@ public class RobotContainer {
 		driver.leftTrigger()
 		.whileTrue(Commands.parallel(
 			intake.extend(),
-			indexer.runFloorSlow()
+			indexer.runFloorSlow()//.onlyIf(driver.rightTrigger())
 		))	
 		.onFalse(intake.completeStop().unless(driver.rightTrigger()))
 		.onFalse(indexer.indexOffCommand().unless(driver.rightTrigger()))
@@ -182,6 +182,8 @@ public class RobotContainer {
 		operator.a().onTrue(shooter.PresetClimberPole());
 		operator.b().onTrue(shooter.PresetTrench());
 		operator.y().onTrue(shooter.PresetBatter());
+		operator.rightTrigger().onTrue(shooter.PresetPassing());
+
 
 		// Deploy Climber
 		// operator.x().onTrue(
