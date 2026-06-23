@@ -197,7 +197,7 @@ public class Shooter extends SubsystemBase {
 				targetSpeed = entryWheelSpeed.getDouble(0.0);
 			}
 			//End of Shotmap Mods 
-			targetHood = 0.0;
+			targetHood = 8.0;
 			targetSpeed = 35.0;
 			mShooterKraken.runPosition(targetHood);
 			mShooterKraken.runVelocity(targetSpeed);

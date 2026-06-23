@@ -90,7 +90,7 @@ public class RobotContainer {
             drivetrain.run(() -> drivetrain.teleopDrive(
                 -driver.getLeftY()*0.45,
                 -driver.getLeftX()*0.45,
-                -driver.getRightX()*0.45
+                -driver.getRightX()*0.75
             ))
         );
 
