@@ -67,7 +67,8 @@ public class RobotState {
 	NetworkTableInstance.getDefault().getTable("HOT/Robot").getDoubleTopic("TotalCurrent").publish();
 
 	public RobotState() {
-		mode = Mode.normal; 
+		//mode = Mode.normal;
+		mode = Mode.manual; 
 	}
 
 	private static boolean isInZoneBox(double xmin, double xmax, double ymin, double ymax) {

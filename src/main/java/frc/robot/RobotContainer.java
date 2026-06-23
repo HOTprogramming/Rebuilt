@@ -88,9 +88,9 @@ public class RobotContainer {
     private void configureBindings() {
         drivetrain.setDefaultCommand(
             drivetrain.run(() -> drivetrain.teleopDrive(
-                -driver.getLeftY(),
-                -driver.getLeftX(),
-                -driver.getRightX()
+                -driver.getLeftY()*0.45,
+                -driver.getLeftX()*0.45,
+                -driver.getRightX()*0.45
             ))
         );
 
@@ -99,8 +99,8 @@ public class RobotContainer {
 		driver.rightTrigger()
 		.whileTrue(
 			Commands.either(
-				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY(), -driver.getLeftX())),
-				drivetrain.run(() -> drivetrain.neutralAim(-driver.getLeftY(), -driver.getLeftX())),
+				drivetrain.run(() -> drivetrain.aim(-driver.getLeftY()*0.45, -driver.getLeftX()*0.45)),
+				drivetrain.run(() -> drivetrain.neutralAim(-driver.getLeftY()*0.45, -driver.getLeftX()*0.45)),
 				() -> (RobotState.getZone() == Zone.ALLIANCE)
 			).unless(() -> RobotState.isManualMode()))
 		.whileTrue(shooter.autoAim()) // schedule commands separately so they dont end each other
@@ -128,7 +128,7 @@ public class RobotContainer {
 				intake.completeStop().unless(driver.leftTrigger()),
 				Commands.race(shooter.autoAim(), Commands.waitSeconds(0.1))
 			)
-		);
+		).onFalse(shooter.stop());
 
 		driver.leftTrigger()
 		.whileTrue(Commands.parallel(
