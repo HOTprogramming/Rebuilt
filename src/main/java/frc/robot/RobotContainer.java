@@ -120,17 +120,17 @@ public class RobotContainer {
 					Commands.waitUntil(() -> shooter.readyToShoot() && drivetrain.isAtTargetAngle()),
 					Commands.waitSeconds(0.2)
 				).unless(() -> RobotState.isManualMode()),
-				intake.packingAgitate().unless(driver.leftTrigger())
+				intake.packingAgitate().unless(operator.leftTrigger())
 			)
 		).onFalse(
 			Commands.parallel(
 				indexer.indexOffCommand(),
-				intake.completeStop().unless(driver.leftTrigger()),
+				intake.completeStop().unless(operator.leftTrigger()),
 				Commands.race(shooter.autoAim(), Commands.waitSeconds(0.1))
 			)
 		);
 
-		driver.leftTrigger()
+		operator.leftTrigger()
 		.whileTrue(Commands.parallel(
 			intake.extend(),
 			indexer.runFloorSlow()//.onlyIf(driver.rightTrigger())
@@ -151,7 +151,7 @@ public class RobotContainer {
 		driver.leftBumper().onTrue(Commands.sequence(indexer.reverseIndexCommand())).onFalse(indexer.indexOffCommand());
 
 
-		operator.leftTrigger().onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
+		operator.rightBumper().onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
 
 
 		// Undock from the pole after climbing
