@@ -130,7 +130,7 @@ public class RobotContainer {
 			)
 		);
 
-		operator.leftTrigger()
+		driver.leftTrigger()
 		.whileTrue(Commands.parallel(
 			intake.extend(),
 			indexer.runFloorSlow()//.onlyIf(driver.rightTrigger())
@@ -151,7 +151,10 @@ public class RobotContainer {
 		driver.leftBumper().onTrue(Commands.sequence(indexer.reverseIndexCommand())).onFalse(indexer.indexOffCommand());
 
 
-		operator.rightBumper().onTrue(shooter.reverseShooter()).onFalse(shooter.hoodDown());
+		driver.rightBumper()
+		.onTrue(shooter.reverseShooter())
+		.onTrue(indexer.reverseIndexCommand())
+		.onFalse(shooter.hoodDown());                                                       
 
 
 		// Undock from the pole after climbing

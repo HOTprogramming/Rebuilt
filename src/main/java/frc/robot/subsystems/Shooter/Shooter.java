@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
 	public double targetSpeed = 0;
 	public double targetHood = 0;
 
-	public double shotMapOffset = -0.30;
+	public double shotMapOffset = -0.15;
 
 
 	private NetworkTableEntry entryTuningMode;

@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +29,8 @@ import edu.wpi.first.units.measure.Current;
 
 public class DrivetrainTelemetry {
     private final double MaxSpeed;
+
+	private Field2d field = new Field2d();
 	
 	private final StatusSignal<Current>[] driveCurrentSignals = new StatusSignal[4];
 	
@@ -44,6 +47,8 @@ public class DrivetrainTelemetry {
 		driveTotalCurrent = driveStateTable.getDoubleTopic("TotalCurrent").publish();
 
         SignalLogger.start();
+
+		SmartDashboard.putData("Field", field);
 
         /* Set up the module state Mechanism2d telemetry */
         for (int i = 0; i < 4; ++i) {
@@ -72,6 +77,9 @@ public class DrivetrainTelemetry {
 
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
+
+		field.setRobotPose(state.Pose);
+		
         /* Telemeterize the swerve drive state */
         drivePose.set(state.Pose);
         driveSpeeds.set(state.Speeds);

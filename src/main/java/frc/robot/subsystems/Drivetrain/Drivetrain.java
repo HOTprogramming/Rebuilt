@@ -49,12 +49,12 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private double m_lastSimTime;
     public boolean tipped = false;
 
-	private final SlewRateLimiter xLimiter = new SlewRateLimiter(3.5);
-	private final SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
+	private final SlewRateLimiter xLimiter = new SlewRateLimiter(2.5);
+	private final SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
 
 	private final SlewRateLimiter xSOTFLimiter = new SlewRateLimiter(2.0);
 	private final SlewRateLimiter ySOTFLimiter = new SlewRateLimiter(2.0);
-	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(5);
+	private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4);
 
 	private final SwerveDriveBrake brakeRequest = new SwerveDriveBrake();
 
@@ -134,6 +134,12 @@ public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	}
 
 	public void teleopDrive(double driveX, double driveY, double driveTheta) {
+		double magnitude = Math.hypot(driveX, driveY);
+		if (magnitude > 1.0) {
+			driveX /= magnitude;
+			driveY /= magnitude;
+		}
+
 		double rampedX = xLimiter.calculate((driveX * Math.abs(driveX)));
 		double rampedY = yLimiter.calculate((driveY * Math.abs(driveY)));
 		double rampedTheta = rotLimiter.calculate(driveTheta * Math.abs(driveTheta));
